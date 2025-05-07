@@ -1,1 +1,48 @@
+@import url("./variables.css");
+@import url("./loader.css");
 
+body {
+  font-family: var(--body-font);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--body-font);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Theme Toggle */
+#theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 60px;
+  height: 30px;
+  background-color: var(--switch-circle);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+#theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  background-color: var(--switch-bg);
+  border: var(--circle-border);
+  border-radius: 50%;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.dark-theme #theme-toggle::before {
+  transform: translateX(30px);
+}
+
+/* Hide element on Tablet/Phone */
+@media only screen and (max-width:850px) {
+ 
+}
