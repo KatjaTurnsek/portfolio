@@ -1,3 +1,5 @@
+/* resets, variables, fonts, global tags */
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 :root {
@@ -99,20 +101,6 @@ a:hover,
 a:focus {
   color: var(--link-hover-color);
   text-decoration: underline;
-}
-
-.light-theme {
-  --bg-color: var(--grey);
-  --text-color: var(--dark);
-  --h1-color: var(--dark);
-}
-
-.dark-theme {
-  --bg-color: var(--dark);
-  --text-color: var(--grey);
-  --h1-color: var(--grey);
-  --switch-bg: var(--dark);
-  --switch-circle: var(--yellow-light);
 }
 
 /* Hide element on Tablet/Phone */

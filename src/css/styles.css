@@ -1,45 +1,17 @@
-@import url("./variables.css");
-@import url("./loader.css");
+/* light/dark theme variables */
 
-body {
-  font-family: var(--body-font);
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-family: var(--body-font);
-  transition: background-color 0.3s, color 0.3s;
+.light-theme {
+  --bg-color: var(--grey);
+  --text-color: var(--dark);
+  --h1-color: var(--dark);
 }
 
-/* Theme Toggle */
-#theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-  width: 60px;
-  height: 30px;
-  background-color: var(--switch-circle);
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  outline: none;
-  transition: background-color 0.3s ease;
-}
-
-#theme-toggle::before {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 22px;
-  height: 22px;
-  background-color: var(--switch-bg);
-  border: var(--circle-border);
-  border-radius: 50%;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.dark-theme #theme-toggle::before {
-  transform: translateX(30px);
+.dark-theme {
+  --bg-color: var(--dark);
+  --text-color: var(--grey);
+  --h1-color: var(--grey);
+  --switch-bg: var(--dark);
+  --switch-circle: var(--yellow-light);
 }
 
 /* Hide element on Tablet/Phone */

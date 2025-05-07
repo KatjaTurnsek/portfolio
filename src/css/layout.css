@@ -1,0 +1,14 @@
+/* sections like header, footer, nav, main */
+
+body {
+  font-family: var(--body-font);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--body-font);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hide element on Tablet/Phone */
+@media only screen and (max-width:850px) {
+ 
+}
