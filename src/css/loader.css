@@ -1,1 +1,55 @@
+/* loader.css */
+
+/* Full-page loader container */
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: background-color 0.3s ease, opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.spinner {
+  width: 30%;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.wave {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1;
+  filter: blur(0.1px);
+  opacity: 0.8;
+}
 

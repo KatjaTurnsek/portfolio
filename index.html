@@ -10,6 +10,18 @@
 </head>
 <body class="light-theme">
 
+<!-- loader -->
+<div class="loader hidden">
+  <div class="spinner">
+    <svg viewBox="0 0 100 10" preserveAspectRatio="none">
+      <path class="wave" fill="none" stroke="var(--text-color)" />
+    </svg>
+  </div>
+</div>
+
+  <!-- Page content below -->
+  <div id="content">
+
   <header>
 
     <button id="theme-toggle" aria-label="Toggle Theme"></button>
@@ -41,6 +53,8 @@
         </div>
         <p>&copy; 2025</p>
       </footer>
+
+  </div>
 
     <script type="module" src="src/js/index.js"></script>
 
