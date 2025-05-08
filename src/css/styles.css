@@ -4,6 +4,8 @@
   --bg-color: var(--grey);
   --text-color: var(--dark);
   --h1-color: var(--dark);
+  --footer-bg: var(--dark);
+  --footer-text-color: var(--grey);
 }
 
 .dark-theme {
@@ -12,6 +14,8 @@
   --h1-color: var(--grey);
   --switch-bg: var(--dark);
   --switch-circle: var(--yellow-light);
+  --footer-bg: var(--teal-light);
+  --footer-text-color: var(--dark);
 }
 
 /* Hide element on Tablet/Phone */

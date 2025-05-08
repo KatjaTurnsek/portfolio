@@ -4,3 +4,4 @@
 @import url("./styles.css"); /* light/dark theme variables */
 @import url("./case-studies.css"); /* extra pages with my work */
 @import url("./loader.css"); /* well, loader */
+@import url("./reset.css"); /* global stuff */

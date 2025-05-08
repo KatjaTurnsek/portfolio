@@ -2,12 +2,12 @@
 
 /* Theme Toggle */
 #theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-  width: 60px;
-  height: 30px;
+  position: absolute;
+  top: 70px;
+  right: 140px;
+  z-index: 999;
+  width: 55px;
+  height: 27px;
   background-color: var(--switch-circle);
   border: none;
   border-radius: 30px;
@@ -20,7 +20,7 @@
   content: '';
   position: absolute;
   top: 2px;
-  left: 2px;
+  left: 1px;
   width: 22px;
   height: 22px;
   background-color: var(--switch-bg);
@@ -35,5 +35,7 @@
 
 /* Hide element on Tablet/Phone */
 @media only screen and (max-width:850px) {
- 
+  #theme-toggle {
+    right: 100px;
+  }
 }
