@@ -9,7 +9,6 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  align-items: center;
   padding: 0 60px;
   background-color: transparent;
   color: var(--h1-color);
@@ -68,20 +67,24 @@ footer {
   color: inherit;
 }
 
-/* Hamburger menu button */
+/* Menu */
 .menu-toggle {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 50px;
   color: var(--text-color);
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease-in, color 0.4s ease-in;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Fullscreen menu */
+.menu-toggle:hover {
+  color: var(--menu-hover-color);
+  transition: color 0.4s ease-out;
+}
+
 .fullscreen-menu {
   position: fixed;
   top: 0;
@@ -90,34 +93,65 @@ footer {
   height: 100vh;
   background-color: var(--bg-color);
   color: var(--text-color);
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 40px 200px;
+  justify-content: flex-start;
+  padding: 150px 200px 100px;
   z-index: 1000;
-  transition: opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  clip-path: ellipse(0% 0% at 50% 0%);
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  filter: blur(0px);
 }
 
 .fullscreen-menu.open {
-  display: flex;
+  opacity: 1;
+  pointer-events: all;
+  clip-path: ellipse(200% 200% at 50% 0%);
 }
 
-/* Menu */
+.fullscreen-menu.animating-in {
+  animation: pourDown 1s ease forwards;
+}
+
+.fullscreen-menu.animating-out {
+  opacity: 0;
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+@keyframes pourDown {
+  0% {
+    clip-path: ellipse(0% 0% at 50% 0%);
+  }
+  40% {
+    clip-path: ellipse(60% 30% at 50% 0%);
+  }
+  70% {
+    clip-path: ellipse(100% 60% at 50% 0%);
+  }
+  100% {
+    clip-path: ellipse(200% 200% at 50% 0%);
+  }
+}
+
 .fullscreen-menu .menu-logo {
   height: 55px;
-  margin-top: 100px;
-  margin-bottom: 100px;
 }
 
 .menu-toggle.opened {
   position: fixed;
   top: 55px;
   right: 60px;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background-color: var(--text-color);
-  color: var(--bg-color);
+  background-color: transparent;
+  border: 2px solid var(--menu-border-color);
+  color: var(--menu-color);
+  transition: color 0.4s ease-in, border-color 0.4s ease-in;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,11 +159,18 @@ footer {
   z-index: 1100;
 }
 
+.menu-toggle.opened:hover {
+  color: var(--menu-hover-color);
+  border-color: var(--menu-hover-color);
+  transition: color 0.4s ease-out;
+}
+
 .fullscreen-menu nav {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
+  padding-top: 120px;
 }
 
 .fullscreen-menu nav a {
@@ -139,11 +180,29 @@ footer {
   color: var(--text-color);
   text-decoration: none;
   text-align: right;
+  transition: color 0.4s ease-in;
 }
 
+.fullscreen-menu nav a:hover {
+  color: var(--menu-hover-color);
+  text-decoration: none;
+  transition: color 0.4s ease-out;
+}
+
+#menuClose {
+  display: none;
+}
+
+.fullscreen-menu.open #menuClose {
+  display: flex;
+}
 
 /* Hide element on Tablet/Phone */
-@media only screen and (max-width:850px) {
+@media only screen and (max-width: 850px) {
+  header {
+    height: 100px;
+  }
+
   footer {
     flex-direction: column;
     height: auto;
@@ -166,24 +225,31 @@ footer {
     padding: 0 30px;
   }
 
+  .menu-toggle {
+    font-size: 40px;
+  }
+  
   .fullscreen-menu {
-    padding: 40px 60px;
+    padding: 166px 60px;
+  }
+
+  .logo {
+    height: 45px;
   }
 
   .fullscreen-menu .menu-logo {
     right: 55px;
+    margin-bottom: 30px;
   }
 
   .menu-toggle.opened {
     right: 30px;
-    top: 45px;
+    top: 30px;
+    width: 40px;
+    height: 40px;
   }
 
   .fullscreen-menu nav a {
     font-size: 60px;
-  }
-
-  .fullscreen-menu .menu-logo {
-    margin-bottom: 30px;
   }
 }

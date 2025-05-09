@@ -33,9 +33,44 @@
   transform: translateX(30px);
 }
 
+/* Toggle Wave top */
+.fullscreen-menu .menu-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.fullscreen-menu .menu-wave img {
+  width: 100%;
+  height: auto;
+  display: block;
+  animation: waveFadeIn 1s ease forwards;
+  opacity: 0;
+}
+
+.fullscreen-menu.animating-in .menu-wave img {
+  animation: waveFadeIn 1s ease forwards;
+}
+
+@keyframes waveFadeIn {
+  0% {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Hide element on Tablet/Phone */
 @media only screen and (max-width:850px) {
   #theme-toggle {
+    top: 40px;
     right: 100px;
   }
 }

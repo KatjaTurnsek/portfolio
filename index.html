@@ -19,11 +19,11 @@
   </div>
 </div>
 
-  <!-- Page content below -->
-
   <header>
     <div class="header-left">
-      <img src="assets/images/logo-katjadev.webp" alt="Logo" class="logo">
+      <a href="#home">
+        <img src="assets/images/logo-katjadev-dark.svg" alt="Katja Dev Logo" class="logo site-logo">
+      </a>
     </div>
     <div class="header-controls">
       <button id="theme-toggle" class="theme-switcher" aria-label="Toggle Theme"></button>
@@ -33,9 +33,13 @@
     </div>
   </header>
   
-  <!-- Fullscreen Menu Overlay -->
-  <div class="fullscreen-menu" id="menu">
-    <img src="assets/images/logo-katjadev.webp" alt="Menu Logo" class="menu-logo">
+  <div class="fullscreen-menu" id="menu" role="dialog" aria-modal="true">
+    <div class="menu-wave">
+      <img src="assets/images/wave-bg.svg" alt="" aria-hidden="true" />
+    </div>
+    <a href="#home">
+      <img src="assets/images/logo-katjadev-dark.svg" alt="Katja Dev Logo" class="logo site-logo">
+    </a>
     <button class="menu-toggle opened" id="menuClose" aria-label="Close menu">
       <i class="fas fa-times"></i>
     </button>
@@ -47,15 +51,22 @@
   </div>
   
     <main>
-
-      <h1>Welcome</h1>
-      <p>This is a one-page website with theme switching!</p>
-
-      <section id="home">Home Section</section>
-      <section id="work">Work Section</section>
-      <section id="about">About Section</section>
-      <section id="contact">Contact Section</section>
-      
+      <section id="home">
+        <h1>Welcome</h1>
+        <p>This is a one-page website with theme switching!</p>
+      </section>
+      <section id="work">
+        <h2>Work</h2>
+        <p>This is a one-page website with theme switching!</p>
+      </section>
+      <section id="about">
+        <h2>About</h2>
+        <p>This is a one-page website with theme switching!</p>
+      </section>
+      <section id="contact">
+        <h2>Contact</h2>
+        <p>This is a one-page website with theme switching!</p>
+      </section>
     </main>
     
     <footer>

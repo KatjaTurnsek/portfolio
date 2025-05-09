@@ -6,6 +6,9 @@
   --h1-color: var(--dark);
   --footer-bg: var(--dark);
   --footer-text-color: var(--grey);
+  --menu-color: var(--dark);
+  --menu-hover-color: var(--teal);
+  --menu-border-color: var(--dark);
 }
 
 .dark-theme {
@@ -16,6 +19,9 @@
   --switch-circle: var(--yellow-light);
   --footer-bg: var(--teal-light);
   --footer-text-color: var(--dark);
+  --menu-color: var(--grey);
+  --menu-hover-color: var(--teal-light);
+  --menu-border-color: var(--grey);
 }
 
 /* Hide element on Tablet/Phone */

@@ -99,13 +99,14 @@ p {
 a {
   color: var(--link-color);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.4s ease-in;
 }
 
 a:hover,
 a:focus {
   color: var(--link-hover-color);
   text-decoration: underline;
+  transition: color 0.4s ease-out;
 }
 
 /* Hide element on Tablet/Phone */
