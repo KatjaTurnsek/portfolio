@@ -9,6 +9,9 @@
   --menu-color: var(--dark);
   --menu-hover-color: var(--teal);
   --menu-border-color: var(--dark);
+  --switch-bg: var(--yellow-light);
+  --switch-circle: var(--dark); 
+  --circle-border: 2px solid var(--dark);
 }
 
 .dark-theme {
@@ -20,7 +23,7 @@
   --footer-bg: var(--teal-light);
   --footer-text-color: var(--dark);
   --menu-color: var(--grey);
-  --menu-hover-color: var(--teal-light);
+  --menu-hover-color: var(--teal);
   --menu-border-color: var(--grey);
 }
 

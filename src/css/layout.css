@@ -30,6 +30,14 @@ header.scrolled {
   height: 55px;
 }
 
+.site-logo {
+  z-index: 1001; /* higher than headers, menu, etc. */
+  position: relative; /* so z-index works */
+  display: block;
+  height: 55px;
+  transition: filter 0.3s ease;
+}
+
 main {
   flex: 1;
   padding-top: 180px;

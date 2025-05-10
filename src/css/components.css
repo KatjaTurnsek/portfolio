@@ -27,9 +27,10 @@
   border: var(--circle-border);
   border-radius: 50%;
   transition: transform 0.3s ease, background-color 0.3s ease;
+  transform: translateX(0); /* default */
 }
 
-.dark-theme #theme-toggle::before {
+#theme-toggle.dark-mode::before {
   transform: translateX(30px);
 }
 

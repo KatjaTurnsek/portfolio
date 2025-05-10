@@ -30,8 +30,8 @@ const themeToggle = document.getElementById("theme-toggle");
 const siteLogos = document.querySelectorAll(".site-logo");
 
 function updateLogo() {
-  const isDark = document.documentElement.classList.contains("dark-theme");
-  siteLogos.forEach((logo) => {
+  const isDark = document.body.classList.contains("dark-theme");
+  document.querySelectorAll(".site-logo").forEach((logo) => {
     logo.src = isDark
       ? "assets/images/logo-katjadev-light.svg"
       : "assets/images/logo-katjadev-dark.svg";
