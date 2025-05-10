@@ -109,40 +109,12 @@ footer {
   z-index: 1000;
   opacity: 0;
   pointer-events: none;
-  clip-path: ellipse(0% 0% at 50% 0%);
-  transition: opacity 0.4s ease, filter 0.4s ease;
-  filter: blur(0px);
+  transition: opacity 0.4s ease;
 }
 
 .fullscreen-menu.open {
   opacity: 1;
   pointer-events: all;
-  clip-path: ellipse(200% 200% at 50% 0%);
-}
-
-.fullscreen-menu.animating-in {
-  animation: pourDown 1s ease forwards;
-}
-
-.fullscreen-menu.animating-out {
-  opacity: 0;
-  filter: blur(20px);
-  pointer-events: none;
-}
-
-@keyframes pourDown {
-  0% {
-    clip-path: ellipse(0% 0% at 50% 0%);
-  }
-  40% {
-    clip-path: ellipse(60% 30% at 50% 0%);
-  }
-  70% {
-    clip-path: ellipse(100% 60% at 50% 0%);
-  }
-  100% {
-    clip-path: ellipse(200% 200% at 50% 0%);
-  }
 }
 
 .fullscreen-menu .menu-logo {

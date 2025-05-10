@@ -2,7 +2,6 @@ import { updateSwitcherPosition } from "./toggle.js";
 import { hideLoader, showLoader } from "./loader.js";
 import { setupMenuToggle } from "./nav.js";
 
-// Toggle
 document.addEventListener("DOMContentLoaded", () => {
   setupMenuToggle();
 });

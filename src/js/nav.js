@@ -8,30 +8,21 @@ export function setupMenuToggle() {
 
     function openMenu() {
       try {
-        menu.classList.remove("animating-out");
-        menu.classList.add("open", "animating-in");
+        menu.classList.add("open");
         menu.removeAttribute("inert");
         menuToggle.classList.add("opened");
         menuToggle.style.display = "none";
         menuClose.focus();
-
-        setTimeout(() => {
-          menu.classList.remove("animating-in");
-        }, 1000);
       } catch (_) {}
     }
 
     function closeMenu() {
       try {
-        menu.classList.add("animating-out");
+        menu.classList.remove("open");
         menu.setAttribute("inert", "");
         menuToggle.style.display = "inline-block";
         menuToggle.classList.remove("opened");
         menuToggle.focus();
-
-        setTimeout(() => {
-          menu.classList.remove("open", "animating-out");
-        }, 600);
       } catch (_) {}
     }
 
