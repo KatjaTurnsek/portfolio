@@ -60,6 +60,7 @@ h1 {
   color: var(--h1-color);
   font-weight: var(--h1-font-weight);
   line-height: var(--h1-line-height);
+  max-width: 800px;
   margin-bottom: 60px;
   text-align: left;
   transition: color 0.3s;
@@ -92,8 +93,9 @@ p {
   font-family: var(--body-font);
   font-size: var(--p-font-size);
   line-height: var(--p-line-height);
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
   color: var(--text-color);
+  text-align: left;
 }
 
 a {
