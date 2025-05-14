@@ -1,0 +1,7 @@
+@import url("./variables.css"); /* resets, variables, fonts, global tags */
+@import url("./layout.css"); /* sections like header, footer, nav, main */
+@import url("./components.css"); /* buttons, forms, cards, toggle switch, etc. */
+@import url("./styles.css"); /* light/dark theme variables */
+@import url("./case-studies.css"); /* extra pages with my work */
+@import url("./loader.css"); /* well, loader */
+@import url("./reset.css"); /* global stuff */
