@@ -83,8 +83,7 @@ h3 {
   color: var(--h3-color);
   font-weight: var(--h3-font-weight);
   line-height: var(--h3-line-height);
-  margin-bottom: 95px;
-  text-align: left;
+  margin: 45px 0 45px 0;
   text-transform: uppercase;
   transition: color 0.3s;
 }
@@ -128,5 +127,6 @@ a:focus {
     font-size:  30px;
     line-height: 40px;
     text-align: center;
+    margin: 0 0 45px 0;
   }
 }

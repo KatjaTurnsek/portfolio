@@ -2,8 +2,11 @@
 
 .light-theme {
   --bg-color: var(--grey);
+  --img-item-bg-color: var(--dark);
   --text-color: var(--dark);
   --h1-color: var(--dark);
+  --h2-color: var(--dark);
+  --h3-color: var(--dark);
   --footer-bg: var(--dark);
   --footer-text-color: var(--grey);
   --menu-color: var(--dark);
@@ -16,8 +19,11 @@
 
 .dark-theme {
   --bg-color: var(--dark);
+  --img-item-bg-color: var(--grey);
   --text-color: var(--grey);
   --h1-color: var(--grey);
+  --h2-color: var(--grey);
+  --h3-color: var(--grey);
   --switch-bg: var(--dark);
   --switch-circle: var(--yellow-light);
   --footer-bg: var(--teal-light);
