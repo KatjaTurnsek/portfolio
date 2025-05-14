@@ -95,7 +95,6 @@ p {
   line-height: var(--p-line-height);
   margin-bottom: 1em;
   color: var(--text-color);
-  text-align: left;
 }
 
 a {

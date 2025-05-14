@@ -7,41 +7,69 @@ export function setupMenuToggle() {
     if (!menuToggle || !menuClose || !menu) return;
 
     function openMenu() {
-      try {
-        menu.classList.add("open");
-        menu.removeAttribute("inert");
-        menuToggle.classList.add("opened");
-        menuToggle.style.display = "none";
-        menuClose.focus();
-      } catch (_) {}
+      menu.classList.add("open");
+      menu.removeAttribute("inert");
+      menuToggle.classList.add("opened");
+      menuToggle.style.display = "none";
+      menuClose.focus();
     }
 
     function closeMenu() {
-      try {
-        menu.classList.remove("open");
-        menu.setAttribute("inert", "");
-        menuToggle.style.display = "inline-block";
-        menuToggle.classList.remove("opened");
-        menuToggle.focus();
-      } catch (_) {}
+      menu.classList.remove("open");
+      menu.setAttribute("inert", "");
+      menuToggle.style.display = "inline-block";
+      menuToggle.classList.remove("opened");
+      menuToggle.focus();
     }
 
     menuToggle.addEventListener("click", openMenu);
     menuClose.addEventListener("click", closeMenu);
 
     document.addEventListener("keydown", (e) => {
-      try {
-        if (e.key === "Escape" && menu.classList.contains("open")) {
-          closeMenu();
-        }
-      } catch (_) {}
+      if (e.key === "Escape" && menu.classList.contains("open")) {
+        closeMenu();
+      }
     });
 
-    const navLinks = menu.querySelectorAll("a");
+    const navLinks = document.querySelectorAll("a[href^='#']"); // Ensure it includes header links too
+
     navLinks.forEach((link) => {
-      link.addEventListener("click", () => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute("href").substring(1);
+        const targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+          const offsetTop =
+            targetSection.getBoundingClientRect().top + window.scrollY;
+          const header = document.querySelector("header");
+          const headerHeight = header ? header.offsetHeight : 160;
+
+          window.scrollTo({
+            top: offsetTop - headerHeight + 10, // +10 adds a small visual cushion
+            behavior: "smooth",
+          });
+
+          // Reveal target section after scroll
+          setTimeout(() => {
+            document
+              .querySelectorAll(".fullscreen-section")
+              .forEach((section) => {
+                section.classList.remove("visible");
+              });
+            targetSection.classList.add("visible");
+          }, 500);
+        }
+
         setTimeout(closeMenu, 100);
       });
     });
-  } catch (_) {}
+
+    // Reveal #home on initial load
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("home")?.classList.add("visible");
+    });
+  } catch (err) {
+    console.error("Menu setup failed:", err);
+  }
 }
