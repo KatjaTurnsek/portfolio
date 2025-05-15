@@ -15,6 +15,7 @@
   --switch-bg: var(--yellow-light);
   --switch-circle: var(--dark); 
   --circle-border: 2px solid var(--dark);
+  color: var(--wave-color-light); 
 }
 
 .dark-theme {
@@ -31,9 +32,5 @@
   --menu-color: var(--grey);
   --menu-hover-color: var(--teal);
   --menu-border-color: var(--grey);
-}
-
-/* Hide element on Tablet/Phone */
-@media only screen and (max-width:850px) {
- 
+  color: var(--wave-color-dark); 
 }

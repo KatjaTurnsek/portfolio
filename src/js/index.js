@@ -1,7 +1,8 @@
+import gsap from "gsap";
 import { updateSwitcherPosition } from "./toggle.js";
 import { hideLoader, showLoader } from "./loader.js";
 import { setupMenuToggle } from "./nav.js";
-import gsap from "gsap";
+import { animateWaveLine, insertWaveLines } from "./animations.js";
 
 // GSAP animate-in function
 const revealSection = (targetId) => {
@@ -21,56 +22,53 @@ const revealSection = (targetId) => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Wavy SVG under all h2s
+  insertWaveLines();
+
+  // Init GSAP wave animation
+  animateWaveLine();
+
+  // Init menu toggle
   setupMenuToggle();
 
-  // Combine both header and fullscreen menu links here
-  const navLinks = document.querySelectorAll("a[href^='#']");
-  const allSections = document.querySelectorAll(".fullscreen-section");
+  // Show loader
+  showLoader();
+  setTimeout(hideLoader, 3000);
 
-  // Set all sections to hidden initially
+  // Initial section setup
+  const allSections = document.querySelectorAll(".fullscreen-section");
+  const home = document.getElementById("home");
+
   allSections.forEach((section) => {
     section.style.opacity = 0;
     section.style.transform = "translateY(50px)";
     section.style.pointerEvents = "none";
   });
 
-  // Show home section immediately
-  const home = document.getElementById("home");
   if (home) {
     gsap.set(home, { opacity: 1, y: 0 });
     home.classList.add("visible");
     home.style.pointerEvents = "auto";
   }
 
-  // Handle both header and fullscreen-menu links
+  // Smooth scroll and reveal on nav click
+  const navLinks = document.querySelectorAll("a[href^='#']");
   navLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const targetId = link.getAttribute("href").substring(1);
-
-      // Scroll to target section
       document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
-
-      // Animate in the section if not already visible
       revealSection(targetId);
     });
   });
-});
 
-// Loader functionality
-window.addEventListener("DOMContentLoaded", () => {
-  showLoader();
-  setTimeout(() => {
-    hideLoader();
-  }, 3000);
-});
-
-// Scroll effect on header
-window.addEventListener("scroll", () => {
-  const header = document.querySelector("header");
-  if (window.scrollY > 10) {
-    header.classList.add("scrolled");
-  } else {
-    header.classList.remove("scrolled");
-  }
+  // Scroll-based header effect
+  window.addEventListener("scroll", () => {
+    const header = document.querySelector("header");
+    if (window.scrollY > 10) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
+  });
 });

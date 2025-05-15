@@ -1,5 +1,19 @@
 /* buttons, forms, cards, toggle switch, etc. */
 
+/* Wavy line */
+.wavy-line {
+  display: block;
+  width: 100vw;
+  height: 30px;
+  margin: 0 auto 2rem auto;
+}
+
+.wavy-line path {
+  stroke: currentColor;
+  stroke-width: 1;
+  fill: none;
+}
+
 /* Theme Toggle */
 #theme-toggle {
   position: absolute;
