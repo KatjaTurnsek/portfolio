@@ -2,13 +2,15 @@ import gsap from "gsap";
 import { updateSwitcherPosition } from "./toggle.js";
 import { hideLoader, showLoader } from "./loader.js";
 import { setupMenuToggle } from "./nav.js";
+import { setupResponsiveImages } from "./responsiveImages.js";
 import { animateWaveLine, insertWaveLines } from "./animations.js";
 
-// GSAP animate-in function
+// Reveal section with GSAP
 const revealSection = (targetId) => {
-  const section = document.getElementById(targetId);
+  try {
+    const section = document.getElementById(targetId);
+    if (!section || section.classList.contains("visible")) return;
 
-  if (section && !section.classList.contains("visible")) {
     gsap.to(section, {
       duration: 0.8,
       opacity: 1,
@@ -18,57 +20,88 @@ const revealSection = (targetId) => {
         section.style.pointerEvents = "auto";
       },
     });
+  } catch (e) {
+    // Silent failure — no user disruption
+  }
+};
+
+// Init sections hidden
+const initSections = () => {
+  try {
+    const allSections = document.querySelectorAll(".fullscreen-section");
+    const home = document.getElementById("home");
+
+    allSections.forEach((section) => {
+      section.style.opacity = 0;
+      section.style.transform = "translateY(50px)";
+      section.style.pointerEvents = "none";
+    });
+
+    if (home) {
+      gsap.set(home, { opacity: 1, y: 0 });
+      home.classList.add("visible");
+      home.style.pointerEvents = "auto";
+    }
+  } catch (e) {
+    // Safe fail
+  }
+};
+
+// Navigation click handling
+const setupNavigation = () => {
+  try {
+    const navLinks = document.querySelectorAll("a[href^='#']");
+    navLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute("href").substring(1);
+        document
+          .getElementById(targetId)
+          ?.scrollIntoView({ behavior: "smooth" });
+        revealSection(targetId);
+      });
+    });
+  } catch (e) {
+    // Ignore gracefully
+  }
+};
+
+// Scroll-based header class
+const setupHeaderScrollEffect = () => {
+  try {
+    const header = document.querySelector("header");
+    if (!header) return;
+
+    window.addEventListener("scroll", () => {
+      header.classList.toggle("scrolled", window.scrollY > 10);
+    });
+  } catch (e) {
+    // Silent error
   }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Wavy SVG under all h2s
-  insertWaveLines();
+  try {
+    insertWaveLines();
+    animateWaveLine();
+  } catch (e) {}
 
-  // Init GSAP wave animation
-  animateWaveLine();
+  try {
+    setupMenuToggle();
+  } catch (e) {}
 
-  // Init menu toggle
-  setupMenuToggle();
+  try {
+    setupResponsiveImages();
+  } catch (e) {}
 
-  // Show loader
-  showLoader();
-  setTimeout(hideLoader, 3000);
+  try {
+    showLoader();
+    setTimeout(hideLoader, 3000);
+  } catch (e) {}
 
-  // Initial section setup
-  const allSections = document.querySelectorAll(".fullscreen-section");
-  const home = document.getElementById("home");
-
-  allSections.forEach((section) => {
-    section.style.opacity = 0;
-    section.style.transform = "translateY(50px)";
-    section.style.pointerEvents = "none";
-  });
-
-  if (home) {
-    gsap.set(home, { opacity: 1, y: 0 });
-    home.classList.add("visible");
-    home.style.pointerEvents = "auto";
-  }
-
-  // Smooth scroll and reveal on nav click
-  const navLinks = document.querySelectorAll("a[href^='#']");
-  navLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      const targetId = link.getAttribute("href").substring(1);
-      document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
-      revealSection(targetId);
-    });
-  });
-
-  // Scroll-based header effect
-  window.addEventListener("scroll", () => {
-    const header = document.querySelector("header");
-    if (window.scrollY > 10) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
-    }
-  });
+  try {
+    initSections();
+    setupNavigation();
+    setupHeaderScrollEffect();
+  } catch (e) {}
 });

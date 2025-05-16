@@ -2,7 +2,6 @@
 
 .light-theme {
   --bg-color: var(--grey);
-  --img-item-bg-color: var(--dark);
   --text-color: var(--dark);
   --h1-color: var(--dark);
   --h2-color: var(--dark);
@@ -20,7 +19,6 @@
 
 .dark-theme {
   --bg-color: var(--dark);
-  --img-item-bg-color: var(--grey);
   --text-color: var(--grey);
   --h1-color: var(--grey);
   --h2-color: var(--grey);
