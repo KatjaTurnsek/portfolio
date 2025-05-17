@@ -3,7 +3,12 @@ import { updateSwitcherPosition } from "./toggle.js";
 import { hideLoader, showLoader } from "./loader.js";
 import { setupMenuToggle } from "./nav.js";
 import { setupResponsiveImages } from "./responsiveImages.js";
-import { animateWaveLine, insertWaveLines } from "./animations.js";
+import {
+  animateWaveLine,
+  insertWaveLines,
+  animateCustomWaveLines,
+  animateTealBars,
+} from "./animations.js";
 
 // Reveal section with GSAP
 const revealSection = (targetId) => {
@@ -18,6 +23,11 @@ const revealSection = (targetId) => {
       onStart: () => {
         section.classList.add("visible");
         section.style.pointerEvents = "auto";
+
+        // Trigger bar animation when about section is revealed
+        if (targetId === "about") {
+          animateTealBars();
+        }
       },
     });
   } catch (e) {
@@ -84,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     insertWaveLines();
     animateWaveLine();
+    animateCustomWaveLines();
   } catch (e) {}
 
   try {
