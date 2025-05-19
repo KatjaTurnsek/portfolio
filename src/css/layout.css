@@ -41,7 +41,7 @@ header.scrolled {
 main {
   flex: 1;
   padding-top: 160px;
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
   min-height: 100vh;
 }
@@ -196,6 +196,9 @@ footer {
 /* Flex and Rows */
 .rows {
   display: flex;
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto;
   flex-direction: column;
   gap: 1.5rem;
   padding-bottom: 100px;
