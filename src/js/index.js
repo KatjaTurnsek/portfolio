@@ -76,6 +76,52 @@ const setupNavigation = () => {
   }
 };
 
+// Case study scroll-to-top
+const setupCaseStudyScroll = () => {
+  try {
+    const caseLinks = document.querySelectorAll(".work-link[href^='#']");
+    const header = document.querySelector("header");
+
+    caseLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute("href").substring(1);
+        const section = document.getElementById(targetId);
+
+        if (section) {
+          revealSection(targetId);
+
+          const scrollToSection = () => {
+            const headerOffset = header ? header.offsetHeight : 0;
+            const elementTop =
+              section.getBoundingClientRect().top + window.scrollY;
+            const offsetTop = elementTop - headerOffset;
+
+            window.scrollTo({
+              top: offsetTop,
+              behavior: "smooth",
+            });
+          };
+
+          const observer = new IntersectionObserver(
+            (entries, obs) => {
+              if (entries[0].isIntersecting) {
+                scrollToSection();
+                obs.disconnect();
+              }
+            },
+            { threshold: 0.1 }
+          );
+
+          observer.observe(section);
+        }
+      });
+    });
+  } catch (e) {
+    // silent fail
+  }
+};
+
 // Scroll-based header class
 const setupHeaderScrollEffect = () => {
   try {
@@ -113,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     initSections();
     setupNavigation();
+    setupCaseStudyScroll();
     setupHeaderScrollEffect();
   } catch (e) {}
 });

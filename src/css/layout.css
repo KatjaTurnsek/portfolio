@@ -59,6 +59,12 @@ main {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+  scroll-margin-top: 160px;
+}
+
+.fullscreen-section h1:first-child {
+  margin-top: 0;
+  padding-top: 2rem; /* optional, adjust for spacing */
 }
 
 footer {
