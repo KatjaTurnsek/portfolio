@@ -1,5 +1,66 @@
 /* buttons, forms, cards, toggle switch, etc. */
 
+/* back and demo shared base style for label links */
+.label-link {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-family: var(--h1-font);
+  font-size: 30px;
+  line-height: 40px;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.4s ease-out;
+  text-transform: uppercase;
+}
+
+.label-link:hover,
+.label-link:focus {
+  color: var(--link-hover-color);
+  text-decoration: none;
+}
+
+.label-link .arrow-icon,
+.label-link .label-text {
+  color: inherit;
+  transition: color 0.4s ease-out;
+}
+
+.online-demo-label .label-text {
+  text-transform: none;
+}
+
+.back-to-work-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* Tech info */
+
+.tech-demo-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.tech-stack {
+  font-family: var(--body-font);
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 35px;
+  color: var(--text-color);
+  user-select: none;
+  white-space: nowrap;
+}
+
 /* form */
 .contact-form-wrapper {
   width: 100%;
@@ -69,7 +130,7 @@ textarea {
   font-family: var(--h1-font);
   font-size: 30px;
   line-height: 40px;
-  font-weight: 400;
+  font-weight: 300;
   text-transform: uppercase;
   cursor: pointer;
   display: flex;
@@ -136,7 +197,7 @@ textarea {
   line-height: 40px;
   text-transform: uppercase;
   color: var(--dark);
-  font-weight: 400;
+  font-weight: 300;
 }
 
 .circle-button {
