@@ -113,7 +113,33 @@ const setupCaseStudyScroll = () => {
   } catch (e) {}
 };
 
-// Scroll-based header class
+// Global scroll-to-top for any link with data-scrolltop
+const setupScrollTopLinks = () => {
+  const scrollLinks = document.querySelectorAll("a[data-scrolltop]");
+
+  scrollLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const href = link.getAttribute("href");
+      if (!href || !href.startsWith("#")) return;
+
+      const targetId = href.substring(1);
+      const section = document.getElementById(targetId);
+      if (!section) return;
+
+      e.preventDefault();
+      revealSection(targetId);
+
+      window.scrollTo({
+        top: section.offsetTop,
+        behavior: "smooth",
+      });
+
+      section.scrollTop = 0; // If it's scrollable
+    });
+  });
+};
+
+// Header scroll effect
 const setupHeaderScrollEffect = () => {
   try {
     const header = document.querySelector("header");
@@ -139,6 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSections();
   setupNavigation();
   setupCaseStudyScroll();
+  setupScrollTopLinks();
   setupHeaderScrollEffect();
 
   // Fade in images one by one
