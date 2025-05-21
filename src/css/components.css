@@ -40,6 +40,7 @@
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  padding-top: 60px;
 }
 
 /* Tech info */
@@ -416,6 +417,34 @@ textarea {
 
 /* Hide element on Tablet/Phone */
 @media only screen and (max-width:850px) {
+  .tech-demo-wrapper {
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .tech-stack {
+    font-size: 22px;
+    line-height: 32px;
+    margin-bottom: 15px;
+    white-space: normal;
+  }
+
+  .label-link {
+    justify-content: center;
+    width: 100%;
+    font-size: 26px;
+    line-height: 36px;
+    white-space: normal;
+    flex-wrap: wrap;
+  }
+
+  .back-to-work-container {
+    justify-content: center;
+    margin-top: 30px;
+  }
+
   .contact-form-wrapper {
     justify-content: center;
     padding: 2rem 1rem;
