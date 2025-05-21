@@ -3,11 +3,9 @@ import { MorphSVGPlugin } from "../../node_modules/gsap/MorphSVGPlugin.js";
 
 gsap.registerPlugin(MorphSVGPlugin);
 
-// Paths for the morph animation
 const originalPath = "M0,10 C50,0 100,20 150,10 S250,20 300,10 S400,0 500,10";
 const morphPath = "M0,10 C50,20 100,0 150,10 S250,0 300,10 S400,20 500,10";
 
-// Programmatically create loader markup
 function createLoader() {
   const loader = document.createElement("div");
   loader.className = "loader";
@@ -32,7 +30,6 @@ function createLoader() {
   document.body.appendChild(loader);
 }
 
-// Animate the wave using GSAP + MorphSVG
 function animateWave() {
   const path = document.querySelector(".wave");
   if (!path) return;
@@ -46,7 +43,6 @@ function animateWave() {
   });
 }
 
-// Show loader and trigger animation
 export function showLoader() {
   let loader = document.querySelector(".loader");
   if (!loader) {
@@ -58,7 +54,6 @@ export function showLoader() {
   animateWave();
 }
 
-// Hide loader
 export function hideLoader() {
   const loader = document.querySelector(".loader");
   if (loader) {

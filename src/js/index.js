@@ -24,15 +24,12 @@ const revealSection = (targetId) => {
         section.classList.add("visible");
         section.style.pointerEvents = "auto";
 
-        // Trigger bar animation when about section is revealed
         if (targetId === "about") {
           animateTealBars();
         }
       },
     });
-  } catch (e) {
-    // Silent failure — no user disruption
-  }
+  } catch (e) {}
 };
 
 // Init sections hidden
@@ -52,9 +49,7 @@ const initSections = () => {
       home.classList.add("visible");
       home.style.pointerEvents = "auto";
     }
-  } catch (e) {
-    // Safe fail
-  }
+  } catch (e) {}
 };
 
 // Navigation click handling
@@ -71,9 +66,7 @@ const setupNavigation = () => {
         revealSection(targetId);
       });
     });
-  } catch (e) {
-    // Ignore gracefully
-  }
+  } catch (e) {}
 };
 
 // Case study scroll-to-top
@@ -117,9 +110,7 @@ const setupCaseStudyScroll = () => {
         }
       });
     });
-  } catch (e) {
-    // silent fail
-  }
+  } catch (e) {}
 };
 
 // Scroll-based header class
@@ -131,35 +122,60 @@ const setupHeaderScrollEffect = () => {
     window.addEventListener("scroll", () => {
       header.classList.toggle("scrolled", window.scrollY > 10);
     });
-  } catch (e) {
-    // Silent error
-  }
+  } catch (e) {}
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  try {
-    insertWaveLines();
-    animateWaveLine();
-    animateCustomWaveLines();
-  } catch (e) {}
+  insertWaveLines();
+  animateWaveLine();
+  animateCustomWaveLines();
+  setupMenuToggle();
 
-  try {
-    setupMenuToggle();
-  } catch (e) {}
+  const responsiveImgs = setupResponsiveImages();
 
-  try {
-    setupResponsiveImages();
-  } catch (e) {}
+  showLoader();
+  setTimeout(hideLoader, 3000);
 
-  try {
-    showLoader();
-    setTimeout(hideLoader, 3000);
-  } catch (e) {}
+  initSections();
+  setupNavigation();
+  setupCaseStudyScroll();
+  setupHeaderScrollEffect();
 
-  try {
-    initSections();
-    setupNavigation();
-    setupCaseStudyScroll();
-    setupHeaderScrollEffect();
-  } catch (e) {}
+  // Fade in images one by one
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        const img = entry.target;
+        if (entry.isIntersecting) {
+          if (img.complete) {
+            fadeIn(img);
+          } else {
+            img.onload = () => fadeIn(img);
+          }
+          obs.unobserve(img);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  let fadeDelay = 0;
+
+  function fadeIn(img) {
+    gsap.to(img, {
+      opacity: 1,
+      filter: "blur(0px)",
+      duration: 1,
+      delay: fadeDelay,
+      ease: "power2.out",
+      onStart: () => {
+        fadeDelay += 0.15;
+        setTimeout(() => {
+          fadeDelay = 0;
+        }, 300);
+      },
+    });
+  }
+
+  responsiveImgs.forEach((img) => observer.observe(img));
 });

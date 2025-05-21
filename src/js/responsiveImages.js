@@ -1,5 +1,6 @@
 export function setupResponsiveImages() {
   const thumbs = document.querySelectorAll("img.thumb[data-img]");
+  const insertedImages = [];
 
   thumbs.forEach((img) => {
     const base = img.dataset.img;
@@ -15,7 +16,6 @@ export function setupResponsiveImages() {
       { width: 900, descriptor: "900w" },
     ];
 
-    // Create a <source> for each format
     formats.forEach((format) => {
       const source = document.createElement("source");
       const mime = format === "jpg" ? "image/jpeg" : `image/${format}`;
@@ -34,16 +34,20 @@ export function setupResponsiveImages() {
       picture.appendChild(source);
     });
 
-    // Create fallback <img>
     const fallback = document.createElement("img");
-    fallback.src = `${path}/${base}-600.jpg`; // Default fallback
+    fallback.src = `${path}/${base}-600.jpg`;
     fallback.loading = "lazy";
     fallback.alt = img.alt || "";
     fallback.className = img.className;
     fallback.width = img.width || 600;
     fallback.height = img.height || "auto";
+    fallback.style.opacity = 0;
+    fallback.style.filter = "blur(10px)";
 
     picture.appendChild(fallback);
     img.replaceWith(picture);
+    insertedImages.push(fallback);
   });
+
+  return insertedImages;
 }

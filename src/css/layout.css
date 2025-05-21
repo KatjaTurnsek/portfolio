@@ -262,7 +262,8 @@ footer {
 
 .work-item {
   border-radius: 10px;
-  transition: box-shadow 0.4s ease, transform 0.4s ease, outline 0.4s ease;
+  transition: box-shadow 0.4s ease, transform 0.4s ease, outline-color 0.4s ease, outline-width 0.4s ease;
+  outline: 4px solid transparent;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -271,7 +272,8 @@ footer {
 .work-item:hover {
   transform: translateY(-8px);
   box-shadow: 0 0 18px var(--yellow-light);
-  outline: 4px solid var(--yellow);
+  outline-color: var(--yellow);
+  outline-width: 4px;
 }
 
 .work-item img {
