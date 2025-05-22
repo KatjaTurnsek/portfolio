@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import { updateSwitcherPosition } from "./toggle.js";
 import { hideLoader, showLoader } from "./loader.js";
-// Removed: import { loadThumbImages } from "./imageLoader.js";
+import { attachMiniLoaders } from "./loader.js";
 import { setupMenuToggle } from "./nav.js";
 import { setupResponsiveImages } from "./responsiveImages.js";
 import {
@@ -163,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupMenuToggle();
 
   const responsiveImgs = setupResponsiveImages();
+  const miniLoaders = attachMiniLoaders(responsiveImgs);
 
   showLoader();
 
@@ -175,12 +176,10 @@ document.addEventListener("DOMContentLoaded", () => {
           })
     )
   ).then(() => {
-    // Add artificial delay for testing loaders
     setTimeout(() => {
       revealImagesSequentially(responsiveImgs);
-      // Removed: loadThumbImages();
       hideLoader();
-    }, 1500); // <-- 1.5s delay
+    }, 1500);
   });
 
   initSections();

@@ -63,3 +63,21 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* Mini version loader */
+.mini-loader-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.1); /* Optional */
+  z-index: 1000;
+}
+
+.mini-spinner svg {
+  width: 40px;
+  height: 20px;
+  stroke: teal;
+}
