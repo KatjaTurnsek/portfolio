@@ -1,6 +1,7 @@
 import gsap from "gsap";
 import { updateSwitcherPosition } from "./toggle.js";
 import { hideLoader, showLoader } from "./loader.js";
+// Removed: import { loadThumbImages } from "./imageLoader.js";
 import { setupMenuToggle } from "./nav.js";
 import { setupResponsiveImages } from "./responsiveImages.js";
 import {
@@ -10,117 +11,96 @@ import {
   animateTealBars,
 } from "./animations.js";
 
-// Reveal section with GSAP
+// Reveal section
 const revealSection = (targetId) => {
-  try {
-    const section = document.getElementById(targetId);
-    if (!section || section.classList.contains("visible")) return;
+  const section = document.getElementById(targetId);
+  if (!section || section.classList.contains("visible")) return;
 
-    gsap.to(section, {
-      duration: 0.8,
-      opacity: 1,
-      y: 0,
-      onStart: () => {
-        section.classList.add("visible");
-        section.style.pointerEvents = "auto";
+  gsap.to(section, {
+    duration: 0.8,
+    opacity: 1,
+    y: 0,
+    onStart: () => {
+      section.classList.add("visible");
+      section.style.pointerEvents = "auto";
 
-        if (targetId === "about") {
-          animateTealBars();
-        }
-      },
-    });
-  } catch (e) {}
+      if (targetId === "about") animateTealBars();
+    },
+  });
 };
 
-// Init sections hidden
+// Init sections hidden except "home"
 const initSections = () => {
-  try {
-    const allSections = document.querySelectorAll(".fullscreen-section");
-    const home = document.getElementById("home");
+  const sections = document.querySelectorAll(".fullscreen-section");
+  const home = document.getElementById("home");
 
-    allSections.forEach((section) => {
-      section.style.opacity = 0;
-      section.style.transform = "translateY(50px)";
-      section.style.pointerEvents = "none";
-    });
+  sections.forEach((section) => {
+    section.style.opacity = 0;
+    section.style.transform = "translateY(50px)";
+    section.style.pointerEvents = "none";
+  });
 
-    if (home) {
-      gsap.set(home, { opacity: 1, y: 0 });
-      home.classList.add("visible");
-      home.style.pointerEvents = "auto";
-    }
-  } catch (e) {}
+  if (home) {
+    gsap.set(home, { opacity: 1, y: 0 });
+    home.classList.add("visible");
+    home.style.pointerEvents = "auto";
+  }
 };
 
 // Navigation click handling
 const setupNavigation = () => {
-  try {
-    const navLinks = document.querySelectorAll("a[href^='#']");
-    navLinks.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute("href").substring(1);
-        document
-          .getElementById(targetId)
-          ?.scrollIntoView({ behavior: "smooth" });
-        revealSection(targetId);
-      });
+  document.querySelectorAll("a[href^='#']").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute("href").substring(1);
+      document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+      revealSection(targetId);
     });
-  } catch (e) {}
+  });
 };
 
 // Case study scroll-to-top
 const setupCaseStudyScroll = () => {
-  try {
-    const caseLinks = document.querySelectorAll(".work-link[href^='#']");
-    const header = document.querySelector("header");
+  const header = document.querySelector("header");
 
-    caseLinks.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute("href").substring(1);
-        const section = document.getElementById(targetId);
+  document.querySelectorAll(".work-link[href^='#']").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute("href").substring(1);
+      const section = document.getElementById(targetId);
+      if (!section) return;
 
-        if (section) {
-          revealSection(targetId);
+      revealSection(targetId);
 
-          const scrollToSection = () => {
-            const headerOffset = header ? header.offsetHeight : 0;
-            const elementTop =
-              section.getBoundingClientRect().top + window.scrollY;
-            const offsetTop = elementTop - headerOffset;
+      const scrollToSection = () => {
+        const offset =
+          section.getBoundingClientRect().top +
+          window.scrollY -
+          (header?.offsetHeight || 0);
+        window.scrollTo({ top: offset, behavior: "smooth" });
+      };
 
-            window.scrollTo({
-              top: offsetTop,
-              behavior: "smooth",
-            });
-          };
+      const observer = new IntersectionObserver(
+        ([entry], obs) => {
+          if (entry.isIntersecting) {
+            scrollToSection();
+            obs.disconnect();
+          }
+        },
+        { threshold: 0.1 }
+      );
 
-          const observer = new IntersectionObserver(
-            (entries, obs) => {
-              if (entries[0].isIntersecting) {
-                scrollToSection();
-                obs.disconnect();
-              }
-            },
-            { threshold: 0.1 }
-          );
-
-          observer.observe(section);
-        }
-      });
+      observer.observe(section);
     });
-  } catch (e) {}
+  });
 };
 
-// Global scroll-to-top for any link with data-scrolltop
+// Global scroll-to-top
 const setupScrollTopLinks = () => {
-  const scrollLinks = document.querySelectorAll("a[data-scrolltop]");
-
-  scrollLinks.forEach((link) => {
+  document.querySelectorAll("a[data-scrolltop]").forEach((link) => {
     link.addEventListener("click", (e) => {
       const href = link.getAttribute("href");
-      if (!href || !href.startsWith("#")) return;
+      if (!href?.startsWith("#")) return;
 
       const targetId = href.substring(1);
       const section = document.getElementById(targetId);
@@ -129,31 +109,37 @@ const setupScrollTopLinks = () => {
       e.preventDefault();
       revealSection(targetId);
 
-      window.scrollTo({
-        top: section.offsetTop,
-        behavior: "smooth",
-      });
-
+      window.scrollTo({ top: section.offsetTop, behavior: "smooth" });
       section.scrollTop = 0;
     });
   });
 };
 
-// Header scroll effect
+// Sticky header scroll effect
 const setupHeaderScrollEffect = () => {
-  try {
-    const header = document.querySelector("header");
-    if (!header) return;
+  const header = document.querySelector("header");
+  if (!header) return;
 
-    window.addEventListener("scroll", () => {
-      header.classList.toggle("scrolled", window.scrollY > 10);
-    });
-  } catch (e) {}
+  window.addEventListener("scroll", () => {
+    header.classList.toggle("scrolled", window.scrollY > 10);
+  });
 };
 
-// Sequential fade-in loader for images
+// Sequential image fade-in
 const revealImagesSequentially = (images) => {
   let delay = 0;
+
+  const fadeIn = (img, onComplete) => {
+    gsap.to(img, {
+      opacity: 1,
+      filter: "blur(0px)",
+      duration: 0.5,
+      delay,
+      ease: "power2.out",
+      onComplete,
+    });
+    delay += 0.075;
+  };
 
   const loadNext = (index) => {
     if (index >= images.length) return;
@@ -166,21 +152,10 @@ const revealImagesSequentially = (images) => {
     }
   };
 
-  const fadeIn = (img, callback) => {
-    gsap.to(img, {
-      opacity: 1,
-      filter: "blur(0px)",
-      duration: 0.5,
-      delay,
-      ease: "power2.out",
-      onComplete: callback,
-    });
-    delay += 0.075;
-  };
-
   loadNext(0);
 };
 
+// Main init
 document.addEventListener("DOMContentLoaded", () => {
   insertWaveLines();
   animateWaveLine();
@@ -190,14 +165,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const responsiveImgs = setupResponsiveImages();
 
   showLoader();
-  setTimeout(hideLoader, 3000);
+
+  Promise.all(
+    responsiveImgs.map((img) =>
+      img.complete
+        ? Promise.resolve()
+        : new Promise((resolve) => {
+            img.onload = img.onerror = () => resolve();
+          })
+    )
+  ).then(() => {
+    // Add artificial delay for testing loaders
+    setTimeout(() => {
+      revealImagesSequentially(responsiveImgs);
+      // Removed: loadThumbImages();
+      hideLoader();
+    }, 1500); // <-- 1.5s delay
+  });
 
   initSections();
   setupNavigation();
   setupCaseStudyScroll();
   setupScrollTopLinks();
   setupHeaderScrollEffect();
-
-  // Load images one by one in sequence
-  revealImagesSequentially(responsiveImgs);
 });
