@@ -134,7 +134,7 @@ const setupScrollTopLinks = () => {
         behavior: "smooth",
       });
 
-      section.scrollTop = 0; // If it's scrollable
+      section.scrollTop = 0;
     });
   });
 };
@@ -149,6 +149,36 @@ const setupHeaderScrollEffect = () => {
       header.classList.toggle("scrolled", window.scrollY > 10);
     });
   } catch (e) {}
+};
+
+// Sequential fade-in loader for images
+const revealImagesSequentially = (images) => {
+  let delay = 0;
+
+  const loadNext = (index) => {
+    if (index >= images.length) return;
+
+    const img = images[index];
+    if (img.complete) {
+      fadeIn(img, () => loadNext(index + 1));
+    } else {
+      img.onload = () => fadeIn(img, () => loadNext(index + 1));
+    }
+  };
+
+  const fadeIn = (img, callback) => {
+    gsap.to(img, {
+      opacity: 1,
+      filter: "blur(0px)",
+      duration: 0.5,
+      delay,
+      ease: "power2.out",
+      onComplete: callback,
+    });
+    delay += 0.075;
+  };
+
+  loadNext(0);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -168,41 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupScrollTopLinks();
   setupHeaderScrollEffect();
 
-  // Fade in images one by one
-  const observer = new IntersectionObserver(
-    (entries, obs) => {
-      entries.forEach((entry) => {
-        const img = entry.target;
-        if (entry.isIntersecting) {
-          if (img.complete) {
-            fadeIn(img);
-          } else {
-            img.onload = () => fadeIn(img);
-          }
-          obs.unobserve(img);
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
-
-  let fadeDelay = 0;
-
-  function fadeIn(img) {
-    gsap.to(img, {
-      opacity: 1,
-      filter: "blur(0px)",
-      duration: 1,
-      delay: fadeDelay,
-      ease: "power2.out",
-      onStart: () => {
-        fadeDelay += 0.15;
-        setTimeout(() => {
-          fadeDelay = 0;
-        }, 300);
-      },
-    });
-  }
-
-  responsiveImgs.forEach((img) => observer.observe(img));
+  // Load images one by one in sequence
+  revealImagesSequentially(responsiveImgs);
 });

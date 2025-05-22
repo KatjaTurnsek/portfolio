@@ -36,7 +36,7 @@ export function setupResponsiveImages() {
 
     const fallback = document.createElement("img");
     fallback.src = `${path}/${base}-600.jpg`;
-    fallback.loading = "lazy";
+    fallback.loading = "eager"; // force eager for sequential loading
     fallback.alt = img.alt || "";
     fallback.className = img.className;
     fallback.width = img.width || 600;
