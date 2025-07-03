@@ -14,7 +14,8 @@
   --switch-bg: var(--yellow-light);
   --switch-circle: var(--dark); 
   --circle-border: 2px solid var(--dark);
-  color: var(--wave-color-light); 
+  color: var(--wave-color-light);
+  --blob-color: #efe8ad;
 }
 
 .dark-theme {
@@ -31,4 +32,5 @@
   --menu-hover-color: var(--teal);
   --menu-border-color: var(--grey);
   color: var(--wave-color-dark); 
+  --blob-color: #93906b;
 }

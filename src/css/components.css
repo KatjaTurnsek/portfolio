@@ -390,6 +390,33 @@ textarea {
   left: 70px;
 }
 
+/* Animated blob */
+.morphing-blob-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#blob-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.blobs .blob {
+  fill: var(--blob-color);
+}
+
+.blob {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 /* Buttons */
 .hire-button {
   position: relative;

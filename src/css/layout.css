@@ -1,9 +1,7 @@
 /* sections like header, footer, nav, main */
 
 header {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   height: 160px;
   display: flex;
@@ -14,10 +12,6 @@ header {
   color: var(--h1-color);
   z-index: 999;
   transition: background-color 0.3s ease;
-}
-
-header.scrolled {
-  background-color: var(--bg-color);
 }
 
 .header-controls {

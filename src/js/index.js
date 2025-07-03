@@ -9,7 +9,12 @@ import {
   insertWaveLines,
   animateCustomWaveLines,
   animateTealBars,
+  animateGooeyBlobs,
+  enableInteractiveJellyBlob,
 } from "./animations.js";
+
+animateGooeyBlobs();
+enableInteractiveJellyBlob();
 
 // Reveal section
 const revealSection = (targetId) => {
