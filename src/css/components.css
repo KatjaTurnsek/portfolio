@@ -1,6 +1,6 @@
 /* buttons, forms, cards, toggle switch, etc. */
 
-/* back and demo shared base style for label links */
+/* base style for label links */
 .label-link {
   background: none;
   border: none;
@@ -462,8 +462,6 @@ textarea {
   transform: scale(1.05);
 }
 
-
-
 /* Hide element on Tablet/Phone */
 @media only screen and (max-width:850px) {
   .tech-demo-wrapper {
@@ -526,17 +524,7 @@ textarea {
     padding-top: 30px;
   }
 
-  .hire-button {
-    position: static;
-    margin: 0 auto;
-    width: 180px;
-    height: 180px;
-    font-size: 20px;
-    line-height: 30px;
-  }
-
-  #top-waves-canvas, #menu-waves-canvas {
-    height: 200px;
-  }
-
+#top-waves-canvas, #menu-waves-canvas {
+  height: 200px;
+}
 }

@@ -201,6 +201,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1500);
   });
 
+  // 💡 Scroll to contact when HIRE ME button is clicked
+  const hireBtn = document.getElementById("hireBtn");
+  if (hireBtn) {
+    hireBtn.addEventListener("click", () => {
+      const contact = document.getElementById("contact");
+      if (contact) {
+        contact.scrollIntoView({ behavior: "smooth" });
+        revealSection("contact");
+      }
+    });
+  }
+
   initSections();
   setupNavigation();
   setupCaseStudyScroll();

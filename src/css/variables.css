@@ -35,6 +35,11 @@
   --h3-font-weight: 600;
   --h3-line-height: 50px;
 
+  --h4-font-size: 30px;
+  --h4-color: var(--yellow-light);
+  --h4-font-weight: 600;
+  --h4-line-height: 40px;
+
   --p-font-size: 20px;
   --p-line-height: 40px;
   --link-color: var(--teal);
@@ -94,6 +99,16 @@ h3 {
   transition: color 0.3s;
 }
 
+h4 {
+  font-family: var(--h1-font);
+  font-size: var(--h4-font-size);
+  color: var(--h4-color);
+  font-weight: var(--h4-font-weight);
+  line-height: var(--h4-line-height);
+  margin: 45px 0 45px 0;
+  transition: color 0.3s;
+}
+
 p {
   font-family: var(--body-font);
   font-size: var(--p-font-size);
@@ -134,4 +149,5 @@ a:focus {
     line-height: 40px;
     text-align: center;
   }
+
 }
