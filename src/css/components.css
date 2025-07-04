@@ -428,7 +428,6 @@ textarea {
   height: 200px;
   border-radius: 50%;
   background-color: var(--yellow);
-  border: 20px solid var(--yellow-light);
   color: var(--dark);
   font-family: var(--h1-font);
   font-size: 25px;
@@ -438,13 +437,32 @@ textarea {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  z-index: 0;
+  overflow: hidden;
+  transition: background-color 0.4s ease;
+}
+
+.hire-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 20px solid var(--yellow-light);
+  transition: border-color 0.4s ease, transform 0.4s ease;
+  z-index: -1;
 }
 
 .hire-button:hover {
   background-color: var(--yellow-light);
-  border-color: var(--yellow);
+  text-decoration: none;
 }
+
+.hire-button:hover::before {
+  border-color: var(--yellow);
+  transform: scale(1.05);
+}
+
+
 
 /* Hide element on Tablet/Phone */
 @media only screen and (max-width:850px) {
