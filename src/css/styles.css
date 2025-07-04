@@ -16,6 +16,8 @@
   --circle-border: 2px solid var(--dark);
   color: var(--wave-color-light);
   --blob-color: #efe8ad;
+  --wave-color-1: rgba(123, 184, 171, 0.7);
+  --wave-color-2: rgba(123, 184, 171, 0.4);
 }
 
 .dark-theme {
@@ -26,11 +28,13 @@
   --h3-color: var(--grey);
   --switch-bg: var(--dark);
   --switch-circle: var(--yellow-light);
-  --footer-bg: var(--teal-light);
+  --footer-bg: var(--yellow);
   --footer-text-color: var(--dark);
   --menu-color: var(--grey);
   --menu-hover-color: var(--teal);
   --menu-border-color: var(--grey);
   color: var(--wave-color-dark); 
-  --blob-color: #93906b;
+  --blob-color: var(--teal);
+  --wave-color-1: rgba(123, 184, 171, 0.7);
+  --wave-color-2: rgba(59, 138, 127, 0.7);
 }

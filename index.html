@@ -10,6 +10,8 @@
 </head>
 <body class="light-theme">
 
+<canvas id="top-waves-canvas" class="wave-canvas"></canvas>
+
 <div class="morphing-blob-wrapper">
   <svg id="blob-svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
     <defs>
@@ -43,7 +45,7 @@
 
 <div class="fullscreen-menu" id="menu" role="dialog" aria-modal="true">
   <div class="menu-wave">
-    <img src="assets/images/wave-bg.svg" alt="" aria-hidden="true">
+     <canvas id="menu-waves-canvas" aria-hidden="true"></canvas>
   </div>
   <a href="#home">
     <img src="assets/images/logo-katjadev-dark.svg" alt="Katja Dev Logo" class="site-logo logo" loading="eager">

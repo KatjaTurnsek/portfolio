@@ -11,10 +11,24 @@ import {
   animateTealBars,
   animateGooeyBlobs,
   enableInteractiveJellyBlob,
+  animateTopDrippingWaves,
+  animateMenuDrippingWaves,
 } from "./animations.js";
 
 animateGooeyBlobs();
 enableInteractiveJellyBlob();
+animateTopDrippingWaves();
+
+// Call only when menu is open
+const menu = document.getElementById("menu");
+if (menu) {
+  const observer = new MutationObserver(() => {
+    if (menu.classList.contains("open")) {
+      animateMenuDrippingWaves();
+    }
+  });
+  observer.observe(menu, { attributes: true, attributeFilter: ["class"] });
+}
 
 // Reveal section
 const revealSection = (targetId) => {

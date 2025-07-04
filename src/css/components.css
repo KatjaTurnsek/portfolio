@@ -305,7 +305,6 @@ textarea {
   width: 100vw;
   height: 30px;
   margin: 0 auto 2rem auto;
-
 }
 
 .wavy-line path {
@@ -358,16 +357,10 @@ textarea {
   overflow: hidden;
 }
 
-.fullscreen-menu .menu-wave img {
+#menu-waves-canvas {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  animation: waveFadeIn 1s ease forwards;
-  opacity: 0;
-}
-
-.fullscreen-menu.animating-in .menu-wave img {
-  animation: waveFadeIn 1s ease forwards;
 }
 
 @keyframes waveFadeIn {
@@ -398,7 +391,7 @@ textarea {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  z-index: -1;
+  z-index: -999;
   pointer-events: none;
 }
 
@@ -415,6 +408,17 @@ textarea {
 .blob {
   transform-box: fill-box;
   transform-origin: center;
+}
+
+/* Animated waves */
+#top-waves-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 300px;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Buttons */
@@ -512,4 +516,9 @@ textarea {
     font-size: 20px;
     line-height: 30px;
   }
+
+  #top-waves-canvas, #menu-waves-canvas {
+    height: 200px;
+  }
+
 }

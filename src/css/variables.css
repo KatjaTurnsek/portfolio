@@ -49,6 +49,10 @@
 
   --wave-color-light: var(--dark);
   --wave-color-dark: var(--grey);
+
+  --blob-color: #efe8ad;
+  --wave-color-1: rgba(123, 184, 171, 0.7);
+  --wave-color-2: rgba(123, 184, 171, 0.4);
 }
 
 * {
