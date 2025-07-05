@@ -1,12 +1,13 @@
 export function setupResponsiveImages() {
-  const thumbs = document.querySelectorAll("img.thumb[data-img]");
+  const thumbs = document.querySelectorAll("img.thumb[data-src]");
   const insertedImages = [];
 
   thumbs.forEach((img) => {
-    const base = img.dataset.img;
+    const filename = img.dataset.src; // Full filename, e.g., site-petart-mobile-600.webp
     const path = img.dataset.path || "assets/images";
-    if (!base) return;
+    if (!filename) return;
 
+    const baseName = filename.replace(/-\d+\.(webp|jpg|png)$/, ""); // For responsive srcset
     const picture = document.createElement("picture");
 
     const formats = ["webp", "jpg", "png"];
@@ -22,7 +23,7 @@ export function setupResponsiveImages() {
       source.type = mime;
 
       const srcset = sizes
-        .map((s) => `${path}/${base}-${s.width}.${format} ${s.descriptor}`)
+        .map((s) => `${path}/${baseName}-${s.width}.${format} ${s.descriptor}`)
         .join(", ");
 
       source.setAttribute("srcset", srcset);
@@ -35,8 +36,8 @@ export function setupResponsiveImages() {
     });
 
     const fallback = document.createElement("img");
-    fallback.src = `${path}/${base}-600.jpg`;
-    fallback.loading = "eager"; // force eager for sequential loading
+    fallback.src = `${path}/${filename}`;
+    fallback.loading = "lazy";
     fallback.alt = img.alt || "";
     fallback.className = img.className;
     fallback.width = img.width || 600;

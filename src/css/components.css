@@ -62,7 +62,34 @@
   white-space: nowrap;
 }
 
+/* Bullet lists */
+
+.bullet-list,
+.bullet-list-right {
+  list-style-type: disc;
+  list-style-position: outside;
+  margin: 10px 0 10px 0;
+  font-size: var(--p-font-size);
+  line-height: var(--p-line-height);
+  color: var(--text-color);
+}
+
+.bullet-list {
+  padding: 0 40px;
+}
+
+.bullet-list-right {
+  padding: 0 0 0 40px;
+}
+
+.bullet-list li,
+.bullet-list-right li {
+  padding-left: 30px;
+  margin-bottom: 10px;
+}
+
 /* form */
+
 .contact-form-wrapper {
   width: 100%;
   display: flex;
@@ -524,7 +551,11 @@ textarea {
     padding-top: 30px;
   }
 
-#top-waves-canvas, #menu-waves-canvas {
-  height: 200px;
-}
+  #top-waves-canvas, #menu-waves-canvas {
+    height: 200px;
+  }
+
+  .bullet-list, .bullet-list-right {
+    padding: 20px;
+  }
 }

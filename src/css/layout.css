@@ -373,6 +373,23 @@ footer {
   width: 100%;
 }
 
+.item-left,
+.item-right {
+  padding-top: 40px;
+}
+
+.item-left {
+  padding-right: 40px;
+}
+
+.item-right {
+  padding-left: 40px;
+}
+
+.case-study-text {
+  width: 100%;
+}
+
 .case-study-item img {
   display: block;
   width: 100%;
@@ -478,5 +495,18 @@ footer {
 
   .work-title {
     display: none;
+  }
+
+  .item-left,
+  .item-right {
+    padding-top: 20px;
+  }
+
+  .item-left {
+    padding-right: 0;
+  }
+
+  .item-right {
+    padding-left: 0;
   }
 }
