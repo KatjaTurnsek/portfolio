@@ -426,6 +426,7 @@ textarea {
   width: 100%;
   height: 100%;
   display: block;
+  filter: blur(10px);
 }
 
 .blobs .blob {
@@ -435,6 +436,7 @@ textarea {
 .blob {
   transform-box: fill-box;
   transform-origin: center;
+  stroke: none;
 }
 
 /* Animated waves */
@@ -446,6 +448,7 @@ textarea {
   height: 300px;
   z-index: -1;
   pointer-events: none;
+  filter: blur(1px);
 }
 
 /* Buttons */
