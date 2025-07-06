@@ -62,6 +62,34 @@
   white-space: nowrap;
 }
 
+.tech-demo-wrapper .online-demo-label {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+  padding: 0;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.tech-demo-wrapper .online-demo-label:hover {
+  color: var(--link-hover-color);
+}
+
+.arrow-icon {
+  font-size: 0.9em;
+}
+
+.tech-demo-wrapper .online-demo-label + .online-demo-label {
+  margin-top: 0.5rem;
+}
+
+.demo-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 /* Bullet lists */
 
 .bullet-list,
