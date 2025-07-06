@@ -265,6 +265,8 @@ footer {
   width: 100%;
   position: relative;
   overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background-color: #000;
 }
 
 .work-item:hover {
@@ -277,9 +279,10 @@ footer {
 .work-item img {
   display: block;
   width: 100%;
-  height: auto;
-  border-radius: 10px;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
+  border-radius: 10px;
 }
 
 .work-overlay {
