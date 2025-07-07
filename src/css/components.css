@@ -476,7 +476,6 @@ textarea {
   height: 300px;
   z-index: -1;
   pointer-events: none;
-  filter: blur(1px);
 }
 
 /* Buttons */
