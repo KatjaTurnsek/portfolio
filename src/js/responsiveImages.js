@@ -1,5 +1,5 @@
-export function setupResponsiveImages() {
-  const thumbs = document.querySelectorAll("img.thumb[data-src]");
+export function setupResponsiveImages(section = document) {
+  const thumbs = section.querySelectorAll("img.thumb[data-src]");
   const insertedImages = [];
 
   thumbs.forEach((img) => {
@@ -67,7 +67,6 @@ export function setupResponsiveImages() {
       if (container) {
         const loader = document.createElement("div");
         loader.className = "simple-mini-loader";
-        // loader.textContent = "Loading...";
         container.appendChild(loader);
 
         const removeLoader = () => {
@@ -104,7 +103,7 @@ export function setupResponsiveImages() {
 
       insertedImages.push(fallback);
     } catch (e) {
-      // Skip this image on any error
+      // fail silently per image
     }
   });
 
