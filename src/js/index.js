@@ -14,10 +14,6 @@ import {
   animateMenuDrippingWaves,
 } from "./animations.js";
 
-animateGooeyBlobs();
-enableInteractiveJellyBlob();
-animateTopDrippingWaves();
-
 const menu = document.getElementById("menu");
 if (menu) {
   const observer = new MutationObserver(() => {
@@ -41,6 +37,25 @@ const revealSection = (targetId) => {
       section.style.pointerEvents = "auto";
 
       if (targetId === "about") animateTealBars();
+
+      // Load and animate images in the revealed section
+      const images = section.querySelectorAll("img.thumb");
+      if (images.length) {
+        const loadedImages = Array.from(images).filter(
+          (img) => img.complete && img.naturalWidth !== 0
+        );
+
+        if (loadedImages.length < images.length) {
+          images.forEach((img) => {
+            if (!img.complete) {
+              img.onload = () => revealImagesSequentially([img]);
+              img.onerror = () => {};
+            }
+          });
+        } else {
+          revealImagesSequentially(images);
+        }
+      }
     },
   });
 };
@@ -169,34 +184,54 @@ const revealImagesSequentially = (images) => {
   loadNext(0);
 };
 
+// ✅ MAIN INIT
+
 document.addEventListener("DOMContentLoaded", () => {
-  insertWaveLines();
-  animateWaveLine();
-  animateCustomWaveLines();
   setupMenuToggle();
-
-  const responsiveImgs = setupResponsiveImages();
-
+  setupResponsiveImages();
   showLoader();
 
-  const imagePromises = responsiveImgs.map((img) =>
-    img.complete && img.naturalWidth !== 0
-      ? Promise.resolve()
-      : new Promise((resolve) => {
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-        })
-  );
+  setTimeout(() => {
+    hideLoader();
+    insertWaveLines();
+    animateWaveLine();
+    animateCustomWaveLines();
 
-  Promise.race([
-    Promise.all(imagePromises),
-    new Promise((resolve) => setTimeout(resolve, 7000)),
-  ]).then(() => {
-    setTimeout(() => {
-      revealImagesSequentially(responsiveImgs);
-      hideLoader();
-    }, 1500);
-  });
+    // 1. Fade in dripping waves slightly earlier
+    const wavesCanvas = document.getElementById("top-waves-canvas");
+    if (wavesCanvas) {
+      gsap.fromTo(
+        wavesCanvas,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1.5,
+          delay: 0.3,
+          ease: "power2.out",
+          onStart: animateTopDrippingWaves,
+        }
+      );
+    }
+
+    // 2. Fade in gooey blobs slightly later
+    const blobWrapper = document.querySelector(".morphing-blob-wrapper");
+    if (blobWrapper) {
+      gsap.fromTo(
+        blobWrapper,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1.5,
+          delay: 0.8,
+          ease: "power2.out",
+          onStart: () => {
+            animateGooeyBlobs();
+            enableInteractiveJellyBlob();
+          },
+        }
+      );
+    }
+  }, 1500);
 
   const hireBtn = document.getElementById("hireBtn");
   if (hireBtn) {
