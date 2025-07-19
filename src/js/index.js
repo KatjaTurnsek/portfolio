@@ -1,7 +1,6 @@
 import gsap from "gsap";
 import { updateSwitcherPosition } from "./toggle.js";
 import { hideLoader, showLoader } from "./loader.js";
-import { attachMiniLoaders } from "./loader.js";
 import { setupMenuToggle } from "./nav.js";
 import { setupResponsiveImages } from "./responsiveImages.js";
 import {
@@ -19,7 +18,6 @@ animateGooeyBlobs();
 enableInteractiveJellyBlob();
 animateTopDrippingWaves();
 
-// Call only when menu is open
 const menu = document.getElementById("menu");
 if (menu) {
   const observer = new MutationObserver(() => {
@@ -30,7 +28,6 @@ if (menu) {
   observer.observe(menu, { attributes: true, attributeFilter: ["class"] });
 }
 
-// Reveal section
 const revealSection = (targetId) => {
   const section = document.getElementById(targetId);
   if (!section || section.classList.contains("visible")) return;
@@ -48,7 +45,6 @@ const revealSection = (targetId) => {
   });
 };
 
-// Init sections hidden except "home"
 const initSections = () => {
   const sections = document.querySelectorAll(".fullscreen-section");
   const home = document.getElementById("home");
@@ -66,19 +62,20 @@ const initSections = () => {
   }
 };
 
-// Navigation click handling
 const setupNavigation = () => {
   document.querySelectorAll("a[href^='#']").forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const targetId = link.getAttribute("href").substring(1);
-      document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
-      revealSection(targetId);
+      const section = document.getElementById(targetId);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+        revealSection(targetId);
+      }
     });
   });
 };
 
-// Case study scroll-to-top
 const setupCaseStudyScroll = () => {
   const header = document.querySelector("header");
 
@@ -114,7 +111,6 @@ const setupCaseStudyScroll = () => {
   });
 };
 
-// Global scroll-to-top
 const setupScrollTopLinks = () => {
   document.querySelectorAll("a[data-scrolltop]").forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -134,7 +130,6 @@ const setupScrollTopLinks = () => {
   });
 };
 
-// Sticky header scroll effect
 const setupHeaderScrollEffect = () => {
   const header = document.querySelector("header");
   if (!header) return;
@@ -144,7 +139,6 @@ const setupHeaderScrollEffect = () => {
   });
 };
 
-// Sequential image fade-in
 const revealImagesSequentially = (images) => {
   let delay = 0;
 
@@ -168,13 +162,13 @@ const revealImagesSequentially = (images) => {
       fadeIn(img, () => loadNext(index + 1));
     } else {
       img.onload = () => fadeIn(img, () => loadNext(index + 1));
+      img.onerror = () => loadNext(index + 1);
     }
   };
 
   loadNext(0);
 };
 
-// Main init
 document.addEventListener("DOMContentLoaded", () => {
   insertWaveLines();
   animateWaveLine();
@@ -182,26 +176,28 @@ document.addEventListener("DOMContentLoaded", () => {
   setupMenuToggle();
 
   const responsiveImgs = setupResponsiveImages();
-  const miniLoaders = attachMiniLoaders(responsiveImgs);
 
   showLoader();
 
-  Promise.all(
-    responsiveImgs.map((img) =>
-      img.complete
-        ? Promise.resolve()
-        : new Promise((resolve) => {
-            img.onload = img.onerror = () => resolve();
-          })
-    )
-  ).then(() => {
+  const imagePromises = responsiveImgs.map((img) =>
+    img.complete && img.naturalWidth !== 0
+      ? Promise.resolve()
+      : new Promise((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        })
+  );
+
+  Promise.race([
+    Promise.all(imagePromises),
+    new Promise((resolve) => setTimeout(resolve, 7000)),
+  ]).then(() => {
     setTimeout(() => {
       revealImagesSequentially(responsiveImgs);
       hideLoader();
     }, 1500);
   });
 
-  // 💡 Scroll to contact when HIRE ME button is clicked
   const hireBtn = document.getElementById("hireBtn");
   if (hireBtn) {
     hireBtn.addEventListener("click", () => {
