@@ -21,6 +21,7 @@ import {
   setupScrollTopLinks,
   setupHeaderScrollEffect,
 } from "./init.js";
+import { animateTextInSection } from "./animatedTexts.js";
 
 // Fade-in utility for images
 const revealImagesSequentially = (images) => {
@@ -53,17 +54,23 @@ const revealImagesSequentially = (images) => {
   loadNext(0);
 };
 
-// Observe "about" section visibility to trigger animation
+// Handle sectionVisible custom event
 document.addEventListener("sectionVisible", (e) => {
-  if (e.detail === "about") {
+  const sectionId = e.detail;
+  const section = document.getElementById(sectionId);
+  if (!section) return;
+
+  // About-specific animation
+  if (sectionId === "about") {
     animateTealBars();
   }
 
-  const section = document.getElementById(e.detail);
-  if (section) {
-    const loadedImages = setupResponsiveImages(section);
-    revealImagesSequentially(loadedImages);
-  }
+  // Animate text
+  animateTextInSection(section);
+
+  // Animate images
+  const loadedImages = setupResponsiveImages(section);
+  revealImagesSequentially(loadedImages);
 });
 
 // Animate menu waves when opened

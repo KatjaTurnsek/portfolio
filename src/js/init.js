@@ -1,5 +1,6 @@
 import gsap from "gsap";
 
+// Reveal a section and trigger animations
 export function revealSection(targetId) {
   const section = document.getElementById(targetId);
   if (!section || section.classList.contains("visible")) return;
@@ -12,13 +13,14 @@ export function revealSection(targetId) {
       section.classList.add("visible");
       section.style.pointerEvents = "auto";
 
-      // Notify index.js that a section has become visible
-      const event = new CustomEvent("sectionVisible", { detail: targetId });
-      document.dispatchEvent(event);
+      document.dispatchEvent(
+        new CustomEvent("sectionVisible", { detail: targetId })
+      );
     },
   });
 }
 
+// Initialize all sections and reveal home section (after loader delay)
 export function initSections() {
   const sections = document.querySelectorAll(".fullscreen-section");
   const home = document.getElementById("home");
@@ -33,9 +35,19 @@ export function initSections() {
     gsap.set(home, { opacity: 1, y: 0 });
     home.classList.add("visible");
     home.style.pointerEvents = "auto";
+
+    // Trigger sectionVisible for home after loader finishes
+    setTimeout(() => {
+      requestAnimationFrame(() => {
+        document.dispatchEvent(
+          new CustomEvent("sectionVisible", { detail: "home" })
+        );
+      });
+    }, 1700); // Delay should match or slightly exceed global loader fade duration
   }
 }
 
+// Smooth scroll and reveal on anchor click
 export function setupNavigation() {
   document.querySelectorAll("a[href^='#']").forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -50,6 +62,7 @@ export function setupNavigation() {
   });
 }
 
+// Reveal and scroll to case studies with header offset
 export function setupCaseStudyScroll() {
   const header = document.querySelector("header");
 
@@ -85,6 +98,7 @@ export function setupCaseStudyScroll() {
   });
 }
 
+// Scroll to top of section with data-scrolltop
 export function setupScrollTopLinks() {
   document.querySelectorAll("a[data-scrolltop]").forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -104,6 +118,7 @@ export function setupScrollTopLinks() {
   });
 }
 
+// Toggle header class when scrolled
 export function setupHeaderScrollEffect() {
   const header = document.querySelector("header");
   if (!header) return;

@@ -72,8 +72,8 @@ h1 {
   color: var(--h1-color);
   font-weight: var(--h1-font-weight);
   line-height: var(--h1-line-height);
-  max-width: 800px;
   margin-bottom: 60px;
+  max-width: 800px;
   text-align: left;
   transition: color 0.3s;
 }
@@ -128,6 +128,20 @@ a:focus {
   color: var(--link-hover-color);
   text-decoration: underline;
   transition: color 0.4s ease-out;
+}
+
+h1 span.line,
+h2 span.line,
+h3 span.line,
+h4 span.line,
+p span.line {
+  display: block;
+  overflow: hidden;
+}
+
+h1 span.word {
+  display: inline-block;
+  overflow: visible;
 }
 
 /* Hide element on Tablet/Phone */
