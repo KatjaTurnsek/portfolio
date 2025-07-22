@@ -21,7 +21,7 @@ import {
   setupScrollTopLinks,
   setupHeaderScrollEffect,
 } from "./init.js";
-import { animateTextInSection } from "./animatedTexts.js";
+import { animateTextInSection, animateMenuLinks } from "./animatedTexts.js";
 
 // Fade-in utility for images
 const revealImagesSequentially = (images) => {
@@ -79,6 +79,7 @@ if (menu) {
   const observer = new MutationObserver(() => {
     if (menu.classList.contains("open")) {
       animateMenuDrippingWaves();
+      animateMenuLinks();
     }
   });
   observer.observe(menu, { attributes: true, attributeFilter: ["class"] });
