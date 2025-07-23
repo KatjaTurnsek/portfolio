@@ -158,8 +158,8 @@ label {
 
 input,
 textarea {
-  background-color: var(--teal-light);
-  border: none;
+  background-color: rgba(0, 128, 128, 0.2);
+  background-color: var(--teal-transparent);
   border-radius: 10px;
   height: 50px;
   padding: 0 1rem;
@@ -167,7 +167,39 @@ textarea {
   font-family: inherit;
   resize: none;
   box-sizing: border-box;
+  border: 2px solid transparent;
+  color: var(--text-color);
 }
+
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px rgba(0, 128, 128, 0.15) inset !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+  font-family: inherit;
+  font-size: 16px;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+input:invalid,
+textarea:invalid {
+  border: 2px solid var(--error-color);
+}
+
+input:valid,
+textarea:valid {
+  border: 2px solid var(--success-color);
+}
+
+input:invalid:focus,
+textarea:invalid:focus {
+  outline: 2px solid var(--error-color);
+}
+
+input:valid:focus,
+textarea:valid:focus {
+  outline: 2px solid var(--success-color);
+}
+
 
 textarea {
   padding-top: 0.75rem;

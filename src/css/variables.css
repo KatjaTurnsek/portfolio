@@ -7,6 +7,7 @@
   --dark: #0D0D0D;
   --teal: #3B8A7F;
   --teal-light: #7BB8AB;
+  --teal-transparent: rgba(0, 128, 128, 0.25);
   --yellow: #E8C86E;
   --yellow-light: #F1E9A5;
 
@@ -58,6 +59,9 @@
   --blob-color: #efe8ad;
   --wave-color-1: rgba(123, 184, 171, 0.7);
   --wave-color-2: rgba(123, 184, 171, 0.4);
+
+  --success-color: #44b78b;
+  --error-color: #e15b64;
 }
 
 * {

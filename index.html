@@ -555,7 +555,8 @@
 
   </section>
   
-   <!-- contact -->
+   
+  <!-- contact -->
   <section class="fullscreen-section" id="contact">
     <div class="rows">
       <div class="row">
@@ -567,40 +568,61 @@
         <p class="info-text">Email contact@katjadev.com or use the form</p>
 
         <div class="contact-form-wrapper">
-          <form class="contact-form" action="#" method="post">
+         <form class="contact-form" action="https://formsubmit.co/contact@katjadev.com" method="POST">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://katjadev.com#thank-you">
+
             <div class="name-row">
               <div class="form-group">
                 <label for="first-name">First Name</label>
-                <input type="text" id="first-name" name="first-name" required>
+                <input type="text" id="first-name" name="first-name" autocomplete="given-name" required>
               </div>
               <div class="form-group">
                 <label for="last-name">Last Name</label>
-                <input type="text" id="last-name" name="last-name" required>
+                <input type="text" id="last-name" name="last-name" autocomplete="family-name" required>
               </div>
             </div>
-        
+
             <div class="form-group full-width">
               <label for="email">Email</label>
-              <input type="email" id="email" name="email" required>
+              <input type="email" id="email" name="email" autocomplete="email" required>
             </div>
-        
+
             <div class="form-group full-width">
               <label for="message">Message</label>
-              <textarea id="message" name="message" rows="4" required></textarea>
+              <textarea id="message" name="message" rows="4" autocomplete="off" required></textarea>
             </div>
-        
-            <!-- Submit button aligned right -->
+
             <div class="button-wrapper">
               <button type="submit" class="submit-button">
                 Send <i class="fa-solid fa-arrow-right-long"></i>
               </button>
             </div>
           </form>
+
         </div>        
 
       </div>
     </div>
   </section>
+
+  <!-- thank you -->
+  <section class="fullscreen-section" id="thank-you">
+  <div class="rows">
+    <div class="row">
+      <h1>Thank You!</h1>
+      <p>Your message has been sent successfully. I'll get back to you as soon as possible.</p>
+      
+      <div class="back-to-work-container">
+        <a href="#home" class="label-link back-to-work-label" data-scrolltop>
+          <i class="fa-solid fa-arrow-left arrow-icon" aria-hidden="true"></i>
+          <span class="label-text">Back to Home</span>
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</section>
   
 </main>
     

@@ -20,7 +20,7 @@ export function revealSection(targetId) {
   });
 }
 
-// Initialize all sections and reveal home section (after loader delay)
+// Initialize all sections and reveal home or hash section (after loader delay)
 export function initSections() {
   const sections = document.querySelectorAll(".fullscreen-section");
   const home = document.getElementById("home");
@@ -31,19 +31,33 @@ export function initSections() {
     section.style.pointerEvents = "none";
   });
 
-  if (home) {
-    gsap.set(home, { opacity: 1, y: 0 });
-    home.classList.add("visible");
-    home.style.pointerEvents = "auto";
+  const hash = window.location.hash?.substring(1);
+  const initialTarget = document.getElementById(hash) || home;
 
-    // Trigger sectionVisible for home after loader finishes
+  if (initialTarget) {
+    // Wait for loader to finish before showing the section
     setTimeout(() => {
-      requestAnimationFrame(() => {
-        document.dispatchEvent(
-          new CustomEvent("sectionVisible", { detail: "home" })
-        );
+      gsap.to(initialTarget, {
+        duration: 0.8,
+        opacity: 1,
+        y: 0,
+        onStart: () => {
+          initialTarget.classList.add("visible");
+          initialTarget.style.pointerEvents = "auto";
+
+          requestAnimationFrame(() => {
+            document.dispatchEvent(
+              new CustomEvent("sectionVisible", { detail: initialTarget.id })
+            );
+          });
+
+          if (hash && initialTarget.id === hash) {
+            // Scroll to it only if it's not home
+            initialTarget.scrollIntoView({ behavior: "auto" });
+          }
+        },
       });
-    }, 1700); // Delay should match or slightly exceed global loader fade duration
+    }, 1700);
   }
 }
 
