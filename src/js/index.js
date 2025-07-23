@@ -132,6 +132,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 1500);
 
+  function enableNoSelectDuringInteraction() {
+    const body = document.body;
+
+    const addNoSelect = () => body.classList.add("no-select");
+    const removeNoSelect = () => body.classList.remove("no-select");
+
+    document.addEventListener("mousedown", addNoSelect);
+    document.addEventListener("mouseup", removeNoSelect);
+    document.addEventListener("touchstart", addNoSelect);
+    document.addEventListener("touchend", removeNoSelect);
+  }
+
   const hireBtn = document.getElementById("hireBtn");
   if (hireBtn) {
     hireBtn.addEventListener("click", () => {
@@ -148,4 +160,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCaseStudyScroll();
   setupScrollTopLinks();
   setupHeaderScrollEffect();
+  enableNoSelectDuringInteraction();
 });

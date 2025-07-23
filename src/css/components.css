@@ -560,6 +560,14 @@ textarea {
   color: var(--dark);
 }
 
+/* No select Texts while blobs */
+.no-select,
+.no-select * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
 /* Hide element on Tablet/Phone */
 @media only screen and (max-width:850px) {
   .tech-demo-wrapper {
