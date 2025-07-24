@@ -354,165 +354,12 @@ export function animateTopDrippingWaves() {
   let vw, vh;
   let waves = [];
   let resized = false;
+  let waveOffset = 0;
 
   resizeCanvas();
   initWaves();
-
   gsap.ticker.add(update);
-  window.addEventListener("resize", () => {
-    resized = true;
-  });
-
-  function isMobile() {
-    return window.innerWidth < 768;
-  }
-
-  function resizeCanvas() {
-    vw = window.innerWidth;
-    vh = isMobile() ? 200 : 300;
-
-    canvas.width = vw * resolution;
-    canvas.height = vh * resolution;
-    canvas.style.width = vw + "px";
-    canvas.style.height = vh + "px";
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(resolution, resolution);
-  }
-
-  function initWaves() {
-    waves = [];
-
-    const syncedSegments = 120;
-    const syncedDuration = isMobile() ? 16 : 18;
-    const syncedFrequency = 1.25;
-
-    waves.push(
-      createWave({
-        amplitude: isMobile() ? 80 : 160,
-        duration: isMobile() ? 14 : 17,
-        frequency: 1.5,
-        segments: 120,
-        waveHeight: isMobile() ? 90 : 120,
-        colorVar: "--wave-color-1",
-      }),
-      createWave({
-        amplitude: isMobile() ? 60 : 120,
-        duration: isMobile() ? 16 : 20,
-        frequency: 1,
-        segments: 100,
-        waveHeight: isMobile() ? 50 : 80,
-        colorVar: "--wave-color-2",
-      })
-    );
-  }
-
-  function update() {
-    if (resized) {
-      resizeCanvas();
-      initWaves();
-      waves.forEach((wave) => wave.resize(vw));
-      resized = false;
-    }
-
-    ctx.clearRect(0, 0, vw, vh);
-    ctx.globalCompositeOperation = "source-over";
-
-    for (let wave of waves) {
-      wave.draw();
-    }
-  }
-
-  function createWave(options) {
-    const wave = {
-      amplitude: options.amplitude,
-      duration: options.duration,
-      frequency: options.frequency,
-      waveHeight: options.waveHeight,
-      segments: options.segments,
-      colorVar: options.colorVar,
-      points: [],
-      width: window.innerWidth,
-      tweens: [],
-      init,
-      resize,
-      draw,
-    };
-
-    function init() {
-      const interval = wave.width / wave.segments;
-      for (let i = 0; i <= wave.segments; i++) {
-        const point = { x: i * interval, y: 1 };
-        const tween = gsap
-          .to(point, {
-            y: -1,
-            duration: wave.duration,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-          })
-          .progress((i / wave.segments) * wave.frequency);
-        wave.tweens.push(tween);
-        wave.points.push(point);
-      }
-    }
-
-    function draw() {
-      const styles = getComputedStyle(document.body);
-      const color = styles.getPropertyValue(wave.colorVar).trim();
-      const height = wave.amplitude / 2;
-
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(wave.width, 0);
-      ctx.lineTo(
-        wave.width,
-        wave.waveHeight + wave.points[wave.points.length - 1].y * height
-      );
-
-      for (let i = wave.points.length - 1; i >= 0; i--) {
-        const pt = wave.points[i];
-        ctx.lineTo(pt.x, wave.waveHeight + pt.y * height);
-      }
-
-      ctx.lineTo(0, wave.waveHeight + wave.points[0].y * height);
-      ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-
-    function resize(width) {
-      wave.width = width;
-      const interval = wave.width / wave.segments;
-      for (let i = 0; i <= wave.segments; i++) {
-        wave.points[i].x = i * interval;
-      }
-    }
-
-    init();
-    return wave;
-  }
-}
-
-// --- Menu Dripping Waves ---
-export function animateMenuDrippingWaves() {
-  const canvas = document.getElementById("menu-waves-canvas");
-  if (!canvas) return;
-
-  const ctx = canvas.getContext("2d");
-  const resolution = window.devicePixelRatio || 1;
-
-  let vw, vh;
-  let waves = [];
-  let resized = false;
-
-  resizeCanvas();
-  initWaves();
-
-  gsap.ticker.add(update);
-  window.addEventListener("resize", () => {
-    resized = true;
-  });
+  window.addEventListener("resize", () => (resized = true));
 
   function isMobile() {
     return window.innerWidth < 850;
@@ -531,112 +378,327 @@ export function animateMenuDrippingWaves() {
     ctx.scale(resolution, resolution);
   }
 
+  function getCssVar(varName, fallback) {
+    const value = getComputedStyle(document.body).getPropertyValue(varName);
+    return value.trim() || fallback;
+  }
+
   function initWaves() {
     waves = [];
 
-    waves.push(
-      createWave({
-        amplitude: isMobile() ? 80 : 160,
-        duration: isMobile() ? 14 : 17,
-        frequency: 1.5,
-        segments: 120,
-        waveHeight: isMobile() ? 90 : 120,
-        colorVar: "--wave-color-1",
-      }),
-      createWave({
-        amplitude: isMobile() ? 60 : 120,
-        duration: isMobile() ? 16 : 20,
-        frequency: 1,
-        segments: 100,
-        waveHeight: isMobile() ? 50 : 80,
-        colorVar: "--wave-color-2",
-      })
-    );
+    const wave1 = createWave({
+      amplitude: isMobile() ? 40 : 100,
+      duration: 8, // slower animation
+      frequency: 0.5,
+      segments: 100,
+      waveHeight: isMobile() ? 70 : vh * 0.4,
+      colorVar: "--wave-color-1",
+    });
+
+    const wave2 = createWave({
+      amplitude: isMobile() ? 20 : 50,
+      duration: 10,
+      frequency: 0.3,
+      segments: 100,
+      waveHeight: isMobile() ? 75 : vh * 0.4,
+      colorVar: "--wave-color-2",
+    });
+
+    gsap.to(wave1, {
+      duration: 36, // slower
+      amplitude: isMobile() ? 6 : 100,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+    });
+
+    gsap.to(wave2, {
+      duration: 44,
+      amplitude: isMobile() ? 5 : 80,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+    });
+
+    gsap.to([wave1, wave2], {
+      duration: 64,
+      waveHeight: vh / 2,
+      ease: "sine.inOut",
+      repeat: -1,
+      repeatDelay: 1,
+      yoyo: true,
+    });
+
+    waves.push(wave1, wave2);
   }
 
   function update() {
     if (resized) {
       resizeCanvas();
-      initWaves();
-      waves.forEach((wave) => wave.resize(vw));
+      waves.forEach((wave) => wave.resize(vw, vh));
       resized = false;
     }
 
     ctx.clearRect(0, 0, vw, vh);
     ctx.globalCompositeOperation = "source-over";
 
-    for (let wave of waves) {
-      wave.draw();
-    }
+    waves.forEach((wave) => {
+      wave.draw(); // just draw based on current tween state
+    });
   }
 
   function createWave(options) {
     const wave = {
       amplitude: options.amplitude,
-      duration: options.duration,
       frequency: options.frequency,
-      waveHeight: options.waveHeight,
+      duration: options.duration,
       segments: options.segments,
+      waveHeight: options.waveHeight,
       colorVar: options.colorVar,
       points: [],
-      width: window.innerWidth,
       tweens: [],
+      width: vw,
+      height: vh,
+
       init,
       resize,
       draw,
     };
 
     function init() {
+      wave.points = [];
+      wave.tweens = [];
       const interval = wave.width / wave.segments;
+
       for (let i = 0; i <= wave.segments; i++) {
         const point = { x: i * interval, y: 1 };
         const tween = gsap
           .to(point, {
-            y: -1,
             duration: wave.duration,
+            y: -1,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut",
           })
           .progress((i / wave.segments) * wave.frequency);
+
         wave.tweens.push(tween);
         wave.points.push(point);
       }
     }
 
-    function draw() {
-      const styles = getComputedStyle(document.body);
-      const color = styles.getPropertyValue(wave.colorVar).trim();
-      const height = wave.amplitude / 2;
-
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(wave.width, 0);
-      ctx.lineTo(
-        wave.width,
-        wave.waveHeight + wave.points[wave.points.length - 1].y * height
-      );
-
-      for (let i = wave.points.length - 1; i >= 0; i--) {
-        const pt = wave.points[i];
-        ctx.lineTo(pt.x, wave.waveHeight + pt.y * height);
-      }
-
-      ctx.lineTo(0, wave.waveHeight + wave.points[0].y * height);
-      ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-
-    function resize(width) {
+    function resize(width, height) {
       wave.width = width;
+      wave.height = height;
       const interval = wave.width / wave.segments;
       for (let i = 0; i <= wave.segments; i++) {
         wave.points[i].x = i * interval;
       }
     }
 
-    init();
+    function draw() {
+      const height = wave.amplitude / 2;
+      const startY = wave.waveHeight;
+      const fill = getCssVar(wave.colorVar, "rgba(0,0,0,0.2)");
+
+      ctx.beginPath();
+      ctx.moveTo(wave.points[0].x, startY - wave.points[0].y * height);
+
+      for (let i = 1; i < wave.points.length - 1; i++) {
+        const current = wave.points[i];
+        const next = wave.points[i + 1];
+        const cx = (current.x + next.x) / 2;
+        const cy = startY - ((current.y + next.y) / 2) * height;
+        ctx.quadraticCurveTo(current.x, startY - current.y * height, cx, cy);
+      }
+
+      const last = wave.points[wave.points.length - 1];
+      ctx.lineTo(last.x, startY - last.y * height);
+      ctx.lineTo(wave.width, 0);
+      ctx.lineTo(0, 0);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+    }
+
+    wave.init();
+    return wave;
+  }
+}
+
+// --- Menu Dripping Waves ---
+export function animateMenuDrippingWaves() {
+  const canvas = document.getElementById("menu-waves-canvas");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  const resolution = window.devicePixelRatio || 1;
+
+  let vw, vh;
+  let waves = [];
+  let resized = false;
+
+  resizeCanvas();
+  initWaves();
+  gsap.ticker.add(update);
+  window.addEventListener("resize", () => (resized = true));
+
+  function isMobile() {
+    return window.innerWidth < 850;
+  }
+
+  function resizeCanvas() {
+    vw = window.innerWidth;
+    vh = isMobile() ? 200 : 300;
+
+    canvas.width = vw * resolution;
+    canvas.height = vh * resolution;
+    canvas.style.width = vw + "px";
+    canvas.style.height = vh + "px";
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(resolution, resolution);
+  }
+
+  function getCssVar(varName, fallback) {
+    const value = getComputedStyle(document.body).getPropertyValue(varName);
+    return value.trim() || fallback;
+  }
+
+  function initWaves() {
+    waves = [];
+
+    const wave1 = createWave({
+      amplitude: isMobile() ? 40 : 100,
+      duration: 8,
+      frequency: 0.5,
+      segments: 100,
+      waveHeight: isMobile() ? 70 : vh * 0.4,
+      colorVar: "--wave-color-1",
+    });
+
+    const wave2 = createWave({
+      amplitude: isMobile() ? 20 : 50,
+      duration: 10,
+      frequency: 0.3,
+      segments: 100,
+      waveHeight: isMobile() ? 75 : vh * 0.4,
+      colorVar: "--wave-color-2",
+    });
+
+    gsap.to(wave1, {
+      duration: 36,
+      amplitude: isMobile() ? 6 : 100,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+    });
+
+    gsap.to(wave2, {
+      duration: 44,
+      amplitude: isMobile() ? 5 : 80,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+    });
+
+    gsap.to([wave1, wave2], {
+      duration: 64,
+      waveHeight: vh / 2,
+      ease: "sine.inOut",
+      repeat: -1,
+      repeatDelay: 1,
+      yoyo: true,
+    });
+
+    waves.push(wave1, wave2);
+  }
+
+  function update() {
+    if (resized) {
+      resizeCanvas();
+      waves.forEach((wave) => wave.resize(vw, vh));
+      resized = false;
+    }
+
+    ctx.clearRect(0, 0, vw, vh);
+    ctx.globalCompositeOperation = "source-over";
+
+    waves.forEach((wave) => {
+      wave.draw();
+    });
+  }
+
+  function createWave(options) {
+    const wave = {
+      amplitude: options.amplitude,
+      frequency: options.frequency,
+      duration: options.duration,
+      segments: options.segments,
+      waveHeight: options.waveHeight,
+      colorVar: options.colorVar,
+      points: [],
+      tweens: [],
+      width: vw,
+      height: vh,
+
+      init,
+      resize,
+      draw,
+    };
+
+    function init() {
+      wave.points = [];
+      wave.tweens = [];
+      const interval = wave.width / wave.segments;
+
+      for (let i = 0; i <= wave.segments; i++) {
+        const point = { x: i * interval, y: 1 };
+        const tween = gsap
+          .to(point, {
+            duration: wave.duration,
+            y: -1,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          })
+          .progress((i / wave.segments) * wave.frequency);
+
+        wave.tweens.push(tween);
+        wave.points.push(point);
+      }
+    }
+
+    function resize(width, height) {
+      wave.width = width;
+      wave.height = height;
+      const interval = wave.width / wave.segments;
+      for (let i = 0; i <= wave.segments; i++) {
+        wave.points[i].x = i * interval;
+      }
+    }
+
+    function draw() {
+      const height = wave.amplitude / 2;
+      const startY = wave.waveHeight;
+      const fill = getCssVar(wave.colorVar, "rgba(0,0,0,0.2)");
+
+      ctx.beginPath();
+      ctx.moveTo(wave.points[0].x, startY - wave.points[0].y * height);
+
+      for (let i = 1; i < wave.points.length; i++) {
+        const pt = wave.points[i];
+        ctx.lineTo(pt.x, startY - pt.y * height);
+      }
+
+      ctx.lineTo(wave.width, 0);
+      ctx.lineTo(0, 0);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+    }
+
+    wave.init();
     return wave;
   }
 }
