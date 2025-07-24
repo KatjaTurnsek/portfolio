@@ -460,7 +460,7 @@ footer {
   }
   
   .fullscreen-menu {
-    padding: 166px 60px;
+    padding: 120px 60px;
   }
 
   .logo {
@@ -469,7 +469,7 @@ footer {
 
   .fullscreen-menu .menu-logo {
     right: 55px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .menu-toggle.opened {
@@ -479,8 +479,12 @@ footer {
     height: 40px;
   }
 
+  .fullscreen-menu nav {
+    gap: 0;
+  }
+
   .fullscreen-menu nav a {
-    font-size: 60px;
+    font-size: 55px;
   }
 
   .case-study-wrapper {
