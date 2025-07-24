@@ -20,9 +20,12 @@ export function animateWaveLine() {
   });
 }
 
+// H2 waves
 export function insertWaveLines() {
   const waveSVG = `
-     <svg id="wavy-line" class="wavy-line" viewBox="0 0 500 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path id="wavy-path" d="M0,15 C50,5 100,25 150,15 S250,25 300,15 S400,5 500,15"></path></svg>
+    <svg class="wavy-line" viewBox="0 0 500 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <polyline class="wavy-polyline" fill="none" stroke="currentColor" stroke-width="1" />
+    </svg>
   `;
 
   const headings = document.querySelectorAll("h2");
@@ -35,19 +38,42 @@ export function insertWaveLines() {
 }
 
 export function animateCustomWaveLines() {
-  const wavePaths = document.querySelectorAll(
-    ".custom-wave-line .wavy-line path"
-  );
+  const polylines = document.querySelectorAll(".wavy-polyline");
 
-  wavePaths.forEach((path) => {
-    gsap.to(path, {
-      duration: 3,
-      repeat: -1,
-      yoyo: true,
-      ease: "power1.inOut",
-      morphSVG: {
-        shape: "M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15",
-      },
+  polylines.forEach((polyline) => {
+    const svg = polyline.closest("svg");
+    const width = 500;
+    const amplitude = 10;
+    const frequency = 2;
+    const segments = 100;
+    const interval = width / segments;
+
+    const points = [];
+
+    for (let i = 0; i <= segments; i++) {
+      const point = svg.createSVGPoint();
+      point.x = i * interval;
+      point.y = 15;
+
+      points.push(point);
+      polyline.points.appendItem(point);
+
+      gsap
+        .to(point, {
+          y: 15 + Math.sin((i / segments) * Math.PI * frequency) * -amplitude,
+          duration: 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        })
+        .progress(i / segments);
+    }
+
+    // Redraw the polyline on every animation frame
+    gsap.ticker.add(() => {
+      for (let i = 0; i < points.length; i++) {
+        polyline.points.getItem(i).y = points[i].y;
+      }
     });
   });
 }

@@ -18,14 +18,15 @@ function createLoader() {
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("viewBox", "0 0 500 20");
 
-  const path = document.createElementNS(svgNS, "path");
+  const path = document.createElementNS(svgNS, "polyline");
+  path.setAttribute("points", "");
+
   path.setAttribute("class", "wave-global");
-  path.setAttribute("d", originalPath);
   path.setAttribute("fill", "none");
   path.setAttribute("stroke", "currentColor");
   path.setAttribute("stroke-width", "1");
-
   svg.appendChild(path);
+
   spinner.appendChild(svg);
   loader.appendChild(spinner);
   document.body.appendChild(loader);
@@ -33,17 +34,38 @@ function createLoader() {
 
 // Animate the global loader wave
 function animateWave() {
-  const loader = document.querySelector(".loader");
-  const path = loader?.querySelector(".wave-global");
-  if (!path) return;
+  const path = document.querySelector(".wave-global");
+  if (!path || !path.points) return;
 
-  gsap.to(path, {
-    duration: 2,
-    repeat: -1,
-    yoyo: true,
-    ease: "sine.inOut",
-    morphSVG: morphPath,
-  });
+  const width = 500;
+  const segments = 80;
+  const amplitude = 10;
+  const frequency = 4;
+  const interval = width / segments;
+
+  const svg = path.ownerSVGElement;
+  const points = [];
+
+  for (let i = 0; i <= segments; i++) {
+    const norm = i / segments;
+    const pt = svg.createSVGPoint();
+    pt.x = i * interval;
+    pt.y = 10;
+    path.points.appendItem(pt);
+
+    points[i] = {
+      ref: pt,
+      tween: gsap
+        .to(pt, {
+          y: 10 - amplitude,
+          duration: 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        })
+        .progress(norm * frequency),
+    };
+  }
 }
 
 // Show the global loader
