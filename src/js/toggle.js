@@ -8,11 +8,21 @@ export function updateSwitcherPosition(isDark) {
 
 // Function to update the logo based on the theme
 function updateLogo() {
-  const isDark = body.classList.contains("dark-theme");
+  const isDark = document.body.classList.contains("dark-theme");
+  const menuIsOpen = document.body.classList.contains("menu-open");
+
   document.querySelectorAll(".site-logo").forEach((logo) => {
-    logo.src = isDark
-      ? "assets/images/logo-katjadev-light.svg"
-      : "assets/images/logo-katjadev-dark.svg";
+    const isMenuLogo = logo.classList.contains("site-logo-menu");
+
+    if (isMenuLogo) {
+      // MENU LOGO
+      logo.src = isDark
+        ? "assets/images/logo-katjadev-light.svg"
+        : "assets/images/logo-katjadev-dark.svg";
+    } else {
+      // HEADER LOGO
+      logo.src = "assets/images/logo-katjadev-dark.svg";
+    }
   });
 }
 

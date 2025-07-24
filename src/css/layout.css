@@ -97,7 +97,7 @@ footer {
   border: none;
   cursor: pointer;
   font-size: 50px;
-  color: var(--text-color);
+  color: var(--dark);
   transition: transform 0.4s ease-in, color 0.4s ease-in;
   display: flex;
   align-items: center;
@@ -463,13 +463,14 @@ footer {
     padding: 120px 60px;
   }
 
-  .logo {
-    height: 45px;
-  }
-
   .fullscreen-menu .menu-logo {
     right: 55px;
     margin-bottom: 20px;
+  }
+
+  .site-logo,
+  .menu-logo {
+    height: 45px;
   }
 
   .menu-toggle.opened {

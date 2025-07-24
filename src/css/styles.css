@@ -26,15 +26,15 @@
   --h1-color: var(--grey);
   --h2-color: var(--grey);
   --h3-color: var(--grey);
-  --switch-bg: var(--dark);
-  --switch-circle: var(--yellow-light);
-  --footer-bg: var(--yellow-light);
+  --switch-bg: var(--yellow-light);
+  --switch-circle: var(--dark); 
+  --footer-bg: var(--grey);
   --footer-text-color: var(--dark);
-  --menu-color: var(--grey);
-  --menu-hover-color: var(--yellow-light);
-  --menu-border-color: var(--grey);
+  --menu-color: var(--dark);
+  --menu-hover-color: var(--teal);
+  --menu-border-color: var(--dark);
   color: var(--wave-color-dark); 
   --blob-color: var(--teal);
-  --wave-color-1: rgba(123, 184, 171, 0.7);
-  --wave-color-2: rgba(59, 138, 127, 0.4);
+  --wave-color-1: rgba(241, 233, 165, 0.6);
+  --wave-color-2: rgba(241, 233, 165, 0.3);
 }
