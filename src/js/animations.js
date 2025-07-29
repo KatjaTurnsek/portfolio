@@ -4,7 +4,6 @@ import { ScrollTrigger } from "../../node_modules/gsap/ScrollTrigger.js";
 
 gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger);
 
-// Detect Safari for performance tweaks
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 // --- Morphing wave line ---
@@ -48,12 +47,11 @@ export function animateCustomWaveLines() {
     const width = 500;
     const amplitude = 10;
     const frequency = 2;
-    const segments = isSafari ? 50 : 100; // fewer points for Safari
+    const segments = isSafari ? 50 : 100;
     const interval = width / segments;
 
     const points = [];
 
-    // Initialize points
     for (let i = 0; i <= segments; i++) {
       const point = svg.createSVGPoint();
       point.x = i * interval;
@@ -62,9 +60,8 @@ export function animateCustomWaveLines() {
       polyline.points.appendItem(point);
     }
 
-    // Animate points using a single ticker
     gsap.ticker.add(() => {
-      const time = performance.now() * 0.002; // controls speed
+      const time = performance.now() * 0.002;
       for (let i = 0; i <= segments; i++) {
         points[i].y =
           15 +
@@ -124,7 +121,6 @@ export function animateGooeyBlobs() {
 
   if (!container) return;
 
-  // Same blob count for all browsers
   const blobCount = 30;
   const spread = isMobile ? 400 : 700;
   const motionDistance = isMobile ? 120 : 400;
@@ -134,7 +130,7 @@ export function animateGooeyBlobs() {
     { x: VW * 0.7, y: VH * 0.5 },
   ];
 
-  // Remove blur for Safari
+  // Safari
   if (isSafari) container.removeAttribute("filter");
 
   for (let i = 1; i <= blobCount; i++) {
@@ -174,7 +170,6 @@ export function animateGooeyBlobs() {
       },
     });
 
-    // Pulsating effect
     gsap.to(circle, {
       scaleX: "random(0.9, 1.1)",
       scaleY: "random(0.9, 1.1)",
@@ -208,8 +203,8 @@ export function enableInteractiveJellyBlob() {
   let activeBlob = null;
   let isDragging = false;
   let originalTransforms = new Map();
+  let lastSwitchTime = 0;
 
-  // Slightly reduced scale for Safari for smoother performance
   const getScale = (dx, dy) =>
     Math.min(Math.sqrt(dx * dx + dy * dy) / 500, isSafari ? 0.18 : 0.25);
   const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
@@ -251,10 +246,25 @@ export function enableInteractiveJellyBlob() {
     target.x = svgPos.x;
     target.y = svgPos.y;
 
+    const now = Date.now();
+    if (now - lastSwitchTime < 200) return; // cooldown 200ms
+
     const closestBlob = getClosestBlob(clientX, clientY);
+
     if (closestBlob && closestBlob !== activeBlob) {
+      const newMatrix = closestBlob.getScreenCTM();
+      const oldMatrix = activeBlob?.getScreenCTM();
+
+      const newDist = Math.hypot(newMatrix.e - clientX, newMatrix.f - clientY);
+      const oldDist = oldMatrix
+        ? Math.hypot(oldMatrix.e - clientX, oldMatrix.f - clientY)
+        : Infinity;
+
+      if (newDist >= oldDist - 15) return;
+
       if (activeBlob) returnBlobToOriginal(activeBlob);
       activeBlob = closestBlob;
+      lastSwitchTime = now;
 
       if (!originalTransforms.has(activeBlob)) {
         const transform = gsap.getProperty(activeBlob);
@@ -275,16 +285,15 @@ export function enableInteractiveJellyBlob() {
   function loop() {
     requestAnimationFrame(loop);
     const now = Date.now();
-
-    // Limit to ~60fps
     if (!isDragging || !activeBlob || now - lastUpdate < 16) return;
     lastUpdate = now;
 
     vel.x = target.x - current.x;
     vel.y = target.y - current.y;
 
-    current.x += vel.x * 0.1;
-    current.y += vel.y * 0.1;
+    // Stick closer by speeding up lerp
+    current.x += vel.x * 0.2;
+    current.y += vel.y * 0.2;
 
     const angle = getAngle(vel.x, vel.y);
     const scale = getScale(vel.x, vel.y);
@@ -343,7 +352,7 @@ export function enableInteractiveJellyBlob() {
 // --- Top dripping waves ---
 export function animateTopDrippingWaves() {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  if (isSafari) return; // Safari uses static SVG fallback
+  if (isSafari) return;
 
   const canvas = document.getElementById("top-waves-canvas");
   if (!canvas) return;
@@ -511,7 +520,7 @@ export function animateTopDrippingWaves() {
 // --- Menu dripping waves ---
 export function animateMenuDrippingWaves() {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  if (isSafari) return; // Safari uses static SVG fallback
+  if (isSafari) return;
 
   const canvas = document.getElementById("menu-waves-canvas");
   if (!canvas) return;
