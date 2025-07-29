@@ -2,9 +2,12 @@ import { gsap } from "gsap";
 import { MorphSVGPlugin } from "../../node_modules/gsap/MorphSVGPlugin.js";
 import { ScrollTrigger } from "../../node_modules/gsap/ScrollTrigger.js";
 
-gsap.registerPlugin(MorphSVGPlugin);
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger);
 
+// Detect Safari for performance tweaks
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// --- Morphing wave line ---
 export function animateWaveLine() {
   const original = "M0,15 C50,5 100,25 150,15 S250,25 300,15 S400,5 500,15";
   const alt = "M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15";
@@ -20,7 +23,7 @@ export function animateWaveLine() {
   });
 }
 
-// H2 waves
+// --- Inject wave line SVGs after all h2 ---
 export function insertWaveLines() {
   const waveSVG = `
     <svg class="wavy-line" viewBox="0 0 500 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -29,7 +32,6 @@ export function insertWaveLines() {
   `;
 
   const headings = document.querySelectorAll("h2");
-
   headings.forEach((heading) => {
     const wrapper = document.createElement("div");
     wrapper.innerHTML = waveSVG;
@@ -37,6 +39,7 @@ export function insertWaveLines() {
   });
 }
 
+// --- Animate each wave line polyline ---
 export function animateCustomWaveLines() {
   const polylines = document.querySelectorAll(".wavy-polyline");
 
@@ -45,39 +48,34 @@ export function animateCustomWaveLines() {
     const width = 500;
     const amplitude = 10;
     const frequency = 2;
-    const segments = 100;
+    const segments = isSafari ? 50 : 100; // fewer points for Safari
     const interval = width / segments;
 
     const points = [];
 
+    // Initialize points
     for (let i = 0; i <= segments; i++) {
       const point = svg.createSVGPoint();
       point.x = i * interval;
       point.y = 15;
-
       points.push(point);
       polyline.points.appendItem(point);
-
-      gsap
-        .to(point, {
-          y: 15 + Math.sin((i / segments) * Math.PI * frequency) * -amplitude,
-          duration: 2,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        })
-        .progress(i / segments);
     }
 
-    // Redraw the polyline on every animation frame
+    // Animate points using a single ticker
     gsap.ticker.add(() => {
-      for (let i = 0; i < points.length; i++) {
+      const time = performance.now() * 0.002; // controls speed
+      for (let i = 0; i <= segments; i++) {
+        points[i].y =
+          15 +
+          Math.sin((i / segments) * Math.PI * frequency + time) * -amplitude;
         polyline.points.getItem(i).y = points[i].y;
       }
     });
   });
 }
 
+// --- Animated teal bars ---
 export function animateTealBars() {
   const timeline = gsap.timeline();
 
@@ -90,31 +88,17 @@ export function animateTealBars() {
 
   timeline.to(
     ".bar-1",
-    {
-      width: "90%",
-      duration: 1,
-      ease: "power4.out",
-    },
+    { width: "90%", duration: 1, ease: "power4.out" },
     "<+0.5"
   );
-
   timeline.to(
     ".bar-2",
-    {
-      width: "70%",
-      duration: 1,
-      ease: "power4.out",
-    },
+    { width: "70%", duration: 1, ease: "power4.out" },
     "-=0.6"
   );
-
   timeline.to(
     ".bar-3",
-    {
-      width: "80%",
-      duration: 1,
-      ease: "power4.out",
-    },
+    { width: "80%", duration: 1, ease: "power4.out" },
     "-=0.6"
   );
 
@@ -130,7 +114,7 @@ export function animateTealBars() {
   );
 }
 
-// --- Gooey Blobs with Group Wrappers ---
+// --- Gooey blobs with Safari performance tweak ---
 export function animateGooeyBlobs() {
   const VW = window.innerWidth;
   const VH = window.innerHeight;
@@ -140,25 +124,29 @@ export function animateGooeyBlobs() {
 
   if (!container) return;
 
+  // Same blob count for all browsers
   const blobCount = 30;
+  const spread = isMobile ? 400 : 700;
+  const motionDistance = isMobile ? 120 : 400;
+
   const clusterCenters = [
     { x: VW * 0.3, y: VH * 0.5 },
     { x: VW * 0.7, y: VH * 0.5 },
   ];
 
-  const spread = isMobile ? 400 : 700;
-  const motionDistance = isMobile ? 200 : 400;
+  // Remove blur for Safari
+  if (isSafari) container.removeAttribute("filter");
 
   for (let i = 1; i <= blobCount; i++) {
     const center = clusterCenters[i % 2];
     const x = center.x + Math.random() * spread - spread / 2;
     const y = center.y + Math.random() * spread - spread / 2;
-    const size = Math.floor(Math.random() * 60) + 80;
+    const size = Math.floor(Math.random() * 50) + 80;
 
     const group = document.createElementNS(svgns, "g");
     group.setAttribute("class", "blob-group");
     group.setAttribute("id", `blob-group-${i}`);
-    group.setAttribute("transform", "translate(0,0)");
+    group.setAttribute("transform", `translate(${x},${y})`);
     container.appendChild(group);
 
     const circle = document.createElementNS(svgns, "circle");
@@ -168,21 +156,16 @@ export function animateGooeyBlobs() {
     circle.setAttribute("r", size);
     group.appendChild(circle);
 
-    let pos = { x, y, rotation: 0 };
-    gsap.set(group, { x: pos.x, y: pos.y });
-
-    const tl = gsap.timeline({ repeat: -1, yoyo: true, repeatRefresh: true });
-    const targetX1 = x + Math.random() * motionDistance - motionDistance / 2;
-    const targetY1 = y + Math.random() * motionDistance - motionDistance / 2;
-    const targetX2 = x + Math.random() * motionDistance - motionDistance / 2;
-    const targetY2 = y + Math.random() * motionDistance - motionDistance / 2;
-
-    tl.to(pos, {
+    // GSAP motion
+    const pos = { x, y, rotation: 0 };
+    gsap.to(pos, {
       duration: 12 + Math.random() * 4,
-      x: targetX1,
-      y: targetY1,
+      x: x + Math.random() * motionDistance - motionDistance / 2,
+      y: y + Math.random() * motionDistance - motionDistance / 2,
       rotation: Math.random() > 0.5 ? "+=180" : "-=180",
       ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
       onUpdate: () => {
         group.setAttribute(
           "transform",
@@ -191,31 +174,17 @@ export function animateGooeyBlobs() {
       },
     });
 
-    tl.to(pos, {
-      duration: 12 + Math.random() * 4,
-      x: targetX2,
-      y: targetY2,
-      rotation: Math.random() > 0.5 ? "+=180" : "-=180",
-      ease: "sine.inOut",
-      onUpdate: () => {
-        group.setAttribute(
-          "transform",
-          `translate(${pos.x},${pos.y}) rotate(${pos.rotation})`
-        );
-      },
-    });
-
+    // Pulsating effect
     gsap.to(circle, {
-      scaleX: "random(0.9, 1.14)",
-      scaleY: "random(0.9, 1.14)",
-      duration: "random(2, 5)",
+      scaleX: "random(0.9, 1.1)",
+      scaleY: "random(0.9, 1.1)",
+      duration: "random(2, 4)",
       repeat: -1,
       yoyo: true,
       ease: "sine.inOut",
     });
   }
 
-  // --- GSAP Scroll Fade-Out ---
   gsap.to(container, {
     opacity: 0.3,
     ease: "none",
@@ -240,8 +209,9 @@ export function enableInteractiveJellyBlob() {
   let isDragging = false;
   let originalTransforms = new Map();
 
+  // Slightly reduced scale for Safari for smoother performance
   const getScale = (dx, dy) =>
-    Math.min(Math.sqrt(dx * dx + dy * dy) / 500, 0.25);
+    Math.min(Math.sqrt(dx * dx + dy * dy) / 500, isSafari ? 0.18 : 0.25);
   const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
 
   function getSVGCoords(clientX, clientY) {
@@ -259,13 +229,9 @@ export function enableInteractiveJellyBlob() {
     blobs.forEach((blob) => {
       const matrix = blob.getScreenCTM();
       if (!matrix) return;
-
       const cx = matrix.e;
       const cy = matrix.f;
       const dist = Math.hypot(cx - x, cy - y);
-      const radius =
-        parseFloat(blob.querySelector("circle")?.getAttribute("r")) || 60;
-
       if (dist < minDist) {
         minDist = dist;
         closest = blob;
@@ -305,9 +271,14 @@ export function enableInteractiveJellyBlob() {
     }
   }
 
+  let lastUpdate = 0;
   function loop() {
     requestAnimationFrame(loop);
-    if (!isDragging || !activeBlob) return;
+    const now = Date.now();
+
+    // Limit to ~60fps
+    if (!isDragging || !activeBlob || now - lastUpdate < 16) return;
+    lastUpdate = now;
 
     vel.x = target.x - current.x;
     vel.y = target.y - current.y;
@@ -321,9 +292,9 @@ export function enableInteractiveJellyBlob() {
     gsap.set(activeBlob, {
       x: current.x,
       y: current.y,
-      rotation: angle + "_short",
-      scaleX: 1 + scale,
-      scaleY: 1 - scale,
+      rotation: isSafari ? angle : angle + "_short",
+      scaleX: 1 + (isSafari ? scale * 0.7 : scale),
+      scaleY: 1 - (isSafari ? scale * 0.7 : scale),
       transformOrigin: "center",
     });
   }
@@ -332,11 +303,9 @@ export function enableInteractiveJellyBlob() {
     const original = originalTransforms.get(blob);
     if (!original) return;
 
-    let targetY = Math.max(original.y, 400);
-
     gsap.to(blob, {
       x: original.x,
-      y: targetY,
+      y: Math.max(original.y, 400),
       rotation: 0,
       scaleX: 1,
       scaleY: 1,
@@ -371,16 +340,22 @@ export function enableInteractiveJellyBlob() {
   loop();
 }
 
-// --- Dripping Waves on Top ---
+// --- Top dripping waves ---
 export function animateTopDrippingWaves() {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isSafari) return; // Safari uses static SVG fallback
+
   const canvas = document.getElementById("top-waves-canvas");
+  if (!canvas) return;
+
   const ctx = canvas.getContext("2d");
   const resolution = window.devicePixelRatio || 1;
 
   let vw, vh;
   let waves = [];
   let resized = false;
-  let waveOffset = 0;
+  let startTime = performance.now();
+  let waveTime = 0;
 
   resizeCanvas();
   initWaves();
@@ -414,7 +389,6 @@ export function animateTopDrippingWaves() {
 
     const wave1 = createWave({
       amplitude: isMobile() ? 40 : 100,
-      duration: 8, // slower animation
       frequency: 0.5,
       segments: 100,
       waveHeight: isMobile() ? 70 : vh * 0.4,
@@ -422,36 +396,18 @@ export function animateTopDrippingWaves() {
     });
 
     const wave2 = createWave({
-      amplitude: isMobile() ? 20 : 50,
-      duration: 10,
+      amplitude: isMobile() ? 20 : 60,
       frequency: 0.3,
       segments: 100,
       waveHeight: isMobile() ? 75 : vh * 0.4,
       colorVar: "--wave-color-2",
     });
 
-    gsap.to(wave1, {
-      duration: 36, // slower
-      amplitude: isMobile() ? 6 : 100,
-      ease: "sine.inOut",
-      repeat: -1,
-      yoyo: true,
-    });
-
-    gsap.to(wave2, {
-      duration: 44,
-      amplitude: isMobile() ? 5 : 80,
-      ease: "sine.inOut",
-      repeat: -1,
-      yoyo: true,
-    });
-
     gsap.to([wave1, wave2], {
-      duration: 64,
+      duration: 36,
       waveHeight: vh / 2,
       ease: "sine.inOut",
       repeat: -1,
-      repeatDelay: 1,
       yoyo: true,
     });
 
@@ -459,6 +415,11 @@ export function animateTopDrippingWaves() {
   }
 
   function update() {
+    const now = performance.now();
+    const delta = (now - startTime) / 1000;
+    startTime = now;
+    waveTime += delta * 0.6;
+
     if (resized) {
       resizeCanvas();
       waves.forEach((wave) => wave.resize(vw, vh));
@@ -469,7 +430,7 @@ export function animateTopDrippingWaves() {
     ctx.globalCompositeOperation = "source-over";
 
     waves.forEach((wave) => {
-      wave.draw(); // just draw based on current tween state
+      wave.draw();
     });
   }
 
@@ -477,12 +438,10 @@ export function animateTopDrippingWaves() {
     const wave = {
       amplitude: options.amplitude,
       frequency: options.frequency,
-      duration: options.duration,
       segments: options.segments,
       waveHeight: options.waveHeight,
       colorVar: options.colorVar,
       points: [],
-      tweens: [],
       width: vw,
       height: vh,
 
@@ -493,22 +452,19 @@ export function animateTopDrippingWaves() {
 
     function init() {
       wave.points = [];
-      wave.tweens = [];
       const interval = wave.width / wave.segments;
 
       for (let i = 0; i <= wave.segments; i++) {
         const point = { x: i * interval, y: 1 };
-        const tween = gsap
+        gsap
           .to(point, {
-            duration: wave.duration,
+            duration: 8,
             y: -1,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut",
           })
           .progress((i / wave.segments) * wave.frequency);
-
-        wave.tweens.push(tween);
         wave.points.push(point);
       }
     }
@@ -552,8 +508,11 @@ export function animateTopDrippingWaves() {
   }
 }
 
-// --- Menu Dripping Waves ---
+// --- Menu dripping waves ---
 export function animateMenuDrippingWaves() {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isSafari) return; // Safari uses static SVG fallback
+
   const canvas = document.getElementById("menu-waves-canvas");
   if (!canvas) return;
 
@@ -563,6 +522,8 @@ export function animateMenuDrippingWaves() {
   let vw, vh;
   let waves = [];
   let resized = false;
+  let startTime = performance.now();
+  let waveTime = 0;
 
   resizeCanvas();
   initWaves();
@@ -596,7 +557,6 @@ export function animateMenuDrippingWaves() {
 
     const wave1 = createWave({
       amplitude: isMobile() ? 40 : 100,
-      duration: 8,
       frequency: 0.5,
       segments: 100,
       waveHeight: isMobile() ? 70 : vh * 0.4,
@@ -604,36 +564,18 @@ export function animateMenuDrippingWaves() {
     });
 
     const wave2 = createWave({
-      amplitude: isMobile() ? 20 : 50,
-      duration: 10,
+      amplitude: isMobile() ? 20 : 60,
       frequency: 0.3,
       segments: 100,
       waveHeight: isMobile() ? 75 : vh * 0.4,
       colorVar: "--wave-color-2",
     });
 
-    gsap.to(wave1, {
-      duration: 36,
-      amplitude: isMobile() ? 6 : 100,
-      ease: "sine.inOut",
-      repeat: -1,
-      yoyo: true,
-    });
-
-    gsap.to(wave2, {
-      duration: 44,
-      amplitude: isMobile() ? 5 : 80,
-      ease: "sine.inOut",
-      repeat: -1,
-      yoyo: true,
-    });
-
     gsap.to([wave1, wave2], {
-      duration: 64,
+      duration: 36,
       waveHeight: vh / 2,
       ease: "sine.inOut",
       repeat: -1,
-      repeatDelay: 1,
       yoyo: true,
     });
 
@@ -641,6 +583,11 @@ export function animateMenuDrippingWaves() {
   }
 
   function update() {
+    const now = performance.now();
+    const delta = (now - startTime) / 1000;
+    startTime = now;
+    waveTime += delta * 0.6;
+
     if (resized) {
       resizeCanvas();
       waves.forEach((wave) => wave.resize(vw, vh));
@@ -659,12 +606,10 @@ export function animateMenuDrippingWaves() {
     const wave = {
       amplitude: options.amplitude,
       frequency: options.frequency,
-      duration: options.duration,
       segments: options.segments,
       waveHeight: options.waveHeight,
       colorVar: options.colorVar,
       points: [],
-      tweens: [],
       width: vw,
       height: vh,
 
@@ -675,22 +620,19 @@ export function animateMenuDrippingWaves() {
 
     function init() {
       wave.points = [];
-      wave.tweens = [];
       const interval = wave.width / wave.segments;
 
       for (let i = 0; i <= wave.segments; i++) {
         const point = { x: i * interval, y: 1 };
-        const tween = gsap
+        gsap
           .to(point, {
-            duration: wave.duration,
+            duration: 8,
             y: -1,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut",
           })
           .progress((i / wave.segments) * wave.frequency);
-
-        wave.tweens.push(tween);
         wave.points.push(point);
       }
     }

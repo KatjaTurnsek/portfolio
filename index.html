@@ -10,7 +10,11 @@
 </head>
 <body class="light-theme">
 
-  <canvas id="top-waves-canvas" class="wave-canvas"></canvas>
+<canvas id="top-waves-canvas" class="wave-canvas"></canvas>
+<div class="top-waves">
+  <img src="assets/images/waves-light.webp" class="wave light-theme" alt="Wave background light">
+  <img src="assets/images/waves-dark.webp" class="wave dark-theme" alt="Wave background dark">
+</div>
 
 <div class="morphing-blob-wrapper">
   <svg id="blob-svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
@@ -46,6 +50,13 @@
 <div class="fullscreen-menu" id="menu" role="dialog" aria-modal="true">
   <div class="menu-wave">
      <canvas id="menu-waves-canvas" aria-hidden="true"></canvas>
+
+     <!-- Safari fallback static waves -->
+    <div class="menu-waves">
+      <img src="assets/images/waves-light.webp" class="wave light-theme" alt="Wave background light">
+      <img src="assets/images/waves-dark.webp" class="wave dark-theme" alt="Wave background dark">
+    </div>
+    
   </div>
   <a href="#home">
     <img src="assets/images/logo-katjadev-dark.svg"

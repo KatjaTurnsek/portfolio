@@ -433,34 +433,6 @@ textarea {
   transform: translateX(30px);
 }
 
-/* Toggle Wave top */
-.fullscreen-menu .menu-wave {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  z-index: -1;
-  overflow: hidden;
-}
-
-#menu-waves-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-@keyframes waveFadeIn {
-  0% {
-    transform: translateY(-30px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
 .fullscreen-menu nav a span.word {
   display: inline-block;
   overflow: hidden;
@@ -485,6 +457,8 @@ textarea {
   overflow: hidden;
   z-index: -999;
   pointer-events: none;
+  will-change: transform;
+  transform: translateZ(0); /* force GPU acceleration */
 }
 
 #blob-svg {
@@ -510,9 +484,92 @@ textarea {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 300px; /* or however tall you want the wave section */
+  height: 300px;
   z-index: -1;
   pointer-events: none;
+  display: block;
+}
+
+/* --- Static Waves (Single WebP) --- */
+.top-waves {
+  display: none; /* Hide by default, JS shows on Safari */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  pointer-events: none;
+  z-index: 1;
+  animation: fadeInWaves 1.5s ease-out 0.3s forwards;
+}
+
+@keyframes fadeInWaves {
+  to {
+    opacity: 1;
+  }
+}
+
+.top-waves img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;  /* Fixed height for consistency */
+  object-fit: cover;
+  display: none; /* Hidden by default */
+}
+
+.light-theme .top-waves img.light-theme {
+  display: block;
+}
+
+.dark-theme .top-waves img.dark-theme {
+  display: block;
+}
+
+/* --- Menu Waves --- */
+.fullscreen-menu .menu-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px; /* Match the top wave height */
+  z-index: -1;
+  overflow: hidden;
+}
+
+#menu-waves-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.menu-waves {
+  display: none; /* Hidden by default, JS shows on Safari */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  animation: fadeInWaves 1.5s ease-out 0.3s forwards;
+}
+
+.menu-waves img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+/* Show correct theme */
+.light-theme .menu-waves img.light-theme {
+  display: block;
+}
+
+.dark-theme .menu-waves img.dark-theme {
   display: block;
 }
 
@@ -571,6 +628,14 @@ textarea {
 
 /* Hide element on Tablet/Phone */
 @media only screen and (max-width:850px) {
+  .top-waves {
+    height: 150px;
+  }
+
+  .menu-waves {
+    height: 100px;
+  }
+  
   .tech-demo-wrapper {
     display: block;
     text-align: center;
