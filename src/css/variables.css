@@ -77,9 +77,16 @@ h1 {
   font-weight: var(--h1-font-weight);
   line-height: var(--h1-line-height);
   margin-bottom: 60px;
-  max-width: 800px;
   text-align: left;
   transition: color 0.3s;
+}
+
+.h1-narrow {
+  max-width: 13ch;
+  text-wrap: balance;
+  margin-inline: auto;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
 }
 
 h2 {

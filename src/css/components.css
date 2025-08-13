@@ -48,7 +48,7 @@
 .tech-demo-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
 }
 
@@ -87,7 +87,17 @@
 .demo-links {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
+  padding-left: 30px;
+}
+
+.demo-links .label-text {
+  font-size: 25px;
+  line-height: 35px;
+}
+
+.demo-links .arrow-icon {
+  font-size: 0.85em;
 }
 
 /* Bullet lists */
@@ -657,6 +667,10 @@ textarea {
     line-height: 36px;
     white-space: normal;
     flex-wrap: wrap;
+  }
+
+  .demo-links {
+    padding-left: 0;
   }
 
   .back-to-work-container {
