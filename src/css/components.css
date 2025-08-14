@@ -44,7 +44,6 @@
 }
 
 /* Tech info */
-
 .tech-demo-wrapper {
   display: flex;
   justify-content: space-between;
@@ -100,8 +99,68 @@
   font-size: 0.85em;
 }
 
-/* Bullet lists */
+/* Project switcher */
+.project-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .5rem;
+}
 
+.project-switcher .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.15);
+  text-decoration: none;
+  font-family: var(--body-font);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--bg-color, #fff) 85%, transparent);
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.project-switcher .pill:hover,
+.project-switcher .pill:focus {
+  border-color: var(--link-hover-color);
+  color: var(--link-hover-color);
+}
+
+.project-switcher .pill[aria-current="page"] {
+  background: color-mix(in srgb, var(--link-hover-color) 12%, transparent);
+  border-color: color-mix(in srgb, var(--link-hover-color) 40%, #999);
+}
+
+.related-links {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  justify-content: flex-end;
+  padding-top: 28px;
+}
+
+.related-links .related-label {
+  font: 600 12px/1 var(--body-font);
+  opacity: .7;
+  margin-right: .25rem;
+}
+
+.related-links .label-link.related-link {
+  font-size: 16px;
+  line-height: 22px;
+  text-transform: none;
+  gap: .35rem;
+}
+
+.related-links .label-link .arrow-icon {
+  font-size: .9em;
+}
+
+/* Bullet lists */
 .bullet-list,
 .bullet-list-right {
   list-style-type: disc;
@@ -671,6 +730,12 @@ textarea {
 
   .demo-links {
     padding-left: 0;
+  }
+
+  .related-links {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    row-gap: .5rem;
   }
 
   .back-to-work-container {
