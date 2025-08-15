@@ -78,7 +78,7 @@ Thanks for your interest in improving this project! Contributions are welcome �
 1) Fork the repository and create a branch:
 
 git checkout -b feat/your-short-title
-# or: fix/..., docs/..., style/...
+### or: fix/..., docs/..., style/...
 
 2) Run locally - Use a local server (e.g., VS Code Live Server) so ES modules load correctly.
 3) Make your changes following the guidelines below.
@@ -142,6 +142,6 @@ Ensure you have rights to any assets you add and include proper attributions (fo
 
 ## 🙋‍♀️ Author
 
-**Katja Turnšek**
+** Katja Turnšek **
 Frontend Development Student
 [Portfolio Website](https://katjaturnsek.github.io/portfolio/)
