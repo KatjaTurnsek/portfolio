@@ -6,7 +6,7 @@ A personal front-end portfolio showcasing selected web, interaction, and graphic
 
 ## 📍 Live Site
 
-Coming soon...
+[Portfolio Website](https://katjaturnsek.github.io/portfolio/)
 
 ## 💻 GitHub Repository
 
@@ -48,6 +48,7 @@ This is a static front-end project with no backend or external API requirements.
 
 ## 📁 Project Structure (excerpt)
 
+```text
 assets/
   images/
   css/
@@ -59,6 +60,7 @@ assets/
     loader.js
     images.js
 index.html
+```
 
 ## ♿ Accessibility & Performance
 
@@ -138,8 +140,8 @@ docs(readme): add contributing section
 By contributing, you agree your code will be licensed under the project’s license (MIT unless stated otherwise).
 Ensure you have rights to any assets you add and include proper attributions (fonts, icons, images).
 
-🙋‍♀️ Author
+## 🙋‍♀️ Author
 
-Katja Turnšek
+**Katja Turnšek**
 Frontend Development Student
-Portfolio Website: coming soon
+[Portfolio Website](https://katjaturnsek.github.io/portfolio/)
