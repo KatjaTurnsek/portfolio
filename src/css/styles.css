@@ -1,40 +1,44 @@
-/* light/dark theme variables */
+/* ==========================================================================
+   styles.css — Theme Overrides
+   - Light theme == baseline from variables.css (no need to repeat defaults)
+   - Dark theme overrides only what actually differs
+   - Attach class on <body class="light-theme|dark-theme">
+   ========================================================================== */
 
-.light-theme {
-  --bg-color: var(--grey);
-  --text-color: var(--dark);
-  --h1-color: var(--dark);
-  --h2-color: var(--dark);
-  --h3-color: var(--dark);
-  --footer-bg: var(--dark);
-  --footer-text-color: var(--grey);
-  --menu-color: var(--dark);
-  --menu-hover-color: var(--teal);
-  --menu-border-color: var(--dark);
-  --switch-bg: var(--yellow-light);
-  --switch-circle: var(--dark); 
-  --circle-border: 2px solid var(--dark);
-  color: var(--wave-color-light);
-  --blob-color: #efe8ad;
-  --wave-color-1: rgba(123, 184, 171, 0.7);
-  --wave-color-2: rgba(123, 184, 171, 0.4);
+/* LIGHT THEME */
+body.light-theme {
+  color-scheme: light;
 }
 
-.dark-theme {
-  --bg-color: var(--dark);
+/* DARK THEME */
+body.dark-theme {
+  --bg-color:   var(--dark);
   --text-color: var(--grey);
-  --h1-color: var(--grey);
-  --h2-color: var(--grey);
-  --h3-color: var(--grey);
-  --switch-bg: var(--yellow-light);
-  --switch-circle: var(--dark); 
-  --footer-bg: var(--grey);
+
+  /* Headings track text color by default via legacy vars */
+  --h1-color: var(--text-color);
+  --h2-color: var(--text-color);
+  --h3-color: var(--text-color);
+
+  /* Footer inversion */
+  --footer-bg:         var(--grey);
   --footer-text-color: var(--dark);
-  --menu-color: var(--dark);
-  --menu-hover-color: var(--teal);
+
+  /* Menus */
+  --menu-color:        var(--dark);
   --menu-border-color: var(--dark);
-  color: var(--wave-color-dark); 
-  --blob-color: var(--teal);
+
+  /* Graphics (waves/blobs) for dark */
+  --blob-color:   var(--teal);
   --wave-color-1: rgba(241, 233, 165, 0.6);
   --wave-color-2: rgba(241, 233, 165, 0.3);
+
+  /* Stronger contrast on dark backgrounds */
+  --pill-border: rgba(255,255,255,0.35);
+  --pill-bg: rgba(255,255,255,0.08);
+
+  --pill-active-bg: rgba(123,184,171,0.20);
+  --pill-active-border: rgba(123,184,171,0.45);
+
+  color-scheme: dark;
 }

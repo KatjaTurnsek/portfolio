@@ -1,3 +1,16 @@
+/* ==========================================================================
+   reset.css — Minimal baseline + theme hooks
+   --------------------------------------------------------------------------
+   Purpose:
+   - Normalize box-sizing
+   - Remove default body margin/padding
+   - Make media elements responsive
+   - Inherit typography for form controls
+   - Prevent long-word layout breaks
+   - Applied theme colors via CSS variables
+   ========================================================================== */
+
+
 html {
   box-sizing: border-box;
   height: 100%;

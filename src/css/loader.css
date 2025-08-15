@@ -1,18 +1,69 @@
-/* loader.css */
+/* ==========================================================================
+   Loader.css — Global overlay (GSAP wave) + Mini image loader
+   Theme-aware via body-scoped CSS variables: --bg-color, --text-color
+   ========================================================================== */
 
-/* Global loader (GSAP wave) */
+/* --------------------------------------------------
+   Tunables / Defaults
+   -------------------------------------------------- */
+:root {
+  /* Stacking */
+  --loader-z: 2147483647;
+
+  /* Durations */
+  --loader-fade: 0.4s ease;
+  --loader-bg-fade: 0.3s ease;
+  --wave-pulse-duration: 2s;
+  --mini-pulse-duration: 1.2s;
+  --mini-fade-duration: 0.3s;
+
+  /* Global spinner sizing */
+  --spinner-width: min(520px, 80vw);
+  --spinner-height: 24px;
+
+  /* Mini loader sizing */
+  --mini-size: 40px;
+  --mini-dot: 10px;
+  --mini-gap: 6px;
+}
+
+/* --------------------------------------------------
+   Accessibility: Reduced Motion
+   -------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .spinner svg path,
+  .simple-mini-loader span { animation: none !important; }
+  .loader,
+  .simple-mini-loader.fade-out { transition: none !important; }
+}
+
+/* --------------------------------------------------
+   Keyframes (wave stroke pulse + mini dots)
+   -------------------------------------------------- */
+@keyframes loaderPulseStroke {
+  0%, 100% { stroke-opacity: 1; }
+  50%      { stroke-opacity: 0.4; }
+}
+
+@keyframes loaderMiniPulse {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40%           { transform: scale(1.3); opacity: 1;   }
+}
+
+/* ==========================================================================
+   GLOBAL LOADER (full-screen overlay; GSAP animates the polyline points)
+   ========================================================================== */
+
 .loader {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
+  inset: 0;
+  z-index: var(--loader-z);
 
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
+  /* THEME-AWARE: relies on variables set on <body class="light-theme|dark-theme"> */
   background-color: var(--bg-color);
   color: var(--text-color);
 
@@ -20,95 +71,77 @@
   visibility: visible;
   pointer-events: auto;
 
-  transition: background-color 0.3s ease, opacity 0.4s ease, visibility 0.4s ease;
+  transition:
+    background-color var(--loader-bg-fade),
+    opacity var(--loader-fade),
+    visibility var(--loader-fade);
 }
 
+/* Hidden state (fades out, blocks clicks off) */
 .loader.hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-@keyframes pulseStroke {
-  0%, 100% {
-    stroke-opacity: 1;
-  }
-  50% {
-    stroke-opacity: 0.4;
-  }
-}
-
-.spinner svg path {
-  animation: pulseStroke 2s infinite ease-in-out;
-}
-
-/* Spinner container */
+/* Spinner container (holds the wave SVG) */
 .spinner {
-  width: 30%;
-  height: 20px;
+  width: var(--spinner-width);
+  height: var(--spinner-height);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
+/* SVG sizing + path styling (stroke uses currentColor) */
 .spinner svg {
   width: 100%;
   height: 100%;
   overflow: visible;
 }
-
 .spinner svg path {
+  stroke: currentColor;
   stroke-width: 1;
   fill: none;
-  vector-effect: non-scaling-stroke;
   stroke-linecap: round;
   stroke-linejoin: round;
+  animation: loaderPulseStroke var(--wave-pulse-duration) infinite ease-in-out;
 }
 
-/* Mini image loader (3-dot spinner) */
+/* ==========================================================================
+   MINI IMAGE LOADER (3-dot inline spinner, centered in image container)
+   ========================================================================== */
+
 .simple-mini-loader {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: var(--mini-size);
+  height: var(--mini-size);
   transform: translate(-50%, -50%);
-  pointer-events: none;
   z-index: 10;
-  gap: 6px;
+  pointer-events: none;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mini-gap);
 }
 
+/* Dots inherit theme color via --text-color */
 .simple-mini-loader span {
-  width: 10px;
-  height: 10px;
+  width: var(--mini-dot);
+  height: var(--mini-dot);
   border-radius: 50%;
   background-color: var(--text-color);
-  animation: miniPulse 1.2s infinite ease-in-out;
+  animation: loaderMiniPulse var(--mini-pulse-duration) infinite ease-in-out;
 }
+.simple-mini-loader span:nth-child(2) { animation-delay: 0.2s; }
+.simple-mini-loader span:nth-child(3) { animation-delay: 0.4s; }
 
-.simple-mini-loader span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.simple-mini-loader span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes miniPulse {
-  0%, 80%, 100% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-  40% {
-    transform: scale(1.3);
-    opacity: 1;
-  }
-}
-
+/* Fade-out helper class */
 .simple-mini-loader.fade-out {
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--mini-fade-duration) ease;
 }
+

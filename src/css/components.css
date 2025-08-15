@@ -1,41 +1,70 @@
-/* buttons, forms, cards, toggle switch, etc. */
+/* ==========================================================================
+   UI Components & Patterns
+   Depends on global CSS variables:
+   --text-color, --bg-color, --link-hover-color, --h1-font, --body-font,
+   --teal, --teal-light, --teal-transparent, --yellow, --yellow-light,
+   --blob-color, --switch-circle, --switch-bg, --circle-border, --dark,
+   --p-font-size, --p-line-height
+   ========================================================================== */
 
-/* base style for label links */
-.label-link {
+
+/* ========================================================================== */
+/* 0) Utilities                                                               */
+/* ========================================================================== */
+
+.no-select,
+.no-select * { user-select: none !important; -webkit-user-select: none !important; -ms-user-select: none !important; }
+
+.full-width { width: 100%; }
+
+
+/* ========================================================================== */
+/* 1) Links & CTAs (single source of truth)                                   */
+/* ========================================================================== */
+
+.label-link,
+.submit-button {
+  /* Context variables */
+  --label-size: 30px;
+  --label-line: 40px;
+  --label-weight: 300;
+  --label-transform: uppercase;
+  --icon-scale: 0.9em;
+
   background: none;
   border: none;
   color: var(--text-color);
   font-family: var(--h1-font);
-  font-size: 30px;
-  line-height: 40px;
-  font-weight: 300;
+  font-size: var(--label-size);
+  line-height: var(--label-line);
+  font-weight: var(--label-weight);
+  text-transform: var(--label-transform);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 0;
   white-space: nowrap;
   text-decoration: none;
   transition: color 0.4s ease-out;
-  text-transform: uppercase;
 }
 
 .label-link:hover,
-.label-link:focus {
+.label-link:focus,
+.label-link:focus-visible,
+.submit-button:hover,
+.submit-button:focus,
+.submit-button:focus-visible {
   color: var(--link-hover-color);
   text-decoration: none;
+  outline: none;
 }
 
-.label-link .arrow-icon,
-.label-link .label-text {
-  color: inherit;
-  transition: color 0.4s ease-out;
-}
+.label-link .label-text { color: currentColor; transition: color 0.4s ease-out; }
 
-.online-demo-label .label-text {
-  text-transform: none;
-}
+.arrow-icon { font-size: var(--icon-scale); color: currentColor; }
 
+/* Back to Work alignment */
 .back-to-work-container {
   display: flex;
   justify-content: flex-end;
@@ -43,7 +72,11 @@
   padding-top: 60px;
 }
 
-/* Tech info */
+
+/* ========================================================================== */
+/* 2) Tech Info Bar (tools + demo links)                                      */
+/* ========================================================================== */
+
 .tech-demo-wrapper {
   display: flex;
   justify-content: space-between;
@@ -61,45 +94,24 @@
   white-space: nowrap;
 }
 
-.tech-demo-wrapper .online-demo-label {
-  display: inline-flex;
-  align-items: center;
-  font-weight: 500;
-  padding: 0;
-  color: var(--text-color);
-  text-decoration: none;
-  transition: transform 0.3s ease;
-}
-
-.tech-demo-wrapper .online-demo-label:hover {
-  color: var(--link-hover-color);
-}
-
-.arrow-icon {
-  font-size: 0.9em;
-}
-
-.tech-demo-wrapper .online-demo-label + .online-demo-label {
-  margin-top: 0.5rem;
-}
-
+/* Demo links stack */
 .demo-links {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
   padding-left: 30px;
 }
-
-.demo-links .label-text {
-  font-size: 25px;
-  line-height: 35px;
+.demo-links .label-link {
+  --label-size: 25px;
+  --label-line: 35px;
+  --icon-scale: 0.85em;
 }
 
-.demo-links .arrow-icon {
-  font-size: 0.85em;
-}
 
-/* Project switcher */
+/* ========================================================================== */
+/* 3) Project Switcher (pills)                                                */
+/* ========================================================================== */
+
 .project-switcher {
   display: flex;
   flex-wrap: wrap;
@@ -113,27 +125,35 @@
   gap: .5rem;
   padding: .5rem .8rem;
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,.15);
+  border: 1px solid var(--pill-border);
   text-decoration: none;
   font-family: var(--body-font);
   font-weight: 500;
   font-size: 14px;
   line-height: 1;
   color: var(--text-color);
-  background: color-mix(in srgb, var(--bg-color, #fff) 85%, transparent);
-  transition: background .2s ease, color .2s ease, border-color .2s ease;
+  background-color: var(--pill-bg);
+  transition: background .2s ease, color .2s ease, border-color .2s ease, outline-color .2s ease;
 }
 
 .project-switcher .pill:hover,
-.project-switcher .pill:focus {
+.project-switcher .pill:focus-visible {
   border-color: var(--link-hover-color);
   color: var(--link-hover-color);
+  outline: 2px solid rgba(123,184,171,.4);
+  outline-offset: 2px;
 }
 
 .project-switcher .pill[aria-current="page"] {
-  background: color-mix(in srgb, var(--link-hover-color) 12%, transparent);
-  border-color: color-mix(in srgb, var(--link-hover-color) 40%, #999);
+  background-color: var(--pill-active-bg);
+  border-color: var(--pill-active-border);
+  color: var(--link-hover-color);
 }
+
+
+/* ========================================================================== */
+/* 4) Related Links (inline CTA group)                                        */
+/* ========================================================================== */
 
 .related-links {
   display: flex;
@@ -149,35 +169,31 @@
   margin-right: .25rem;
 }
 
-.related-links .label-link.related-link {
-  font-size: 16px;
-  line-height: 22px;
-  text-transform: none;
+.related-links .label-link {
+  --label-size: 16px;
+  --label-line: 22px;
+  --label-transform: none;
+  --icon-scale: 0.9em;
   gap: .35rem;
 }
 
-.related-links .label-link .arrow-icon {
-  font-size: .9em;
-}
 
-/* Bullet lists */
+/* ========================================================================== */
+/* 5) Bullet Lists                                                            */
+/* ========================================================================== */
+
 .bullet-list,
 .bullet-list-right {
   list-style-type: disc;
   list-style-position: outside;
-  margin: 10px 0 10px 0;
+  margin: 10px 0;
   font-size: var(--p-font-size);
   line-height: var(--p-line-height);
   color: var(--text-color);
 }
 
-.bullet-list {
-  padding: 0 40px;
-}
-
-.bullet-list-right {
-  padding: 0 0 0 40px;
-}
+.bullet-list { padding: 0 40px; }
+.bullet-list-right { padding: 0 0 0 40px; }
 
 .bullet-list li,
 .bullet-list-right li {
@@ -185,7 +201,11 @@
   margin-bottom: 10px;
 }
 
-/* form */
+
+/* ========================================================================== */
+/* 6) Forms                                                                   */
+/* ========================================================================== */
+
 .contact-form-wrapper {
   width: 100%;
   display: flex;
@@ -212,10 +232,6 @@
   flex: 1;
 }
 
-.full-width {
-  width: 100%;
-}
-
 label {
   margin-bottom: 0.5rem;
   color: var(--text-color);
@@ -226,7 +242,6 @@ label {
 
 input,
 textarea {
-  background-color: rgba(0, 128, 128, 0.2);
   background-color: var(--teal-transparent);
   border-radius: 10px;
   height: 50px;
@@ -239,6 +254,8 @@ textarea {
   color: var(--text-color);
 }
 
+textarea { padding-top: 0.75rem; height: auto; }
+
 input:-webkit-autofill,
 textarea:-webkit-autofill {
   box-shadow: 0 0 0px 1000px rgba(0, 128, 128, 0.15) inset !important;
@@ -249,67 +266,18 @@ textarea:-webkit-autofill {
 }
 
 input:invalid,
-textarea:invalid {
-  border: 2px solid var(--error-color);
-}
+textarea:invalid { border: 2px solid var(--error-color); }
 
 input:valid,
-textarea:valid {
-  border: 2px solid var(--success-color);
-}
+textarea:valid { border: 2px solid var(--success-color); }
 
 input:invalid:focus,
-textarea:invalid:focus {
-  outline: 2px solid var(--error-color);
-}
+textarea:invalid:focus { outline: 2px solid var(--error-color); }
 
 input:valid:focus,
-textarea:valid:focus {
-  outline: 2px solid var(--success-color);
-}
+textarea:valid:focus { outline: 2px solid var(--success-color); }
 
-textarea {
-  padding-top: 0.75rem;
-  height: auto;
-}
-
-.button-wrapper {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.submit-button {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-family: var(--h1-font);
-  font-size: 30px;
-  line-height: 40px;
-  font-weight: 300;
-  text-transform: uppercase;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0;
-  white-space: nowrap;
-  transition: color 0.4s ease-out;
-}
-
-.submit-button:hover,
-.submit-button:focus {
-  color: var(--link-hover-color);
-  text-decoration: none;
-}
-
-.submit-button i {
-  font-size: 16px;
-  transition: color 0.4s ease-out;
-}
-
-.submit-button:hover i {
-  color: var(--link-hover-color);
-}
+.button-wrapper { display: flex; justify-content: flex-end; }
 
 .info-text {
   font-size: 30px;
@@ -319,10 +287,12 @@ textarea {
   font-weight: 400;
 }
 
-/* testimonial */
-.testimonial-section {
-  padding-bottom: 100px;
-}
+
+/* ========================================================================== */
+/* 7) Testimonials (header strip + card)                                      */
+/* ========================================================================== */
+
+.testimonial-section { padding-bottom: 100px; }
 
 .testimonial {
   background-color: var(--teal-light);
@@ -336,23 +306,15 @@ textarea {
   box-sizing: border-box;
 }
 
-.testimonial-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.arrow-icon {
-  font-size: 14px;
-  color: var(--dark);
-}
-
-.label-text {
+.testimonial-label { display: flex; align-items: center; gap: 10px; }
+.testimonial .arrow-icon { font-size: 14px; color: var(--dark); }
+.testimonial-label .label-text {
+  font-family: var(--h1-font);
+  font-weight: 300;
   font-size: 30px;
   line-height: 40px;
   text-transform: uppercase;
   color: var(--dark);
-  font-weight: 300;
 }
 
 .circle-button {
@@ -368,11 +330,7 @@ textarea {
   align-items: center;
   justify-content: center;
 }
-
-.circle-button i {
-  font-size: 58px;
-  color: var(--dark);
-}
+.circle-button i { font-size: 58px; color: var(--dark); }
 
 /* Testimonial Card */
 .testimonial-card {
@@ -383,14 +341,12 @@ textarea {
   background: color-mix(in srgb, var(--bg-color) 50%, transparent);
   color: var(--text-color);
 }
-
 .testimonial-card blockquote {
   margin: 0 0 30px;
   font-family: var(--body-font);
   font-size: var(--p-font-size);
   line-height: var(--p-line-height);
 }
-
 .testimonial-card figcaption {
   display: flex;
   flex-wrap: wrap;
@@ -400,20 +356,15 @@ textarea {
   font-size: 16px;
   line-height: 20px;
 }
+.testimonial-card .author { font-weight: 600; }
+.testimonial-card .role { opacity: .75; }
+.testimonial-card + .testimonial-card { margin-top: 30px; }
 
-.testimonial-card .author {
-  font-weight: 600;
-}
 
-.testimonial-card .role {
-  opacity: .75;
-}
+/* ========================================================================== */
+/* 8) Animated Bars                                                            */
+/* ========================================================================== */
 
-.testimonial-card + .testimonial-card {
-  margin-top: 30px;
-}
-
-/* animated bars */
 .animated-bars {
   width: 100%;
   display: flex;
@@ -421,17 +372,10 @@ textarea {
   gap: 15px;
   padding-bottom: 60px;
 }
-
-.bar-stack {
-  position: relative;
-  width: 100%;
-  height: 50px;
-}
-
+.bar-stack { position: relative; width: 100%; height: 50px; }
 .bar {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0; top: 0;
   height: 50px;
   border-radius: 10px;
   width: 0%;
@@ -440,19 +384,13 @@ textarea {
   align-items: center;
   padding-left: 20px;
 }
-
-.bar-bg {
-  background-color: var(--teal);
-  z-index: 1;
-}
-
+.bar-bg { background-color: var(--teal); z-index: 1; }
 .bar-1, .bar-2, .bar-3 {
   background-color: var(--teal-light);
   z-index: 2;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-
 .bar-label {
   color: var(--dark);
   font-size: 20px;
@@ -463,7 +401,11 @@ textarea {
   white-space: nowrap;
 }
 
-/* Section line */
+
+/* ========================================================================== */
+/* 9) Section Divider Lines (SVG)                                             */
+/* ========================================================================== */
+
 .section-line-wrapper {
   width: 100%;
   margin: 40px auto;
@@ -471,41 +413,24 @@ textarea {
   transform: translateY(30px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
+.section-line-wrapper.visible { opacity: 1; transform: translateY(0); }
 
-.section-line-wrapper.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.section-line {
-  width: 100%;
-  height: 20px;
-  display: block;
-  overflow: visible;
-  cursor: grab;
-}
-
+.section-line { width: 100%; height: 20px; display: block; overflow: visible; cursor: grab; }
 .section-line .wave {
   stroke-width: 1;
   stroke-linecap: round;
   stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
 }
 
-/* Wavy line */
-.wavy-line {
-  display: block;
-  width: 100vw;
-  height: 30px;
-  margin: 0 auto 2rem auto;
-}
+/* Simple wavy line helper */
+.wavy-line { display: block; width: 100%; height: 30px; margin: 0 auto 2rem; }
+.wavy-line path { stroke: currentColor; stroke-width: 1; fill: none; }
 
-.wavy-line path {
-  stroke-width: 1;
-  fill: none;
-}
 
-/* Theme Toggle */
+/* ========================================================================== */
+/* 10) Theme Toggle                                                           */
+/* ========================================================================== */
+
 #theme-toggle {
   position: absolute;
   top: 70px;
@@ -520,7 +445,6 @@ textarea {
   outline: none;
   transition: background-color 0.3s ease;
 }
-
 #theme-toggle::before {
   content: '';
   position: absolute;
@@ -534,61 +458,35 @@ textarea {
   transition: transform 0.3s ease, background-color 0.3s ease;
   transform: translateX(0); /* default */
 }
+#theme-toggle.dark-mode::before { transform: translateX(30px); }
 
-#theme-toggle.dark-mode::before {
-  transform: translateX(30px);
-}
 
-.fullscreen-menu nav a span.word {
-  display: inline-block;
-  overflow: hidden;
-}
+/* ========================================================================== */
+/* 11) Animated Blob (background)                                             */
+/* ========================================================================== */
 
-.hire-section {
-  position: absolute;
-  bottom: 0;
-  left: 70px;
-  position: absolute;
-  bottom: -30px;
-  left: 70px;
-}
-
-/* Animated blob */
 .morphing-blob-wrapper {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   overflow: hidden;
   z-index: -999;
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0); /* force GPU acceleration */
 }
+#blob-svg { width: 100%; height: 100%; display: block; filter: blur(10px); }
+.blobs .blob { fill: var(--blob-color); }
+.blob { transform-box: fill-box; transform-origin: center; stroke: none; }
 
-#blob-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  filter: blur(10px);
-}
 
-.blobs .blob {
-  fill: var(--blob-color);
-}
+/* ========================================================================== */
+/* 12) Top Waves (canvas + static fallbacks)                                  */
+/* ========================================================================== */
 
-.blob {
-  transform-box: fill-box;
-  transform-origin: center;
-  stroke: none;
-}
-
-/* Animated waves */
 #top-waves-canvas {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100vw;
   height: 300px;
   z-index: -1;
@@ -596,93 +494,68 @@ textarea {
   display: block;
 }
 
-/* --- Static Waves (Single WebP) --- */
+/* Static WebP fallback */
 .top-waves {
   display: none;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   height: 200px;
   pointer-events: none;
   z-index: 1;
   animation: fadeInWaves 1.5s ease-out 0.3s forwards;
 }
-
-@keyframes fadeInWaves {
-  to {
-    opacity: 1;
-  }
-}
+@keyframes fadeInWaves { to { opacity: 1; } }
 
 .top-waves img {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   object-fit: cover;
   display: none;
 }
+.light-theme .top-waves img.light-theme { display: block; }
+.dark-theme .top-waves img.dark-theme { display: block; }
 
-.light-theme .top-waves img.light-theme {
-  display: block;
-}
 
-.dark-theme .top-waves img.dark-theme {
-  display: block;
-}
+/* ========================================================================== */
+/* 13) Menu Waves                                                             */
+/* ========================================================================== */
 
-/* --- Menu Waves --- */
 .fullscreen-menu .menu-wave {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 200px;
+  top: 0; left: 0;
+  width: 100%; height: 200px;
   z-index: -1;
   overflow: hidden;
 }
-
-#menu-waves-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+#menu-waves-canvas { width: 100%; height: 100%; display: block; }
 
 .menu-waves {
   display: none;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 200px;
+  top: 0; left: 0;
+  width: 100%; height: 200px;
   animation: fadeInWaves 1.5s ease-out 0.3s forwards;
 }
-
 .menu-waves img {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   object-fit: cover;
   display: none;
 }
+.light-theme .menu-waves img.light-theme { display: block; }
+.dark-theme .menu-waves img.dark-theme { display: block; }
 
-.light-theme .menu-waves img.light-theme {
-  display: block;
-}
 
-.dark-theme .menu-waves img.dark-theme {
-  display: block;
-}
+/* ========================================================================== */
+/* 14) Hire Button                                                            */
+/* ========================================================================== */
 
-/* Buttons */
 .hire-button {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 200px; height: 200px;
   border-radius: 50%;
   background-color: var(--yellow-light);
   color: var(--dark);
@@ -690,64 +563,47 @@ textarea {
   font-size: 25px;
   font-weight: 700;
   text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   z-index: 0;
   overflow: hidden;
   transition: background-color 0.4s ease;
 }
-
 .hire-button::before {
   content: "";
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   border-radius: 50%;
   border: 20px solid var(--yellow);
   transition: border-color 0.4s ease, transform 0.4s ease;
   z-index: -1;
 }
+.hire-button:hover { background-color: var(--yellow); text-decoration: none; }
+.hire-button:hover::before { border-color: var(--yellow-light); transform: scale(1.05); }
 
-.hire-button:hover {
-  background-color: var(--yellow);
-  text-decoration: none;
+.hire-button a,
+.hire-button a:hover { color: var(--dark); }
+
+.hire-section {
+  position: absolute;
+  bottom: -30px;
+  left: 70px;
 }
 
-.hire-button:hover::before {
-  border-color: var(--yellow-light);
-  transform: scale(1.05);
-}
 
-.hire-button a, a:hover {
-  color: var(--dark);
-}
+/* ========================================================================== */
+/* 15) Responsive Tweaks                                                      */
+/* ========================================================================== */
 
-/* No select Texts while blobs */
-.no-select,
-.no-select * {
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  -ms-user-select: none !important;
-}
+@media (max-width: 850px) {
+  .top-waves { height: 150px; }
+  .menu-waves { height: 100px; }
 
-/* Hide element on Tablet/Phone */
-@media only screen and (max-width:850px) {
-  .top-waves {
-    height: 150px;
-  }
-
-  .menu-waves {
-    height: 100px;
-  }
-  
   .tech-demo-wrapper {
     display: block;
     text-align: center;
     width: 100%;
     margin-top: 20px;
   }
-
   .tech-stack {
     font-size: 22px;
     line-height: 32px;
@@ -755,77 +611,40 @@ textarea {
     white-space: normal;
   }
 
+  .project-switcher {
+    justify-content: center;
+  }
+
   .label-link {
     justify-content: center;
     width: 100%;
-    font-size: 26px;
-    line-height: 36px;
     white-space: normal;
     flex-wrap: wrap;
   }
+  .demo-links { padding-left: 0; }
 
-  .demo-links {
-    padding-left: 0;
-  }
+  .related-links { justify-content: flex-start; flex-wrap: wrap; row-gap: .5rem; }
 
-  .related-links {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    row-gap: .5rem;
-  }
+  .back-to-work-container { justify-content: center; margin-top: 30px; }
 
-  .back-to-work-container {
-    justify-content: center;
-    margin-top: 30px;
-  }
+  .circle-button { left: 20%; width: 100px; height: 100px; }
+  .circle-button i { font-size: 40px; }
 
-  .circle-button {
-    left: 20%;
-    width: 100px;
-    height: 100px;
-  }
+  .contact-form-wrapper { justify-content: center; padding: 2rem 1rem; }
+  .contact-form { width: 100%; }
+  .name-row { flex-direction: column; gap: 1.5rem; }
 
-  .circle-button i {
-    font-size: 40px;
-  }
+  .info-text { text-align: center; }
 
-  .contact-form-wrapper {
-    justify-content: center;
-    padding: 2rem 1rem;
-  }
-
-  .contact-form {
-    width: 100%;
-  }
-
-  .name-row {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .info-text {
-    text-align: center;
-  }
-  
-  #theme-toggle {
-    top: 40px;
-    right: 100px;
-  }
+  #theme-toggle { top: 40px; right: 100px; }
 
   .hire-section {
     position: static;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-    padding-top: 30px;
+    display: flex; justify-content: center; align-items: center;
+    height: auto; padding-top: 30px;
   }
 
-  #top-waves-canvas, #menu-waves-canvas {
-    height: 200px;
-  }
+  #top-waves-canvas, #menu-waves-canvas { height: 200px; }
 
-  .bullet-list, .bullet-list-right {
-    padding: 20px;
-  }
+  .bullet-list, .bullet-list-right { padding: 20px; }
 }

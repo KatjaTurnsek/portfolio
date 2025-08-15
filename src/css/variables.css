@@ -1,7 +1,14 @@
-/* resets, variables, fonts, global tags */
+/* ==========================================================================
+   variables.css — Resets, Tokens, Defaults, Global Typography
+   - Theme classes in styles.css ONLY override differences
+   - Legacy heading vars (--h1/2/3-color) map to --text-color
+   ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 
+/* -----------------------------
+   Core palette tokens
+----------------------------- */
 :root {
   --grey: #D3D9D4;
   --dark: #0D0D0D;
@@ -11,28 +18,52 @@
   --yellow: #E8C86E;
   --yellow-light: #F1E9A5;
 
-  --switch-bg: var(--yellow-light);
+  /* -----------------------------
+     Semantic UI defaults (LIGHT baseline)
+  ----------------------------- */
+  --bg-color:   var(--grey);
+  --text-color: var(--dark);
+
+  /* Headings (keep legacy names for compatibility) */
+  --h1-color: var(--text-color);
+  --h2-color: var(--text-color);
+  --h3-color: var(--text-color);
+
+  /* Footer */
+  --footer-bg:         var(--dark);
+  --footer-text-color: var(--grey);
+
+  /* Navigation + controls (menu uses these) */
+  --menu-color:        var(--text-color);  /* contrast-safe default */
+  --menu-hover-color:  var(--teal);
+  --menu-border-color: var(--text-color);
+
+  /* NAV TYPOGRAPHY */
+  --nav-font: var(--font-sans);
+  --nav-font-weight: normal;
+  --nav-font-size: 90px;
+
+  /* Theme switch */
+  --switch-bg:     var(--yellow-light);
   --switch-circle: var(--dark);
   --circle-border: 2px solid var(--dark);
 
-  --font-sans: 'Montserrat', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-
+  /* Typography families */
+  --font-sans: "Montserrat", sans-serif;
+  --font-serif: "Playfair Display", serif;
   --h1-font: var(--font-sans);
   --body-font: var(--font-serif);
 
+  /* Typography scale */
   --h1-font-size: 90px;
-  --h1-color: var(--dark);
   --h1-font-weight: 600;
   --h1-line-height: 100px;
 
   --h2-font-size: 60px;
-  --h2-color: var(--dark);
   --h2-font-weight: 600;
   --h2-line-height: 70px;
 
   --h3-font-size: 40px;
-  --h3-color: var(--dark);
   --h3-font-weight: 600;
   --h3-line-height: 50px;
 
@@ -43,83 +74,77 @@
 
   --p-font-size: 20px;
   --p-line-height: 40px;
-  --link-color: var(--teal);
+
+  /* Links */
+  --link-color:       var(--teal);
   --link-hover-color: var(--teal-light);
 
-  --footer-bg: var(--dark);
-  --footer-text-color: var(--grey);
-
-  --nav-font: var(--font-sans);
-  --nav-font-weight: normal;
-  --nav-font-size: 90px;
-
+  /* Graphics (waves/blobs/loader) */
   --wave-color-light: var(--dark);
-  --wave-color-dark: var(--grey);
-
-  --blob-color: #efe8ad;
+  --wave-color-dark:  var(--grey);
+  --blob-color:       #efe8ad;
   --wave-color-1: rgba(123, 184, 171, 0.7);
   --wave-color-2: rgba(123, 184, 171, 0.4);
 
+  /* Loader consumes theme automatically */
+  --loader-bg: var(--bg-color);
+  --loader-fg: var(--text-color);
+
+  /* States */
   --success-color: #44b78b;
-  --error-color: #e15b64;
+  --error-color:   #e15b64;
+
+  /* Let UA adapt controls & scrollbars */
+  color-scheme: light dark;
+
+  /* Pills */
+  --pill-border: rgba(0,0,0,0.20);
+  --pill-bg: rgba(255,255,255,0.50);
+  --pill-active-bg: rgba(123,184,171,0.20);
+  --pill-active-border: rgba(123,184,171,0.50);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-h1 {
+/* Headings */
+h1, h2, h3, h4 {
   font-family: var(--h1-font);
+  text-align: left;
+  transition: color 0.3s ease;
+}
+h1 {
   font-size: var(--h1-font-size);
   color: var(--h1-color);
   font-weight: var(--h1-font-weight);
   line-height: var(--h1-line-height);
   margin-bottom: 60px;
-  text-align: left;
-  transition: color 0.3s;
 }
-
 .h1-narrow {
   max-width: 13ch;
   text-wrap: balance;
-  margin-inline: auto;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
+  margin-inline: 0;
 }
-
 h2 {
-  font-family: var(--h1-font);
   font-size: var(--h2-font-size);
   color: var(--h2-color);
   font-weight: var(--h2-font-weight);
   line-height: var(--h2-line-height);
-  text-align: left;
-  transition: color 0.3s;
 }
-
 h3 {
-  font-family: var(--h1-font);
   font-size: var(--h3-font-size);
   color: var(--h3-color);
   font-weight: var(--h3-font-weight);
   line-height: var(--h3-line-height);
-  margin: 45px 0 45px 0;
+  margin: 45px 0;
   text-transform: uppercase;
-  transition: color 0.3s;
 }
-
 h4 {
-  font-family: var(--h1-font);
   font-size: var(--h4-font-size);
   color: var(--h4-color);
   font-weight: var(--h4-font-weight);
   line-height: var(--h4-line-height);
-  margin: 45px 0 45px 0;
-  transition: color 0.3s;
+  margin: 45px 0;
 }
 
+/* Paragraphs & links */
 p {
   font-family: var(--body-font);
   font-size: var(--p-font-size);
@@ -127,13 +152,11 @@ p {
   margin-bottom: 1em;
   color: var(--text-color);
 }
-
 a {
   color: var(--link-color);
   text-decoration: none;
   transition: color 0.4s ease-in;
 }
-
 a:hover,
 a:focus {
   color: var(--link-hover-color);
@@ -141,38 +164,18 @@ a:focus {
   transition: color 0.4s ease-out;
 }
 
+/* SplitType helpers */
 h1 span.line,
 h2 span.line,
 h3 span.line,
 h4 span.line,
-p span.line {
-  display: block;
-  overflow: hidden;
-}
+p  span.line { display: block; overflow: hidden; }
+h1 span.word { display: inline-block; overflow: visible; }
 
-h1 span.word {
-  display: inline-block;
-  overflow: visible;
-}
-
-/* Hide element on Tablet/Phone */
-@media only screen and (max-width:850px) {
-  h1 {
-    font-size: 70px;
-    line-height: 85px;
-    text-align: center;
-  }
-
-  h2 {
-    font-size:  50px;
-    line-height: 65px;
-    text-align: center;
-  }
-
-  h3 {
-    font-size:  30px;
-    line-height: 40px;
-    text-align: center;
-  }
-
+/* Responsive type */
+@media (max-width: 850px) {
+  h1 { font-size: clamp(36px, 9vw, 70px); line-height: 1.1;  text-align: center; }
+  h2 { font-size: clamp(28px, 6.5vw, 50px); line-height: 1.15; text-align: center; }
+  h3 { font-size: clamp(22px, 5vw, 30px);  line-height: 1.2;  text-align: center; }
+  h4 { font-size: clamp(18px, 4.5vw, 30px); line-height: 1.33; text-align: center; }
 }

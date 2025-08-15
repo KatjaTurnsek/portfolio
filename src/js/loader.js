@@ -20,13 +20,14 @@ function createLoader() {
 
   const path = document.createElementNS(svgNS, "polyline");
   path.setAttribute("points", "");
-
   path.setAttribute("class", "wave-global");
   path.setAttribute("fill", "none");
   path.setAttribute("stroke", "currentColor");
   path.setAttribute("stroke-width", "1");
-  svg.appendChild(path);
+  // Keep stroke width visually constant when the SVG scales
+  path.setAttribute("vector-effect", "non-scaling-stroke");
 
+  svg.appendChild(path);
   spinner.appendChild(svg);
   loader.appendChild(spinner);
   document.body.appendChild(loader);
