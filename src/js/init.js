@@ -1,6 +1,24 @@
+/**
+ * init.js
+ *
+ * Handles fullscreen section initialization and navigation:
+ * - Reveals sections and dispatches `sectionVisible` events
+ * - Handles anchor link navigation with smooth scrolling
+ * - Adjusts scroll for case studies with header offset
+ * - Enables scroll-to-top links
+ * - Applies header scroll effect (adds `.scrolled` class)
+ */
+
 import gsap from "gsap";
 
-// Reveal a section and trigger animations
+/**
+ * Reveals a fullscreen section by fading/sliding it in
+ * and dispatches a `sectionVisible` event for animations.
+ *
+ * @function revealSection
+ * @param {string} targetId - The id of the section element to reveal.
+ * @returns {void}
+ */
 export function revealSection(targetId) {
   const section = document.getElementById(targetId);
   if (!section || section.classList.contains("visible")) return;
@@ -20,7 +38,16 @@ export function revealSection(targetId) {
   });
 }
 
-// Initialize all sections and reveal home or hash section (after loader delay)
+/**
+ * Initializes all fullscreen sections:
+ * - Hides sections initially
+ * - Reveals either the home section or the hash-targeted section
+ *   after the loader delay
+ * - Dispatches `sectionVisible` event for the initial section
+ *
+ * @function initSections
+ * @returns {void}
+ */
 export function initSections() {
   const sections = document.querySelectorAll(".fullscreen-section");
   const home = document.getElementById("home");
@@ -35,7 +62,6 @@ export function initSections() {
   const initialTarget = document.getElementById(hash) || home;
 
   if (initialTarget) {
-    // Wait for loader to finish before showing the section
     setTimeout(() => {
       gsap.to(initialTarget, {
         duration: 0.8,
@@ -52,7 +78,6 @@ export function initSections() {
           });
 
           if (hash && initialTarget.id === hash) {
-            // Scroll to it only if it's not home
             initialTarget.scrollIntoView({ behavior: "auto" });
           }
         },
@@ -61,7 +86,13 @@ export function initSections() {
   }
 }
 
-// Smooth scroll and reveal on anchor click
+/**
+ * Sets up smooth scrolling and section reveals
+ * for all anchor links with `href="#id"`.
+ *
+ * @function setupNavigation
+ * @returns {void}
+ */
 export function setupNavigation() {
   document.querySelectorAll("a[href^='#']").forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -76,7 +107,13 @@ export function setupNavigation() {
   });
 }
 
-// Reveal and scroll to case studies with header offset
+/**
+ * Handles scrolling to case study sections (linked by `.work-link`).
+ * Accounts for header offset and reveals the target section before scrolling.
+ *
+ * @function setupCaseStudyScroll
+ * @returns {void}
+ */
 export function setupCaseStudyScroll() {
   const header = document.querySelector("header");
 
@@ -112,7 +149,13 @@ export function setupCaseStudyScroll() {
   });
 }
 
-// Scroll to top of section with data-scrolltop
+/**
+ * Enables "scroll to top" links within sections.
+ * Uses `a[data-scrolltop]` with hash targets.
+ *
+ * @function setupScrollTopLinks
+ * @returns {void}
+ */
 export function setupScrollTopLinks() {
   document.querySelectorAll("a[data-scrolltop]").forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -132,7 +175,13 @@ export function setupScrollTopLinks() {
   });
 }
 
-// Toggle header class when scrolled
+/**
+ * Toggles `.scrolled` class on header
+ * when the page is scrolled more than 10px.
+ *
+ * @function setupHeaderScrollEffect
+ * @returns {void}
+ */
 export function setupHeaderScrollEffect() {
   const header = document.querySelector("header");
   if (!header) return;

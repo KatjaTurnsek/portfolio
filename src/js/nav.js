@@ -1,3 +1,12 @@
+/**
+ * nav.js
+ *
+ * Handles fullscreen menu toggle and navigation:
+ * - Opens/closes menu on button clicks or Escape key
+ * - Smooth scrolls to anchors with header offset
+ * - Closes menu after link click
+ * - Ensures #home section is visible on page load
+ */
 export function setupMenuToggle() {
   try {
     const menuToggle = document.getElementById("menuToggle");
@@ -31,8 +40,8 @@ export function setupMenuToggle() {
       }
     });
 
-    const navLinks = document.querySelectorAll("a[href^='#']"); // Ensure it includes header links too
-
+    // Smooth scroll for all anchor links
+    const navLinks = document.querySelectorAll("a[href^='#']");
     navLinks.forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
@@ -46,17 +55,15 @@ export function setupMenuToggle() {
           const headerHeight = header ? header.offsetHeight : 160;
 
           window.scrollTo({
-            top: offsetTop - headerHeight + 10, // +10 adds a small visual cushion
+            top: offsetTop - headerHeight + 10,
             behavior: "smooth",
           });
 
-          // Reveal target section after scroll
+          // Mark target as visible
           setTimeout(() => {
             document
               .querySelectorAll(".fullscreen-section")
-              .forEach((section) => {
-                section.classList.remove("visible");
-              });
+              .forEach((section) => section.classList.remove("visible"));
             targetSection.classList.add("visible");
           }, 500);
         }
@@ -65,7 +72,7 @@ export function setupMenuToggle() {
       });
     });
 
-    // Reveal #home on initial load
+    // Reveal #home section on page load
     window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("home")?.classList.add("visible");
     });

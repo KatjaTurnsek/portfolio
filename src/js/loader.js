@@ -1,3 +1,12 @@
+/**
+ * loader.js
+ *
+ * Implements both global and per-image loaders:
+ * - Global site loader with animated wave polyline
+ * - Mini 3-dot loaders for thumbnails with blur→sharp transition
+ * - Responsive image setup with <picture> sources and breakpoints
+ */
+
 import gsap from "gsap";
 import { MorphSVGPlugin } from "../../node_modules/gsap/MorphSVGPlugin.js";
 
@@ -6,7 +15,14 @@ gsap.registerPlugin(MorphSVGPlugin);
 const originalPath = "M0,10 C50,0 100,20 150,10 S250,20 300,10 S400,0 500,10";
 const morphPath = "M0,10 C50,20 100,0 150,10 S250,0 300,10 S400,20 500,10";
 
-// Create the global loader element
+/**
+ * Creates and injects the global loader element into the DOM.
+ * Loader consists of a `.loader` container with a `.spinner` and
+ * a wave polyline SVG inside it.
+ *
+ * @function createLoader
+ * @returns {void}
+ */
 function createLoader() {
   const loader = document.createElement("div");
   loader.className = "loader";
@@ -24,7 +40,6 @@ function createLoader() {
   path.setAttribute("fill", "none");
   path.setAttribute("stroke", "currentColor");
   path.setAttribute("stroke-width", "1");
-  // Keep stroke width visually constant when the SVG scales
   path.setAttribute("vector-effect", "non-scaling-stroke");
 
   svg.appendChild(path);
@@ -33,7 +48,13 @@ function createLoader() {
   document.body.appendChild(loader);
 }
 
-// Animate the global loader wave
+/**
+ * Animates the polyline inside `.wave-global` to produce
+ * a continuous wave motion for the global loader.
+ *
+ * @function animateWave
+ * @returns {void}
+ */
 function animateWave() {
   const path = document.querySelector(".wave-global");
   if (!path || !path.points) return;
@@ -69,7 +90,13 @@ function animateWave() {
   }
 }
 
-// Show the global loader
+/**
+ * Displays the global loader. Creates it if not already present
+ * and starts the wave animation.
+ *
+ * @function showLoader
+ * @returns {void}
+ */
 export function showLoader() {
   let loader = document.querySelector(".loader");
   if (!loader) {
@@ -80,7 +107,12 @@ export function showLoader() {
   animateWave();
 }
 
-// Hide the global loader
+/**
+ * Hides the global loader by adding `.hidden` class.
+ *
+ * @function hideLoader
+ * @returns {void}
+ */
 export function hideLoader() {
   const loader = document.querySelector(".loader");
   if (loader) {
@@ -88,7 +120,14 @@ export function hideLoader() {
   }
 }
 
-// Find the closest container with position: relative
+/**
+ * Finds the nearest parent container with `position: relative`
+ * to correctly position a mini loader.
+ *
+ * @function findRelativeContainer
+ * @param {HTMLElement} img - The image element to check from.
+ * @returns {HTMLElement} The relative container or the image parent.
+ */
 function findRelativeContainer(img) {
   let el = img.parentElement;
   while (el && el !== document.body) {
@@ -99,7 +138,15 @@ function findRelativeContainer(img) {
   return img.parentElement; // fallback
 }
 
-// Attach mini loader to an image
+/**
+ * Attaches a mini loader (3-dot pulsing animation) to an image.
+ * Removes the loader once the image has loaded or failed.
+ *
+ * @function attachMiniLoaderToImg
+ * @param {HTMLImageElement} img - The image element to attach the loader to.
+ * @param {string} fullPath - The image source path.
+ * @returns {void}
+ */
 export function attachMiniLoaderToImg(img, fullPath) {
   try {
     const container = findRelativeContainer(img);
@@ -109,8 +156,7 @@ export function attachMiniLoaderToImg(img, fullPath) {
     loader.className = "simple-mini-loader";
 
     for (let i = 0; i < 3; i++) {
-      const dot = document.createElement("span");
-      loader.appendChild(dot);
+      loader.appendChild(document.createElement("span"));
     }
 
     container.appendChild(loader);
@@ -131,12 +177,22 @@ export function attachMiniLoaderToImg(img, fullPath) {
     }
 
     img.src = fullPath;
-  } catch (e) {
-    // Silent fallback in production
+  } catch {
+    // Silent fail in production
   }
 }
 
-// Attach mini loaders to a list of images
+/**
+ * Sets up responsive images by:
+ * - Replacing `<img>` tags with `<picture>` for multiple formats (webp/jpg/png)
+ * - Adding size breakpoints
+ * - Attaching mini loaders while images load
+ *
+ * Expects `<img class="thumb" data-src="...">` elements in the DOM.
+ *
+ * @function setupResponsiveImages
+ * @returns {HTMLImageElement[]} Array of newly inserted fallback `<img>` elements.
+ */
 export function setupResponsiveImages() {
   const thumbs = document.querySelectorAll("img.thumb[data-src]");
   const insertedImages = [];
@@ -208,7 +264,7 @@ export function setupResponsiveImages() {
 
       attachMiniLoaderToImg(fallback, fullPath);
       insertedImages.push(fallback);
-    } catch (e) {
+    } catch {
       // Skip problematic image
     }
   });

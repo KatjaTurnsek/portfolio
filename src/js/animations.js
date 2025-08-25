@@ -1,12 +1,31 @@
+/**
+ * animations.js
+ *
+ * Contains all GSAP-powered animations for the site:
+ * - Morphing and custom wave lines
+ * - Animated teal skill bars
+ * - Gooey blobs and interactive jelly blobs
+ * - Top and menu dripping wave canvases
+ */
+
 import { gsap } from "gsap";
 import { MorphSVGPlugin } from "../../node_modules/gsap/MorphSVGPlugin.js";
 import { ScrollTrigger } from "../../node_modules/gsap/ScrollTrigger.js";
 
 gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger);
 
+/**
+ * True if current browser is Safari (used for fallbacks/perf tweaks).
+ * @constant {boolean}
+ */
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-// --- Morphing wave line ---
+/**
+ * Morphs a single SVG path between two wave shapes in a loop.
+ * Expects an element `#wavy-line path` to be present in the DOM.
+ * @function animateWaveLine
+ * @returns {void}
+ */
 export function animateWaveLine() {
   const original = "M0,15 C50,5 100,25 150,15 S250,25 300,15 S400,5 500,15";
   const alt = "M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15";
@@ -16,13 +35,16 @@ export function animateWaveLine() {
     repeat: -1,
     yoyo: true,
     ease: "power1.inOut",
-    morphSVG: {
-      shape: alt,
-    },
+    morphSVG: { shape: alt },
   });
 }
 
-// --- Inject wave line SVGs after all h2 ---
+/**
+ * Inserts an inline SVG “wavy line” right after each <h2>.
+ * Polyline points are animated later by {@link animateCustomWaveLines}.
+ * @function insertWaveLines
+ * @returns {void}
+ */
 export function insertWaveLines() {
   const waveSVG = `
     <svg class="wavy-line" viewBox="0 0 500 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,15 +52,20 @@ export function insertWaveLines() {
     </svg>
   `;
 
-  const headings = document.querySelectorAll("h2");
-  headings.forEach((heading) => {
+  document.querySelectorAll("h2").forEach((heading) => {
     const wrapper = document.createElement("div");
     wrapper.innerHTML = waveSVG;
     heading.insertAdjacentElement("afterend", wrapper.firstElementChild);
   });
 }
 
-// --- Animate each wave line polyline ---
+/**
+ * Builds and animates polyline points to create subtle, continuous wave motion
+ * for every `.wavy-polyline` inserted by {@link insertWaveLines}.
+ * Uses GSAP ticker for per-frame updates.
+ * @function animateCustomWaveLines
+ * @returns {void}
+ */
 export function animateCustomWaveLines() {
   const polylines = document.querySelectorAll(".wavy-polyline");
 
@@ -72,7 +99,12 @@ export function animateCustomWaveLines() {
   });
 }
 
-// --- Animated teal bars ---
+/**
+ * Grows background bars and foreground bars, then fades in labels —
+ * used in the “About” skills/competence section.
+ * @function animateTealBars
+ * @returns {void}
+ */
 export function animateTealBars() {
   const timeline = gsap.timeline();
 
@@ -101,24 +133,27 @@ export function animateTealBars() {
 
   timeline.to(
     ".bar-label",
-    {
-      opacity: 1,
-      duration: 1.2,
-      ease: "power2.out",
-      stagger: 0.2,
-    },
+    { opacity: 1, duration: 1.2, ease: "power2.out", stagger: 0.2 },
     "-=0.4"
   );
 }
 
-// --- Gooey blobs with Safari performance tweak ---
+/**
+ * Creates multiple SVG blob groups and animates slow floating/scale motion.
+ * If Safari is detected, removes the SVG filter for performance.
+ * Also links opacity to scroll via ScrollTrigger (parallax-like effect).
+ * Requires:
+ *  - SVG group container with id `blobs-g` (inside `#blob-svg`)
+ *  - CSS classes: `.blob-group` and `.blob`
+ * @function animateGooeyBlobs
+ * @returns {void}
+ */
 export function animateGooeyBlobs() {
   const VW = window.innerWidth;
   const VH = window.innerHeight;
   const isMobile = VW < 768;
   const svgns = "http://www.w3.org/2000/svg";
   const container = document.getElementById("blobs-g");
-
   if (!container) return;
 
   const blobCount = 30;
@@ -130,7 +165,6 @@ export function animateGooeyBlobs() {
     { x: VW * 0.7, y: VH * 0.5 },
   ];
 
-  // Safari
   if (isSafari) container.removeAttribute("filter");
 
   for (let i = 1; i <= blobCount; i++) {
@@ -152,7 +186,6 @@ export function animateGooeyBlobs() {
     circle.setAttribute("r", size);
     group.appendChild(circle);
 
-    // GSAP motion
     const pos = { x, y, rotation: 0 };
     gsap.to(pos, {
       duration: 12 + Math.random() * 4,
@@ -192,7 +225,14 @@ export function animateGooeyBlobs() {
   });
 }
 
-// --- Closest Blob Reacts to Mouse or Touch (Jelly Effect) ---
+/**
+ * Enables “closest blob follows pointer while dragging” jelly interaction.
+ * - On mousedown/touchstart: picks closest blob, follows pointer with squash/stretch.
+ * - On release: returns blob to original position/scale.
+ * Requires the SVG root with id `blob-svg` and generated `.blob-group` nodes.
+ * @function enableInteractiveJellyBlob
+ * @returns {void}
+ */
 export function enableInteractiveJellyBlob() {
   const svg = document.getElementById("blob-svg");
   if (!svg) return;
@@ -247,7 +287,7 @@ export function enableInteractiveJellyBlob() {
     target.y = svgPos.y;
 
     const now = Date.now();
-    if (now - lastSwitchTime < 200) return; // cooldown 200ms
+    if (now - lastSwitchTime < 200) return; // cooldown
 
     const closestBlob = getClosestBlob(clientX, clientY);
 
@@ -291,7 +331,6 @@ export function enableInteractiveJellyBlob() {
     vel.x = target.x - current.x;
     vel.y = target.y - current.y;
 
-    // Stick closer by speeding up lerp
     current.x += vel.x * 0.2;
     current.y += vel.y * 0.2;
 
@@ -349,7 +388,14 @@ export function enableInteractiveJellyBlob() {
   loop();
 }
 
-// --- Top dripping waves ---
+/**
+ * Renders animated dripping waves on the top canvas using 2 layered waves.
+ * Pulls colors from CSS variables (--wave-color-1, --wave-color-2).
+ * Skips on Safari (static fallback is used elsewhere).
+ * Requires a canvas with id `top-waves-canvas`.
+ * @function animateTopDrippingWaves
+ * @returns {void}
+ */
 export function animateTopDrippingWaves() {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   if (isSafari) return;
@@ -453,7 +499,6 @@ export function animateTopDrippingWaves() {
       points: [],
       width: vw,
       height: vh,
-
       init,
       resize,
       draw,
@@ -517,7 +562,13 @@ export function animateTopDrippingWaves() {
   }
 }
 
-// --- Menu dripping waves ---
+/**
+ * Same as {@link animateTopDrippingWaves} but for the full-screen menu canvas
+ * (id `menu-waves-canvas`). Uses a simpler drawing path.
+ * Skips on Safari (static fallback).
+ * @function animateMenuDrippingWaves
+ * @returns {void}
+ */
 export function animateMenuDrippingWaves() {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   if (isSafari) return;
@@ -621,7 +672,6 @@ export function animateMenuDrippingWaves() {
       points: [],
       width: vw,
       height: vh,
-
       init,
       resize,
       draw,

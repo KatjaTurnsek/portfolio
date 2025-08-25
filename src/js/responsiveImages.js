@@ -1,3 +1,19 @@
+/**
+ * responsiveImages.js
+ *
+ * Handles responsive image replacement and mini loaders:
+ * - Replaces `<img class="thumb" data-src="...">` with `<picture>`
+ * - Adds multiple formats (webp/jpg/png) and responsive srcsets
+ * - Applies blur → sharp fade-in
+ * - Displays a minimal loader until each image finishes loading
+ */
+
+/**
+ * Processes images within a section and replaces them with <picture>.
+ *
+ * @param {ParentNode} [section=document] - DOM scope to search in.
+ * @returns {HTMLImageElement[]} List of processed <img> elements.
+ */
 export function setupResponsiveImages(section = document) {
   const thumbs = section.querySelectorAll("img.thumb[data-src]");
   const insertedImages = [];
@@ -48,16 +64,19 @@ export function setupResponsiveImages(section = document) {
       const fallback = document.createElement("img");
       fallback.loading = img.dataset.priority === "eager" ? "eager" : "lazy";
 
+      // Copy attributes except data-src/path
       [...img.attributes].forEach((attr) => {
         if (attr.name !== "data-src" && attr.name !== "data-path") {
           fallback.setAttribute(attr.name, attr.value);
         }
       });
 
+      // Blur → sharp transition
       fallback.style.opacity = 0;
       fallback.style.filter = "blur(10px)";
       fallback.style.transition = "opacity 0.4s ease, filter 0.4s ease";
 
+      // Choose a sensible container for the mini loader
       const container =
         img.closest(".work-item-wrapper") ||
         img.closest(".work-item") ||
@@ -85,6 +104,7 @@ export function setupResponsiveImages(section = document) {
           removeLoader();
         };
 
+        // In case image is already cached/complete
         setTimeout(() => {
           if (fallback.complete && fallback.naturalWidth !== 0) {
             fallback.style.opacity = 1;
@@ -97,12 +117,13 @@ export function setupResponsiveImages(section = document) {
       picture.appendChild(fallback);
       img.replaceWith(picture);
 
+      // Defer setting src to allow loader to mount first
       setTimeout(() => {
         fallback.src = fullPath;
       }, 0);
 
       insertedImages.push(fallback);
-    } catch (e) {
+    } catch {
       // fail silently per image
     }
   });

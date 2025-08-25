@@ -1,13 +1,44 @@
+/**
+ * animatedTexts.js
+ *
+ * Handles text reveal animations using GSAP + SplitType:
+ * - Animates headings (H1–H4) and paragraphs within sections
+ * - Animates fullscreen menu links word-by-word
+ * - Provides Safari-specific fallbacks for smoother text easing
+ */
+
 import gsap from "gsap";
 import SplitType from "split-type";
 
+/**
+ * True if current browser is Safari (lighter ease applied).
+ * @constant {boolean}
+ */
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-const textEase = isSafari ? "power1.out" : "power2.out"; // lighter ease for Safari
 
+/**
+ * Default easing used for text animations, adjusted for Safari.
+ * @constant {string}
+ */
+const textEase = isSafari ? "power1.out" : "power2.out";
+
+/**
+ * Animates all text elements within a given section:
+ * - H1: springs in word-by-word
+ * - H2–H4: slides in line-by-line (Safari: only lines)
+ * - P: slides in line-by-line with slight delay
+ *
+ * Uses GSAP + SplitType to split text into animatable spans.
+ * Falls back to simple opacity if SplitType fails.
+ *
+ * @function animateTextInSection
+ * @param {HTMLElement} section - The section element containing text to animate.
+ * @returns {void}
+ */
 export function animateTextInSection(section) {
   if (!section) return;
 
-  // Animate all H1s
+  // Animate H1s
   const h1s = section.querySelectorAll("h1");
   h1s.forEach((heading) => {
     document.fonts.ready.then(() => {
@@ -16,11 +47,9 @@ export function animateTextInSection(section) {
           types: "words",
           tagName: "span",
         });
-
         const words = split.words;
         gsap.set(heading, { opacity: 1 });
 
-        // Use a timeline (less overhead)
         gsap
           .timeline({
             defaults: { ease: isSafari ? "power1.out" : "elastic.out(1, 0.4)" },
@@ -37,7 +66,7 @@ export function animateTextInSection(section) {
     });
   });
 
-  // Animate h2, h3, h4
+  // Animate H2–H4
   const headings = section.querySelectorAll("h2, h3, h4");
   headings.forEach((el) => {
     try {
@@ -93,7 +122,14 @@ export function animateTextInSection(section) {
   });
 }
 
-// Animate menu links
+/**
+ * Animates menu navigation links (`.fullscreen-menu nav a`)
+ * word-by-word when the menu is opened.
+ * Uses SplitType to split link text, then GSAP to animate in sequence.
+ *
+ * @function animateMenuLinks
+ * @returns {void}
+ */
 export function animateMenuLinks() {
   const links = document.querySelectorAll(".fullscreen-menu nav a");
 
