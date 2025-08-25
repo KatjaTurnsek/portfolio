@@ -61,6 +61,16 @@ assets/
     images.js
 index.html
 ```
+## 📚 Documentation
+
+This project uses **JSDoc-style comments in the source code** (no generated docs site).
+
+- **Detailed modules:** `animations.js`, `init.js`, `animatedTexts.js`, `index.js`
+- **Light modules:** `toggle.js`, `nav.js`, `responsiveImages.js` (file header + one export JSDoc)
+- **No docs:** third-party/minified files
+
+_Read the docs directly in the JS files on GitHub or in your IDE._
+
 
 ## ♿ Accessibility & Performance
 
