@@ -1,67 +1,106 @@
 /**
- * toggle.js
- *
- * Handles light/dark theme switching:
- * - Applies stored or system theme on load
- * - Updates body theme classes and switcher state
- * - Switches logos depending on theme
- * - Saves user preference in localStorage
+ * toggle.js — Light/Dark theme switcher (hardened)
+ * - Applies saved or system theme on load
+ * - Toggles body classes (light-theme / dark-theme)
+ * - Updates switcher state and swaps logos
+ * - Persists preference; follows OS changes if no explicit choice
+ * - Idempotent boot; cross-tab + OS change sync
  */
 
-const body = document.body;
-const themeToggle = document.getElementById("theme-toggle");
+const THEME_KEY = "theme";
+const LOGO_LIGHT = "assets/images/logo-katjadev-light.svg";
+const LOGO_DARK = "assets/images/logo-katjadev-dark.svg";
 
 /**
- * Updates the toggle switcher position (dark vs light).
- *
- * @function updateSwitcherPosition
- * @param {boolean} isDark - Whether dark mode is active.
+ * Update site logos.
+ * Rule (matches your working version):
+ * - .site-logo-menu flips with theme (dark → light logo, light → dark logo)
+ * - All other .site-logo use the dark logo always
  */
-export function updateSwitcherPosition(isDark) {
-  themeToggle.classList.toggle("dark-mode", isDark);
-}
-
-/**
- * Updates site logos based on theme and menu state.
- * Internal helper, not exported.
- */
-function updateLogo() {
-  const isDark = document.body.classList.contains("dark-theme");
-
-  document.querySelectorAll(".site-logo").forEach((logo) => {
-    const isMenuLogo = logo.classList.contains("site-logo-menu");
-    logo.src = isMenuLogo
-      ? isDark
-        ? "assets/images/logo-katjadev-light.svg"
-        : "assets/images/logo-katjadev-dark.svg"
-      : "assets/images/logo-katjadev-dark.svg";
+function updateLogo(isDark) {
+  document.querySelectorAll(".site-logo").forEach((img) => {
+    const isMenuLogo = img.classList.contains("site-logo-menu");
+    img.src = isMenuLogo ? (isDark ? LOGO_LIGHT : LOGO_DARK) : LOGO_DARK;
   });
 }
 
-// Apply stored or system theme on load
-window.addEventListener("DOMContentLoaded", () => {
-  const storedTheme = localStorage.getItem("theme");
-  const isDark = storedTheme
-    ? storedTheme === "dark"
-    : window.matchMedia("(prefers-color-scheme: dark)").matches;
+/** Toggle button visual state */
+export function updateSwitcherPosition(isDark) {
+  const btn = document.getElementById("theme-toggle");
+  if (btn) btn.classList.toggle("dark-mode", !!isDark);
+}
+
+/** Apply theme classes + UI affordances */
+function applyTheme(theme) {
+  const isDark = theme === "dark";
+  const body = document.body;
+  if (!body) return;
 
   body.classList.remove("light-theme", "dark-theme");
   body.classList.add(isDark ? "dark-theme" : "light-theme");
 
   updateSwitcherPosition(isDark);
-  updateLogo();
-});
+  updateLogo(isDark);
 
-// Toggle theme on button click
-themeToggle.addEventListener("click", () => {
-  const isDark = body.classList.contains("dark-theme");
-  const newTheme = isDark ? "light" : "dark";
+  const btn = document.getElementById("theme-toggle");
+  if (btn) {
+    btn.setAttribute("aria-pressed", String(isDark));
+    btn.setAttribute(
+      "title",
+      isDark ? "Switch to light theme" : "Switch to dark theme"
+    );
+  }
+}
 
-  body.classList.remove("light-theme", "dark-theme");
-  body.classList.add(`${newTheme}-theme`);
+/** Resolve initial theme from storage or OS */
+function getInitialTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved === "light" || saved === "dark") return saved;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
 
-  updateSwitcherPosition(newTheme === "dark");
-  updateLogo();
+/** Click handler for the toggle button */
+function onToggleClick(e) {
+  e?.preventDefault?.();
+  const next = document.body.classList.contains("dark-theme")
+    ? "light"
+    : "dark";
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+}
 
-  localStorage.setItem("theme", newTheme);
-});
+/** One-time initializer */
+function boot() {
+  applyTheme(getInitialTheme());
+
+  const btn = document.getElementById("theme-toggle");
+  if (btn && !btn.__themeBound) {
+    btn.__themeBound = true;
+    btn.addEventListener("click", onToggleClick);
+  }
+
+  // Follow OS theme when there's no explicit user choice
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  media.addEventListener?.("change", (evt) => {
+    if (!localStorage.getItem(THEME_KEY))
+      applyTheme(evt.matches ? "dark" : "light");
+  });
+
+  // Cross-tab sync
+  window.addEventListener("storage", (evt) => {
+    if (
+      evt.key === THEME_KEY &&
+      (evt.newValue === "light" || evt.newValue === "dark")
+    ) {
+      applyTheme(evt.newValue);
+    }
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot, { once: true });
+} else {
+  boot();
+}

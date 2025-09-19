@@ -7,6 +7,7 @@ import "./gh-redirect.js";
  *  - Shows exactly one section at a time (no full page reloads).
  *  - Defers the very first reveal until the global loader fires `loader:done`.
  *  - Supports deep links (`/work#case-foo`) and Back/Forward.
+ *  - Smart back buttons via [data-back] (uses history.back() with SPA fallback).
  *  - Keeps nav state in sync and focuses the first heading for a11y.
  *
  * Expects each route to map to a section with that `id` in the DOM.
@@ -28,7 +29,7 @@ import "./gh-redirect.js";
     "/contact": "contact",
   };
 
-  /** @type {Record<string, string>} - Reverse map: section id -> path */
+  /** @type {Record<string, string>} */
   const idsToPaths = Object.fromEntries(
     Object.entries(routes).map(([path, id]) => [id, path])
   );
@@ -38,8 +39,7 @@ import "./gh-redirect.js";
     Array.from(document.querySelectorAll(".fullscreen-section"));
 
   /**
-   * Normalizes a pathname by stripping the Vite base and trailing slash.
-   * Falls back to "/" if the path isn't a known route.
+   * Normalize pathname by stripping base and trailing slash. Falls back to "/".
    * @param {string} pathname
    * @returns {keyof RouteMap}
    */
@@ -50,10 +50,7 @@ import "./gh-redirect.js";
     return /** @type {keyof RouteMap} */ (p in routes ? p : "/");
   }
 
-  /**
-   * Closes the full-screen menu and clears body lock classes if present.
-   * @returns {void}
-   */
+  /** Close the full-screen menu and clear body locks. */
   function closeMenuIfOpen() {
     const menu = document.getElementById("menu");
     if (menu && menu.classList.contains("open")) menu.classList.remove("open");
@@ -61,9 +58,8 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Hides all sections except the provided id and resets their animated state.
+   * Hide all sections except the target and reset animation state.
    * @param {string} idToShow
-   * @returns {void}
    */
   function hideAllExcept(idToShow) {
     allSections().forEach((s) => {
@@ -78,9 +74,8 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Prepares a section for reveal: measurable & interactive, but at the animation start state.
+   * Prepare a section for reveal (measurable, interactive, anim start state).
    * @param {HTMLElement} el
-   * @returns {void}
    */
   function prepTargetForReveal(el) {
     el.style.display = "block";
@@ -92,9 +87,8 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Applies the active class to nav links whose path matches the given section id.
+   * Toggle active class on nav links for the current section id.
    * @param {string} id
-   * @returns {void}
    */
   function setActiveLinkById(id) {
     const routedPath = idsToPaths[id] || normalizePathname(location.pathname);
@@ -112,11 +106,9 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Prepares the initial section (no animation yet) and seeds history state.
-   * The actual reveal is triggered later by the global loader (`loader:done`).
+   * Initial section prep (no animation) and seed history. Actual reveal happens on `loader:done`.
    * @param {keyof RouteMap} path
    * @param {string|null} hash
-   * @returns {void}
    */
   function initialShow(path, hash) {
     const baseId = routes[path] || routes["/"];
@@ -131,7 +123,6 @@ import "./gh-redirect.js";
     if (title) document.title = title;
     setActiveLinkById(id);
 
-    // Remember which section to reveal when loader completes.
     window.__currentSectionId = id;
 
     history.replaceState(
@@ -141,10 +132,7 @@ import "./gh-redirect.js";
     );
   }
 
-  /**
-   * First-time reveal trigger (runs once). Called on `loader:done` or timeout fallback.
-   * @returns {void}
-   */
+  /** One-time initial reveal trigger. */
   function kickInitialReveal() {
     if (window.__initialRevealed) return;
     window.__initialRevealed = true;
@@ -153,14 +141,12 @@ import "./gh-redirect.js";
   }
 
   document.addEventListener("loader:done", kickInitialReveal);
-  // Dev fallback if loader isn't shown:
   setTimeout(kickInitialReveal, 1200);
 
   /**
-   * Core navigation: updates history/URL and animates the target section.
+   * Core SPA navigation: update history, URL, and animate the target section.
    * @param {keyof RouteMap} path
    * @param {{hash?: string|null, replace?: boolean}} [opts]
-   * @returns {void}
    */
   function render(path, { hash = null, replace = false } = {}) {
     const baseId = routes[path] || routes["/"];
@@ -172,7 +158,6 @@ import "./gh-redirect.js";
     const el = document.getElementById(id);
     if (el) {
       prepTargetForReveal(el);
-
       window.scrollTo({ top: 0, behavior: "auto" });
 
       const h = el.querySelector("h1, h2, h3");
@@ -193,16 +178,42 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Intercepts same-origin link clicks for SPA navigation.
-   * Lets browser handle external links, downloads, and non-route anchors.
+   * Smart back: try real history.back(); if no navigation occurs, fall back to the given internal href via SPA render.
+   * @param {string} href
+   */
+  function smartBack(href) {
+    const before = location.href;
+    const onPop = () => window.removeEventListener("popstate", onPop);
+    window.addEventListener("popstate", onPop, { once: true });
+
+    history.back();
+
+    setTimeout(() => {
+      if (location.href === before) {
+        const url = new URL(href, location.origin);
+        const path = normalizePathname(url.pathname);
+        const hash = url.hash ? url.hash.slice(1) : null;
+        render(path, { hash });
+      }
+    }, 250);
+  }
+
+  /**
+   * Intercept same-origin link clicks for SPA navigation. Honors [data-back] smart back buttons.
    * @param {MouseEvent} e
-   * @returns {void}
    */
   function onClick(e) {
     const a = /** @type {HTMLElement|null} */ (
       e.target instanceof Element ? e.target.closest("a") : null
     );
     if (!a) return;
+
+    // Smart back buttons
+    if (a.matches("[data-back]")) {
+      e.preventDefault();
+      smartBack(a.getAttribute("href") || "/");
+      return;
+    }
 
     if (
       /** @type {HTMLAnchorElement} */ (a).target &&
@@ -239,20 +250,14 @@ import "./gh-redirect.js";
     render(basePath, { hash });
   }
 
-  /**
-   * Handles Back/Forward navigation by re-rendering the current URL.
-   * @returns {void}
-   */
+  /** Back/Forward handler: re-render current URL without adding history entries. */
   function onPopState() {
     const path = normalizePathname(location.pathname);
     const hash = location.hash ? location.hash.slice(1) : null;
     render(path, { hash, replace: true });
   }
 
-  /**
-   * Boots the router after the DOM is ready.
-   * @returns {void}
-   */
+  /** Boot the router after DOM is ready. */
   function start() {
     const initialPath = normalizePathname(location.pathname);
     const initialHash = location.hash ? location.hash.slice(1) : null;

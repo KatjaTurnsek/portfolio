@@ -8,6 +8,7 @@ import "./router.js";
 window.__routerActive = true;
 
 import gsap from "gsap";
+import "./toggle.js";
 import { hideLoader, showLoader } from "./loader.js";
 import { setupMenuToggle } from "./nav.js";
 import { setupResponsiveImages } from "./responsiveImages.js";
