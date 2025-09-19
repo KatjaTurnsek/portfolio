@@ -11,7 +11,7 @@
   --loader-z: 2147483647;
 
   /* Durations */
-  --loader-fade: 0.4s ease;
+  --loader-fade: 0.45s ease;
   --loader-bg-fade: 0.3s ease;
   --wave-pulse-duration: 2s;
   --mini-pulse-duration: 1.2s;
@@ -31,7 +31,7 @@
    Accessibility: Reduced Motion
    -------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .spinner svg path,
+  .spinner svg .wave-global,
   .simple-mini-loader span { animation: none !important; }
   .loader,
   .simple-mini-loader.fade-out { transition: none !important; }
@@ -56,14 +56,17 @@
 
 .loader {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+
+  /* Use viewport units so transformed ancestors can't clip height */
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* modern mobile browsers */
+
   z-index: var(--loader-z);
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* THEME-AWARE: relies on variables set on <body class="light-theme|dark-theme"> */
+  /* Overlay background + theme colors */
   background-color: var(--bg-color);
   color: var(--text-color);
 
@@ -77,29 +80,41 @@
     visibility var(--loader-fade);
 }
 
-/* Hidden state (fades out, blocks clicks off) */
+/* Hidden state (fades out, disables clicks) */
 .loader.hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-/* Spinner container (holds the wave SVG) */
+/* Spinner container (holds the wave SVG)
+   CENTER IT ABSOLUTELY TO THE VIEWPORT using fixed positioning */
 .spinner {
+  position: fixed;          /* key: ignore any transformed ancestors */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   width: var(--spinner-width);
-  height: var(--spinner-height);
+  min-height: var(--spinner-height);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  z-index: calc(var(--loader-z) + 1); /* above overlay just in case */
 }
 
-/* SVG sizing + path styling (stroke uses currentColor) */
+/* SVG sizing + polyline styling (stroke uses currentColor) */
 .spinner svg {
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
   overflow: visible;
 }
-.spinner svg path {
+
+/* IMPORTANT: loader.js uses <polyline class="wave-global"> */
+.spinner svg .wave-global {
   stroke: currentColor;
   stroke-width: 1;
   fill: none;
@@ -145,3 +160,10 @@
   transition: opacity var(--mini-fade-duration) ease;
 }
 
+/* ==========================================================================
+   Scroll lock while loader is visible (added by loader.js)
+   ========================================================================== */
+html.no-scroll,
+body.no-scroll {
+  overflow: hidden;
+}

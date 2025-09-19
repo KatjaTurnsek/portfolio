@@ -1,26 +1,17 @@
 /**
- * loader.js
- *
- * Implements both global and per-image loaders:
- * - Global site loader with animated wave polyline
- * - Mini 3-dot loaders for thumbnails with blur→sharp transition
- * - Responsive image setup with <picture> sources and breakpoints
+ * @file loader.js
+ * @description Global loader overlay (wave animation) + mini image loaders.
+ * Hides with a fade, unlocks scroll, and dispatches `loader:done` when finished.
  */
 
 import gsap from "gsap";
-import { MorphSVGPlugin } from "../../node_modules/gsap/MorphSVGPlugin.js";
 
-gsap.registerPlugin(MorphSVGPlugin);
-
-const originalPath = "M0,10 C50,0 100,20 150,10 S250,20 300,10 S400,0 500,10";
-const morphPath = "M0,10 C50,20 100,0 150,10 S250,0 300,10 S400,20 500,10";
+let waveTweens = /** @type {gsap.core.Tween[]} */ ([]);
+let waveStarted = false;
 
 /**
- * Creates and injects the global loader element into the DOM.
- * Loader consists of a `.loader` container with a `.spinner` and
- * a wave polyline SVG inside it.
- *
- * @function createLoader
+ * Ensures the loader DOM exists and is appended to <body>.
+ * Creates: <div.loader><div.spinner><svg><polyline.wave-global /></svg></div></div>
  * @returns {void}
  */
 function createLoader() {
@@ -34,39 +25,38 @@ function createLoader() {
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("viewBox", "0 0 500 20");
 
-  const path = document.createElementNS(svgNS, "polyline");
-  path.setAttribute("points", "");
-  path.setAttribute("class", "wave-global");
-  path.setAttribute("fill", "none");
-  path.setAttribute("stroke", "currentColor");
-  path.setAttribute("stroke-width", "1");
-  path.setAttribute("vector-effect", "non-scaling-stroke");
+  const poly = document.createElementNS(svgNS, "polyline");
+  poly.setAttribute("points", "");
+  poly.setAttribute("class", "wave-global");
+  poly.setAttribute("fill", "none");
+  poly.setAttribute("stroke", "currentColor");
+  poly.setAttribute("stroke-width", "1");
+  poly.setAttribute("vector-effect", "non-scaling-stroke");
 
-  svg.appendChild(path);
+  svg.appendChild(poly);
   spinner.appendChild(svg);
   loader.appendChild(spinner);
   document.body.appendChild(loader);
 }
 
 /**
- * Animates the polyline inside `.wave-global` to produce
- * a continuous wave motion for the global loader.
- *
- * @function animateWave
+ * Starts the wave tween on the polyline points (runs once).
  * @returns {void}
  */
 function animateWave() {
-  const path = document.querySelector(".wave-global");
+  if (waveStarted) return;
+  const path = /** @type {SVGPolylineElement|null} */ (
+    document.querySelector(".wave-global")
+  );
   if (!path || !path.points) return;
 
+  waveStarted = true;
+  const svg = path.ownerSVGElement;
   const width = 500;
   const segments = 80;
   const amplitude = 10;
   const frequency = 4;
   const interval = width / segments;
-
-  const svg = path.ownerSVGElement;
-  const points = [];
 
   for (let i = 0; i <= segments; i++) {
     const norm = i / segments;
@@ -75,76 +65,93 @@ function animateWave() {
     pt.y = 10;
     path.points.appendItem(pt);
 
-    points[i] = {
-      ref: pt,
-      tween: gsap
-        .to(pt, {
-          y: 10 - amplitude,
-          duration: 2,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        })
-        .progress(norm * frequency),
-    };
+    const tween = gsap
+      .to(pt, {
+        y: 10 - amplitude,
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      })
+      .progress(norm * frequency);
+
+    waveTweens.push(tween);
   }
 }
 
 /**
- * Displays the global loader. Creates it if not already present
- * and starts the wave animation.
- *
- * @function showLoader
+ * Shows the global loader and locks page scroll.
  * @returns {void}
  */
 export function showLoader() {
-  let loader = document.querySelector(".loader");
+  let loader = /** @type {HTMLElement|null} */ (
+    document.querySelector(".loader")
+  );
   if (!loader) {
     createLoader();
-    loader = document.querySelector(".loader");
+    loader = /** @type {HTMLElement} */ (document.querySelector(".loader"));
   }
+  loader.style.opacity = "1";
+  loader.style.display = "block";
   loader.classList.remove("hidden");
+
+  document.documentElement.classList.add("no-scroll");
   animateWave();
 }
 
 /**
- * Hides the global loader by adding `.hidden` class.
- *
- * @function hideLoader
+ * Hides the global loader with a fade, kills tweens, unlocks scroll,
+ * removes the DOM node, and emits `loader:done`.
  * @returns {void}
  */
 export function hideLoader() {
-  const loader = document.querySelector(".loader");
-  if (loader) {
-    loader.classList.add("hidden");
+  const loader = /** @type {HTMLElement|null} */ (
+    document.querySelector(".loader")
+  );
+  if (!loader) {
+    document.dispatchEvent(new CustomEvent("loader:done"));
+    return;
   }
+
+  gsap.to(loader, {
+    opacity: 0,
+    duration: 0.45,
+    ease: "power2.out",
+    onComplete: () => {
+      waveTweens.forEach((t) => t.kill());
+      waveTweens = [];
+      waveStarted = false;
+
+      loader.remove();
+      document.documentElement.classList.remove("no-scroll");
+
+      document.dispatchEvent(new CustomEvent("loader:done"));
+    },
+  });
 }
 
+/* ---------------- Mini image loaders + responsive <picture> ---------------- */
+
 /**
- * Finds the nearest parent container with `position: relative`
- * to correctly position a mini loader.
- *
- * @function findRelativeContainer
- * @param {HTMLElement} img - The image element to check from.
- * @returns {HTMLElement} The relative container or the image parent.
+ * Finds the nearest positioned ancestor (position: relative) for placing mini loader.
+ * @param {HTMLImageElement} img
+ * @returns {HTMLElement|null}
  */
 function findRelativeContainer(img) {
   let el = img.parentElement;
   while (el && el !== document.body) {
-    const style = getComputedStyle(el);
-    if (style.position === "relative") return el;
+    const st = getComputedStyle(el);
+    if (st.position === "relative") return el;
     el = el.parentElement;
   }
-  return img.parentElement; // fallback
+  return img.parentElement;
 }
 
 /**
- * Attaches a mini loader (3-dot pulsing animation) to an image.
- * Removes the loader once the image has loaded or failed.
- *
- * @function attachMiniLoaderToImg
- * @param {HTMLImageElement} img - The image element to attach the loader to.
- * @param {string} fullPath - The image source path.
+ * Attaches a 3-dot mini loader to the image's positioned container and removes it on load/error.
+ * Also sets the image `src` to begin loading.
+ * @param {HTMLImageElement} img
+ * @param {string} fullPath
  * @returns {void}
  */
 export function attachMiniLoaderToImg(img, fullPath) {
@@ -152,55 +159,51 @@ export function attachMiniLoaderToImg(img, fullPath) {
     const container = findRelativeContainer(img);
     if (!container) return;
 
-    const loader = document.createElement("div");
-    loader.className = "simple-mini-loader";
+    const mini = document.createElement("div");
+    mini.className = "simple-mini-loader";
+    mini.appendChild(document.createElement("span"));
+    mini.appendChild(document.createElement("span"));
+    mini.appendChild(document.createElement("span"));
+    container.appendChild(mini);
 
-    for (let i = 0; i < 3; i++) {
-      loader.appendChild(document.createElement("span"));
-    }
-
-    container.appendChild(loader);
-
-    const removeLoader = () => {
-      loader.classList.add("fade-out");
-      setTimeout(() => loader.remove(), 500);
+    const removeMini = () => {
+      mini.classList.add("fade-out");
+      setTimeout(() => mini.remove(), 500);
     };
 
     if (img.complete && img.naturalWidth !== 0) {
-      setTimeout(removeLoader, 1000);
+      setTimeout(removeMini, 250);
     } else {
-      img.addEventListener("load", removeLoader);
-      img.addEventListener("error", () => {
-        removeLoader();
-        img.alt = "Image failed to load";
-      });
+      img.addEventListener("load", removeMini, { once: true });
+      img.addEventListener(
+        "error",
+        () => {
+          removeMini();
+          img.alt = "Image failed to load";
+        },
+        { once: true }
+      );
     }
 
     img.src = fullPath;
   } catch {
-    // Silent fail in production
+    /* no-op */
   }
 }
 
 /**
- * Sets up responsive images by:
- * - Replacing `<img>` tags with `<picture>` for multiple formats (webp/jpg/png)
- * - Adding size breakpoints
- * - Attaching mini loaders while images load
- *
- * Expects `<img class="thumb" data-src="...">` elements in the DOM.
- *
- * @function setupResponsiveImages
- * @returns {HTMLImageElement[]} Array of newly inserted fallback `<img>` elements.
+ * Converts <img.thumb data-src> into <picture> with multiple sources,
+ * attaches mini loaders, and returns the created fallback <img> elements.
+ * @returns {HTMLImageElement[]}
  */
 export function setupResponsiveImages() {
   const thumbs = document.querySelectorAll("img.thumb[data-src]");
-  const insertedImages = [];
+  const inserted = /** @type {HTMLImageElement[]} */ ([]);
 
   thumbs.forEach((originalImg) => {
     try {
-      const filename = originalImg.dataset.src;
-      const path = originalImg.dataset.path || "assets/images";
+      const filename = originalImg.getAttribute("data-src") || "";
+      const path = originalImg.getAttribute("data-path") || "assets/images";
       if (!filename) return;
 
       const fullPath = `${path}/${filename}`;
@@ -212,37 +215,31 @@ export function setupResponsiveImages() {
       const picture = document.createElement("picture");
 
       if (baseName) {
-        const formats = ["webp", "jpg", "png"];
+        const formats = /** @type {const} */ (["webp", "jpg", "png"]);
         const sizes = [
           { width: 300, descriptor: "300w" },
           { width: 600, descriptor: "600w" },
           { width: 900, descriptor: "900w" },
         ];
-
         formats.forEach((format) => {
           const source = document.createElement("source");
-          const mime = format === "jpg" ? "image/jpeg" : `image/${format}`;
-
-          const srcset = sizes
+          source.type = format === "jpg" ? "image/jpeg" : `image/${format}`;
+          source.srcset = sizes
             .map(
               (s) => `${path}/${baseName}-${s.width}.${format} ${s.descriptor}`
             )
             .join(", ");
-
-          source.setAttribute("type", mime);
-          source.setAttribute("srcset", srcset);
-          source.setAttribute(
-            "sizes",
-            "(min-width: 1024px) 30vw, (min-width: 600px) 45vw, 90vw"
-          );
-
+          source.sizes =
+            "(min-width: 1024px) 30vw, (min-width: 600px) 45vw, 90vw";
           picture.appendChild(source);
         });
       }
 
       const fallback = document.createElement("img");
       fallback.loading =
-        originalImg.dataset.priority === "eager" ? "eager" : "lazy";
+        originalImg.getAttribute("data-priority") === "eager"
+          ? "eager"
+          : "lazy";
 
       [...originalImg.attributes].forEach((attr) => {
         if (!["data-src", "data-path"].includes(attr.name)) {
@@ -250,12 +247,11 @@ export function setupResponsiveImages() {
         }
       });
 
-      fallback.style.opacity = 0;
+      fallback.style.opacity = "0";
       fallback.style.filter = "blur(10px)";
       fallback.style.transition = "opacity 0.4s ease, filter 0.4s ease";
-
       fallback.onload = () => {
-        fallback.style.opacity = 1;
+        fallback.style.opacity = "1";
         fallback.style.filter = "blur(0)";
       };
 
@@ -263,11 +259,11 @@ export function setupResponsiveImages() {
       originalImg.replaceWith(picture);
 
       attachMiniLoaderToImg(fallback, fullPath);
-      insertedImages.push(fallback);
+      inserted.push(fallback);
     } catch {
-      // Skip problematic image
+      /* skip */
     }
   });
 
-  return insertedImages;
+  return inserted;
 }

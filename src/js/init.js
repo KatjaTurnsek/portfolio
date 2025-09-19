@@ -1,36 +1,32 @@
 /**
- * init.js
- *
- * Handles fullscreen section initialization and navigation:
- * - Reveals sections and dispatches `sectionVisible` events
- * - Handles anchor link navigation with smooth scrolling
- * - Adjusts scroll for case studies with header offset
- * - Enables scroll-to-top links
- * - Applies header scroll effect (adds `.scrolled` class)
+ * @file init.js
+ * @description Router-friendly section initialization and reveal utilities.
+ * Exposes `revealSection` (also on `window`) and keeps legacy hash navigation
+ * helpers no-op when the History-API router is active.
  */
 
 import gsap from "gsap";
 
 /**
- * Reveals a fullscreen section by fading/sliding it in
- * and dispatches a `sectionVisible` event for animations.
- *
- * @function revealSection
- * @param {string} targetId - The id of the section element to reveal.
+ * Reveals a section with a fade/slide animation and emits `sectionVisible`.
+ * @param {string} targetId - Target section element id.
  * @returns {void}
  */
 export function revealSection(targetId) {
   const section = document.getElementById(targetId);
   if (!section || section.classList.contains("visible")) return;
 
+  section.style.display = "block";
+  section.style.visibility = "visible";
+  section.style.pointerEvents = "auto";
+
   gsap.to(section, {
     duration: 0.8,
     opacity: 1,
     y: 0,
+    ease: "power2.out",
     onStart: () => {
       section.classList.add("visible");
-      section.style.pointerEvents = "auto";
-
       document.dispatchEvent(
         new CustomEvent("sectionVisible", { detail: targetId })
       );
@@ -38,137 +34,106 @@ export function revealSection(targetId) {
   });
 }
 
+/** Make `revealSection` callable from non-module code (router). */
+if (typeof window !== "undefined") window.revealSection = revealSection;
+
 /**
- * Initializes all fullscreen sections:
- * - Hides sections initially
- * - Reveals either the home section or the hash-targeted section
- *   after the loader delay
- * - Dispatches `sectionVisible` event for the initial section
- *
- * @function initSections
+ * Initializes sections for non-router mode:
+ * hides all, then reveals #home.
+ * No-ops when the router is active.
  * @returns {void}
  */
 export function initSections() {
+  if (window.__routerActive) return;
+
   const sections = document.querySelectorAll(".fullscreen-section");
   const home = document.getElementById("home");
 
   sections.forEach((section) => {
+    section.style.display = "none";
     section.style.opacity = 0;
     section.style.transform = "translateY(50px)";
+    section.style.visibility = "hidden";
     section.style.pointerEvents = "none";
+    section.classList.remove("visible");
   });
 
-  const hash = window.location.hash?.substring(1);
-  const initialTarget = document.getElementById(hash) || home;
-
-  if (initialTarget) {
-    setTimeout(() => {
-      gsap.to(initialTarget, {
-        duration: 0.8,
-        opacity: 1,
-        y: 0,
-        onStart: () => {
-          initialTarget.classList.add("visible");
-          initialTarget.style.pointerEvents = "auto";
-
-          requestAnimationFrame(() => {
-            document.dispatchEvent(
-              new CustomEvent("sectionVisible", { detail: initialTarget.id })
-            );
-          });
-
-          if (hash && initialTarget.id === hash) {
-            initialTarget.scrollIntoView({ behavior: "auto" });
-          }
-        },
-      });
-    }, 1700);
+  if (home) {
+    home.style.display = "block";
+    home.style.visibility = "visible";
+    home.style.pointerEvents = "auto";
+    gsap.to(home, {
+      duration: 0.8,
+      opacity: 1,
+      y: 0,
+      ease: "power2.out",
+      onStart: () => {
+        home.classList.add("visible");
+        document.dispatchEvent(
+          new CustomEvent("sectionVisible", { detail: "home" })
+        );
+      },
+    });
   }
 }
 
 /**
- * Sets up smooth scrolling and section reveals
- * for all anchor links with `href="#id"`.
- *
- * @function setupNavigation
+ * Legacy hash navigation (disabled when router is active).
  * @returns {void}
  */
 export function setupNavigation() {
+  if (window.__routerActive) return;
   document.querySelectorAll("a[href^='#']").forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
-      const targetId = link.getAttribute("href").substring(1);
-      const section = document.getElementById(targetId);
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
-        revealSection(targetId);
-      }
+      const targetId = link.getAttribute("href")?.slice(1);
+      if (!targetId) return;
+      revealSection(targetId);
+      document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
     });
   });
 }
 
 /**
- * Handles scrolling to case study sections (linked by `.work-link`).
- * Accounts for header offset and reveals the target section before scrolling.
- *
- * @function setupCaseStudyScroll
+ * Legacy case-study scroller with header offset (disabled when router is active).
  * @returns {void}
  */
 export function setupCaseStudyScroll() {
+  if (window.__routerActive) return;
   const header = document.querySelector("header");
-
   document.querySelectorAll(".work-link[href^='#']").forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
-      const targetId = link.getAttribute("href").substring(1);
-      const section = document.getElementById(targetId);
+      const targetId = link.getAttribute("href")?.slice(1);
+      const section = targetId && document.getElementById(targetId);
       if (!section) return;
 
       revealSection(targetId);
-
-      const scrollToSection = () => {
-        const offset =
-          section.getBoundingClientRect().top +
-          window.scrollY -
-          (header?.offsetHeight || 0);
-        window.scrollTo({ top: offset, behavior: "smooth" });
-      };
-
-      const observer = new IntersectionObserver(
-        ([entry], obs) => {
-          if (entry.isIntersecting) {
-            scrollToSection();
-            obs.disconnect();
-          }
-        },
-        { threshold: 0.1 }
-      );
-
-      observer.observe(section);
+      const top =
+        section.getBoundingClientRect().top +
+        window.scrollY -
+        ((header && header.offsetHeight) || 0);
+      window.scrollTo({ top, behavior: "smooth" });
     });
   });
 }
 
 /**
- * Enables "scroll to top" links within sections.
- * Uses `a[data-scrolltop]` with hash targets.
- *
- * @function setupScrollTopLinks
+ * Legacy "scroll to top" links (disabled when router is active).
  * @returns {void}
  */
 export function setupScrollTopLinks() {
+  if (window.__routerActive) return;
   document.querySelectorAll("a[data-scrolltop]").forEach((link) => {
     link.addEventListener("click", (e) => {
       const href = link.getAttribute("href");
       if (!href?.startsWith("#")) return;
-
-      const targetId = href.substring(1);
+      e.preventDefault();
+      const targetId = href.slice(1);
       const section = document.getElementById(targetId);
       if (!section) return;
 
-      e.preventDefault();
       revealSection(targetId);
-
       window.scrollTo({ top: section.offsetTop, behavior: "smooth" });
       section.scrollTop = 0;
     });
@@ -176,17 +141,14 @@ export function setupScrollTopLinks() {
 }
 
 /**
- * Toggles `.scrolled` class on header
- * when the page is scrolled more than 10px.
- *
- * @function setupHeaderScrollEffect
+ * Adds/removes `.scrolled` on the header based on scroll position.
  * @returns {void}
  */
 export function setupHeaderScrollEffect() {
   const header = document.querySelector("header");
   if (!header) return;
-
-  window.addEventListener("scroll", () => {
+  const onScroll = () =>
     header.classList.toggle("scrolled", window.scrollY > 10);
-  });
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 }

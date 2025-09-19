@@ -1,0 +1,10 @@
+<!doctype html>
+<meta charset="utf-8">
+<script>
+  var BASE = '/<portfolio>/';
+
+  var redirectTo = BASE + 'index.html';
+  var fullPath = location.pathname + location.search + location.hash;
+  sessionStorage.setItem('gh_redirect', fullPath);
+  location.replace(redirectTo);
+</script>
