@@ -4,12 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "build:gh": "vite build --base=/portfolio/",
-  "preview": "vite preview"
-},
+    "dev": "vite",
+    "build": "vite build",
+    "build:gh": "vite build --base=/portfolio/",
+    "preview": "vite preview",
+    "prettier:check": "prettier . --check",
+    "prettier:write": "prettier . --write",
+    "format": "npm run prettier:write"
+  },
   "devDependencies": {
+    "prettier": "^3.6.2",
     "vite": "^6.3.5"
   },
   "dependencies": {
