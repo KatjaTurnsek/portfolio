@@ -422,10 +422,32 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   stroke-linejoin: round;
 }
 
-/* Simple wavy line helper */
-.wavy-line { display: block; width: 100%; height: 30px; margin: 0 auto 2rem; }
-.wavy-line path { stroke: currentColor; stroke-width: 1; fill: none; }
+/* Small waves inserted after <h2> (from insertWaveLines) */
+.wavy-line {
+  display: block;
+  width: 100%;
+  height: 30px;
+  margin: 0 auto 2rem;
+}
+.wavy-line .wavy-polyline {
+  stroke: currentColor;
+  stroke-width: 1;
+  fill: none;
+}
 
+/* Hero wave at the top (created by ensureHeroWave) */
+#wavy-line.wavy-line-hero {
+  width: 100%;
+  height: 30px;
+  display: block;
+  pointer-events: none;
+  color: var(--wave-hero-stroke, currentColor);
+}
+#wavy-line.wavy-line-hero path {
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
 
 /* ========================================================================== */
 /* 10) Theme Toggle                                                           */

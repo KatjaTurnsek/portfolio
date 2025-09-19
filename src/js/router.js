@@ -1,19 +1,17 @@
 import "./gh-redirect.js";
 
 /**
- * History-API router for a one-page site with “pretty” paths.
+ * History-API router with clean, crawlable paths.
+ * - Static routes: "/", "/work", "/about", "/contact"
+ * - Dynamic case routes: "/work/:slug" → "#case-:slug",
+ *                        "/work/:slug/:sub" → "#case-:slug-:sub"
+ * - Defers first reveal until `loader:done`
+ * - [data-back] links behave like a real Back button with SPA fallback
  *
- * Features:
- *  - Shows exactly one section at a time (no full page reloads).
- *  - Defers the very first reveal until the global loader fires `loader:done`.
- *  - Supports deep links (`/work#case-foo`) and Back/Forward.
- *  - Smart back buttons via [data-back] (uses history.back() with SPA fallback).
- *  - Keeps nav state in sync and focuses the first heading for a11y.
+ * Expects a section with an id matching the route target to exist in the DOM.
+ * Sets `window.__routerActive = true` so other modules can disable legacy flows.
  *
- * Expects each route to map to a section with that `id` in the DOM.
- * Exposes `window.__routerActive = true` so other modules can opt out of legacy behaviors.
- *
- * @typedef {Record<string, string>} RouteMap - Maps path -> section id.
+ * @typedef {Record<string, string>} RouteMap
  */
 (function initRouter() {
   if (typeof window !== "undefined") window.__routerActive = true;
@@ -29,7 +27,7 @@ import "./gh-redirect.js";
     "/contact": "contact",
   };
 
-  /** @type {Record<string, string>} */
+  /** Reverse static map (id → path). */
   const idsToPaths = Object.fromEntries(
     Object.entries(routes).map(([path, id]) => [id, path])
   );
@@ -39,18 +37,54 @@ import "./gh-redirect.js";
     Array.from(document.querySelectorAll(".fullscreen-section"));
 
   /**
-   * Normalize pathname by stripping base and trailing slash. Falls back to "/".
+   * Strip base and trailing slash, ensure leading slash.
    * @param {string} pathname
-   * @returns {keyof RouteMap}
+   * @returns {string}
    */
   function normalizePathname(pathname) {
     let p = pathname.startsWith(BASE) ? pathname.slice(BASE.length) : pathname;
     if (!p.startsWith("/")) p = "/" + p;
     if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
-    return /** @type {keyof RouteMap} */ (p in routes ? p : "/");
+    return p;
   }
 
-  /** Close the full-screen menu and clear body locks. */
+  /**
+   * Convert a path to a section id if it exists in DOM.
+   * @param {string} path
+   * @returns {string|null}
+   */
+  function pathToId(path) {
+    if (path in routes) return routes[path];
+    if (path.startsWith("/work/")) {
+      const parts = path.split("/").filter(Boolean); // ["work", "slug", "sub?"]
+      const slug = parts[1];
+      const sub = parts[2];
+      if (!slug) return null;
+      const id = "case-" + slug + (sub ? "-" + sub : "");
+      if (document.getElementById(id)) return id;
+    }
+    return null;
+  }
+
+  /**
+   * Convert a section id to its pretty path.
+   * @param {string} id
+   * @returns {string}
+   */
+  function idToPath(id) {
+    if (id in idsToPaths) return idsToPaths[id];
+    if (id.startsWith("case-")) {
+      const rest = id.slice(5);
+      const firstDash = rest.indexOf("-");
+      if (firstDash === -1) return "/work/" + rest;
+      const slug = rest.slice(0, firstDash);
+      const sub = rest.slice(firstDash + 1);
+      return "/work/" + slug + "/" + sub;
+    }
+    return "/";
+  }
+
+  /** Close fullscreen menu if open. */
   function closeMenuIfOpen() {
     const menu = document.getElementById("menu");
     if (menu && menu.classList.contains("open")) menu.classList.remove("open");
@@ -58,8 +92,9 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Hide all sections except the target and reset animation state.
+   * Hide all sections except target and reset their animated state.
    * @param {string} idToShow
+   * @returns {void}
    */
   function hideAllExcept(idToShow) {
     allSections().forEach((s) => {
@@ -74,8 +109,9 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Prepare a section for reveal (measurable, interactive, anim start state).
+   * Prepare target for reveal (measurable, interactive, start state).
    * @param {HTMLElement} el
+   * @returns {void}
    */
   function prepTargetForReveal(el) {
     el.style.display = "block";
@@ -87,11 +123,12 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Toggle active class on nav links for the current section id.
+   * Apply active class to nav links that match the routed path for this id.
    * @param {string} id
+   * @returns {void}
    */
   function setActiveLinkById(id) {
-    const routedPath = idsToPaths[id] || normalizePathname(location.pathname);
+    const routedPath = idToPath(id) || normalizePathname(location.pathname);
     document.querySelectorAll("nav a").forEach((a) => {
       let isActive = false;
       try {
@@ -106,33 +143,32 @@ import "./gh-redirect.js";
   }
 
   /**
-   * Initial section prep (no animation) and seed history. Actual reveal happens on `loader:done`.
-   * @param {keyof RouteMap} path
+   * Initial prep and history normalization (waits for loader to reveal).
+   * Accepts legacy deep links with hashes and converts to pretty paths.
+   * @param {string} path
    * @param {string|null} hash
+   * @returns {void}
    */
   function initialShow(path, hash) {
-    const baseId = routes[path] || routes["/"];
-    const id = hash && document.getElementById(hash) ? hash : baseId;
+    const hashId = hash && document.getElementById(hash) ? hash : null;
+    const id = hashId || pathToId(path) || routes["/"];
     const el = document.getElementById(id);
     if (!el) return;
 
     hideAllExcept(id);
     prepTargetForReveal(el);
 
-    const title = el.getAttribute("data-title");
-    if (title) document.title = title;
-    setActiveLinkById(id);
+    const t = el.getAttribute("data-title");
+    if (t) document.title = t;
 
+    setActiveLinkById(id);
     window.__currentSectionId = id;
 
-    history.replaceState(
-      { path, hash },
-      "",
-      BASE + path + (hash ? `#${hash}` : "")
-    );
+    const pretty = idToPath(id);
+    history.replaceState({ path: pretty }, "", BASE + pretty);
   }
 
-  /** One-time initial reveal trigger. */
+  /** Reveal current section once (on `loader:done` or fallback). */
   function kickInitialReveal() {
     if (window.__initialRevealed) return;
     window.__initialRevealed = true;
@@ -144,13 +180,13 @@ import "./gh-redirect.js";
   setTimeout(kickInitialReveal, 1200);
 
   /**
-   * Core SPA navigation: update history, URL, and animate the target section.
-   * @param {keyof RouteMap} path
-   * @param {{hash?: string|null, replace?: boolean}} [opts]
+   * Core render: show target id for a given path and update history.
+   * @param {string} path
+   * @param {{ replace?: boolean }} [opts]
+   * @returns {void}
    */
-  function render(path, { hash = null, replace = false } = {}) {
-    const baseId = routes[path] || routes["/"];
-    const id = hash && document.getElementById(hash) ? hash : baseId;
+  function render(path, { replace = false } = {}) {
+    const id = pathToId(path) || routes["/"];
 
     closeMenuIfOpen();
     hideAllExcept(id);
@@ -158,74 +194,74 @@ import "./gh-redirect.js";
     const el = document.getElementById(id);
     if (el) {
       prepTargetForReveal(el);
+
       window.scrollTo({ top: 0, behavior: "auto" });
 
       const h = el.querySelector("h1, h2, h3");
       if (h && !h.hasAttribute("tabindex")) h.setAttribute("tabindex", "-1");
       if (h) setTimeout(() => h.focus?.(), 50);
 
-      const title = el.getAttribute("data-title");
-      if (title) document.title = title;
+      const t = el.getAttribute("data-title");
+      if (t) document.title = t;
 
       setActiveLinkById(id);
       window.revealSection?.(id);
     }
 
-    const url = BASE + path + (hash ? `#${hash}` : "");
-    const state = { path, hash };
+    const state = { path };
+    const url = BASE + path;
     if (replace) history.replaceState(state, "", url);
     else history.pushState(state, "", url);
   }
 
   /**
-   * Smart back: try real history.back(); if no navigation occurs, fall back to the given internal href via SPA render.
+   * Try real history.back(); if it doesn't navigate, fall back to `href`.
    * @param {string} href
+   * @returns {void}
    */
   function smartBack(href) {
     const before = location.href;
-    const onPop = () => window.removeEventListener("popstate", onPop);
-    window.addEventListener("popstate", onPop, { once: true });
-
+    const popOnce = () => window.removeEventListener("popstate", popOnce);
+    window.addEventListener("popstate", popOnce, { once: true });
     history.back();
-
     setTimeout(() => {
       if (location.href === before) {
         const url = new URL(href, location.origin);
         const path = normalizePathname(url.pathname);
-        const hash = url.hash ? url.hash.slice(1) : null;
-        render(path, { hash });
+        const id = pathToId(path);
+        if (id) render(path);
+        else location.assign(href);
       }
     }, 250);
   }
 
   /**
-   * Intercept same-origin link clicks for SPA navigation. Honors [data-back] smart back buttons.
+   * Intercept same-origin links for SPA nav.
+   * Supports `[data-back]` and legacy hash links (#id → pretty path).
    * @param {MouseEvent} e
+   * @returns {void}
    */
   function onClick(e) {
-    const a = /** @type {HTMLElement|null} */ (
-      e.target instanceof Element ? e.target.closest("a") : null
-    );
-    if (!a) return;
+    const el =
+      e.target instanceof Element ? e.target.closest("a,button") : null;
+    if (!el) return;
 
-    // Smart back buttons
-    if (a.matches("[data-back]")) {
+    if (el.hasAttribute("data-back")) {
       e.preventDefault();
-      smartBack(a.getAttribute("href") || "/");
+      const href = el instanceof HTMLAnchorElement ? el.href : "/";
+      smartBack(href);
       return;
     }
 
-    if (
-      /** @type {HTMLAnchorElement} */ (a).target &&
-      /** @type {HTMLAnchorElement} */ (a).target !== "_self"
-    )
-      return;
+    if (!(el instanceof HTMLAnchorElement)) return;
+
+    if (el.target && el.target !== "_self") return;
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
       return;
 
     let url;
     try {
-      url = new URL(/** @type {HTMLAnchorElement} */ (a).href, location.origin);
+      url = new URL(el.href, location.origin);
     } catch {
       return;
     }
@@ -234,30 +270,27 @@ import "./gh-redirect.js";
     const path = normalizePathname(url.pathname);
     const hash = url.hash ? url.hash.slice(1) : null;
 
-    const isRoutedPath = path in routes;
-    const hashTargetsSection = !!(hash && document.getElementById(hash));
-
-    if (!isRoutedPath && !hashTargetsSection) return;
-
-    e.preventDefault();
-
-    if (hash && idsToPaths[hash]) {
-      render(idsToPaths[hash]);
+    // Hash → pretty path (#id → /..., if such section exists)
+    if (hash && document.getElementById(hash)) {
+      e.preventDefault();
+      render(idToPath(hash));
       return;
     }
 
-    const basePath = isRoutedPath ? path : normalizePathname(location.pathname);
-    render(basePath, { hash });
+    const id = pathToId(path);
+    if (!id) return; // not a routed path → let browser handle (PDFs, files, etc.)
+
+    e.preventDefault();
+    render(path);
   }
 
-  /** Back/Forward handler: re-render current URL without adding history entries. */
+  /** Popstate handler: re-render current URL without new history entries. */
   function onPopState() {
     const path = normalizePathname(location.pathname);
-    const hash = location.hash ? location.hash.slice(1) : null;
-    render(path, { hash, replace: true });
+    render(path, { replace: true });
   }
 
-  /** Boot the router after DOM is ready. */
+  /** Boot after DOM is ready. */
   function start() {
     const initialPath = normalizePathname(location.pathname);
     const initialHash = location.hash ? location.hash.slice(1) : null;

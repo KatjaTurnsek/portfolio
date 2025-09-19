@@ -21,22 +21,67 @@ gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger);
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 /**
- * Morphs a single SVG path between two wave shapes in a loop.
- * Expects an element `#wavy-line path` to be present in the DOM.
- * @function animateWaveLine
+ * Inserted into .top-waves (falls back to <body>).
+ * @returns {SVGPathElement|null}
+ */
+function ensureHeroWave() {
+  const ORIGINAL_D = "M0,15 C50,5 100,25 150,15 S250,25 300,15 S400,5 500,15";
+  const host = document.querySelector(".top-waves") || document.body;
+  if (!host) return null;
+
+  /** @type {SVGSVGElement|null} */
+  let svg = document.getElementById("wavy-line");
+  if (!svg) {
+    svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("id", "wavy-line");
+    svg.setAttribute("viewBox", "0 0 500 30");
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    svg.classList.add("wavy-line-hero");
+
+    const path = document.createElementNS(svg.namespaceURI, "path");
+    path.setAttribute("d", ORIGINAL_D);
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "currentColor");
+    path.setAttribute("stroke-width", "2");
+
+    svg.appendChild(path);
+    host.appendChild(svg);
+  }
+
+  return /** @type {SVGPathElement|null} */ (svg.querySelector("path"));
+}
+
+/**
+ * Morphs the hero wave path in a loop. Falls back to a simple bob if MorphSVG is unavailable.
  * @returns {void}
  */
 export function animateWaveLine() {
-  const original = "M0,15 C50,5 100,25 150,15 S250,25 300,15 S400,5 500,15";
-  const alt = "M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15";
+  const ALT_D = "M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15";
+  const path = ensureHeroWave();
+  if (!path) return;
 
-  gsap.to("#wavy-line path", {
-    duration: 3,
-    repeat: -1,
-    yoyo: true,
-    ease: "power1.inOut",
-    morphSVG: { shape: alt },
-  });
+  gsap.killTweensOf(path);
+
+  // If MorphSVG is available, run the morph; otherwise, do a subtle vertical bob.
+  if (gsap.plugins?.MorphSVGPlugin) {
+    gsap.to(path, {
+      duration: 3,
+      repeat: -1,
+      yoyo: true,
+      ease: "power1.inOut",
+      morphSVG: { shape: ALT_D },
+    });
+  } else {
+    gsap.to(path, {
+      duration: 2.5,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+      y: 2,
+    });
+  }
 }
 
 /**

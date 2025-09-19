@@ -6,12 +6,21 @@
  * changes and other tabs. Safe to import multiple times (idempotent boot).
  */
 
-/** @constant {string} */
+/** @constant {string} - Prefix for asset URLs (Vite BASE_URL or <base href>) */
+const BASE = (
+  import.meta?.env?.BASE_URL ??
+  document.querySelector("base")?.getAttribute("href") ??
+  "/"
+).replace(/\/$/, "");
+
+/** @constant {string} - localStorage key for theme preference */
 const THEME_KEY = "theme";
-/** @constant {string} */
-const LOGO_LIGHT = "assets/images/logo-katjadev-light.svg";
-/** @constant {string} */
-const LOGO_DARK = "assets/images/logo-katjadev-dark.svg";
+
+/** @constant {string} - Light logo path (base-aware) */
+const LOGO_LIGHT = `${BASE}/assets/images/logo-katjadev-light.svg`;
+
+/** @constant {string} - Dark logo path (base-aware) */
+const LOGO_DARK = `${BASE}/assets/images/logo-katjadev-dark.svg`;
 
 /**
  * Update site logos according to theme.
