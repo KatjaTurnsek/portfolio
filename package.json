@@ -10,9 +10,12 @@
     "preview": "vite preview",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",
-    "format": "npm run prettier:write"
+    "format": "npm run prettier:write",
+    "docs": "jsdoc -c jsdoc.json"
   },
   "devDependencies": {
+    "jsdoc": "^4.0.4",
+    "minami": "^1.2.3",
     "prettier": "^3.6.2",
     "vite": "^6.3.5"
   },
