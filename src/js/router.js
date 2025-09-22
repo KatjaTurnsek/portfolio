@@ -1,4 +1,4 @@
-import "./gh-redirect.js";
+import './gh-redirect.js';
 
 /**
  * History-API router with clean, crawlable paths.
@@ -14,27 +14,24 @@ import "./gh-redirect.js";
  * @typedef {Record<string, string>} RouteMap
  */
 (function initRouter() {
-  if (typeof window !== "undefined") window.__routerActive = true;
+  if (typeof window !== 'undefined') window.__routerActive = true;
 
-  const ACTIVE_CLASS = "is-active";
-  const BASE = (import.meta?.env?.BASE_URL || "/").replace(/\/$/, "");
+  const ACTIVE_CLASS = 'is-active';
+  const BASE = (import.meta?.env?.BASE_URL || '/').replace(/\/$/, '');
 
   /** @type {RouteMap} */
   const routes = {
-    "/": "home",
-    "/work": "work",
-    "/about": "about",
-    "/contact": "contact",
+    '/': 'home',
+    '/work': 'work',
+    '/about': 'about',
+    '/contact': 'contact',
   };
 
   /** Reverse static map (id → path). */
-  const idsToPaths = Object.fromEntries(
-    Object.entries(routes).map(([path, id]) => [id, path])
-  );
+  const idsToPaths = Object.fromEntries(Object.entries(routes).map(([path, id]) => [id, path]));
 
   /** @returns {HTMLElement[]} */
-  const allSections = () =>
-    Array.from(document.querySelectorAll(".fullscreen-section"));
+  const allSections = () => Array.from(document.querySelectorAll('.fullscreen-section'));
 
   /**
    * Strip base and trailing slash, ensure leading slash.
@@ -43,8 +40,8 @@ import "./gh-redirect.js";
    */
   function normalizePathname(pathname) {
     let p = pathname.startsWith(BASE) ? pathname.slice(BASE.length) : pathname;
-    if (!p.startsWith("/")) p = "/" + p;
-    if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+    if (!p.startsWith('/')) p = '/' + p;
+    if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
     return p;
   }
 
@@ -55,12 +52,12 @@ import "./gh-redirect.js";
    */
   function pathToId(path) {
     if (path in routes) return routes[path];
-    if (path.startsWith("/work/")) {
-      const parts = path.split("/").filter(Boolean); // ["work", "slug", "sub?"]
+    if (path.startsWith('/work/')) {
+      const parts = path.split('/').filter(Boolean); // ["work", "slug", "sub?"]
       const slug = parts[1];
       const sub = parts[2];
       if (!slug) return null;
-      const id = "case-" + slug + (sub ? "-" + sub : "");
+      const id = 'case-' + slug + (sub ? '-' + sub : '');
       if (document.getElementById(id)) return id;
     }
     return null;
@@ -73,22 +70,46 @@ import "./gh-redirect.js";
    */
   function idToPath(id) {
     if (id in idsToPaths) return idsToPaths[id];
-    if (id.startsWith("case-")) {
+    if (id.startsWith('case-')) {
       const rest = id.slice(5);
-      const firstDash = rest.indexOf("-");
-      if (firstDash === -1) return "/work/" + rest;
+      const firstDash = rest.indexOf('-');
+      if (firstDash === -1) return '/work/' + rest;
       const slug = rest.slice(0, firstDash);
       const sub = rest.slice(firstDash + 1);
-      return "/work/" + slug + "/" + sub;
+      return '/work/' + slug + '/' + sub;
     }
-    return "/";
+    return '/';
+  }
+
+  /**
+   * Update document <title>, meta description and canonical based on a section element.
+   * @param {HTMLElement} el
+   */
+  function setMetaFromSection(el) {
+    if (!el) return;
+
+    // Title
+    const title = el.getAttribute('data-title');
+    if (title) document.title = title;
+
+    // Description
+    const desc = el.getAttribute('data-description');
+    const meta = document.querySelector('meta[name="description"]');
+    if (desc && meta) meta.setAttribute('content', desc);
+
+    // Canonical (optional but nice for SEO)
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      const pretty = idToPath(el.id);
+      canonical.setAttribute('href', location.origin + BASE + pretty);
+    }
   }
 
   /** Close fullscreen menu if open. */
   function closeMenuIfOpen() {
-    const menu = document.getElementById("menu");
-    if (menu && menu.classList.contains("open")) menu.classList.remove("open");
-    document.body.classList.remove("menu-open", "no-scroll", "overflow-hidden");
+    const menu = document.getElementById('menu');
+    if (menu && menu.classList.contains('open')) menu.classList.remove('open');
+    document.body.classList.remove('menu-open', 'no-scroll', 'overflow-hidden');
   }
 
   /**
@@ -99,12 +120,12 @@ import "./gh-redirect.js";
   function hideAllExcept(idToShow) {
     allSections().forEach((s) => {
       if (s.id === idToShow) return;
-      s.classList.remove("visible");
-      s.style.display = "none";
-      s.style.visibility = "hidden";
-      s.style.pointerEvents = "none";
-      s.style.opacity = "0";
-      s.style.transform = "translateY(50px)";
+      s.classList.remove('visible');
+      s.style.display = 'none';
+      s.style.visibility = 'hidden';
+      s.style.pointerEvents = 'none';
+      s.style.opacity = '0';
+      s.style.transform = 'translateY(50px)';
     });
   }
 
@@ -114,12 +135,12 @@ import "./gh-redirect.js";
    * @returns {void}
    */
   function prepTargetForReveal(el) {
-    el.style.display = "block";
-    el.style.visibility = "visible";
-    el.style.pointerEvents = "auto";
-    el.style.opacity = "0";
-    el.style.transform = "translateY(50px)";
-    el.classList.remove("visible");
+    el.style.display = 'block';
+    el.style.visibility = 'visible';
+    el.style.pointerEvents = 'auto';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(50px)';
+    el.classList.remove('visible');
   }
 
   /**
@@ -129,10 +150,10 @@ import "./gh-redirect.js";
    */
   function setActiveLinkById(id) {
     const routedPath = idToPath(id) || normalizePathname(location.pathname);
-    document.querySelectorAll("nav a").forEach((a) => {
+    document.querySelectorAll('nav a').forEach((a) => {
       let isActive = false;
       try {
-        const aURL = new URL(a.getAttribute("href") || "", location.origin);
+        const aURL = new URL(a.getAttribute('href') || '', location.origin);
         const aPath = normalizePathname(aURL.pathname);
         isActive = aPath === routedPath;
       } catch {
@@ -151,21 +172,19 @@ import "./gh-redirect.js";
    */
   function initialShow(path, hash) {
     const hashId = hash && document.getElementById(hash) ? hash : null;
-    const id = hashId || pathToId(path) || routes["/"];
+    const id = hashId || pathToId(path) || routes['/'];
     const el = document.getElementById(id);
     if (!el) return;
 
     hideAllExcept(id);
     prepTargetForReveal(el);
 
-    const t = el.getAttribute("data-title");
-    if (t) document.title = t;
-
+    setMetaFromSection(el);
     setActiveLinkById(id);
     window.__currentSectionId = id;
 
     const pretty = idToPath(id);
-    history.replaceState({ path: pretty }, "", BASE + pretty);
+    history.replaceState({ path: pretty }, '', BASE + pretty);
   }
 
   /** Reveal current section once (on `loader:done` or fallback). */
@@ -176,7 +195,7 @@ import "./gh-redirect.js";
     if (id) window.revealSection?.(id);
   }
 
-  document.addEventListener("loader:done", kickInitialReveal);
+  document.addEventListener('loader:done', kickInitialReveal);
   setTimeout(kickInitialReveal, 1200);
 
   /**
@@ -186,7 +205,7 @@ import "./gh-redirect.js";
    * @returns {void}
    */
   function render(path, { replace = false } = {}) {
-    const id = pathToId(path) || routes["/"];
+    const id = pathToId(path) || routes['/'];
 
     closeMenuIfOpen();
     hideAllExcept(id);
@@ -195,23 +214,21 @@ import "./gh-redirect.js";
     if (el) {
       prepTargetForReveal(el);
 
-      window.scrollTo({ top: 0, behavior: "auto" });
+      window.scrollTo({ top: 0, behavior: 'auto' });
 
-      const h = el.querySelector("h1, h2, h3");
-      if (h && !h.hasAttribute("tabindex")) h.setAttribute("tabindex", "-1");
+      const h = el.querySelector('h1, h2, h3');
+      if (h && !h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
       if (h) setTimeout(() => h.focus?.(), 50);
 
-      const t = el.getAttribute("data-title");
-      if (t) document.title = t;
-
+      setMetaFromSection(el);
       setActiveLinkById(id);
       window.revealSection?.(id);
     }
 
     const state = { path };
     const url = BASE + path;
-    if (replace) history.replaceState(state, "", url);
-    else history.pushState(state, "", url);
+    if (replace) history.replaceState(state, '', url);
+    else history.pushState(state, '', url);
   }
 
   /**
@@ -221,8 +238,8 @@ import "./gh-redirect.js";
    */
   function smartBack(href) {
     const before = location.href;
-    const popOnce = () => window.removeEventListener("popstate", popOnce);
-    window.addEventListener("popstate", popOnce, { once: true });
+    const popOnce = () => window.removeEventListener('popstate', popOnce);
+    window.addEventListener('popstate', popOnce, { once: true });
     history.back();
     setTimeout(() => {
       if (location.href === before) {
@@ -242,22 +259,20 @@ import "./gh-redirect.js";
    * @returns {void}
    */
   function onClick(e) {
-    const el =
-      e.target instanceof Element ? e.target.closest("a,button") : null;
+    const el = e.target instanceof Element ? e.target.closest('a,button') : null;
     if (!el) return;
 
-    if (el.hasAttribute("data-back")) {
+    if (el.hasAttribute('data-back')) {
       e.preventDefault();
-      const href = el instanceof HTMLAnchorElement ? el.href : "/";
+      const href = el instanceof HTMLAnchorElement ? el.href : '/';
       smartBack(href);
       return;
     }
 
     if (!(el instanceof HTMLAnchorElement)) return;
 
-    if (el.target && el.target !== "_self") return;
-    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
-      return;
+    if (el.target && el.target !== '_self') return;
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
     let url;
     try {
@@ -297,12 +312,12 @@ import "./gh-redirect.js";
 
     initialShow(initialPath, initialHash);
 
-    document.addEventListener("click", onClick, { passive: false });
-    window.addEventListener("popstate", onPopState);
+    document.addEventListener('click', onClick, { passive: false });
+    window.addEventListener('popstate', onPopState);
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
   } else {
     start();
   }

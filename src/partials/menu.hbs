@@ -1,0 +1,32 @@
+<div class='fullscreen-menu' id='menu' role='dialog' aria-modal='true'>
+  <div class='menu-wave'>
+    <canvas id='menu-waves-canvas' aria-hidden='true'></canvas>
+    <div class='menu-waves'>
+      <img
+        src='assets/images/waves-light.webp'
+        class='wave light-theme'
+        alt='Wave background light'
+      />
+      <img src='assets/images/waves-dark.webp' class='wave dark-theme' alt='Wave background dark' />
+    </div>
+  </div>
+
+  <a href='/'>
+    <img
+      src='assets/images/logo-katjadev-dark.svg'
+      alt='Katja Dev Logo'
+      class='site-logo site-logo-menu'
+      loading='eager'
+    />
+  </a>
+
+  <button class='menu-toggle opened' id='menuClose' aria-label='Close menu'>
+    <i class='fas fa-times'></i>
+  </button>
+
+  <nav>
+    <a href='/work'>Work</a>
+    <a href='/about'>About</a>
+    <a href='/contact'>Contact</a>
+  </nav>
+</div>

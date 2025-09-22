@@ -5,19 +5,25 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:gh": "vite --base=/portfolio/",
     "build": "vite build",
     "build:gh": "vite build --base=/portfolio/",
     "preview": "vite preview",
+    "preview:gh": "vite preview --base=/portfolio/",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",
     "format": "npm run prettier:write",
     "docs": "jsdoc -c jsdoc.json"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "jsdoc": "^4.0.4",
     "minami": "^1.2.3",
     "prettier": "^3.6.2",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-handlebars": "^1.5.0"
   },
   "dependencies": {
     "gsap": "^3.13.0",
