@@ -3,6 +3,7 @@
   class='fullscreen-section'
   data-title='Case Study: Agility Bandits — Logo & Graphics | Katja Turnsek'
   data-description='Character-driven mark and motion-centric graphics for a dog agility brand; variants for light/dark and print.'
+  data-case='agilitybandits'
 >
   <div class='rows'>
     <div class='row'>
@@ -10,24 +11,20 @@
       <h2>Agility Bandits - Logotype &amp; Motion-Themed Graphic Elements</h2>
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
-        <a
-          href='assets/pdf/agilitybandits-logosuite.pdf'
-          target='_blank'
-          class='label-link online-demo-label'
-          rel='noopener'
-        >
-          <span class='label-text'>Get Design Files (PDF)</span>
-          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-        </a>
+
+        <!-- Reusable component: Demo Links) -->
+        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
       </div>
     </div>
 
     <div class='row'>
-      <nav class='project-switcher' aria-label='Agility Bandits sections'>
-        <a href='/work/agilitybandits' class='pill'>Web Development</a>
-        <a href='/work/agilitybandits/design' class='pill'>Web &amp; Interaction Design</a>
-        <a href='/work/agilitybandits/logotype' class='pill' aria-current='page'>Graphic Design</a>
-      </nav>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Agility Bandits sections'
+        data-auto='switcher'
+        data-case='agilitybandits'
+      ></nav>
     </div>
 
     <div class='row'>

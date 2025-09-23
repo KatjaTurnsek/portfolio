@@ -3,6 +3,7 @@
   class='fullscreen-section'
   data-title='Case Study: Pet Art With Heart — Logo Design | Katja Turnsek'
   data-description='Hand-drawn pet-centric symbol refined in Illustrator; warm, approachable identity system.'
+  data-case='petart'
 >
   <div class='rows'>
     <div class='row'>
@@ -10,24 +11,20 @@
       <h2>Pet Art With Heart - Emotionally Inspired Logo Design</h2>
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
-        <a
-          href='assets/pdf/petart-logosuite.pdf'
-          target='_blank'
-          class='label-link online-demo-label'
-          rel='noopener'
-        >
-          <span class='label-text'>Get Design Files (PDF)</span>
-          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-        </a>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='petart'></div>
       </div>
     </div>
 
     <div class='row'>
-      <nav class='project-switcher' aria-label='Pet Art With Heart sections'>
-        <a href='/work/petart' class='pill'>Web Development</a>
-        <a href='/work/petart/design' class='pill'>Web &amp; Interaction Design</a>
-        <a href='/work/petart/logotype' class='pill' aria-current='page'>Graphic Design</a>
-      </nav>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Pet Art With Heart sections'
+        data-auto='switcher'
+        data-case='petart'
+      ></nav>
     </div>
 
     <div class='row'>

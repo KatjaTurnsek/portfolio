@@ -3,31 +3,29 @@
   class='fullscreen-section'
   data-title='Case Study: Agility Bandits Blog — Web Development | Katja Turnsek'
   data-description='Responsive blog with Noroff API integration, admin authentication, and accessible UI patterns.'
+  data-case='agilitybandits'
 >
   <div class='rows'>
     <div class='row'>
       <h1>Web Development</h1>
       <h2>Agility Bandits Centre Blog - Exam Project 1</h2>
+
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> HTML | CSS | JavaScript | API</div>
-        <a
-          href='https://agilitybandits-centre.netlify.app/'
-          target='_blank'
-          class='label-link online-demo-label'
-          rel='noopener'
-        >
-          <span class='label-text'>Visit Live Site</span>
-          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-        </a>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
       </div>
     </div>
 
     <div class='row'>
-      <nav class='project-switcher' aria-label='Agility Bandits sections'>
-        <a href='/work/agilitybandits' class='pill' aria-current='page'>Web Development</a>
-        <a href='/work/agilitybandits/design' class='pill'>Web &amp; Interaction Design</a>
-        <a href='/work/agilitybandits/logotype' class='pill'>Graphic Design</a>
-      </nav>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Agility Bandits sections'
+        data-auto='switcher'
+        data-case='agilitybandits'
+      ></nav>
     </div>
 
     <div class='row'>

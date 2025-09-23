@@ -3,6 +3,7 @@
   class='fullscreen-section'
   data-title='Case Study: Personal Portfolio — Web & Interaction Design | Katja Turnsek'
   data-description='Liquid-inspired visual identity, motion design, and UI prototyping for a sleek one-page portfolio.'
+  data-case='portfolio'
 >
   <div class='rows'>
     <div class='row'>
@@ -11,37 +12,19 @@
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> Figma | GSAP | CSS</div>
 
-        <div class='demo-links'>
-          <a
-            href='https://bit.ly/459Qlxv'
-            target='_blank'
-            class='label-link online-demo-label'
-            rel='noopener'
-          >
-            <span class='label-text'>Open In Figma (Desktop)</span>
-            <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-          </a>
-
-          <a
-            href='https://bit.ly/45qWxCv'
-            target='_blank'
-            class='label-link online-demo-label'
-            rel='noopener'
-          >
-            <span class='label-text'>Open In Figma (Mobile)</span>
-            <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-          </a>
-        </div>
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='portfolio'></div>
       </div>
     </div>
 
     <div class='row'>
-      <nav class='project-switcher' aria-label='KT Portfolio sections'>
-        <a href='/work/portfolio' class='pill'>Web Development</a>
-        <a href='/work/portfolio/design' class='pill' aria-current='page'>Web &amp; Interaction
-          Design</a>
-        <a href='/work/portfolio/logotype' class='pill'>Graphic Design</a>
-      </nav>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='KT Portfolio sections'
+        data-auto='switcher'
+        data-case='portfolio'
+      ></nav>
     </div>
 
     <div class='row'>

@@ -3,6 +3,7 @@
   class='fullscreen-section'
   data-title='Case Study: Personal Portfolio — Web Development | Katja Turnsek'
   data-description='Animated one-page portfolio built with GSAP and Vite; theme switching, responsive layout, and performance tuning.'
+  data-case='portfolio'
 >
   <div class='rows'>
     <div class='row'>
@@ -13,24 +14,20 @@
           <strong>Tools:</strong>
           HTML | CSS | JavaScript | GSAP | Vite
         </div>
-        <a
-          href='https://github.com/KatjaTurnsek/portfolio'
-          target='_blank'
-          class='label-link online-demo-label'
-          rel='noopener'
-        >
-          <span class='label-text'>View on GitHub</span>
-          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-        </a>
+
+        <!-- Reusable component: Demo Links (JS injects links for this case) -->
+        <div class='demo-links' data-auto='demo' data-case='portfolio'></div>
       </div>
     </div>
 
     <div class='row'>
-      <nav class='project-switcher' aria-label='KT Portfolio sections'>
-        <a href='/work/portfolio' class='pill' aria-current='page'>Web Development</a>
-        <a href='/work/portfolio/design' class='pill'>Web &amp; Interaction Design</a>
-        <a href='/work/portfolio/logotype' class='pill'>Graphic Design</a>
-      </nav>
+      <!-- Reusable component: Project Switcher (JS builds pills + highlights “Web Development”) -->
+      <nav
+        class='project-switcher'
+        aria-label='KT Portfolio sections'
+        data-auto='switcher'
+        data-case='portfolio'
+      ></nav>
     </div>
 
     <div class='row'>

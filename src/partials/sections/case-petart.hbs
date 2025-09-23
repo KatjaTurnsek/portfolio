@@ -3,6 +3,7 @@
   class='fullscreen-section'
   data-title='Case Study: Pet Art With Heart — Web Development | Katja Turnsek'
   data-description='Fast, accessible artist portfolio built with semantic HTML and custom CSS. Focus on performance, a11y, and SEO.'
+  data-case='petart'
 >
   <div class='rows'>
     <div class='row'>
@@ -10,24 +11,20 @@
       <h2>Pet Art with Heart - Artist Portfolio Website</h2>
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> HTML | CSS</div>
-        <a
-          href='https://pet-art.net'
-          target='_blank'
-          class='label-link online-demo-label'
-          rel='noopener'
-        >
-          <span class='label-text'>Visit Live Site</span>
-          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-        </a>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='petart'></div>
       </div>
     </div>
 
     <div class='row'>
-      <nav class='project-switcher' aria-label='Pet Art With Heart sections'>
-        <a href='/work/petart' class='pill' aria-current='page'>Web Development</a>
-        <a href='/work/petart/design' class='pill'>Web &amp; Interaction Design</a>
-        <a href='/work/petart/logotype' class='pill'>Graphic Design</a>
-      </nav>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Pet Art With Heart sections'
+        data-auto='switcher'
+        data-case='petart'
+      ></nav>
     </div>
 
     <div class='row'>

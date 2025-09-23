@@ -3,43 +3,29 @@
   class='fullscreen-section'
   data-title='Case Study: Pet Art With Heart — Web & Interaction Design | Katja Turnsek'
   data-description='Figma mood board to responsive prototype; minimal identity that supports the artwork and clear UX.'
+  data-case='petart'
 >
   <div class='rows'>
     <div class='row'>
       <h1>Web &amp; Interaction Design</h1>
       <h2>Pet Art With Heart - Visual Identity &amp; UX Design</h2>
+
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> Figma</div>
 
-        <div class='demo-links'>
-          <a
-            href='http://bit.ly/4nB11O4'
-            target='_blank'
-            class='label-link online-demo-label'
-            rel='noopener'
-          >
-            <span class='label-text'>Open In Figma (Desktop)</span>
-            <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-          </a>
-          <a
-            href='https://bit.ly/4kmoXlq'
-            target='_blank'
-            class='label-link online-demo-label'
-            rel='noopener'
-          >
-            <span class='label-text'>Open In Figma (Mobile)</span>
-            <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-          </a>
-        </div>
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='petart'></div>
       </div>
     </div>
 
     <div class='row'>
-      <nav class='project-switcher' aria-label='Pet Art With Heart sections'>
-        <a href='/work/petart' class='pill'>Web Development</a>
-        <a href='/work/petart/design' class='pill' aria-current='page'>Web &amp; Interaction Design</a>
-        <a href='/work/petart/logotype' class='pill'>Graphic Design</a>
-      </nav>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Pet Art With Heart sections'
+        data-auto='switcher'
+        data-case='petart'
+      ></nav>
     </div>
 
     <div class='row'>

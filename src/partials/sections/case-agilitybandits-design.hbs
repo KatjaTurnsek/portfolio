@@ -3,44 +3,29 @@
   class='fullscreen-section'
   data-title='Case Study: Agility Bandits Blog — Web & Interaction Design | Katja Turnsek'
   data-description='Agility-themed branding, responsive grid, and API-aware layouts designed for clarity and speed.'
+  data-case='agilitybandits'
 >
   <div class='rows'>
     <div class='row'>
       <h1>Web &amp; Interaction Design</h1>
       <h2>Agility Bandits Blog - Design &amp; API Integration</h2>
+
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> Figma | JavaScript | API | CSS</div>
 
-        <div class='demo-links'>
-          <a
-            href='https://bit.ly/3UWMUp0'
-            target='_blank'
-            class='label-link online-demo-label'
-            rel='noopener'
-          >
-            <span class='label-text'>Open In Figma (Desktop)</span>
-            <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-          </a>
-          <a
-            href='https://bit.ly/41FuoFo'
-            target='_blank'
-            class='label-link online-demo-label'
-            rel='noopener'
-          >
-            <span class='label-text'>Open In Figma (Mobile)</span>
-            <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
-          </a>
-        </div>
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
       </div>
     </div>
 
     <div class='row'>
-      <nav class='project-switcher' aria-label='Agility Bandits sections'>
-        <a href='/work/agilitybandits' class='pill'>Web Development</a>
-        <a href='/work/agilitybandits/design' class='pill' aria-current='page'>Web &amp; Interaction
-          Design</a>
-        <a href='/work/agilitybandits/logotype' class='pill'>Graphic Design</a>
-      </nav>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Agility Bandits sections'
+        data-auto='switcher'
+        data-case='agilitybandits'
+      ></nav>
     </div>
 
     <div class='row'>
@@ -105,14 +90,9 @@
           <div class='case-study-text'>
             <h3>Figma Design &amp; Prototyping</h3>
             <ul class='bullet-list-right'>
-              <li>
-                Wireframes for homepage, article pages, and
-                <strong>admin login/register</strong>.
-              </li>
-              <li>
-                <strong>Flexible content blocks</strong>
-                designed to adapt to API content.
-              </li>
+              <li>Wireframes for homepage, article pages, and
+                <strong>admin login/register</strong>.</li>
+              <li><strong>Flexible content blocks</strong> designed to adapt to API content.</li>
               <li><strong>Responsive layouts</strong> tested across multiple breakpoints.</li>
             </ul>
           </div>
@@ -122,17 +102,13 @@
           <div class='case-study-text item-left'>
             <h3>Interaction Design</h3>
             <ul class='bullet-list'>
-              <li>
-                Designed
+              <li>Designed
                 <strong>intuitive user flows</strong>
-                from browsing to reading to admin tasks.
-              </li>
+                from browsing to reading to admin tasks.</li>
               <li>Interactive hover/focus states and smooth menu transitions.</li>
-              <li>
-                Fully
+              <li>Fully
                 <strong>accessible interface</strong>
-                for keyboard and screen reader users.
-              </li>
+                for keyboard and screen reader users.</li>
             </ul>
           </div>
         </div>
@@ -173,9 +149,7 @@
               data-src='design-agilitybanditsapi-600.webp'
               alt='JavaScript API integration code for Agility Bandits Blog'
             />
-            <figcaption class='work-caption'>
-              JavaScript code integrating the Noroff API
-            </figcaption>
+            <figcaption class='work-caption'>JavaScript code integrating the Noroff API</figcaption>
           </figure>
         </div>
       </div>
