@@ -4,7 +4,7 @@
  *  - Router setup
  *  - Section visibility hooks (lazy hydration)
  *  - Menu open/close with lazy menu animations + cleanup
- *  - Page-wide effects and fallbacks
+ *  - Page-wide effects, fallbacks, and deferred heavy animations
  */
 
 import './router.js';
@@ -19,10 +19,9 @@ import {
   animateWaveLine,
   insertWaveLines,
   animateCustomWaveLines,
-  animateGooeyBlobs,
-  enableInteractiveJellyBlob,
-  animateTopDrippingWaves,
-  // animateMenuDrippingWaves is lazily imported when the menu opens
+  scheduleTopWavesAfterLCP,
+  scheduleMenuWavesAfterLCP,
+  scheduleBlobsAfterLCP,
 } from './animations.js';
 import { initSections, revealSection, setupHeaderScrollEffect } from './init.js';
 import { animateTextInSection } from './animatedTexts.js';
@@ -48,7 +47,7 @@ import { setupActions } from '../lib/actions.js';
  */
 document.addEventListener('sectionVisible', async (e) => {
   /** @type {{ detail: string }} */
-  // @ts-ignore - CustomEvent typing
+  // @ts-ignore
   const { detail: sectionId } = e;
   const section = document.getElementById(sectionId);
   if (!section) return;
@@ -72,29 +71,26 @@ document.addEventListener('sectionVisible', async (e) => {
 });
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Menu animations (lazy load + cleanup)                                     */
+/* Menu animations (deferred start + cleanup on close)                       */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 const menu = document.getElementById('menu');
-let menuWavesCleanup /** @type {null | (() => void)} */ = null;
+let stopMenuWaves /** @type {null | (() => void)} */ = null;
 
 if (menu) {
   const observer = new MutationObserver(async () => {
     const open = menu.classList.contains('open');
 
     if (open) {
-      // Start menu dripping waves (and animate menu links) lazily.
-      if (!menuWavesCleanup) {
-        const { animateMenuDrippingWaves } = await import('./animations.js');
-        menuWavesCleanup = animateMenuDrippingWaves(); // may be a noop on Safari/reduced-motion
-      }
+      // Start menu dripping waves (deferred) and animate menu links.
+      if (!stopMenuWaves) stopMenuWaves = scheduleMenuWavesAfterLCP();
       const { animateMenuLinks } = await import('./animatedTexts.js');
       animateMenuLinks();
     } else {
       // Menu closed: stop & cleanup the canvas ticker/listeners.
-      if (menuWavesCleanup) {
-        menuWavesCleanup();
-        menuWavesCleanup = null;
+      if (stopMenuWaves) {
+        stopMenuWaves(); // cleanup if started, cancel if still pending
+        stopMenuWaves = null;
       }
     }
   });
@@ -153,11 +149,12 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     hideLoader();
 
+    // Lightweight header adornments
     insertWaveLines();
     animateWaveLine();
     animateCustomWaveLines();
 
-    // Start top dripping waves with a smooth fade (no cleanup needed unless you want to).
+    // Top dripping waves: fade the canvas now; start animation after idle.
     const wavesCanvas = document.getElementById('top-waves-canvas');
     if (wavesCanvas && !isSafari) {
       gsap.fromTo(
@@ -168,12 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
           duration: 1.5,
           delay: 0.3,
           ease: 'power2.out',
-          onStart: animateTopDrippingWaves, // returns a cleanup if you ever need it
         }
       );
+      // returns cancel/cleanup if you ever need to stop it later
+      scheduleTopWavesAfterLCP();
     }
 
-    // Gooey blobs appear after content—animate + enable jelly interaction.
+    // Gooey blobs appear after content—defer heavy setup.
     const blobWrapper = document.querySelector('.morphing-blob-wrapper');
     if (blobWrapper) {
       gsap.fromTo(
@@ -185,8 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
           delay: 0.8,
           ease: 'power2.out',
           onStart: () => {
-            animateGooeyBlobs(); // returns cleanup; not stored since it’s global background
-            enableInteractiveJellyBlob();
+            scheduleBlobsAfterLCP();
           },
         }
       );
