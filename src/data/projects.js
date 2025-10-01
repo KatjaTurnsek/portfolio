@@ -150,7 +150,7 @@ export const projects = [
     category: 'logotype',
     routeUrl: '/work/petart/logotype',
     caseUrl: '#case-petart-logotype',
-    demoLinks: [{ href: 'assets/pdf/petart-logosuite.pdf', label: 'Get Design Files (PDF)' }],
+    demoLinks: [{ href: '/assets/pdf/petart-logosuite.pdf', label: 'Get Design Files (PDF)' }],
     order: 210,
   },
   {
@@ -164,7 +164,7 @@ export const projects = [
     category: 'logotype',
     routeUrl: '/work/portfolio/logotype',
     caseUrl: '#case-portfolio-logotype',
-    demoLinks: [{ href: 'assets/pdf/portfolio-logosuite.pdf', label: 'Get Design Files (PDF)' }],
+    demoLinks: [{ href: '/assets/pdf/portfolio-logosuite.pdf', label: 'Get Design Files (PDF)' }],
     order: 220,
   },
   {
@@ -179,7 +179,7 @@ export const projects = [
     routeUrl: '/work/agilitybandits/logotype',
     caseUrl: '#case-agilitybandits-logotype',
     demoLinks: [
-      { href: 'assets/pdf/agilitybandits-logosuite.pdf', label: 'Get Design Files (PDF)' },
+      { href: '/assets/pdf/agilitybandits-logosuite.pdf', label: 'Get Design Files (PDF)' },
     ],
     order: 230,
   },
@@ -195,7 +195,7 @@ export const projects = [
     routeUrl: '/work/semester-project-1/logotype',
     caseUrl: '#case-semester-project-1-logotype',
     demoLinks: [
-      { href: 'assets/pdf/sciencemuseum-logosuite.pdf', label: 'Get Design Files (PDF)' },
+      { href: '/assets/pdf/sciencemuseum-logosuite.pdf', label: 'Get Design Files (PDF)' },
     ],
     order: 240,
   },

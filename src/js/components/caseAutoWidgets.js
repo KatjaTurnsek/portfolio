@@ -6,6 +6,23 @@ const SWITCHER_LABELS = {
   logotype: 'Graphic Design',
 };
 
+// Normalize the app's base (supports GH Pages subpaths, etc.)
+const BASE = (import.meta?.env?.BASE_URL || '/').replace(/\/$/, '');
+
+// Is an absolute external/special link?
+function isExternal(href = '') {
+  return /^(?:https?:|mailto:|tel:|data:|blob:)/i.test(href);
+}
+
+// Resolve hrefs so "assets/pdf/file.pdf" & "/assets/pdf/file.pdf" work from any route
+function resolveHref(href = '') {
+  if (!href) return '#';
+  if (href.startsWith('#')) return href;
+  if (isExternal(href)) return href;
+  if (href.startsWith('/')) return BASE + href;
+  return BASE + '/' + href;
+}
+
 function siblingVariants(p) {
   const base = p.caseId.replace(/-(design|logotype)$/, '');
   const ids = [base, `${base}-design`, `${base}-logotype`];
@@ -18,15 +35,17 @@ function siblingVariants(p) {
 function renderDemoLinksAuto(el, p) {
   if (!el) return;
   if (el.dataset.wired === '1' || el.querySelector('a')) return;
+
   const links = Array.isArray(p.demoLinks) ? p.demoLinks : [];
   if (!links.length) return;
 
   const frag = document.createDocumentFragment();
+
   for (const { href, label } of links) {
     const a = document.createElement('a');
     a.className = 'label-link online-demo-label';
-    a.href = href;
-    a.target = '_blank';
+    a.href = resolveHref(href);
+    a.target = '_blank'; // open PDFs/externals in new tab (router won't intercept)
     a.rel = 'noopener';
     a.innerHTML = `
       <span class="label-text">${label}</span>
@@ -34,6 +53,7 @@ function renderDemoLinksAuto(el, p) {
     `;
     frag.appendChild(a);
   }
+
   el.replaceChildren(frag);
   el.dataset.wired = '1';
 }
@@ -47,7 +67,11 @@ function renderProjectSwitcherAuto(el, p) {
 
   for (const s of sibs) {
     const a = document.createElement('a');
-    a.href = s.routeUrl || s.caseUrl || '#';
+
+    // Prefer pretty route; fall back to hash (router converts hash→pretty path)
+    const href = s.routeUrl || s.caseUrl || '#';
+    a.href = resolveHref(href);
+
     a.className = 'pill';
     a.textContent = SWITCHER_LABELS[s.category] || s.title;
     if (s.caseId === p.caseId) a.setAttribute('aria-current', 'page');
