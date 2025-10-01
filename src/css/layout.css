@@ -541,6 +541,15 @@ footer {
   align-self: flex-end;
 }
 
+/* Headings focus outline hygiene */
+:where(h1, h2, h3)[tabindex='-1']:focus {
+  outline: none;
+}
+:where(h1, h2, h3):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0.2rem;
+}
+
 /* ==========================================================================
    Responsive (≤ 850px)
    ========================================================================== */

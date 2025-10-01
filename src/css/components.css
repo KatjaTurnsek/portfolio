@@ -7,16 +7,20 @@
    --p-font-size, --p-line-height
    ========================================================================== */
 
-
 /* ========================================================================== */
 /* 0) Utilities                                                               */
 /* ========================================================================== */
 
 .no-select,
-.no-select * { user-select: none !important; -webkit-user-select: none !important; -ms-user-select: none !important; }
+.no-select * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -ms-user-select: none !important;
+}
 
-.full-width { width: 100%; }
-
+.full-width {
+  width: 100%;
+}
 
 /* ========================================================================== */
 /* 1) Links & CTAs (single source of truth)                                   */
@@ -60,9 +64,15 @@
   outline: none;
 }
 
-.label-link .label-text { color: currentColor; transition: color 0.4s ease-out; }
+.label-link .label-text {
+  color: currentColor;
+  transition: color 0.4s ease-out;
+}
 
-.arrow-icon { font-size: var(--icon-scale); color: currentColor; }
+.arrow-icon {
+  font-size: var(--icon-scale);
+  color: currentColor;
+}
 
 /* Back to Work alignment */
 .back-to-work-container {
@@ -71,7 +81,6 @@
   width: 100%;
   padding-top: 60px;
 }
-
 
 /* ========================================================================== */
 /* 2) Tech Info Bar (tools + demo links)                                      */
@@ -107,7 +116,6 @@
   --icon-scale: 0.85em;
 }
 
-
 /* ========================================================================== */
 /* 3) Project Switcher (pills)                                                */
 /* ========================================================================== */
@@ -115,15 +123,15 @@
 .project-switcher {
   display: flex;
   flex-wrap: wrap;
-  gap: .5rem;
-  margin-top: .5rem;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .project-switcher .pill {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  padding: .5rem .8rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 999px;
   border: 1px solid var(--pill-border);
   text-decoration: none;
@@ -133,23 +141,26 @@
   line-height: 1;
   color: var(--text-color);
   background-color: var(--pill-bg);
-  transition: background .2s ease, color .2s ease, border-color .2s ease, outline-color .2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    outline-color 0.2s ease;
 }
 
 .project-switcher .pill:hover,
 .project-switcher .pill:focus-visible {
   border-color: var(--link-hover-color);
   color: var(--link-hover-color);
-  outline: 2px solid rgba(123,184,171,.4);
+  outline: 2px solid rgba(123, 184, 171, 0.4);
   outline-offset: 2px;
 }
 
-.project-switcher .pill[aria-current="page"] {
+.project-switcher .pill[aria-current='page'] {
   background-color: var(--pill-active-bg);
   border-color: var(--pill-active-border);
   color: var(--link-hover-color);
 }
-
 
 /* ========================================================================== */
 /* 4) Related Links (inline CTA group)                                        */
@@ -158,15 +169,15 @@
 .related-links {
   display: flex;
   align-items: center;
-  gap: .75rem;
+  gap: 0.75rem;
   justify-content: flex-end;
   padding-top: 28px;
 }
 
 .related-links .related-label {
   font: 600 12px/1 var(--body-font);
-  opacity: .7;
-  margin-right: .25rem;
+  opacity: 0.7;
+  margin-right: 0.25rem;
 }
 
 .related-links .label-link {
@@ -174,9 +185,8 @@
   --label-line: 22px;
   --label-transform: none;
   --icon-scale: 0.9em;
-  gap: .35rem;
+  gap: 0.35rem;
 }
-
 
 /* ========================================================================== */
 /* 5) Bullet Lists                                                            */
@@ -192,15 +202,18 @@
   color: var(--text-color);
 }
 
-.bullet-list { padding: 0 40px; }
-.bullet-list-right { padding: 0 0 0 40px; }
+.bullet-list {
+  padding: 0 40px;
+}
+.bullet-list-right {
+  padding: 0 0 0 40px;
+}
 
 .bullet-list li,
 .bullet-list-right li {
   padding-left: 30px;
   margin-bottom: 10px;
 }
-
 
 /* ========================================================================== */
 /* 6) Forms                                                                   */
@@ -254,7 +267,10 @@ textarea {
   color: var(--text-color);
 }
 
-textarea { padding-top: 0.75rem; height: auto; }
+textarea {
+  padding-top: 0.75rem;
+  height: auto;
+}
 
 input:-webkit-autofill,
 textarea:-webkit-autofill {
@@ -266,18 +282,29 @@ textarea:-webkit-autofill {
 }
 
 input:invalid,
-textarea:invalid { border: 2px solid var(--error-color); }
+textarea:invalid {
+  border: 2px solid var(--error-color);
+}
 
 input:valid,
-textarea:valid { border: 2px solid var(--success-color); }
+textarea:valid {
+  border: 2px solid var(--success-color);
+}
 
 input:invalid:focus,
-textarea:invalid:focus { outline: 2px solid var(--error-color); }
+textarea:invalid:focus {
+  outline: 2px solid var(--error-color);
+}
 
 input:valid:focus,
-textarea:valid:focus { outline: 2px solid var(--success-color); }
+textarea:valid:focus {
+  outline: 2px solid var(--success-color);
+}
 
-.button-wrapper { display: flex; justify-content: flex-end; }
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
 
 .info-text {
   font-size: 30px;
@@ -287,12 +314,13 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   font-weight: 400;
 }
 
-
 /* ========================================================================== */
 /* 7) Testimonials (header strip + card)                                      */
 /* ========================================================================== */
 
-.testimonial-section { padding-bottom: 100px; }
+.testimonial-section {
+  padding-bottom: 100px;
+}
 
 .testimonial {
   background-color: var(--teal-light);
@@ -306,8 +334,15 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   box-sizing: border-box;
 }
 
-.testimonial-label { display: flex; align-items: center; gap: 10px; }
-.testimonial .arrow-icon { font-size: 14px; color: var(--dark); }
+.testimonial-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.testimonial .arrow-icon {
+  font-size: 14px;
+  color: var(--dark);
+}
 .testimonial-label .label-text {
   font-family: var(--h1-font);
   font-weight: 300;
@@ -330,7 +365,10 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   align-items: center;
   justify-content: center;
 }
-.circle-button i { font-size: 58px; color: var(--dark); }
+.circle-button i {
+  font-size: 58px;
+  color: var(--dark);
+}
 
 /* Testimonial Card */
 .testimonial-card {
@@ -356,10 +394,15 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   font-size: 16px;
   line-height: 20px;
 }
-.testimonial-card .author { font-weight: 600; }
-.testimonial-card .role { opacity: .75; }
-.testimonial-card + .testimonial-card { margin-top: 30px; }
-
+.testimonial-card .author {
+  font-weight: 600;
+}
+.testimonial-card .role {
+  opacity: 0.75;
+}
+.testimonial-card + .testimonial-card {
+  margin-top: 30px;
+}
 
 /* ========================================================================== */
 /* 8) Animated Bars                                                            */
@@ -372,10 +415,15 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   gap: 15px;
   padding-bottom: 60px;
 }
-.bar-stack { position: relative; width: 100%; height: 50px; }
+.bar-stack {
+  position: relative;
+  width: 100%;
+  height: 50px;
+}
 .bar {
   position: absolute;
-  left: 0; top: 0;
+  left: 0;
+  top: 0;
   height: 50px;
   border-radius: 10px;
   width: 0%;
@@ -384,8 +432,13 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   align-items: center;
   padding-left: 20px;
 }
-.bar-bg { background-color: var(--teal); z-index: 1; }
-.bar-1, .bar-2, .bar-3 {
+.bar-bg {
+  background-color: var(--teal);
+  z-index: 1;
+}
+.bar-1,
+.bar-2,
+.bar-3 {
   background-color: var(--teal-light);
   z-index: 2;
   border-top-right-radius: 0;
@@ -401,7 +454,6 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   white-space: nowrap;
 }
 
-
 /* ========================================================================== */
 /* 9) Section Divider Lines (SVG)                                             */
 /* ========================================================================== */
@@ -411,11 +463,22 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   margin: 40px auto;
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
-.section-line-wrapper.visible { opacity: 1; transform: translateY(0); }
+.section-line-wrapper.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-.section-line { width: 100%; height: 20px; display: block; overflow: visible; cursor: grab; }
+.section-line {
+  width: 100%;
+  height: 20px;
+  display: block;
+  overflow: visible;
+  cursor: grab;
+}
 .section-line .wave {
   stroke-width: 1;
   stroke-linecap: round;
@@ -477,11 +540,14 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   background-color: var(--switch-bg);
   border: var(--circle-border);
   border-radius: 50%;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
   transform: translateX(0); /* default */
 }
-#theme-toggle.dark-mode::before { transform: translateX(30px); }
-
+#theme-toggle.dark-mode::before {
+  transform: translateX(30px);
+}
 
 /* ========================================================================== */
 /* 11) Animated Blob (background)                                             */
@@ -489,18 +555,30 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
 
 .morphing-blob-wrapper {
   position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   z-index: -999;
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0); /* force GPU acceleration */
 }
-#blob-svg { width: 100%; height: 100%; display: block; filter: blur(10px); }
-.blobs .blob { fill: var(--blob-color); }
-.blob { transform-box: fill-box; transform-origin: center; stroke: none; }
-
+#blob-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: blur(10px);
+}
+.blobs .blob {
+  fill: var(--blob-color);
+}
+.blob {
+  transform-box: fill-box;
+  transform-origin: center;
+  stroke: none;
+}
 
 /* ========================================================================== */
 /* 12) Top Waves (canvas + static fallbacks)                                  */
@@ -508,7 +586,8 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
 
 #top-waves-canvas {
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 300px;
   z-index: -1;
@@ -520,25 +599,35 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
 .top-waves {
   display: none;
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 200px;
   pointer-events: none;
   z-index: 1;
   animation: fadeInWaves 1.5s ease-out 0.3s forwards;
 }
-@keyframes fadeInWaves { to { opacity: 1; } }
+@keyframes fadeInWaves {
+  to {
+    opacity: 1;
+  }
+}
 
 .top-waves img {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: none;
 }
-.light-theme .top-waves img.light-theme { display: block; }
-.dark-theme .top-waves img.dark-theme { display: block; }
-
+.light-theme .top-waves img.light-theme {
+  display: block;
+}
+.dark-theme .top-waves img.dark-theme {
+  display: block;
+}
 
 /* ========================================================================== */
 /* 13) Menu Waves                                                             */
@@ -546,30 +635,43 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
 
 .fullscreen-menu .menu-wave {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 200px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
   z-index: -1;
   overflow: hidden;
 }
-#menu-waves-canvas { width: 100%; height: 100%; display: block; }
+#menu-waves-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 
 .menu-waves {
   display: none;
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 200px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
   animation: fadeInWaves 1.5s ease-out 0.3s forwards;
 }
 .menu-waves img {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: none;
 }
-.light-theme .menu-waves img.light-theme { display: block; }
-.dark-theme .menu-waves img.dark-theme { display: block; }
-
+.light-theme .menu-waves img.light-theme {
+  display: block;
+}
+.dark-theme .menu-waves img.dark-theme {
+  display: block;
+}
 
 /* ========================================================================== */
 /* 14) Hire Button                                                            */
@@ -577,7 +679,8 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
 
 .hire-button {
   position: relative;
-  width: 200px; height: 200px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background-color: var(--yellow-light);
   color: var(--dark);
@@ -585,25 +688,38 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   font-size: 25px;
   font-weight: 700;
   text-transform: uppercase;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 0;
   overflow: hidden;
   transition: background-color 0.4s ease;
 }
 .hire-button::before {
-  content: "";
-  position: absolute; inset: 0;
+  content: '';
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
   border: 20px solid var(--yellow);
-  transition: border-color 0.4s ease, transform 0.4s ease;
+  transition:
+    border-color 0.4s ease,
+    transform 0.4s ease;
   z-index: -1;
 }
-.hire-button:hover { background-color: var(--yellow); text-decoration: none; }
-.hire-button:hover::before { border-color: var(--yellow-light); transform: scale(1.05); }
+.hire-button:hover {
+  background-color: var(--yellow);
+  text-decoration: none;
+}
+.hire-button:hover::before {
+  border-color: var(--yellow-light);
+  transform: scale(1.05);
+}
 
 .hire-button a,
-.hire-button a:hover { color: var(--dark); }
+.hire-button a:hover {
+  color: var(--dark);
+}
 
 .hire-section {
   position: absolute;
@@ -611,14 +727,17 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
   left: 70px;
 }
 
-
 /* ========================================================================== */
 /* 15) Responsive Tweaks                                                      */
 /* ========================================================================== */
 
 @media (max-width: 850px) {
-  .top-waves { height: 150px; }
-  .menu-waves { height: 100px; }
+  .top-waves {
+    height: 150px;
+  }
+  .menu-waves {
+    height: 100px;
+  }
 
   .tech-demo-wrapper {
     display: block;
@@ -643,30 +762,67 @@ textarea:valid:focus { outline: 2px solid var(--success-color); }
     white-space: normal;
     flex-wrap: wrap;
   }
-  .demo-links { padding-left: 0; }
+  .demo-links {
+    padding-left: 0;
+  }
 
-  .related-links { justify-content: flex-start; flex-wrap: wrap; row-gap: .5rem; }
+  .related-links {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
 
-  .back-to-work-container { justify-content: center; margin-top: 30px; }
+  .back-to-work-container {
+    justify-content: center;
+    margin-top: 30px;
+  }
 
-  .circle-button { left: 20%; width: 100px; height: 100px; }
-  .circle-button i { font-size: 40px; }
+  .circle-button {
+    left: 20%;
+    width: 100px;
+    height: 100px;
+  }
+  .circle-button i {
+    font-size: 40px;
+  }
 
-  .contact-form-wrapper { justify-content: center; padding: 2rem 1rem; }
-  .contact-form { width: 100%; }
-  .name-row { flex-direction: column; gap: 1.5rem; }
+  .contact-form-wrapper {
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .contact-form {
+    width: 100%;
+  }
+  .name-row {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 
-  .info-text { text-align: center; }
+  .info-text {
+    text-align: center;
+  }
 
-  #theme-toggle { top: 40px; right: 100px; }
+  #theme-toggle {
+    top: 40px;
+    right: 100px;
+  }
 
   .hire-section {
     position: static;
-    display: flex; justify-content: center; align-items: center;
-    height: auto; padding-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding-top: 30px;
   }
 
-  #top-waves-canvas, #menu-waves-canvas { height: 200px; }
+  #top-waves-canvas,
+  #menu-waves-canvas {
+    height: 200px;
+  }
 
-  .bullet-list, .bullet-list-right { padding: 20px; }
+  .bullet-list,
+  .bullet-list-right {
+    padding: 20px;
+  }
 }
