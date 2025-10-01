@@ -1,11 +1,11 @@
-// src/data/projects.js
 export const projects = [
   // WEBSITES
   {
     group: 'petart',
     caseId: 'petart',
-    title: 'Pet Art With Heart — Website',
+    title: 'Pet Art With Heart - Website',
     stack: 'HTML | CSS',
+    desc: 'Fast, accessible artist portfolio—semantic HTML, custom CSS, SEO-first.',
     imgSrc: 'assets/images/site-petart-600.webp',
     imgAlt: 'Pet Art With Heart website thumbnail',
     category: 'website',
@@ -18,8 +18,9 @@ export const projects = [
   {
     group: 'portfolio',
     caseId: 'portfolio',
-    title: 'Katja Dev — Portfolio Website',
+    title: 'Katja Dev - Portfolio Website',
     stack: 'HTML | CSS | JavaScript | GSAP',
+    desc: 'Animated one-page portfolio—GSAP + Vite, theme switching, responsive',
     imgSrc: 'assets/images/site-portfolio-600.webp',
     imgAlt: 'Portfolio website thumbnail',
     category: 'website',
@@ -32,8 +33,9 @@ export const projects = [
   {
     group: 'agilitybandits',
     caseId: 'agilitybandits',
-    title: 'Agility Bandits — Website',
+    title: 'Agility Bandits - Website',
     stack: 'HTML | CSS | JavaScript | API',
+    desc: 'Responsive blog—Noroff API, admin auth, accessible UI.',
     imgSrc: 'assets/images/site-agilitybandits-600.webp',
     imgAlt: 'Agility Bandits blog website thumbnail',
     category: 'website',
@@ -43,13 +45,36 @@ export const projects = [
     demoLinks: [{ href: 'https://agilitybandits-centre.netlify.app/', label: 'Visit Live Site' }],
     order: 30,
   },
+  {
+    group: 'semester',
+    caseId: 'semester-project-1',
+    title: 'Semester Project 1 — Science Museum',
+    stack: 'HTML | CSS',
+    desc: 'Museum page, semantic HTML + modern CSS; fast and responsive.',
+    imgSrc: 'assets/images/site-gemenskapet-science-museum-600.webp',
+    imgAlt: 'Gemenskapet Science Museum homepage with interactive exhibits and visitor info',
+    category: 'website',
+    routeUrl: '/work/semester-project-1',
+    caseUrl: '#case-semester-project-1',
+    liveUrl: 'https://katjaturnsek.github.io/Semester-project-1',
+    repoUrl: 'https://github.com/KatjaTurnsek/Semester-project-1',
+    demoLinks: [
+      {
+        href: 'https://katjaturnsek.github.io/Semester-project-1/index.html',
+        label: 'Visit Live Site',
+      },
+      { href: 'https://github.com/KatjaTurnsek/Semester-project-1', label: 'GitHub' },
+    ],
+    order: 40,
+  },
 
   // DESIGN
   {
     group: 'petart',
     caseId: 'petart-design',
-    title: 'Pet Art With Heart — UI Design',
+    title: 'Pet Art With Heart - UI Design',
     stack: 'Figma',
+    desc: 'Figma mood board - responsive prototype—minimal identity, art-first, clear UX.',
     imgSrc: 'assets/images/design-petartmoodboard-600.webp',
     imgAlt: 'Pet Art with Heart design thumbnail',
     category: 'design',
@@ -64,8 +89,9 @@ export const projects = [
   {
     group: 'portfolio',
     caseId: 'portfolio-design',
-    title: 'Katja Dev Portfolio — UI Design',
+    title: 'Katja Dev Portfolio - UI Design',
     stack: 'Figma | JavaScript',
+    desc: 'Liquid-inspired identity—motion design and UI prototyping for a sleek one-page portfolio.',
     imgSrc: 'assets/images/design-ktportfolio-600.webp',
     imgAlt: 'Katja Dev Portfolio website thumbnail',
     category: 'design',
@@ -80,8 +106,9 @@ export const projects = [
   {
     group: 'agilitybandits',
     caseId: 'agilitybandits-design',
-    title: 'Agility Bandits — UI Design',
+    title: 'Agility Bandits - UI Design',
     stack: 'Figma | JavaScript | API',
+    desc: 'Agility-themed branding—responsive grid, API-aware layouts; clear and fast.',
     imgSrc: 'assets/images/design-agilitybandits-600.webp',
     imgAlt: 'Agility Bandits blog Figma design thumbnail',
     category: 'design',
@@ -93,13 +120,31 @@ export const projects = [
     ],
     order: 130,
   },
+  {
+    group: 'semester',
+    caseId: 'semester-project-1-design',
+    title: 'Semester Project 1 - UI Design',
+    stack: 'Figma',
+    desc: 'Museum identity & UI—yellow/green/blues palette, Avenir type, rounded components',
+    imgSrc: 'assets/images/design-gemenskapet-science-museum-600.webp',
+    imgAlt: 'Gemenskapet Science Museum Figma design thumbnail',
+    category: 'design',
+    routeUrl: '/work/semester-project-1/design',
+    caseUrl: '#case-semester-project-1-design',
+    demoLinks: [
+      { href: 'https://bit.ly/3KtBYNM', label: 'Open In Figma (Desktop)' },
+      { href: 'https://bit.ly/3Kxpsg9', label: 'Open In Figma (Mobile)' },
+    ],
+    order: 140,
+  },
 
   // LOGOTYPES
   {
     group: 'petart',
     caseId: 'petart-logotype',
-    title: 'Pet Art With Heart — Logotype',
-    stack: 'Adobe Illustrator',
+    title: 'Pet Art With Heart - Logotype',
+    stack: 'Sketch | Illustrator',
+    desc: 'Hand-drawn pet mark—Illustrator-refined; warm, approachable identity.',
     imgSrc: 'assets/images/design-petartlogo-600.webp',
     imgAlt: 'Pet Art with Heart logotype thumbnail',
     category: 'logotype',
@@ -111,8 +156,9 @@ export const projects = [
   {
     group: 'portfolio',
     caseId: 'portfolio-logotype',
-    title: 'KT Portfolio — Logotype',
+    title: 'KT Portfolio - Logotype',
     stack: 'Sketch | Illustrator',
+    desc: 'KT initials splash mark—fluid, scalable identity for web and print.',
     imgSrc: 'assets/images/logo-ktportfolio-600.webp',
     imgAlt: 'Katja Dev logotype thumbnail',
     category: 'logotype',
@@ -124,8 +170,9 @@ export const projects = [
   {
     group: 'agilitybandits',
     caseId: 'agilitybandits-logotype',
-    title: 'Agility Bandits — Logotype',
+    title: 'Agility Bandits - Logotype',
     stack: 'Adobe Illustrator',
+    desc: 'Character led, motion centric graphics for a dog agility brand.',
     imgSrc: 'assets/images/logo-agilitybandits-600.webp',
     imgAlt: 'Agility Bandits graphics thumbnail',
     category: 'logotype',
@@ -135,6 +182,22 @@ export const projects = [
       { href: 'assets/pdf/agilitybandits-logosuite.pdf', label: 'Get Design Files (PDF)' },
     ],
     order: 230,
+  },
+  {
+    group: 'semester',
+    caseId: 'semester-project-1-logotype',
+    title: 'Semester Project 1 - Logotype',
+    stack: 'Adobe Illustrator',
+    desc: 'Science-led, curiosity-driven magnifying-glass logo for a youth science museum.',
+    imgSrc: 'assets/images/logo-gemenskapet-science-museum-600.webp',
+    imgAlt: 'Gemenskapet Science Museum Logotype thumbnail',
+    category: 'logotype',
+    routeUrl: '/work/semester-project-1/logotype',
+    caseUrl: '#case-semester-project-1-logotype',
+    demoLinks: [
+      { href: 'assets/pdf/sciencemuseum-logosuite.pdf', label: 'Get Design Files (PDF)' },
+    ],
+    order: 240,
   },
 ];
 
