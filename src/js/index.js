@@ -1,10 +1,10 @@
 /**
  * @file index.js
- * @description App bootstrap & orchestration (slim entry):
- *  - Router setup
- *  - Section visibility hooks (lazy hydration)
- *  - Menu open/close with lazy menu animations + cleanup
- *  - Page-wide effects, fallbacks, and deferred heavy animations
+ * @description App bootstrap:
+ *  - Router setup (original behavior)
+ *  - Safe section reveal + runtime min-height sizing (keeps footer flush)
+ *  - Menu open/close + cleanup
+ *  - Loader show/hide and visuals
  */
 
 import './router.js';
@@ -23,7 +23,12 @@ import {
   scheduleMenuWavesAfterLCP,
   scheduleBlobsAfterLCP,
 } from './animations.js';
-import { initSections, revealSection, setupHeaderScrollEffect } from './init.js';
+import {
+  initSections,
+  revealSection,
+  setupHeaderScrollEffect,
+  sizeSectionMinHeight,
+} from './init.js';
 import { animateTextInSection } from './animatedTexts.js';
 
 /* Split components */
@@ -38,60 +43,80 @@ import {
 
 import { setupActions } from '../lib/actions.js';
 
+/* Hard guard: never leave scroll locked */
+function releaseScrollLock() {
+  [document.documentElement, document.body].forEach((el) => {
+    el.classList.remove('menu-open', 'no-scroll', 'overflow-hidden', 'locked');
+    el.style.overflow = '';
+    el.style.overflowY = '';
+    el.style.position = '';
+    el.style.top = '';
+    el.style.width = '';
+  });
+}
+
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Section visibility: lazy hydrate case widgets & run per-section effects   */
+/* Section visibility: hydrate + effects + resize-based min-height           */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Handle custom `sectionVisible` events fired by your section initializer.
- */
 document.addEventListener('sectionVisible', async (e) => {
-  /** @type {{ detail: string }} */
   // @ts-ignore
   const { detail: sectionId } = e;
   const section = document.getElementById(sectionId);
   if (!section) return;
 
-  // Lazy-load case widgets only when a case section becomes visible.
+  // Ensure footer sits at bottom on this section
+  sizeSectionMinHeight(section);
+
+  // Lazy-load case widgets
   if (sectionId.startsWith('case-')) {
     const { hydrateCaseSection } = await import('./components/caseAutoWidgets.js');
     hydrateCaseSection(section);
   }
 
-  // On-demand About effects.
+  // About page adornments on demand
   if (sectionId === 'about') {
     const { animateTealBars } = await import('./animations.js');
     animateTealBars();
   }
 
-  // Common text + image effects.
+  // Common text + image effects
   animateTextInSection(section);
   const loadedImages = setupResponsiveImages(section);
   revealImagesSequentially(loadedImages);
 });
+
+/* Recompute min-height on resize for the visible section */
+window.addEventListener(
+  'resize',
+  () => {
+    const current = document.querySelector('.fullscreen-section.visible');
+    if (current) sizeSectionMinHeight(current);
+  },
+  { passive: true }
+);
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Menu animations (deferred start + cleanup on close)                       */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 const menu = document.getElementById('menu');
-let stopMenuWaves /** @type {null | (() => void)} */ = null;
+let stopMenuWaves = null;
 
 if (menu) {
   const observer = new MutationObserver(async () => {
     const open = menu.classList.contains('open');
 
     if (open) {
-      // Start menu dripping waves (deferred) and animate menu links.
       if (!stopMenuWaves) stopMenuWaves = scheduleMenuWavesAfterLCP();
       const { animateMenuLinks } = await import('./animatedTexts.js');
       animateMenuLinks();
     } else {
-      // Menu closed: stop & cleanup the canvas ticker/listeners.
       if (stopMenuWaves) {
-        stopMenuWaves(); // cleanup if started, cancel if still pending
+        stopMenuWaves();
         stopMenuWaves = null;
       }
+      releaseScrollLock();
     }
   });
   observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
@@ -101,13 +126,7 @@ if (menu) {
 /* Actions (delegated UI events)                                             */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Wire app-wide action handlers.
- */
 setupActions({
-  /**
-   * Open a case via in-page anchor or fallback alert from a card.
-   */
   'open-case': ({ el, ev }) => {
     if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
 
@@ -145,33 +164,25 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('logo-cards')) renderCategory('#logo-cards', 'logotype');
   if (document.getElementById('work-cards')) renderFeatured('#work-cards');
 
-  // Defer loader exit + hero/menu visuals slightly.
+  // Defer loader exit + visuals a bit.
   setTimeout(() => {
     hideLoader();
+    releaseScrollLock();
 
-    // Lightweight header adornments
     insertWaveLines();
     animateWaveLine();
     animateCustomWaveLines();
 
-    // Top dripping waves: fade the canvas now; start animation after idle.
     const wavesCanvas = document.getElementById('top-waves-canvas');
     if (wavesCanvas && !isSafari) {
       gsap.fromTo(
         wavesCanvas,
         { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1.5,
-          delay: 0.3,
-          ease: 'power2.out',
-        }
+        { opacity: 1, duration: 1.5, delay: 0.3, ease: 'power2.out' }
       );
-      // returns cancel/cleanup if you ever need to stop it later
       scheduleTopWavesAfterLCP();
     }
 
-    // Gooey blobs appear after content—defer heavy setup.
     const blobWrapper = document.querySelector('.morphing-blob-wrapper');
     if (blobWrapper) {
       gsap.fromTo(
@@ -188,6 +199,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       );
     }
+
+    // Make sure the currently routed section is revealed + sized
+    const currentId = window.__currentSectionId || 'home';
+    const currentEl = document.getElementById(currentId);
+    if (currentEl) {
+      revealSection(currentId);
+      sizeSectionMinHeight(currentEl);
+    }
   }, 1500);
 
   // CTA → scroll to contact
@@ -202,9 +221,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Global section system + UX helpers
-  initSections();
-  setupHeaderScrollEffect();
+  // Global fallbacks
+  initSections(); // no-op with router; safe
+  setupHeaderScrollEffect(); // header styling
   enableNoSelectDuringInteraction();
   addSafariWillChange();
 });
