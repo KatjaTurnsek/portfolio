@@ -4,24 +4,24 @@
    - Legacy heading vars (--h1/2/3-color) map to --text-color
    ========================================================================== */
 
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 /* -----------------------------
    Core palette tokens
 ----------------------------- */
 :root {
-  --grey: #D3D9D4;
-  --dark: #0D0D0D;
-  --teal: #3B8A7F;
-  --teal-light: #7BB8AB;
+  --grey: #d3d9d4;
+  --dark: #0d0d0d;
+  --teal: #3b8a7f;
+  --teal-light: #7bb8ab;
   --teal-transparent: rgba(0, 128, 128, 0.25);
-  --yellow: #E8C86E;
-  --yellow-light: #F1E9A5;
+  --yellow: #e8c86e;
+  --yellow-light: #f1e9a5;
 
   /* -----------------------------
      Semantic UI defaults (LIGHT baseline)
   ----------------------------- */
-  --bg-color:   var(--grey);
+  --bg-color: var(--grey);
   --text-color: var(--dark);
 
   /* Headings (keep legacy names for compatibility) */
@@ -30,12 +30,12 @@
   --h3-color: var(--text-color);
 
   /* Footer */
-  --footer-bg:         var(--dark);
+  --footer-bg: var(--dark);
   --footer-text-color: var(--grey);
 
   /* Navigation + controls (menu uses these) */
-  --menu-color:        var(--text-color);  /* contrast-safe default */
-  --menu-hover-color:  var(--teal);
+  --menu-color: var(--text-color); /* contrast-safe default */
+  --menu-hover-color: var(--teal);
   --menu-border-color: var(--text-color);
 
   /* NAV TYPOGRAPHY */
@@ -44,13 +44,13 @@
   --nav-font-size: 90px;
 
   /* Theme switch */
-  --switch-bg:     var(--yellow-light);
+  --switch-bg: var(--yellow-light);
   --switch-circle: var(--dark);
   --circle-border: 2px solid var(--dark);
 
   /* Typography families */
-  --font-sans: "Montserrat", sans-serif;
-  --font-serif: "Playfair Display", serif;
+  --font-sans: 'Montserrat', sans-serif;
+  --font-serif: 'Playfair Display', serif;
   --h1-font: var(--font-sans);
   --body-font: var(--font-serif);
 
@@ -76,13 +76,13 @@
   --p-line-height: 40px;
 
   /* Links */
-  --link-color:       var(--teal);
+  --link-color: var(--teal);
   --link-hover-color: var(--teal-light);
 
   /* Graphics (waves/blobs/loader) */
   --wave-color-light: var(--dark);
-  --wave-color-dark:  var(--grey);
-  --blob-color:       #efe8ad;
+  --wave-color-dark: var(--grey);
+  --blob-color: #efe8ad;
   --wave-color-1: rgba(123, 184, 171, 0.7);
   --wave-color-2: rgba(123, 184, 171, 0.4);
 
@@ -92,20 +92,23 @@
 
   /* States */
   --success-color: #44b78b;
-  --error-color:   #e15b64;
+  --error-color: #e15b64;
 
   /* Let UA adapt controls & scrollbars */
   color-scheme: light dark;
 
   /* Pills */
-  --pill-border: rgba(0,0,0,0.20);
-  --pill-bg: rgba(255,255,255,0.50);
-  --pill-active-bg: rgba(123,184,171,0.20);
-  --pill-active-border: rgba(123,184,171,0.50);
+  --pill-border: rgba(0, 0, 0, 0.2);
+  --pill-bg: rgba(255, 255, 255, 0.5);
+  --pill-active-bg: rgba(123, 184, 171, 0.2);
+  --pill-active-border: rgba(123, 184, 171, 0.5);
 }
 
 /* Headings */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--h1-font);
   text-align: left;
   transition: color 0.3s ease;
@@ -169,13 +172,35 @@ h1 span.line,
 h2 span.line,
 h3 span.line,
 h4 span.line,
-p  span.line { display: block; overflow: hidden; }
-h1 span.word { display: inline-block; overflow: visible; }
+p span.line {
+  display: block;
+  overflow: hidden;
+}
+h1 span.word {
+  display: inline-block;
+  overflow: visible;
+}
 
 /* Responsive type */
 @media (max-width: 850px) {
-  h1 { font-size: clamp(36px, 9vw, 70px); line-height: 1.1;  text-align: center; }
-  h2 { font-size: clamp(28px, 6.5vw, 50px); line-height: 1.15; text-align: center; }
-  h3 { font-size: clamp(22px, 5vw, 30px);  line-height: 1.2;  text-align: center; }
-  h4 { font-size: clamp(18px, 4.5vw, 30px); line-height: 1.33; text-align: center; }
+  h1 {
+    font-size: clamp(36px, 9vw, 70px);
+    line-height: 1.1;
+    text-align: center;
+  }
+  h2 {
+    font-size: clamp(28px, 6.5vw, 50px);
+    line-height: 1.15;
+    text-align: center;
+  }
+  h3 {
+    font-size: clamp(22px, 5vw, 30px);
+    line-height: 1.2;
+    text-align: center;
+  }
+  h4 {
+    font-size: clamp(18px, 4.5vw, 30px);
+    line-height: 1.33;
+    text-align: center;
+  }
 }

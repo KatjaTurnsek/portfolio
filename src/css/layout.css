@@ -1,6 +1,8 @@
 /* ==========================================================================
-   Root / Globals
+   layout.css
    ========================================================================== */
+
+/* Root / Globals ---------------------------------------------------------- */
 
 :root {
   /* layout */
@@ -28,32 +30,41 @@
   /* header/footer */
   --header-h: 160px;
   --footer-pad: 20px 60px;
+
+  /* waves (shared by header & menu) */
+  --wave-pos-y: 0%;
+
+  /* Paint area (raster + svg) */
+  --waves-h-min: 140px;
+  --waves-h-vw: 20vw;
+  --waves-h-max: 520px;
+  --waves-h: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
+
+  /* first section offset under the header wave bg */
+  --first-section-pad: clamp(0px, calc(var(--waves-h) - var(--header-h)), 40vh);
 }
 
-/* Utilities */
+/* Utilities --------------------------------------------------------------- */
+
 .container {
   width: 80%;
   max-width: var(--container-w);
   margin-inline: auto;
 }
-
 .center {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .stack {
   display: flex;
   flex-direction: column;
   gap: var(--row-gap);
 }
-
 .hidden {
   display: none !important;
 }
 
-/* Simple reveal animation */
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -61,9 +72,7 @@
   }
 }
 
-/* ==========================================================================
-   Header / Footer
-   ========================================================================== */
+/* Header / Footer --------------------------------------------------------- */
 
 header {
   position: relative;
@@ -73,11 +82,52 @@ header {
   align-items: center;
   justify-content: space-between;
   padding-inline: var(--page-gutter);
-  background-color: transparent;
+  background: transparent;
   color: var(--h1-color);
   z-index: 999;
   transition: background-color var(--transition-fast);
 }
+
+/* Header background — SVG over WebP, both pinned to TOP (no bleed) */
+header::before {
+  content: '';
+  position: absolute;
+  top: 0; /* start at page top */
+  left: 0;
+  right: 0;
+  height: var(--waves-h);
+  pointer-events: none;
+  z-index: 0;
+
+  /* layer 1 (SVG on top), layer 2 (WebP underneath) */
+  background-repeat: no-repeat, no-repeat;
+  background-position:
+    top center,
+    /* SVG pinned to top */ top center; /* WebP pinned to top */
+  background-size:
+    100% auto,
+    /* SVG: full width, natural height */ cover; /* WebP: fill/cover area underneath */
+
+  background-image:
+    url('/assets/images/vector-waves-light.svg'), url('/assets/images/waves-light.webp');
+
+  transform: translateZ(0);
+}
+
+/* Explicit dark theme only (default stays LIGHT) */
+.dark-theme header::before,
+[data-theme='dark'] header::before {
+  background-image:
+    url('/assets/images/vector-waves-dark.svg'), url('/assets/images/waves-dark.webp');
+}
+
+/* keep header content above its background */
+header > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Header controls (logo + theme switcher + hamburger) -------------------- */
 
 .header-controls {
   display: flex;
@@ -85,18 +135,51 @@ header {
   gap: 20px;
 }
 
+/* Theme toggle — INLINE next to hamburger (no absolute offsets) */
+#theme-toggle {
+  position: relative;
+  z-index: 1;
+  width: 55px;
+  height: 27px;
+  background-color: var(--switch-circle);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+#theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  width: 22px;
+  height: 22px;
+  background-color: var(--switch-bg);
+  border: var(--circle-border);
+  border-radius: 50%;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
+  transform: translateX(0);
+}
+#theme-toggle.dark-mode::before {
+  transform: translateX(30px);
+}
+
 .logo,
 .site-logo,
 .fullscreen-menu .menu-logo {
   height: 55px;
 }
-
 .site-logo {
-  z-index: 1001;
+  z-index: 1;
   position: relative;
   display: block;
   transition: filter var(--transition-fast);
 }
+
+/* Main / Footer ----------------------------------------------------------- */
 
 main {
   flex: 1;
@@ -104,6 +187,11 @@ main {
   width: 100%;
   margin-inline: auto;
   min-height: 100vh;
+}
+
+/* Space the first section below the header wave */
+main > .fullscreen-section:first-child {
+  padding-top: var(--first-section-pad);
 }
 
 footer {
@@ -119,7 +207,6 @@ footer {
   flex-wrap: wrap;
   text-align: center;
 }
-
 .footer-left a {
   font-family: var(--h1-font);
   font-size: 30px;
@@ -128,7 +215,6 @@ footer {
   color: var(--footer-link-color);
   text-decoration: none;
 }
-
 .footer-right p {
   font-family: var(--h1-font);
   margin: 0;
@@ -136,9 +222,7 @@ footer {
   color: inherit;
 }
 
-/* ==========================================================================
-   Fullscreen Section
-   ========================================================================== */
+/* Fullscreen Section ------------------------------------------------------ */
 
 .fullscreen-section {
   display: none;
@@ -149,7 +233,6 @@ footer {
     transform var(--transition-fast);
   pointer-events: none;
 }
-
 .fullscreen-section.visible {
   display: block;
   opacity: 1;
@@ -157,15 +240,12 @@ footer {
   pointer-events: auto;
   scroll-margin-top: var(--header-h);
 }
-
 .fullscreen-section h1:first-child {
   margin-top: 0;
   padding-top: 2rem;
 }
 
-/* ==========================================================================
-   Menu
-   ========================================================================== */
+/* Menu ------------------------------------------------------------------- */
 
 .menu-toggle {
   background: none;
@@ -180,7 +260,6 @@ footer {
   align-items: center;
   justify-content: center;
 }
-
 .menu-toggle:hover {
   color: var(--menu-hover-color);
   transition: color var(--transition-med);
@@ -205,7 +284,6 @@ footer {
   font-size: 24px;
   z-index: 1100;
 }
-
 .menu-toggle.opened:hover {
   color: var(--menu-hover-color);
   border-color: var(--menu-hover-color);
@@ -229,6 +307,40 @@ footer {
   transition: opacity var(--transition-med);
 }
 
+/* Menu wave (same behavior as header, no bleed) */
+.fullscreen-menu::before {
+  content: '';
+  position: absolute;
+  top: 0; /* start at top */
+  left: 0;
+  right: 0;
+  height: var(--waves-h);
+  pointer-events: none;
+  z-index: 0;
+
+  background-repeat: no-repeat, no-repeat;
+  background-position:
+    top center,
+    top center;
+  background-size:
+    100% auto,
+    /* SVG full width, natural height */ cover; /* WebP covers area */
+
+  background-image:
+    url('/assets/images/vector-waves-light.svg'), url('/assets/images/waves-light.webp');
+}
+.dark-theme .fullscreen-menu::before,
+[data-theme='dark'] .fullscreen-menu::before {
+  background-image:
+    url('/assets/images/vector-waves-dark.svg'), url('/assets/images/waves-dark.webp');
+}
+
+/* keep menu content above its background */
+.fullscreen-menu > * {
+  position: relative;
+  z-index: 1;
+}
+
 .fullscreen-menu.open {
   opacity: 1;
   pointer-events: all;
@@ -248,7 +360,6 @@ footer {
   gap: 10px;
   padding-top: 60px;
 }
-
 .fullscreen-menu nav a {
   font-family: var(--nav-font);
   font-weight: var(--nav-font-weight);
@@ -258,14 +369,11 @@ footer {
   text-align: right;
   transition: color var(--transition-med);
 }
-
 .fullscreen-menu nav a:hover {
   color: var(--menu-hover-color);
 }
 
-/* ==========================================================================
-   Rows / Generic Content Containers
-   ========================================================================== */
+/* Rows / Generic Content Containers -------------------------------------- */
 
 .rows {
   display: flex;
@@ -287,7 +395,6 @@ footer {
   transform: translateY(30px);
   animation: fadeInUp 0.6s ease forwards;
 }
-
 .row:nth-child(1) {
   animation-delay: 0.3s;
 }
@@ -298,9 +405,7 @@ footer {
   animation-delay: 0.9s;
 }
 
-/* ==========================================================================
-   Work Grid  (4 → 2 → 1)
-   ========================================================================== */
+/* Work Grid (4 → 2 → 1) --------------------------------------------------- */
 
 .work-columns {
   display: grid;
@@ -311,15 +416,11 @@ footer {
   margin-inline: auto;
   padding: 0;
 }
-
-/* Tablet: 2 cols */
 @media (max-width: 1100px) {
   .work-columns {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-
-/* Mobile: 1 col */
 @media (max-width: 640px) {
   .work-columns {
     grid-template-columns: 1fr;
@@ -332,7 +433,6 @@ footer {
   align-items: center;
   position: relative;
 }
-
 .work-item {
   position: relative;
   display: flex;
@@ -350,20 +450,17 @@ footer {
     outline-color var(--transition-med),
     outline-width var(--transition-med);
 }
-
 .work-item:hover {
   transform: translateY(-8px);
   box-shadow: var(--shadow-hover);
   outline-color: var(--yellow);
   outline-width: var(--focus-outline-w);
 }
-
 .work-item > a {
   display: block;
   width: 100%;
   height: 100%;
 }
-
 .work-item img {
   width: 100%;
   height: 100%;
@@ -384,12 +481,10 @@ footer {
   transition: opacity var(--transition-fast);
   padding: 2rem;
 }
-
 .work-item:hover .work-overlay {
   opacity: 1;
 }
 
-/* Touch devices: show overlay text, hide mobile title in overlay context */
 @media (hover: none) and (pointer: coarse) {
   .work-overlay {
     opacity: 1;
@@ -402,11 +497,9 @@ footer {
     display: block;
   }
 }
-
 .work-overlay h4 {
   text-align: center;
 }
-
 .mobile-title {
   display: none;
   font-family: var(--h1-font);
@@ -415,7 +508,6 @@ footer {
   text-align: center;
   margin: 1em 0 0.5em;
 }
-
 .work-caption {
   font-size: var(--caption-font-size);
   line-height: var(--caption-line-height);
@@ -423,7 +515,8 @@ footer {
   text-align: center;
 }
 
-/* Section labels */
+/* Section labels ---------------------------------------------------------- */
+
 .section-label-left,
 .section-label-right {
   width: 100%;
@@ -431,23 +524,19 @@ footer {
   box-sizing: border-box;
   margin: 2rem 0 1rem;
 }
-
 .section-label-left {
   text-align: left;
 }
 .section-label-right {
   text-align: right;
 }
-
 .section-label-left h3,
 .section-label-right h3 {
   margin: 0;
   text-align: inherit;
 }
 
-/* ==========================================================================
-   Case Study Content
-   ========================================================================== */
+/* Case Study Content ------------------------------------------------------ */
 
 .case-study-columns {
   display: flex;
@@ -459,7 +548,6 @@ footer {
   margin: 0 auto;
   padding: 0;
 }
-
 .case-study-wrapper {
   flex: 0 0 50%;
   max-width: 50%;
@@ -467,15 +555,12 @@ footer {
   padding-left: 0;
   padding-right: 0;
 }
-
 .case-study-wrapper:nth-child(odd) {
   padding-right: var(--cs-gutter);
 }
-
 .case-study-wrapper:nth-child(even) {
   padding-left: var(--cs-gutter);
 }
-
 .case-study-wrapper > *:first-child {
   margin-top: 0;
 }
@@ -486,7 +571,6 @@ footer {
   margin: 0;
   border-radius: var(--radius, 10px);
 }
-
 .case-study-item img,
 .case-study-item .thumb {
   display: block;
@@ -496,7 +580,6 @@ footer {
   border-radius: var(--radius, 10px);
   object-fit: cover;
 }
-
 .case-study-item figcaption {
   margin-top: 0.5rem;
   font-size: var(--caption-font-size, 16px);
@@ -510,7 +593,6 @@ footer {
   padding-left: 1.25rem;
   list-style-position: outside;
 }
-
 .case-study-text {
   width: 100%;
 }
@@ -521,7 +603,6 @@ footer {
 .case-study-text > ul:first-child {
   margin-top: 0;
 }
-
 .case-study-text ul {
   margin: 0.5rem 0 0;
   padding-left: 1.25rem;
@@ -550,21 +631,30 @@ footer {
   outline-offset: 0.2rem;
 }
 
-/* ==========================================================================
-   Responsive (≤ 850px)
-   ========================================================================== */
+/* Responsive (≤ 850px) --------------------------------------------------- */
 
 @media only screen and (max-width: 850px) {
-  /* Header / Menu sizing */
   :root {
     --header-h: 100px;
     --page-gutter: 30px;
     --menu-toggle-size: 40px;
     --menu-padding: 120px 60px;
+
+    /* waves on mobile */
+    --waves-h-min: 120px;
+    --waves-h-vw: 28vw;
+    --waves-h-max: 380px;
+    --waves-h: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
   }
 
   header {
     padding-inline: var(--page-gutter);
+  }
+
+  /* switcher stays inline next to hamburger on mobile too */
+  #theme-toggle {
+    width: 55px;
+    height: 27px;
   }
 
   .site-logo,
@@ -586,26 +676,22 @@ footer {
     font-size: 55px;
   }
 
-  /* Footer stack */
   footer {
     flex-direction: column;
     height: auto;
     gap: 10px;
     padding: 20px;
   }
-
   .footer-left,
   .footer-right {
     width: 100%;
   }
-
   .footer-left a,
   .footer-right p {
     display: block;
     width: 100%;
   }
 
-  /* Rows */
   .row {
     padding: 0.5rem;
   }
@@ -614,37 +700,31 @@ footer {
     padding-right: 0;
   }
 
-  /* Right-aligned text becomes full-width centered */
   .align-right-60 {
     width: 100%;
     text-align: center;
   }
 
-  /* Work grid: avoid tiny images */
   .mobile-title {
     display: block;
   }
   .work-title {
     display: none;
   }
-
   .work-item {
     aspect-ratio: auto;
     min-height: 0;
   }
-
   .work-item img {
     width: 100%;
     height: auto;
   }
 
-  /* Section labels work centered */
   .section-label-left,
   .section-label-right {
     text-align: center;
   }
 
-  /* Case study stack full width */
   .case-study-wrapper,
   .case-study-wrapper:nth-child(odd),
   .case-study-wrapper:nth-child(even) {
@@ -663,7 +743,6 @@ footer {
   .item-right {
     padding-top: 20px;
   }
-
   .item-left {
     padding-right: 0;
   }
@@ -676,7 +755,6 @@ footer {
   }
   .case-study-item img,
   .case-study-item .thumb {
-    display: block;
     width: 100%;
     height: auto;
   }
@@ -704,7 +782,6 @@ footer {
     margin-right: 0;
     list-style-position: outside;
   }
-
   .case-study-text .bullet-list-right {
     margin-left: 0;
     padding-left: 0;

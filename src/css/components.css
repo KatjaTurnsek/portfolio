@@ -8,34 +8,25 @@
    --pill-active-bg, --pill-active-border, --error-color, --success-color
    ========================================================================== */
 
-/* ========================================================================== */
-/* 0) Utilities                                                               */
-/* ========================================================================== */
-
+/* 0) Utilities */
 .no-select,
 .no-select * {
   user-select: none !important;
   -webkit-user-select: none !important;
   -ms-user-select: none !important;
 }
-
 .full-width {
   width: 100%;
 }
 
-/* ========================================================================== */
-/* 1) Links & CTAs (single source of truth)                                   */
-/* ========================================================================== */
-
+/* 1) Links & CTAs */
 .label-link,
 .submit-button {
-  /* Context variables */
   --label-size: 30px;
   --label-line: 40px;
   --label-weight: 300;
   --label-transform: uppercase;
   --icon-scale: 0.9em;
-
   background: none;
   border: none;
   color: var(--text-color);
@@ -53,7 +44,6 @@
   text-decoration: none;
   transition: color 0.4s ease-out;
 }
-
 .label-link:hover,
 .label-link:focus,
 .label-link:focus-visible,
@@ -64,18 +54,15 @@
   text-decoration: none;
   outline: none;
 }
-
 .label-link .label-text {
   color: currentColor;
   transition: color 0.4s ease-out;
 }
-
 .arrow-icon {
   font-size: var(--icon-scale);
   color: currentColor;
 }
 
-/* Back to Work alignment */
 .back-to-work-container {
   display: flex;
   justify-content: flex-end;
@@ -83,17 +70,13 @@
   padding-top: 60px;
 }
 
-/* ========================================================================== */
-/* 2) Tech Info Bar (tools + demo links)                                      */
-/* ========================================================================== */
-
+/* 2) Tech Info Bar */
 .tech-demo-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
 }
-
 .tech-stack {
   font-family: var(--body-font);
   font-weight: 400;
@@ -103,8 +86,6 @@
   user-select: none;
   white-space: nowrap;
 }
-
-/* Demo links stack */
 .demo-links {
   display: flex;
   flex-direction: column;
@@ -117,17 +98,13 @@
   --icon-scale: 0.85em;
 }
 
-/* ========================================================================== */
-/* 3) Project Switcher (pills)                                                */
-/* ========================================================================== */
-
+/* 3) Project Switcher */
 .project-switcher {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
-
 .project-switcher .pill {
   display: inline-flex;
   align-items: center;
@@ -148,7 +125,6 @@
     border-color 0.2s ease,
     outline-color 0.2s ease;
 }
-
 .project-switcher .pill:hover,
 .project-switcher .pill:focus-visible {
   border-color: var(--link-hover-color);
@@ -156,17 +132,13 @@
   outline: 2px solid rgba(123, 184, 171, 0.4);
   outline-offset: 2px;
 }
-
 .project-switcher .pill[aria-current='page'] {
   background-color: var(--pill-active-bg);
   border-color: var(--pill-active-border);
   color: var(--link-hover-color);
 }
 
-/* ========================================================================== */
-/* 4) Related Links (inline CTA group)                                        */
-/* ========================================================================== */
-
+/* 4) Related Links */
 .related-links {
   display: flex;
   align-items: center;
@@ -174,13 +146,11 @@
   justify-content: flex-end;
   padding-top: 28px;
 }
-
 .related-links .related-label {
   font: 600 12px/1 var(--body-font);
   opacity: 0.7;
   margin-right: 0.25rem;
 }
-
 .related-links .label-link {
   --label-size: 16px;
   --label-line: 22px;
@@ -189,10 +159,7 @@
   gap: 0.35rem;
 }
 
-/* ========================================================================== */
-/* 5) Bullet Lists                                                            */
-/* ========================================================================== */
-
+/* 5) Bullet Lists */
 .bullet-list,
 .bullet-list-right {
   list-style-type: disc;
@@ -202,24 +169,19 @@
   line-height: var(--p-line-height);
   color: var(--text-color);
 }
-
 .bullet-list {
   padding: 0 40px;
 }
 .bullet-list-right {
   padding: 0 0 0 40px;
 }
-
 .bullet-list li,
 .bullet-list-right li {
   padding-left: 30px;
   margin-bottom: 10px;
 }
 
-/* ========================================================================== */
-/* 6) Forms                                                                   */
-/* ========================================================================== */
-
+/* 6) Forms */
 .contact-form-wrapper {
   width: 100%;
   display: flex;
@@ -227,25 +189,21 @@
   padding-top: 2rem;
   box-sizing: border-box;
 }
-
 .contact-form {
   width: 70%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
-
 .name-row {
   display: flex;
   gap: 1rem;
 }
-
 .form-group {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
-
 label {
   margin-bottom: 0.5rem;
   color: var(--text-color);
@@ -253,7 +211,6 @@ label {
   font-size: 14px;
   letter-spacing: 0.5px;
 }
-
 input,
 textarea {
   background-color: var(--teal-transparent);
@@ -267,12 +224,10 @@ textarea {
   border: 2px solid transparent;
   color: var(--text-color);
 }
-
 textarea {
   padding-top: 0.75rem;
   height: auto;
 }
-
 input:-webkit-autofill,
 textarea:-webkit-autofill {
   box-shadow: 0 0 0px 1000px rgba(0, 128, 128, 0.15) inset !important;
@@ -281,32 +236,26 @@ textarea:-webkit-autofill {
   font-size: 16px;
   transition: background-color 9999s ease-in-out 0s;
 }
-
 input:invalid,
 textarea:invalid {
   border: 2px solid var(--error-color);
 }
-
 input:valid,
 textarea:valid {
   border: 2px solid var(--success-color);
 }
-
 input:invalid:focus,
 textarea:invalid:focus {
   outline: 2px solid var(--error-color);
 }
-
 input:valid:focus,
 textarea:valid:focus {
   outline: 2px solid var(--success-color);
 }
-
 .button-wrapper {
   display: flex;
   justify-content: flex-end;
 }
-
 .info-text {
   font-size: 30px;
   line-height: 40px;
@@ -315,14 +264,10 @@ textarea:valid:focus {
   font-weight: 400;
 }
 
-/* ========================================================================== */
-/* 7) Testimonials (header strip + card)                                      */
-/* ========================================================================== */
-
+/* 7) Testimonials */
 .testimonial-section {
   padding-bottom: 100px;
 }
-
 .testimonial {
   background-color: var(--teal-light);
   width: 100%;
@@ -334,7 +279,6 @@ textarea:valid:focus {
   padding-right: 2rem;
   box-sizing: border-box;
 }
-
 .testimonial-label {
   display: flex;
   align-items: center;
@@ -352,7 +296,6 @@ textarea:valid:focus {
   text-transform: uppercase;
   color: var(--dark);
 }
-
 .circle-button {
   position: absolute;
   left: 50%;
@@ -371,7 +314,6 @@ textarea:valid:focus {
   color: var(--dark);
 }
 
-/* Testimonial Card */
 .testimonial-card {
   margin: 22px 0 0;
   padding: 20px 22px;
@@ -405,10 +347,7 @@ textarea:valid:focus {
   margin-top: 30px;
 }
 
-/* ========================================================================== */
-/* 8) Animated Bars                                                            */
-/* ========================================================================== */
-
+/* 8) Animated Bars */
 .animated-bars {
   width: 100%;
   display: flex;
@@ -416,13 +355,11 @@ textarea:valid:focus {
   gap: 15px;
   padding-bottom: 60px;
 }
-
 .bar-stack {
   position: relative;
   width: 100%;
   height: 50px;
 }
-
 .bar {
   position: absolute;
   left: 0;
@@ -435,12 +372,10 @@ textarea:valid:focus {
   align-items: center;
   padding-left: 20px;
 }
-
 .bar-bg {
   background-color: var(--teal);
   z-index: 1;
 }
-
 .bar-1,
 .bar-2,
 .bar-3 {
@@ -449,7 +384,6 @@ textarea:valid:focus {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-
 .bar-label {
   color: var(--dark);
   font-size: 20px;
@@ -460,10 +394,7 @@ textarea:valid:focus {
   white-space: nowrap;
 }
 
-/* ========================================================================== */
-/* 9) Section Divider Lines (SVG)                                             */
-/* ========================================================================== */
-
+/* 9) Section Divider Lines (SVG) */
 .section-line-wrapper {
   width: 100%;
   margin: 40px auto;
@@ -473,12 +404,10 @@ textarea:valid:focus {
     opacity 0.6s ease,
     transform 0.6s ease;
 }
-
 .section-line-wrapper.visible {
   opacity: 1;
   transform: translateY(0);
 }
-
 .section-line {
   width: 100%;
   height: 20px;
@@ -486,28 +415,22 @@ textarea:valid:focus {
   overflow: visible;
   cursor: grab;
 }
-
 .section-line .wave {
   stroke-width: 1;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-
-/* Small waves inserted after <h2> (from insertWaveLines) */
 .wavy-line {
   display: block;
   width: 100%;
   height: 30px;
   margin: 0 auto 2rem;
 }
-
 .wavy-line .wavy-polyline {
   stroke: currentColor;
   stroke-width: 1;
   fill: none;
 }
-
-/* Hero wave at the top (created by ensureHeroWave) */
 #wavy-line.wavy-line-hero {
   width: 100%;
   height: 30px;
@@ -515,56 +438,13 @@ textarea:valid:focus {
   pointer-events: none;
   color: var(--wave-hero-stroke, currentColor);
 }
-
 #wavy-line.wavy-line-hero path {
   stroke: currentColor;
   stroke-width: 2;
   fill: none;
 }
 
-/* ========================================================================== */
-/* 10) Theme Toggle                                                           */
-/* ========================================================================== */
-
-#theme-toggle {
-  position: absolute;
-  top: 70px;
-  right: 140px;
-  z-index: 999;
-  width: 55px;
-  height: 27px;
-  background-color: var(--switch-circle);
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  outline: none;
-  transition: background-color 0.3s ease;
-}
-
-#theme-toggle::before {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 1px;
-  width: 22px;
-  height: 22px;
-  background-color: var(--switch-bg);
-  border: var(--circle-border);
-  border-radius: 50%;
-  transition:
-    transform 0.3s ease,
-    background-color 0.3s ease;
-  transform: translateX(0);
-}
-
-#theme-toggle.dark-mode::before {
-  transform: translateX(30px);
-}
-
-/* ========================================================================== */
-/* 11) Animated Blob (background)                                             */
-/* ========================================================================== */
-
+/* 10) Animated Blob (background) */
 .morphing-blob-wrapper {
   position: fixed;
   top: 0;
@@ -577,113 +457,22 @@ textarea:valid:focus {
   will-change: transform;
   transform: translateZ(0);
 }
-
 #blob-svg {
   width: 100%;
   height: 100%;
   display: block;
   filter: blur(10px);
 }
-
 .blobs .blob {
   fill: var(--blob-color);
 }
-
 .blob {
   transform-box: fill-box;
   transform-origin: center;
   stroke: none;
 }
 
-/* ========================================================================== */
-/* Top & Menu Waves — responsive, scroll-with-content, matching crop         */
-/* ========================================================================== */
-
-:root {
-  --waves-h-min: 88px;
-  --waves-h-vw: 16vw;
-  --waves-h-max: 200px;
-  --waves-pos-y: 0%;
-  --top-waves-h: clamp(120px, 18vw, 320px);
-  --waves-pos-y: 0%;
-  --top-waves-gap: clamp(0px, calc(var(--top-waves-h) - var(--header-h)), 40vh);
-}
-
-@media (max-width: 850px) {
-  :root {
-    --waves-h-min: 72px;
-    --waves-h-vw: 20vw;
-    --waves-h-max: 140px;
-    --top-waves-h: clamp(88px, 22vw, 160px);
-    --waves-pos-y: 0%;
-    --top-waves-gap: clamp(0px, calc(var(--top-waves-h) - var(--header-h)), 40vh);
-  }
-}
-
-@media (min-width: 1200px) {
-  :root {
-    --top-waves-h: clamp(140px, 18vw, 320px);
-  }
-}
-
-.top-waves {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--top-waves-h);
-  pointer-events: none;
-  z-index: 0;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center var(--waves-pos-y);
-}
-
-.light-theme .top-waves {
-  background-image: url('/assets/images/waves-light.webp');
-}
-.dark-theme .top-waves {
-  background-image: url('/assets/images/waves-dark.webp');
-}
-
-.top-waves img,
-.top-waves picture,
-.top-waves svg {
-  display: none !important;
-}
-
-.menu-waves {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
-  pointer-events: none;
-  z-index: 0;
-}
-
-.menu-waves img.waves-fallback {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center var(--waves-pos-y);
-  pointer-events: none;
-  user-select: none;
-}
-
-/* Kill any legacy canvases if they still exist */
-#top-waves-canvas,
-#menu-waves-canvas {
-  display: none !important;
-}
-
-/* ========================================================================== */
-/* 13) Hire Button                                                            */
-/* ========================================================================== */
-
+/* 11) Hire Button */
 .hire-button {
   position: relative;
   width: 200px;
@@ -703,7 +492,6 @@ textarea:valid:focus {
   overflow: hidden;
   transition: background-color 0.4s ease;
 }
-
 .hire-button::before {
   content: '';
   position: absolute;
@@ -715,113 +503,81 @@ textarea:valid:focus {
     transform 0.4s ease;
   z-index: -1;
 }
-
 .hire-button:hover {
   background-color: var(--yellow);
   text-decoration: none;
 }
-
 .hire-button:hover::before {
   border-color: var(--yellow-light);
   transform: scale(1.05);
 }
-
 .hire-button a,
 .hire-button a:hover {
   color: var(--dark);
 }
-
 .hire-section {
   position: absolute;
   bottom: -30px;
   left: 70px;
 }
 
-/* ========================================================================== */
-/* 14) Responsive Tweaks                                                      */
-/* ========================================================================== */
-
+/* 12) Responsive Tweaks */
 @media (max-width: 850px) {
-  .top-waves {
-    height: 150px;
-  }
-  .menu-waves {
-    height: 120px;
-  }
-
   .tech-demo-wrapper {
     display: block;
     text-align: center;
     width: 100%;
     margin-top: 20px;
   }
-
   .tech-stack {
     font-size: 22px;
     line-height: 32px;
     margin-bottom: 15px;
     white-space: normal;
   }
-
   .project-switcher {
     justify-content: center;
   }
-
   .label-link {
     justify-content: center;
     width: 100%;
     white-space: normal;
     flex-wrap: wrap;
   }
-
   .demo-links {
     padding-left: 0;
   }
-
   .related-links {
     justify-content: flex-start;
     flex-wrap: wrap;
     row-gap: 0.5rem;
   }
-
   .back-to-work-container {
     justify-content: center;
     margin-top: 30px;
   }
-
   .circle-button {
     left: 20%;
     width: 100px;
     height: 100px;
   }
-
   .circle-button i {
     font-size: 40px;
   }
-
   .contact-form-wrapper {
     justify-content: center;
     padding: 2rem 1rem;
   }
-
   .contact-form {
     width: 100%;
   }
-
   .name-row {
     flex-direction: column;
     gap: 1.5rem;
   }
-
   .info-text {
     text-align: center;
   }
-
-  #theme-toggle {
-    top: 40px;
-    right: 100px;
-  }
-
   .hire-section {
     position: static;
     display: flex;
@@ -830,7 +586,6 @@ textarea:valid:focus {
     height: auto;
     padding-top: 30px;
   }
-
   .bullet-list,
   .bullet-list-right {
     padding: 20px;
