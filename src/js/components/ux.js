@@ -2,21 +2,38 @@ import gsap from 'gsap';
 
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+/**
+ * NEW behavior: hide legacy canvases and make sure wave hosts are visible
+ * for ALL browsers (not only Safari). Safe if canvases aren't present.
+ * Backward-compatible name so old imports keep working.
+ */
 export function enableSafariWaveFallback() {
-  if (!isSafari) return;
-  const topCanvas = document.getElementById('top-waves-canvas');
-  if (topCanvas) topCanvas.style.display = 'none';
-  const menuCanvas = document.getElementById('menu-waves-canvas');
-  if (menuCanvas) menuCanvas.style.display = 'none';
-  const topWaves = document.querySelector('.top-waves');
-  if (topWaves) topWaves.style.display = 'block';
-  const menuWaves = document.querySelector('.menu-waves');
-  if (menuWaves) menuWaves.style.display = 'block';
+  // Hide any leftover canvases
+  ['#top-waves-canvas', '#menu-waves-canvas'].forEach((sel) => {
+    const el = document.querySelector(sel);
+    if (el) el.style.display = 'none';
+  });
+
+  // Ensure our hosts are visible (JS injects a single <img.waves-fallback>)
+  ['.top-waves', '.menu-waves'].forEach((sel) => {
+    const host = document.querySelector(sel);
+    if (!host) return;
+    host.style.display = 'block';
+    host.style.pointerEvents = 'none';
+    // If CSS isn’t applied yet, give them a reasonable default height
+    if (!host.style.height) host.style.height = '160px';
+    // Never mask the image
+    host.style.overflow = 'visible';
+  });
 }
 
+/**
+ * Keep will-change hints light & correct. Target the new .waves-fallback image.
+ * Limit scope to Safari (as originally intended) to avoid excessive hints elsewhere.
+ */
 export function addSafariWillChange() {
   if (!isSafari) return;
-  [
+  const selectors = [
     '.blob-group',
     '.blob',
     '.bar-bg',
@@ -26,17 +43,20 @@ export function addSafariWillChange() {
     '.bar-label',
     '.wavy-line',
     '.wavy-polyline',
-    '#top-waves-canvas',
-    '#menu-waves-canvas',
-    '.top-waves img',
-    '.menu-waves img',
-  ].forEach((selector) => {
+    // updated targets for waves:
+    '.top-waves .waves-fallback',
+    '.menu-waves .waves-fallback',
+  ];
+  selectors.forEach((selector) => {
     document.querySelectorAll(selector).forEach((el) => {
       el.style.willChange = 'transform, opacity';
     });
   });
 }
 
+/**
+ * Sequentially fade in a batch of images (cards, gallery, etc).
+ */
 export function revealImagesSequentially(images) {
   let delay = 0;
   const fadeIn = (img, onComplete) => {
@@ -63,6 +83,9 @@ export function revealImagesSequentially(images) {
   loadNext(0);
 }
 
+/**
+ * Prevent text selection during drag interactions (minor UX polish).
+ */
 export function enableNoSelectDuringInteraction() {
   const body = document.body;
   const addNoSelect = () => body.classList.add('no-select');

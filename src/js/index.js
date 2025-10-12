@@ -1,10 +1,9 @@
 /**
- * @file index.js
- * @description App bootstrap:
- *  - Router setup (original behavior)
- *  - Safe section reveal + runtime min-height sizing (keeps footer flush)
- *  - Menu open/close + cleanup
- *  - Loader show/hide and visuals
+ * App bootstrap
+ * - Router setup
+ * - Safe section reveal + runtime min-height sizing
+ * - Menu open/close (lazy-init menu wave image) + cleanup
+ * - Loader show/hide + visuals (respects reduced-motion)
  */
 
 import './router.js';
@@ -19,9 +18,11 @@ import {
   animateWaveLine,
   insertWaveLines,
   animateCustomWaveLines,
-  scheduleTopWavesAfterLCP,
-  scheduleMenuWavesAfterLCP,
-  scheduleBlobsAfterLCP,
+  setupStaticWaves,
+  observeThemeChangesForWaves,
+  deferHeavy,
+  animateGooeyBlobs,
+  enableInteractiveJellyBlob,
 } from './animations.js';
 import {
   initSections,
@@ -35,7 +36,6 @@ import { animateTextInSection } from './animatedTexts.js';
 import { renderCategory, renderFeatured } from './components/workGrid.js';
 import {
   isSafari,
-  enableSafariWaveFallback,
   addSafariWillChange,
   revealImagesSequentially,
   enableNoSelectDuringInteraction,
@@ -43,7 +43,20 @@ import {
 
 import { setupActions } from '../lib/actions.js';
 
-/* Hard guard: never leave scroll locked */
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Utilities                                                                  */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/** @type {boolean} Honor user’s reduced-motion setting. */
+const prefersReducedMotion =
+  typeof window !== 'undefined' &&
+  window.matchMedia &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * Remove any scroll locking side effects that could linger after menu close.
+ * @returns {void}
+ */
 function releaseScrollLock() {
   [document.documentElement, document.body].forEach((el) => {
     el.classList.remove('menu-open', 'no-scroll', 'overflow-hidden', 'locked');
@@ -56,65 +69,78 @@ function releaseScrollLock() {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Section visibility: hydrate + effects + resize-based min-height           */
+/* Section visibility: hydrate + effects + resize-based min-height            */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 document.addEventListener('sectionVisible', async (e) => {
-  // @ts-ignore
+  /** @type {{detail:string}} @ts-ignore */
   const { detail: sectionId } = e;
   const section = document.getElementById(sectionId);
   if (!section) return;
 
-  // Ensure footer sits at bottom on this section
   sizeSectionMinHeight(section);
 
-  // Lazy-load case widgets
   if (sectionId.startsWith('case-')) {
     const { hydrateCaseSection } = await import('./components/caseAutoWidgets.js');
     hydrateCaseSection(section);
   }
 
-  // About page adornments on demand
   if (sectionId === 'about') {
     const { animateTealBars } = await import('./animations.js');
-    animateTealBars();
+    if (!prefersReducedMotion) animateTealBars();
   }
 
-  // Common text + image effects
   animateTextInSection(section);
   const loadedImages = setupResponsiveImages(section);
   revealImagesSequentially(loadedImages);
 });
 
-/* Recompute min-height on resize for the visible section */
-window.addEventListener(
-  'resize',
-  () => {
-    const current = document.querySelector('.fullscreen-section.visible');
-    if (current) sizeSectionMinHeight(current);
-  },
-  { passive: true }
-);
+/* Recompute min-height on resize (rAF-throttled) */
+(() => {
+  let resizeScheduled = false;
+  const onResize = () => {
+    if (resizeScheduled) return;
+    resizeScheduled = true;
+    requestAnimationFrame(() => {
+      const current = document.querySelector('.fullscreen-section.visible');
+      if (current) sizeSectionMinHeight(current);
+      resizeScheduled = false;
+    });
+  };
+  window.addEventListener('resize', onResize, { passive: true });
+})();
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Menu animations (deferred start + cleanup on close)                       */
+/* Menu open/close (lazy-init menu wave; animate links)                       */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/** @type {HTMLElement|null} */
 const menu = document.getElementById('menu');
-let stopMenuWaves = null;
+/** @type {null | (() => void)} */
+let stopWaveThemeObserver = null;
+/** @type {boolean} */
+let menuWaveInited = false;
 
 if (menu) {
   const observer = new MutationObserver(async () => {
     const open = menu.classList.contains('open');
 
     if (open) {
-      if (!stopMenuWaves) stopMenuWaves = scheduleMenuWavesAfterLCP();
+      // Initialize MENU wave image on first open (header wave is CSS-only)
+      if (!menuWaveInited) {
+        setupStaticWaves();
+        const maybeDisposer = observeThemeChangesForWaves();
+        if (typeof maybeDisposer === 'function') stopWaveThemeObserver = maybeDisposer;
+        menuWaveInited = true;
+      }
+
       const { animateMenuLinks } = await import('./animatedTexts.js');
-      animateMenuLinks();
+      if (!prefersReducedMotion) animateMenuLinks();
     } else {
-      if (stopMenuWaves) {
-        stopMenuWaves();
-        stopMenuWaves = null;
+      // Optionally stop observing while menu is closed
+      if (typeof stopWaveThemeObserver === 'function') {
+        stopWaveThemeObserver();
+        stopWaveThemeObserver = null;
       }
       releaseScrollLock();
     }
@@ -123,10 +149,14 @@ if (menu) {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Actions (delegated UI events)                                             */
+/* Actions (delegated UI events)                                              */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 setupActions({
+  /**
+   * Open a case card or smooth-scroll to in-page anchor.
+   * @param {{el:HTMLElement, ev?:Event}} args
+   */
   'open-case': ({ el, ev }) => {
     if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
 
@@ -146,17 +176,14 @@ setupActions({
 });
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* DOM ready: boot loader, mounts, and global effects                        */
+/* DOM ready: boot loader, mounts, and global effects                         */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 document.addEventListener('DOMContentLoaded', () => {
   setupMenuToggle();
   showLoader();
 
-  if (isSafari) {
-    gsap.ticker.fps(50);
-    enableSafariWaveFallback();
-  }
+  if (isSafari) gsap.ticker.fps(50);
 
   // Mount project grids if their mounts exist.
   if (document.getElementById('dev-cards')) renderCategory('#dev-cards', 'website');
@@ -164,43 +191,39 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('logo-cards')) renderCategory('#logo-cards', 'logotype');
   if (document.getElementById('work-cards')) renderFeatured('#work-cards');
 
-  // Defer loader exit + visuals a bit.
+  // Defer loader exit + most visuals a bit.
   setTimeout(() => {
     hideLoader();
     releaseScrollLock();
 
     insertWaveLines();
-    animateWaveLine();
-    animateCustomWaveLines();
-
-    const wavesCanvas = document.getElementById('top-waves-canvas');
-    if (wavesCanvas && !isSafari) {
-      gsap.fromTo(
-        wavesCanvas,
-        { opacity: 0 },
-        { opacity: 1, duration: 1.5, delay: 0.3, ease: 'power2.out' }
-      );
-      scheduleTopWavesAfterLCP();
+    if (!prefersReducedMotion) {
+      animateWaveLine();
+      animateCustomWaveLines();
     }
 
-    const blobWrapper = document.querySelector('.morphing-blob-wrapper');
-    if (blobWrapper) {
-      gsap.fromTo(
-        blobWrapper,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1.5,
-          delay: 0.8,
-          ease: 'power2.out',
-          onStart: () => {
-            scheduleBlobsAfterLCP();
-          },
-        }
-      );
+    if (!prefersReducedMotion) {
+      const blobWrapper = document.querySelector('.morphing-blob-wrapper');
+      if (blobWrapper) {
+        gsap.fromTo(
+          blobWrapper,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 1.5,
+            delay: 0.8,
+            ease: 'power2.out',
+            onStart: () => {
+              deferHeavy(() => {
+                animateGooeyBlobs();
+                enableInteractiveJellyBlob();
+              });
+            },
+          }
+        );
+      }
     }
 
-    // Make sure the currently routed section is revealed + sized
     const currentId = window.__currentSectionId || 'home';
     const currentEl = document.getElementById(currentId);
     if (currentEl) {
@@ -212,18 +235,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // CTA → scroll to contact
   const hireBtn = document.getElementById('hireBtn');
   if (hireBtn) {
-    hireBtn.addEventListener('click', () => {
-      const contact = document.getElementById('contact');
-      if (contact) {
-        contact.scrollIntoView({ behavior: 'smooth' });
-        revealSection('contact');
-      }
-    });
+    hireBtn.addEventListener(
+      'click',
+      () => {
+        const contact = document.getElementById('contact');
+        if (contact) {
+          contact.scrollIntoView({ behavior: 'smooth' });
+          revealSection('contact');
+        }
+      },
+      { passive: true }
+    );
   }
 
-  // Global fallbacks
-  initSections(); // no-op with router; safe
-  setupHeaderScrollEffect(); // header styling
+  // Global fallbacks / effects
+  initSections();
+  setupHeaderScrollEffect();
   enableNoSelectDuringInteraction();
   addSafariWillChange();
 });

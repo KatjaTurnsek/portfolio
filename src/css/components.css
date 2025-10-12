@@ -4,7 +4,8 @@
    --text-color, --bg-color, --link-hover-color, --h1-font, --body-font,
    --teal, --teal-light, --teal-transparent, --yellow, --yellow-light,
    --blob-color, --switch-circle, --switch-bg, --circle-border, --dark,
-   --p-font-size, --p-line-height
+   --p-font-size, --p-line-height, --pill-border, --pill-bg,
+   --pill-active-bg, --pill-active-border, --error-color, --success-color
    ========================================================================== */
 
 /* ========================================================================== */
@@ -415,11 +416,13 @@ textarea:valid:focus {
   gap: 15px;
   padding-bottom: 60px;
 }
+
 .bar-stack {
   position: relative;
   width: 100%;
   height: 50px;
 }
+
 .bar {
   position: absolute;
   left: 0;
@@ -432,10 +435,12 @@ textarea:valid:focus {
   align-items: center;
   padding-left: 20px;
 }
+
 .bar-bg {
   background-color: var(--teal);
   z-index: 1;
 }
+
 .bar-1,
 .bar-2,
 .bar-3 {
@@ -444,6 +449,7 @@ textarea:valid:focus {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
+
 .bar-label {
   color: var(--dark);
   font-size: 20px;
@@ -467,6 +473,7 @@ textarea:valid:focus {
     opacity 0.6s ease,
     transform 0.6s ease;
 }
+
 .section-line-wrapper.visible {
   opacity: 1;
   transform: translateY(0);
@@ -479,6 +486,7 @@ textarea:valid:focus {
   overflow: visible;
   cursor: grab;
 }
+
 .section-line .wave {
   stroke-width: 1;
   stroke-linecap: round;
@@ -492,6 +500,7 @@ textarea:valid:focus {
   height: 30px;
   margin: 0 auto 2rem;
 }
+
 .wavy-line .wavy-polyline {
   stroke: currentColor;
   stroke-width: 1;
@@ -506,6 +515,7 @@ textarea:valid:focus {
   pointer-events: none;
   color: var(--wave-hero-stroke, currentColor);
 }
+
 #wavy-line.wavy-line-hero path {
   stroke: currentColor;
   stroke-width: 2;
@@ -530,6 +540,7 @@ textarea:valid:focus {
   outline: none;
   transition: background-color 0.3s ease;
 }
+
 #theme-toggle::before {
   content: '';
   position: absolute;
@@ -543,8 +554,9 @@ textarea:valid:focus {
   transition:
     transform 0.3s ease,
     background-color 0.3s ease;
-  transform: translateX(0); /* default */
+  transform: translateX(0);
 }
+
 #theme-toggle.dark-mode::before {
   transform: translateX(30px);
 }
@@ -563,17 +575,20 @@ textarea:valid:focus {
   z-index: -999;
   pointer-events: none;
   will-change: transform;
-  transform: translateZ(0); /* force GPU acceleration */
+  transform: translateZ(0);
 }
+
 #blob-svg {
   width: 100%;
   height: 100%;
   display: block;
   filter: blur(10px);
 }
+
 .blobs .blob {
   fill: var(--blob-color);
 }
+
 .blob {
   transform-box: fill-box;
   transform-origin: center;
@@ -581,100 +596,92 @@ textarea:valid:focus {
 }
 
 /* ========================================================================== */
-/* 12) Top Waves (canvas + static fallbacks)                                  */
+/* Top & Menu Waves — responsive, scroll-with-content, matching crop         */
 /* ========================================================================== */
 
-#top-waves-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 300px;
-  z-index: -1;
-  pointer-events: none;
-  display: block;
+:root {
+  --waves-h-min: 88px;
+  --waves-h-vw: 16vw;
+  --waves-h-max: 200px;
+  --waves-pos-y: 0%;
+  --top-waves-h: clamp(120px, 18vw, 320px);
+  --waves-pos-y: 0%;
+  --top-waves-gap: clamp(0px, calc(var(--top-waves-h) - var(--header-h)), 40vh);
 }
 
-/* Static WebP fallback */
-.top-waves {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 200px;
-  pointer-events: none;
-  z-index: 1;
-  animation: fadeInWaves 1.5s ease-out 0.3s forwards;
-}
-@keyframes fadeInWaves {
-  to {
-    opacity: 1;
+@media (max-width: 850px) {
+  :root {
+    --waves-h-min: 72px;
+    --waves-h-vw: 20vw;
+    --waves-h-max: 140px;
+    --top-waves-h: clamp(88px, 22vw, 160px);
+    --waves-pos-y: 0%;
+    --top-waves-gap: clamp(0px, calc(var(--top-waves-h) - var(--header-h)), 40vh);
   }
 }
 
-.top-waves img {
+@media (min-width: 1200px) {
+  :root {
+    --top-waves-h: clamp(140px, 18vw, 320px);
+  }
+}
+
+.top-waves {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: none;
-}
-.light-theme .top-waves img.light-theme {
-  display: block;
-}
-.dark-theme .top-waves img.dark-theme {
-  display: block;
+  height: var(--top-waves-h);
+  pointer-events: none;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center var(--waves-pos-y);
 }
 
-/* ========================================================================== */
-/* 13) Menu Waves                                                             */
-/* ========================================================================== */
-
-.fullscreen-menu .menu-wave {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 200px;
-  z-index: -1;
-  overflow: hidden;
+.light-theme .top-waves {
+  background-image: url('/assets/images/waves-light.webp');
 }
-#menu-waves-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
+.dark-theme .top-waves {
+  background-image: url('/assets/images/waves-dark.webp');
+}
+
+.top-waves img,
+.top-waves picture,
+.top-waves svg {
+  display: none !important;
 }
 
 .menu-waves {
-  display: none;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 200px;
-  animation: fadeInWaves 1.5s ease-out 0.3s forwards;
+  height: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
+  pointer-events: none;
+  z-index: 0;
 }
-.menu-waves img {
+
+.menu-waves img.waves-fallback {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
-  display: none;
+  object-position: center var(--waves-pos-y);
+  pointer-events: none;
+  user-select: none;
 }
-.light-theme .menu-waves img.light-theme {
-  display: block;
-}
-.dark-theme .menu-waves img.dark-theme {
-  display: block;
+
+/* Kill any legacy canvases if they still exist */
+#top-waves-canvas,
+#menu-waves-canvas {
+  display: none !important;
 }
 
 /* ========================================================================== */
-/* 14) Hire Button                                                            */
+/* 13) Hire Button                                                            */
 /* ========================================================================== */
 
 .hire-button {
@@ -696,6 +703,7 @@ textarea:valid:focus {
   overflow: hidden;
   transition: background-color 0.4s ease;
 }
+
 .hire-button::before {
   content: '';
   position: absolute;
@@ -707,10 +715,12 @@ textarea:valid:focus {
     transform 0.4s ease;
   z-index: -1;
 }
+
 .hire-button:hover {
   background-color: var(--yellow);
   text-decoration: none;
 }
+
 .hire-button:hover::before {
   border-color: var(--yellow-light);
   transform: scale(1.05);
@@ -728,7 +738,7 @@ textarea:valid:focus {
 }
 
 /* ========================================================================== */
-/* 15) Responsive Tweaks                                                      */
+/* 14) Responsive Tweaks                                                      */
 /* ========================================================================== */
 
 @media (max-width: 850px) {
@@ -736,7 +746,7 @@ textarea:valid:focus {
     height: 150px;
   }
   .menu-waves {
-    height: 100px;
+    height: 120px;
   }
 
   .tech-demo-wrapper {
@@ -745,6 +755,7 @@ textarea:valid:focus {
     width: 100%;
     margin-top: 20px;
   }
+
   .tech-stack {
     font-size: 22px;
     line-height: 32px;
@@ -762,6 +773,7 @@ textarea:valid:focus {
     white-space: normal;
     flex-wrap: wrap;
   }
+
   .demo-links {
     padding-left: 0;
   }
@@ -782,6 +794,7 @@ textarea:valid:focus {
     width: 100px;
     height: 100px;
   }
+
   .circle-button i {
     font-size: 40px;
   }
@@ -790,9 +803,11 @@ textarea:valid:focus {
     justify-content: center;
     padding: 2rem 1rem;
   }
+
   .contact-form {
     width: 100%;
   }
+
   .name-row {
     flex-direction: column;
     gap: 1.5rem;
@@ -814,11 +829,6 @@ textarea:valid:focus {
     align-items: center;
     height: auto;
     padding-top: 30px;
-  }
-
-  #top-waves-canvas,
-  #menu-waves-canvas {
-    height: 200px;
   }
 
   .bullet-list,

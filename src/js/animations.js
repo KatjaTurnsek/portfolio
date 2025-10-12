@@ -1,12 +1,10 @@
 /**
- * animations.js
- *
- * All GSAP-powered animations:
- *  - Morphing & custom wavy header lines
- *  - Teal skill bars (About)
- *  - Gooey blobs + “jelly” drag
- *  - Dripping waves on top/menu canvases (with cleanup)
- *  - Helpers to defer heavy work until after LCP
+ * GSAP-powered visuals (lightweight after removing heavy canvases).
+ * - Static waves (menu header image swap on theme)
+ * - Heading wavy lines
+ * - Teal skill bars
+ * - Gooey blobs + “jelly” drag
+ * - Defer helper
  */
 
 import { gsap } from 'gsap';
@@ -15,52 +13,206 @@ import { ScrollTrigger } from '../../node_modules/gsap/ScrollTrigger.js';
 
 gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger);
 
-/** True if current browser is Safari (used for fallbacks/perf tweaks). */
+/** Safari detection (minor perf tweaks). */
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Static waves (single <img> per host; dark/light swap)                      */
+/* ────────────────────────────────────────────────────────────────────────── */
+
 /**
- * Ensure the hero wave <svg> exists and return its <path>.
- * Inserted into `.top-waves` (falls back to <body>).
- * @returns {SVGPathElement|null}
+ * @returns {boolean} True when the current theme is dark.
  */
-function ensureHeroWave() {
-  const ORIGINAL_D = 'M0,15 C50,5 100,25 150,15 S250,25 300,15 S400,5 500,15';
-  const host = document.querySelector('.top-waves') || document.body;
-  if (!host) return null;
-
-  /** @type {SVGSVGElement|null} */
-  let svg = document.getElementById('wavy-line');
-  if (!svg) {
-    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('id', 'wavy-line');
-    svg.setAttribute('viewBox', '0 0 500 30');
-    svg.setAttribute('preserveAspectRatio', 'none');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.setAttribute('focusable', 'false');
-    svg.classList.add('wavy-line-hero');
-
-    const path = document.createElementNS(svg.namespaceURI, 'path');
-    path.setAttribute('d', ORIGINAL_D);
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'currentColor');
-    path.setAttribute('stroke-width', '2');
-
-    svg.appendChild(path);
-    host.appendChild(svg);
-  }
-
-  return /** @type {SVGPathElement|null} */ (svg.querySelector('path'));
+function isDarkTheme() {
+  const b = document.body;
+  return b.classList.contains('dark-theme') || b.getAttribute('data-theme') === 'dark';
 }
 
 /**
- * Morph the hero wave path in a loop. Falls back to a simple bob if MorphSVG is unavailable.
+ * Remove legacy canvases/pictures/extra images/SVGs inside a wave host.
+ * @param {Element} host
+ * @returns {void}
+ */
+function purgeLegacyWavesInside(host) {
+  host.querySelectorAll('#top-waves-canvas, #menu-waves-canvas').forEach((n) => n.remove());
+  host.querySelectorAll('picture').forEach((n) => n.remove());
+  host.querySelectorAll('img:not(.waves-fallback)').forEach((n) => n.remove());
+  host.querySelectorAll('svg').forEach((n) => n.remove());
+}
+
+/**
+ * Ensure a single managed <img.waves-fallback> exists in the host.
+ * @param {Element} host
+ * @param {string} [idHint]
+ * @returns {HTMLImageElement}
+ */
+function ensureWaveImg(host, idHint) {
+  /** @type {HTMLImageElement|null} */
+  let img = host.querySelector('img.waves-fallback');
+  if (!img) {
+    img = document.createElement('img');
+    img.className = 'waves-fallback';
+    if (idHint) img.id = idHint;
+    img.alt = '';
+    img.decoding = 'async';
+    img.loading = 'eager';
+    Object.assign(img.style, {
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      display: 'block',
+      objectFit: 'cover',
+      pointerEvents: 'none',
+      userSelect: 'none',
+      opacity: '0',
+      transition: 'opacity .25s ease',
+    });
+    host.appendChild(img);
+  }
+  return img;
+}
+
+/**
+ * Choose the appropriate image URL for the current theme.
+ * @param {Element} host
+ * @returns {string}
+ */
+function pickSrcForTheme(host) {
+  const single = host.getAttribute('data-src');
+  if (single) return single;
+  const dark = host.getAttribute('data-dark-src');
+  const light = host.getAttribute('data-light-src');
+  return isDarkTheme() ? dark || light || '' : light || dark || '';
+}
+
+/**
+ * Initialize static wave images for eligible hosts (e.g., menu).
+ * Skips hosts that lack data-* src attributes (e.g., header now CSS-only).
+ * @returns {void}
+ */
+export function setupStaticWaves() {
+  const topHost =
+    document.querySelector('.top-waves') ||
+    document.getElementById('top-waves') ||
+    document.querySelector('[data-waves="top"]');
+
+  const menuHost =
+    document.querySelector('.menu-waves') ||
+    document.getElementById('menu-waves') ||
+    document.querySelector('[data-waves="menu"]');
+
+  /** @type {Element[]} */
+  const hosts = [topHost, menuHost].filter((h) => !!h);
+  const eligible = hosts.filter(
+    (h) =>
+      h.hasAttribute('data-src') ||
+      h.hasAttribute('data-light-src') ||
+      h.hasAttribute('data-dark-src')
+  );
+
+  eligible.forEach((host, i) => {
+    if (!(host instanceof HTMLElement)) return;
+
+    host.style.position = host.style.position || 'absolute';
+    host.style.left = host.style.left || '0';
+    host.style.top = host.style.top || '0';
+    host.style.width = host.style.width || '100%';
+    host.style.pointerEvents = 'none';
+    host.style.zIndex = host.style.zIndex || '0';
+
+    purgeLegacyWavesInside(host);
+    const img = ensureWaveImg(host, i === 0 ? 'top-waves-img' : 'menu-waves-img');
+    const nextSrc = pickSrcForTheme(host);
+    if (!nextSrc) return;
+
+    const abs = new URL(nextSrc, location.href).href;
+    if (img.src === abs && img.complete) {
+      img.style.opacity = '1';
+      return;
+    }
+
+    const pre = new Image();
+    pre.decoding = 'async';
+    pre.onload = () => {
+      img.src = nextSrc;
+      img.style.opacity = '1';
+    };
+    pre.onerror = () => {
+      img.src = nextSrc;
+      img.style.opacity = '1';
+    };
+    pre.src = nextSrc;
+  });
+}
+
+/**
+ * Refresh static wave images when theme toggles.
+ * @returns {void}
+ */
+export function refreshStaticWaveImages() {
+  const hosts = [
+    document.querySelector('.top-waves') ||
+      document.getElementById('top-waves') ||
+      document.querySelector('[data-waves="top"]'),
+    document.querySelector('.menu-waves') ||
+      document.getElementById('menu-waves') ||
+      document.querySelector('[data-waves="menu"]'),
+  ].filter(Boolean);
+
+  hosts.forEach((host) => {
+    const hasAttrs =
+      host.hasAttribute('data-src') ||
+      host.hasAttribute('data-light-src') ||
+      host.hasAttribute('data-dark-src');
+    if (!hasAttrs) return; // skip header (CSS background)
+
+    const img = host.querySelector('img.waves-fallback');
+    const nextSrc = pickSrcForTheme(host);
+    if (!img || !nextSrc) return;
+
+    const abs = new URL(nextSrc, location.href).href;
+    if (img.src === abs) return;
+
+    img.style.opacity = '0';
+    const pre = new Image();
+    pre.decoding = 'async';
+    pre.onload = () => {
+      img.src = nextSrc;
+      img.style.opacity = '1';
+    };
+    pre.onerror = () => {
+      img.src = nextSrc;
+      img.style.opacity = '1';
+    };
+    pre.src = nextSrc;
+  });
+}
+
+/**
+ * Observe theme changes on <body> and refresh images. Returns a disposer.
+ * @returns {() => void}
+ */
+export function observeThemeChangesForWaves() {
+  const mo = new MutationObserver(() => refreshStaticWaveImages());
+  mo.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+  return () => mo.disconnect();
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Heading wavy lines (SVG)                                                   */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Animate an existing hero wavy path (#wavy-line path) if present.
+ * Uses MorphSVG when available; otherwise a simple bob.
  * @returns {void}
  */
 export function animateWaveLine() {
-  const ALT_D = 'M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15';
-  const path = ensureHeroWave();
+  const path = /** @type {SVGPathElement|null} */ (document.querySelector('#wavy-line path'));
   if (!path) return;
 
+  const ALT_D = 'M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15';
   gsap.killTweensOf(path);
 
   if (gsap.plugins?.MorphSVGPlugin) {
@@ -72,18 +224,12 @@ export function animateWaveLine() {
       morphSVG: { shape: ALT_D },
     });
   } else {
-    gsap.to(path, {
-      duration: 2.5,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-      y: 2,
-    });
+    gsap.to(path, { duration: 2.5, repeat: -1, yoyo: true, ease: 'sine.inOut', y: 2 });
   }
 }
 
 /**
- * Insert an inline SVG “wavy line” right after each <h2>.
+ * Insert a small inline SVG “wavy line” right after each <h2>.
  * @returns {void}
  */
 export function insertWaveLines() {
@@ -95,31 +241,34 @@ export function insertWaveLines() {
   document.querySelectorAll('h2').forEach((heading) => {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = waveSVG;
-    heading.insertAdjacentElement('afterend', wrapper.firstElementChild);
+    const svg = wrapper.firstElementChild;
+    if (svg) heading.insertAdjacentElement('afterend', svg);
   });
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/* ONE shared ticker for all `.wavy-polyline` elements                        */
-/* ────────────────────────────────────────────────────────────────────────── */
+/**
+ * @typedef {Object} PolyItem
+ * @property {SVGPolylineElement} polyline
+ * @property {SVGPoint[]} points
+ * @property {number} segments
+ * @property {number} amplitude
+ * @property {number} frequency
+ */
 
-/** @typedef {{ polyline: SVGPolylineElement, points: SVGPoint[], segments: number, amplitude: number, frequency: number }} PolyItem */
-
-let _polylineItems /** @type {PolyItem[]} */ = [];
+/** @type {PolyItem[]} */
+let _polylineItems = [];
 let _polylineTickerAdded = false;
 
 /**
- * Build and animate polyline points to create subtle, continuous wave motion
- * for every `.wavy-polyline` inserted by {@link insertWaveLines}.
- * Uses ONE shared GSAP ticker for all polylines (perf!).
+ * Animate subtle wave motion on each `.wavy-polyline` using one GSAP ticker.
  * @returns {void}
  */
 export function animateCustomWaveLines() {
   const polylines = document.querySelectorAll('.wavy-polyline');
 
   polylines.forEach((polyline) => {
-    if (polyline instanceof SVGPolylineElement === false) return;
-    if (polyline.dataset.waveInit === '1') return; // prevent double-wiring
+    if (!(polyline instanceof SVGPolylineElement)) return;
+    if (polyline.dataset.waveInit === '1') return;
     polyline.dataset.waveInit = '1';
 
     const svg = polyline.closest('svg');
@@ -131,9 +280,8 @@ export function animateCustomWaveLines() {
 
     /** @type {SVGPoint[]} */
     const points = [];
-
     for (let i = 0; i <= segments; i++) {
-      // @ts-ignore - createSVGPoint exists on SVGSVGElement
+      // @ts-ignore createSVGPoint exists on SVGSVGElement
       const pt = svg.createSVGPoint();
       pt.x = i * interval;
       pt.y = 15;
@@ -150,6 +298,7 @@ export function animateCustomWaveLines() {
   }
 }
 
+/** @returns {void} */
 function _updateAllPolylines() {
   const time = performance.now() * 0.002;
   for (const item of _polylineItems) {
@@ -162,38 +311,31 @@ function _updateAllPolylines() {
   }
 }
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Teal bars (About)                                                          */
+/* ────────────────────────────────────────────────────────────────────────── */
+
 /**
- * Animate teal bars in About section.
+ * Animate the teal skill bars on the About section.
  * @returns {void}
  */
 export function animateTealBars() {
-  const timeline = gsap.timeline();
-
-  timeline.to('.bar-bg', {
-    width: '100%',
-    duration: 1.5,
-    stagger: 1,
-    ease: 'power4.out',
-  });
-
-  timeline.to('.bar-1', { width: '90%', duration: 1, ease: 'power4.out' }, '<+0.5');
-  timeline.to('.bar-2', { width: '70%', duration: 1, ease: 'power4.out' }, '-=0.6');
-  timeline.to('.bar-3', { width: '80%', duration: 1, ease: 'power4.out' }, '-=0.6');
-
-  timeline.to(
-    '.bar-label',
-    { opacity: 1, duration: 1.2, ease: 'power2.out', stagger: 0.2 },
-    '-=0.4'
-  );
+  const tl = gsap.timeline();
+  tl.to('.bar-bg', { width: '100%', duration: 1.5, stagger: 1, ease: 'power4.out' });
+  tl.to('.bar-1', { width: '90%', duration: 1, ease: 'power4.out' }, '<+0.5');
+  tl.to('.bar-2', { width: '70%', duration: 1, ease: 'power4.out' }, '-=0.6');
+  tl.to('.bar-3', { width: '80%', duration: 1, ease: 'power4.out' }, '-=0.6');
+  tl.to('.bar-label', { opacity: 1, duration: 1.2, ease: 'power2.out', stagger: 0.2 }, '-=0.4');
 }
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Gooey blobs + interactive jelly drag                                       */
+/* ────────────────────────────────────────────────────────────────────────── */
+
 /**
- * Create multiple SVG blob groups and animate slow floating/scale motion.
- * If Safari is detected, removes the SVG filter for performance.
- * Also links opacity to scroll via ScrollTrigger (parallax-like effect).
- * Requires:
- *  - #blob-svg > #blobs-g container
- *  - CSS: .blob-group, .blob
+ * Create multiple SVG blobs and animate slow floating/scale motion.
+ * Links opacity to scroll via ScrollTrigger.
+ * Requires #blob-svg > #blobs-g container.
  * @returns {void}
  */
 export function animateGooeyBlobs() {
@@ -261,17 +403,12 @@ export function animateGooeyBlobs() {
   gsap.to(container, {
     opacity: 0.3,
     ease: 'none',
-    scrollTrigger: {
-      trigger: 'body',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true,
-    },
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: true },
   });
 }
 
 /**
- * Enable “closest blob follows pointer while dragging” jelly interaction.
+ * Enable “closest blob follows pointer while dragging” interaction.
  * Requires #blob-svg and generated .blob-group nodes.
  * @returns {void}
  */
@@ -282,6 +419,7 @@ export function enableInteractiveJellyBlob() {
   const target = { x: 0, y: 0 };
   const current = { x: 0, y: 0 };
   const vel = { x: 0, y: 0 };
+  /** @type {SVGGElement|null} */
   let activeBlob = null;
   let isDragging = false;
   const originalTransforms = new Map();
@@ -290,15 +428,26 @@ export function enableInteractiveJellyBlob() {
   const getScale = (dx, dy) => Math.min(Math.sqrt(dx * dx + dy * dy) / 500, isSafari ? 0.18 : 0.25);
   const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
 
+  /**
+   * @param {number} clientX
+   * @param {number} clientY
+   * @returns {{x:number,y:number}}
+   */
   function getSVGCoords(clientX, clientY) {
     // @ts-ignore
     const pt = svg.createSVGPoint();
     pt.x = clientX;
     pt.y = clientY;
     // @ts-ignore
-    return pt.matrixTransform(svg.getScreenCTM().inverse());
+    const res = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return { x: res.x, y: res.y };
   }
 
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @returns {SVGGElement|null}
+   */
   function getClosestBlob(x, y) {
     const blobs = document.querySelectorAll('.blob-group');
     let closest = null;
@@ -316,9 +465,13 @@ export function enableInteractiveJellyBlob() {
       }
     });
 
-    return closest;
+    return /** @type {SVGGElement|null} */ (closest);
   }
 
+  /**
+   * @param {SVGGElement} blob
+   * @returns {void}
+   */
   function returnBlobToOriginal(blob) {
     const original = originalTransforms.get(blob);
     if (!original) return;
@@ -333,10 +486,18 @@ export function enableInteractiveJellyBlob() {
     });
   }
 
+  /**
+   * @param {MouseEvent|TouchEvent} e
+   * @returns {void}
+   */
   function updatePointer(e) {
     if (!isDragging) return;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const clientX = /** @type {TouchEvent} */ (e).touches
+      ? /** @type {TouchEvent} */ (e).touches[0].clientX
+      : /** @type {MouseEvent} */ (e).clientX;
+    const clientY = /** @type {TouchEvent} */ (e).touches
+      ? /** @type {TouchEvent} */ (e).touches[0].clientY
+      : /** @type {MouseEvent} */ (e).clientY;
     const svgPos = getSVGCoords(clientX, clientY);
 
     target.x = svgPos.x;
@@ -363,13 +524,13 @@ export function enableInteractiveJellyBlob() {
       lastSwitchTime = now;
 
       if (!originalTransforms.has(activeBlob)) {
-        const transform = gsap.getProperty(activeBlob);
+        const gp = gsap.getProperty(activeBlob);
         originalTransforms.set(activeBlob, {
-          x: transform('x'),
-          y: transform('y'),
-          rotation: transform('rotation'),
-          scaleX: transform('scaleX'),
-          scaleY: transform('scaleY'),
+          x: gp('x'),
+          y: gp('y'),
+          rotation: gp('rotation'),
+          scaleX: gp('scaleX'),
+          scaleY: gp('scaleY'),
         });
       }
 
@@ -411,10 +572,8 @@ export function enableInteractiveJellyBlob() {
     isDragging = true;
     updatePointer(e);
   });
-
-  window.addEventListener('mousemove', updatePointer);
-  window.addEventListener('touchmove', updatePointer);
-
+  window.addEventListener('mousemove', updatePointer, { passive: false });
+  window.addEventListener('touchmove', updatePointer, { passive: false });
   window.addEventListener('mouseup', () => {
     isDragging = false;
     if (activeBlob) returnBlobToOriginal(activeBlob);
@@ -429,346 +588,15 @@ export function enableInteractiveJellyBlob() {
   loop();
 }
 
-/**
- * Animated dripping waves on the top canvas (id `top-waves-canvas`).
- * Returns a cleanup function to stop the ticker & listeners. Skips on Safari.
- * @returns {() => void}
- */
-export function animateTopDrippingWaves() {
-  const safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  if (safari) return () => {};
-
-  const canvas = document.getElementById('top-waves-canvas');
-  if (!canvas) return () => {};
-
-  const ctx = canvas.getContext('2d');
-  const resolution = window.devicePixelRatio || 1;
-
-  let vw, vh;
-  let waves = [];
-  let resized = false;
-  let waveHeightTween = null;
-  const pointTweens = [];
-  const onResize = () => (resized = true);
-
-  resizeCanvas();
-  initWaves();
-
-  function update() {
-    if (resized) {
-      resizeCanvas();
-      waves.forEach((w) => w.resize(vw, vh));
-      resized = false;
-    }
-    ctx.clearRect(0, 0, vw, vh);
-    ctx.globalCompositeOperation = 'source-over';
-    waves.forEach((w) => w.draw());
-  }
-
-  gsap.ticker.add(update);
-  window.addEventListener('resize', onResize);
-
-  function isMobile() {
-    return window.innerWidth < 850;
-  }
-
-  function resizeCanvas() {
-    vw = window.innerWidth;
-    vh = isMobile() ? 200 : 300;
-    canvas.width = vw * resolution;
-    canvas.height = vh * resolution;
-    canvas.style.width = vw + 'px';
-    canvas.style.height = vh + 'px';
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(resolution, resolution);
-  }
-
-  function getCssVar(varName, fallback) {
-    const value = getComputedStyle(document.body).getPropertyValue(varName);
-    return value.trim() || fallback;
-  }
-
-  function initWaves() {
-    waves = [];
-    pointTweens.forEach((t) => t.kill());
-    pointTweens.length = 0;
-    if (waveHeightTween) waveHeightTween.kill();
-
-    const wave1 = createWave({
-      amplitude: isMobile() ? 40 : 100,
-      frequency: 0.5,
-      segments: 100,
-      waveHeight: isMobile() ? 70 : vh * 0.4,
-      colorVar: '--wave-color-1',
-    });
-
-    const wave2 = createWave({
-      amplitude: isMobile() ? 20 : 60,
-      frequency: 0.3,
-      segments: 100,
-      waveHeight: isMobile() ? 75 : vh * 0.4,
-      colorVar: '--wave-color-2',
-    });
-
-    waveHeightTween = gsap.to([wave1, wave2], {
-      duration: 36,
-      waveHeight: vh / 2,
-      ease: 'sine.inOut',
-      repeat: -1,
-      yoyo: true,
-    });
-
-    waves.push(wave1, wave2);
-  }
-
-  function createWave(options) {
-    const wave = {
-      amplitude: options.amplitude,
-      frequency: options.frequency,
-      segments: options.segments,
-      waveHeight: options.waveHeight,
-      colorVar: options.colorVar,
-      points: [],
-      width: vw,
-      height: vh,
-      init,
-      resize,
-      draw,
-    };
-
-    function init() {
-      wave.points = [];
-      const interval = wave.width / wave.segments;
-      for (let i = 0; i <= wave.segments; i++) {
-        const point = { x: i * interval, y: 1 };
-        const tween = gsap
-          .to(point, { duration: 8, y: -1, repeat: -1, yoyo: true, ease: 'sine.inOut' })
-          .progress((i / wave.segments) * wave.frequency);
-        pointTweens.push(tween);
-        wave.points.push(point);
-      }
-    }
-
-    function resize(width, height) {
-      wave.width = width;
-      wave.height = height;
-      const interval = wave.width / wave.segments;
-      for (let i = 0; i <= wave.segments; i++) {
-        wave.points[i].x = i * interval;
-      }
-    }
-
-    function draw() {
-      const height = wave.amplitude / 2;
-      const startY = wave.waveHeight;
-      const fill = getCssVar(wave.colorVar, 'rgba(0,0,0,0.2)');
-
-      ctx.beginPath();
-      // Fill to edges; smooth curve
-      ctx.moveTo(0, 0);
-      ctx.lineTo(wave.points[0].x, startY - wave.points[0].y * height);
-
-      for (let i = 1; i < wave.points.length - 1; i++) {
-        const current = wave.points[i];
-        const next = wave.points[i + 1];
-        const cx = (current.x + next.x) / 2;
-        const cy = startY - ((current.y + next.y) / 2) * height;
-        ctx.quadraticCurveTo(current.x, startY - current.y * height, cx, cy);
-      }
-
-      const last = wave.points[wave.points.length - 1];
-      ctx.lineTo(last.x, startY - last.y * height);
-      ctx.lineTo(wave.width, 0);
-      ctx.closePath();
-      ctx.fillStyle = fill;
-      ctx.fill();
-    }
-
-    wave.init();
-    return wave;
-  }
-
-  // Cleanup function
-  return () => {
-    gsap.ticker.remove(update);
-    window.removeEventListener('resize', onResize);
-    if (waveHeightTween) waveHeightTween.kill();
-    pointTweens.forEach((t) => t.kill());
-  };
-}
-
-/**
- * Full-screen menu dripping waves (id `menu-waves-canvas`).
- * Returns a cleanup to stop ticker & listeners. Skips on Safari.
- * @returns {() => void}
- */
-export function animateMenuDrippingWaves() {
-  const safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  if (safari) return () => {};
-
-  const canvas = document.getElementById('menu-waves-canvas');
-  if (!canvas) return () => {};
-
-  const ctx = canvas.getContext('2d');
-  const resolution = window.devicePixelRatio || 1;
-
-  let vw, vh;
-  let waves = [];
-  let resized = false;
-  let waveHeightTween = null;
-  const pointTweens = [];
-  const onResize = () => (resized = true);
-
-  resizeCanvas();
-  initWaves();
-
-  function update() {
-    if (resized) {
-      resizeCanvas();
-      waves.forEach((w) => w.resize(vw, vh));
-      resized = false;
-    }
-    ctx.clearRect(0, 0, vw, vh);
-    ctx.globalCompositeOperation = 'source-over';
-    waves.forEach((w) => w.draw());
-  }
-
-  gsap.ticker.add(update);
-  window.addEventListener('resize', onResize);
-
-  function isMobile() {
-    return window.innerWidth < 850;
-  }
-
-  function resizeCanvas() {
-    vw = window.innerWidth;
-    vh = isMobile() ? 200 : 300;
-    canvas.width = vw * resolution;
-    canvas.height = vh * resolution;
-    canvas.style.width = vw + 'px';
-    canvas.style.height = vh + 'px';
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(resolution, resolution);
-  }
-
-  function getCssVar(varName, fallback) {
-    const value = getComputedStyle(document.body).getPropertyValue(varName);
-    return value.trim() || fallback;
-  }
-
-  function initWaves() {
-    waves = [];
-    pointTweens.forEach((t) => t.kill());
-    pointTweens.length = 0;
-    if (waveHeightTween) waveHeightTween.kill();
-
-    const wave1 = createWave({
-      amplitude: isMobile() ? 40 : 100,
-      frequency: 0.5,
-      segments: 100,
-      waveHeight: isMobile() ? 70 : vh * 0.4,
-      colorVar: '--wave-color-1',
-    });
-
-    const wave2 = createWave({
-      amplitude: isMobile() ? 20 : 60,
-      frequency: 0.3,
-      segments: 100,
-      waveHeight: isMobile() ? 75 : vh * 0.4,
-      colorVar: '--wave-color-2',
-    });
-
-    waveHeightTween = gsap.to([wave1, wave2], {
-      duration: 36,
-      waveHeight: vh / 2,
-      ease: 'sine.inOut',
-      repeat: -1,
-      yoyo: true,
-    });
-
-    waves.push(wave1, wave2);
-  }
-
-  function createWave(options) {
-    const wave = {
-      amplitude: options.amplitude,
-      frequency: options.frequency,
-      segments: options.segments,
-      waveHeight: options.waveHeight,
-      colorVar: options.colorVar,
-      points: [],
-      width: vw,
-      height: vh,
-      init,
-      resize,
-      draw,
-    };
-
-    function init() {
-      wave.points = [];
-      const interval = wave.width / wave.segments;
-      for (let i = 0; i <= wave.segments; i++) {
-        const point = { x: i * interval, y: 1 };
-        const tween = gsap
-          .to(point, { duration: 8, y: -1, repeat: -1, yoyo: true, ease: 'sine.inOut' })
-          .progress((i / wave.segments) * wave.frequency);
-        pointTweens.push(tween);
-        wave.points.push(point);
-      }
-    }
-
-    function resize(width, height) {
-      wave.width = width;
-      wave.height = height;
-      const interval = wave.width / wave.segments;
-      for (let i = 0; i <= wave.segments; i++) {
-        wave.points[i].x = i * interval;
-      }
-    }
-
-    function draw() {
-      const height = wave.amplitude / 2;
-      const startY = wave.waveHeight;
-      const fill = getCssVar(wave.colorVar, 'rgba(0,0,0,0.2)');
-
-      ctx.beginPath();
-      ctx.moveTo(wave.points[0].x, startY - wave.points[0].y * height);
-      for (let i = 1; i < wave.points.length; i++) {
-        const pt = wave.points[i];
-        ctx.lineTo(pt.x, startY - pt.y * height);
-      }
-      ctx.lineTo(wave.width, 0);
-      ctx.lineTo(0, 0);
-      ctx.closePath();
-      ctx.fillStyle = fill;
-      ctx.fill();
-    }
-
-    wave.init();
-    return wave;
-  }
-
-  // Cleanup function
-  return () => {
-    gsap.ticker.remove(update);
-    window.removeEventListener('resize', onResize);
-    if (waveHeightTween) waveHeightTween.kill();
-    pointTweens.forEach((t) => t.kill());
-  };
-}
-
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Defer heavy animation work until after LCP / browser idle (opt-in)        */
+/* Defer helper                                                               */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
- * Defer a callback until the browser is idle (approx. after LCP).
- * Uses `requestIdleCallback` when available; falls back to a micro-timeout.
- * Returns a cancel function.
- *
- * @param {() => void} cb - Work to run later (heavy animation setup).
- * @param {number} [timeout=2000] - Max wait before forcing execution (ms).
- * @returns {() => void} cancel - Call to cancel the scheduled work.
+ * Defer heavy work until the browser is idle (or next tick fallback).
+ * @param {() => void} cb Work to run later.
+ * @param {number} [timeout=2000] Max wait in ms for requestIdleCallback.
+ * @returns {() => void} Cancel function.
  */
 export function deferHeavy(cb, timeout = 2000) {
   let cancelled = false;
@@ -796,51 +624,4 @@ export function deferHeavy(cb, timeout = 2000) {
       clearTimeout(id);
     };
   }
-}
-
-/**
- * Schedule top dripping waves after LCP/idle.
- * Returns a function that cancels if not started yet, or cleans up if running.
- * @returns {() => void}
- */
-export function scheduleTopWavesAfterLCP() {
-  let cleanup = null;
-  let started = false;
-  const cancel = deferHeavy(() => {
-    started = true;
-    cleanup = animateTopDrippingWaves();
-  });
-  return () => {
-    if (!started) cancel();
-    else if (cleanup) cleanup();
-  };
-}
-
-/**
- * Schedule menu dripping waves after LCP/idle.
- * Returns a function that cancels if not started yet, or cleans up if running.
- * @returns {() => void}
- */
-export function scheduleMenuWavesAfterLCP() {
-  let cleanup = null;
-  let started = false;
-  const cancel = deferHeavy(() => {
-    started = true;
-    cleanup = animateMenuDrippingWaves();
-  });
-  return () => {
-    if (!started) cancel();
-    else if (cleanup) cleanup();
-  };
-}
-
-/**
- * Schedule gooey blobs + jelly interaction after LCP/idle.
- * @returns {() => void} cancel
- */
-export function scheduleBlobsAfterLCP() {
-  return deferHeavy(() => {
-    animateGooeyBlobs();
-    enableInteractiveJellyBlob();
-  });
 }
