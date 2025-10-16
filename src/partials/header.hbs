@@ -1,38 +1,15 @@
-<!-- Gooey blobs background (fixed behind everything) -->
-<div class='morphing-blob-wrapper' aria-hidden='true'>
-  <svg
-    id='blob-svg'
-    viewBox='0 0 1920 1080'
-    xmlns='http://www.w3.org/2000/svg'
-    preserveAspectRatio='xMidYMid slice'
-  >
-    <defs>
-      <filter id='goo'>
-        <feGaussianBlur in='SourceGraphic' stdDeviation='30' result='blur' />
-        <feColorMatrix
-          in='blur'
-          type='matrix'
-          values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 40 -20'
-          result='goo'
-        />
-        <feComposite in='SourceGraphic' in2='goo' operator='atop' result='finalGoo' />
-      </filter>
-    </defs>
-    <g class='blobs' id='blobs-g' filter='url(#goo)'></g>
-  </svg>
-</div>
-
 <header>
   <div class='header-left'>
-    <a href='/'>
+    <a href='{{baseHref}}'>
       <img
-        src='assets/images/logo-katjadev-dark.svg'
+        src='{{baseHref}}assets/logo-katjadev-dark.svg'
         alt='Katja Dev Logo'
         class='site-logo logo'
         loading='eager'
       />
     </a>
   </div>
+
   <div class='header-controls'>
     <button id='theme-toggle' class='theme-switcher' aria-label='Toggle Theme'></button>
     <button class='menu-toggle' id='menuToggle' aria-label='Toggle menu'>

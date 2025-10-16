@@ -5,10 +5,10 @@
     <base href="{{baseHref}}" />
   </head>
   <body class="light-theme">
-    <!-- Header waves host -->
     <div class="top-waves"></div>
 
-    <div class="morphing-blob-wrapper">
+    <!-- Gooey blobs background -->
+    <div class="morphing-blob-wrapper" aria-hidden="true">
       <svg
         id="blob-svg"
         viewBox="0 0 1920 1080"
@@ -42,6 +42,7 @@
     </main>
 
     {{> footer }}
-    <script type="module" src="/src/js/index.js"></script>
+
+    <script type="module" src="src/js/index.js"></script>
   </body>
 </html>

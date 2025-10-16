@@ -2,14 +2,13 @@
 
   <div
     class='menu-waves'
-    data-light-src='assets/images/waves-light.webp'
-    data-dark-src='assets/images/waves-dark.webp'
-  >
-  </div>
+    data-light-src='{{baseHref}}assets/waves-light.webp'
+    data-dark-src='{{baseHref}}assets/waves-dark.webp'
+  ></div>
 
-  <a href='/'>
+  <a href='{{baseHref}}'>
     <img
-      src='assets/images/logo-katjadev-dark.svg'
+      src='{{baseHref}}assets/logo-katjadev-dark.svg'
       alt='Katja Dev Logo'
       class='site-logo site-logo-menu'
       loading='eager'
@@ -21,8 +20,8 @@
   </button>
 
   <nav>
-    <a href='/work'>Work</a>
-    <a href='/about'>About</a>
-    <a href='/contact'>Contact</a>
+    <a href='{{baseHref}}work'>Work</a>
+    <a href='{{baseHref}}about'>About</a>
+    <a href='{{baseHref}}contact'>Contact</a>
   </nav>
 </div>
