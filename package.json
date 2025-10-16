@@ -8,6 +8,8 @@
     "dev:gh": "vite --base=/portfolio/",
     "build": "vite build",
     "build:gh": "vite build --base=/portfolio/",
+    "predeploy": "npm run build:gh",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview",
     "preview:gh": "vite preview --base=/portfolio/",
     "prettier:check": "prettier . --check",
@@ -19,6 +21,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "jsdoc": "^4.0.4",
     "minami": "^1.2.3",
     "prettier": "^3.6.2",
