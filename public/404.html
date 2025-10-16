@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <meta http-equiv="refresh" content="0; url=/portfolio/" />
+    <script>
+      (function () {
+        // Build a path that keeps the deep link but strips any leading `/portfolio/`
+        var raw = location.pathname + location.search + location.hash;
+        var cleaned = raw.replace(/^\/+/, '').replace(/^portfolio\/?/, '');
+        var dest = '/portfolio/' + cleaned;
+
+        // Let your gh-redirect.js (in the app) restore this after index loads
+        sessionStorage.setItem('gh_redirect', dest);
+
+        // Go to the SPA entry under the correct base
+        location.replace('/portfolio/');
+      })();
+    </script>
+  </head>
+  <body>
+    Redirecting…
+  </body>
+</html>
