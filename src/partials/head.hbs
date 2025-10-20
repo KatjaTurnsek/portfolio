@@ -5,8 +5,8 @@
 <title>{{site.title}}</title>
 <meta name='description' content='{{site.description}}' />
 
-<!-- Crucial: makes all relative URLs resolve under / or /portfolio/ -->
-<base href='{{baseHref}}' />
+<!-- Make all relative URLs resolve under '/' or '/portfolio/' -->
+<base href='{{base}}' />
 
 <link
   rel='stylesheet'
@@ -16,36 +16,36 @@
   referrerpolicy='no-referrer'
 />
 
-<!-- Preload header/menu wave layers (public/ assets; base-aware) -->
+<!-- Preload header/menu wave layers (base-aware via {{asset}}) -->
 <link
   rel='preload'
   as='image'
-  href='{{baseHref}}assets/images/waves-light.webp'
+  href='{{asset "assets/images/waves-light.webp"}}'
   media='(prefers-color-scheme: light)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{baseHref}}assets/images/waves-dark.webp'
+  href='{{asset "assets/images/waves-dark.webp"}}'
   media='(prefers-color-scheme: dark)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{baseHref}}assets/images/vector-waves-light.svg'
+  href='{{asset "assets/images/vector-waves-light.svg"}}'
   type='image/svg+xml'
   media='(prefers-color-scheme: light)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{baseHref}}assets/images/vector-waves-dark.svg'
+  href='{{asset "assets/images/vector-waves-dark.svg"}}'
   type='image/svg+xml'
   media='(prefers-color-scheme: dark)'
 />
 
-<!-- Favicon / icons (optional but recommended) -->
-<link rel='icon' href='{{baseHref}}assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
+<!-- Favicon / icons -->
+<link rel='icon' href='{{asset "assets/images/logo-katjadev-dark.svg"}}' type='image/svg+xml' />
 
-<!-- Canonical points to the base (safe for GH Pages paths) -->
-<link rel='canonical' href='{{baseHref}}' />
+<!-- Canonical points to the site base (relative is fine here; router updates it later) -->
+<link rel='canonical' href='{{base}}' />

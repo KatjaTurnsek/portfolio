@@ -67,7 +67,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='assets/images/logo-ktportfolio-600.webp'
+              src='{{asset "assets/images/logo-ktportfolio-600.webp"}}'
               data-src='logo-ktportfolio-600.webp'
               alt='KT Dev sketch to Vector based Logotype'
             />
@@ -79,7 +79,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='assets/images/design-portfoliologosuite-600.webp'
+              src='{{asset "assets/images/design-portfoliologosuite-600.webp"}}'
               data-src='design-portfoliologosuite-600.webp'
               alt='KT Dev - Logo Design'
             />
@@ -119,10 +119,10 @@
 
     <div class='back-to-work-container'>
       <a
-        href='./work'
+        href='{{route "/work"}}'
         class='label-link back-to-work-label'
-        data-action='back'
-        data-back-fallback='./work'
+        data-back
+        data-back-fallback='{{route "/work"}}'
         aria-label='Go back'
       >
         <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>

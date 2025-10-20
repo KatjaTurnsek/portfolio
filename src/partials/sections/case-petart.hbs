@@ -75,7 +75,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='assets/images/site-petart-600.webp'
+              src='{{asset "assets/images/site-petart-600.webp"}}'
               data-src='site-petart-600.webp'
               alt='Pet Art with Heart - homepage desktop view'
             />
@@ -87,7 +87,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='assets/images/site-petartmobile-600.webp'
+              src='{{asset "assets/images/site-petartmobile-600.webp"}}'
               data-src='site-petartmobile-600.webp'
               alt='Pet Art with Heart - homepage mobile view'
             />
@@ -125,10 +125,10 @@
 
     <div class='back-to-work-container'>
       <a
-        href='./work'
+        href='{{route "/work"}}'
         class='label-link back-to-work-label'
-        data-action='back'
-        data-back-fallback='./work'
+        data-back
+        data-back-fallback='{{route "/work"}}'
         aria-label='Go back'
       >
         <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>

@@ -15,7 +15,11 @@
     </div>
 
     <div class='row'>
-      <p class='info-text'>Email contact@katjadev.com or use the form</p>
+      <p class='info-text'>
+        Email
+        <a href='mailto:contact@katjadev.com'>contact@katjadev.com</a>
+        or use the form
+      </p>
 
       <div class='contact-form-wrapper'>
         <form
@@ -24,7 +28,9 @@
           method='POST'
         >
           <input type='hidden' name='_captcha' value='false' />
-          <input type='hidden' name='_next' value='https://katjadev.com#thank-you' />
+
+          <!-- Set at runtime to: https://<current-origin>/<base>#thank-you -->
+          <input type='hidden' name='_next' value='' data-next-hash='#thank-you' />
 
           <div class='name-row'>
             <div class='form-group'>
@@ -69,4 +75,14 @@
       </div>
     </div>
   </div>
+
+  <!-- Tiny helper to set the FormSubmit _next URL to origin + BASE + #thank-you -->
+  <script>
+    (function () { try { var base = (window.__BASE_URL__ || '/').replace(/\/?$/, '/'); // ensures
+    trailing slash var u = new URL(base, window.location.origin); var hash =
+    document.querySelector('input[name="_next"][data-next-hash]')?.getAttribute('data-next-hash') ||
+    '#thank-you'; u.hash = hash.replace(/^#/, ''); var next =
+    document.querySelector('form.contact-form input[name="_next"]'); if (next) next.value = u.href;
+    } catch (e) { /* noop */ } })();
+  </script>
 </section>

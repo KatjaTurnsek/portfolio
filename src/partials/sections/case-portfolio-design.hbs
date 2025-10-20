@@ -69,7 +69,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='assets/images/design-portfoliomoodboard-600.webp'
+              src='{{asset "assets/images/design-portfoliomoodboard-600.webp"}}'
               data-src='design-portfoliomoodboard-600.webp'
               alt='Figma mood board for KT Portfolio showing colors, typography, and inspiration images'
             />
@@ -84,7 +84,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='assets/images/design-ktportfolio-600.webp'
+              src='{{asset "assets/images/design-ktportfolio-600.webp"}}'
               data-src='design-ktportfolio-600.webp'
               alt='Figma prototype showing Wire framing layout of the Portfolio website'
             />
@@ -170,7 +170,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='assets/images/design-portfoliogsap-600.webp'
+              src='{{asset "assets/images/design-portfoliogsap-600.webp"}}'
               data-src='design-portfoliogsap-600.webp'
               alt='Image of GSAP animation JavaScript code'
             />
@@ -181,10 +181,10 @@
 
       <div class='back-to-work-container'>
         <a
-          href='./work'
+          href='{{route "/work"}}'
           class='label-link back-to-work-label'
-          data-action='back'
-          data-back-fallback='./work'
+          data-back
+          data-back-fallback='{{route "/work"}}'
           aria-label='Go back'
         >
           <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
