@@ -1,22 +1,2322 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>Redirecting…</title>
-    <meta http-equiv="refresh" content="0; url=/portfolio/" />
-    <script>
-      (function () {
-        const dest =
-          '/portfolio/' +
-          (location.pathname + location.search + location.hash)
-            .replace(/^\/+/, '')
-            .replace(/^portfolio\/?/, '');
-        sessionStorage.setItem('gh_redirect', dest);
-        location.replace('/portfolio/');
-      })();
-    </script>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <meta name='color-scheme' content='light dark' />
+    
+    <title>Katja Turnsek - Front-End Developer &amp; Designer | Portfolio Website</title>
+    <meta name='description' content='Creative front-end developer with a background in art and design. Explore a fluid, modern portfolio featuring interactive animations, custom code, and thoughtful UX — built with HTML, CSS, JavaScript, GSAP, and Vite.' />
+    
+    <!-- Crucial: makes all relative URLs resolve under / or /portfolio/ -->
+    <base href='/portfolio/' />
+    
+    <link
+      rel='stylesheet'
+      href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
+      integrity='sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=='
+      crossorigin='anonymous'
+      referrerpolicy='no-referrer'
+    />
+    
+    <!-- Preload header/menu wave layers (public/ assets; base-aware) -->
+    <link
+      rel='preload'
+      as='image'
+      href='/portfolio/assets/images/waves-light.webp'
+      media='(prefers-color-scheme: light)'
+    />
+    <link
+      rel='preload'
+      as='image'
+      href='/portfolio/assets/images/waves-dark.webp'
+      media='(prefers-color-scheme: dark)'
+    />
+    <link
+      rel='preload'
+      as='image'
+      href='/portfolio/assets/images/vector-waves-light.svg'
+      type='image/svg+xml'
+      media='(prefers-color-scheme: light)'
+    />
+    <link
+      rel='preload'
+      as='image'
+      href='/portfolio/assets/images/vector-waves-dark.svg'
+      type='image/svg+xml'
+      media='(prefers-color-scheme: dark)'
+    />
+    
+    <!-- Favicon / icons (optional but recommended) -->
+    <link rel='icon' href='/portfolio/assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
+    
+    <!-- Canonical points to the base (safe for GH Pages paths) -->
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-Cgoi2e2a.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-C8vQ4g-9.css">
   </head>
-  <body>
-    Redirecting…
+
+  <body class="light-theme">
+    <!-- Top wave host -->
+    <div class="top-waves"></div>
+
+    <!-- Gooey blobs background (only one copy across the whole site) -->
+    <div class="morphing-blob-wrapper" aria-hidden="true">
+      <svg
+        id="blob-svg"
+        viewBox="0 0 1920 1080"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="30" result="blur" />
+            <feColorMatrix
+              in="blur"
+              type="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 40 -20"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" result="finalGoo" />
+          </filter>
+        </defs>
+        <g class="blobs" id="blobs-g" filter="url(#goo)"></g>
+      </svg>
+    </div>
+
+    <header>
+  <div class='header-left'>
+    <a href='/portfolio/'>
+      <img
+        src='/portfolio/assets/images/logo-katjadev-dark.svg'
+        alt='Katja Dev Logo'
+        class='site-logo logo'
+        loading='eager'
+      />
+    </a>
+  </div>
+  <div class='header-controls'>
+    <button id='theme-toggle' class='theme-switcher' aria-label='Toggle Theme'></button>
+    <button class='menu-toggle' id='menuToggle' aria-label='Toggle menu'>
+      <i class='fas fa-bars'></i>
+    </button>
+  </div>
+</header> <div class='fullscreen-menu' id='menu' role='dialog' aria-modal='true'>
+  <div
+    class='menu-waves'
+    data-light-src='/portfolio/assets/images/waves-light.webp'
+    data-dark-src='/portfolio/assets/images/waves-dark.webp'
+  ></div>
+
+  <a href='/portfolio/'>
+    <img
+      src='/portfolio/assets/images/logo-katjadev-dark.svg'
+      alt='Katja Dev Logo'
+      class='site-logo site-logo-menu'
+      loading='eager'
+    />
+  </a>
+
+  <button class='menu-toggle opened' id='menuClose' aria-label='Close menu'>
+    <i class='fas fa-times'></i>
+  </button>
+
+  <nav>
+    <a href='#work'>Work</a>
+    <a href='#about'>About</a>
+    <a href='#contact'>Contact</a>
+  </nav>
+</div>
+
+    <main>
+      <section
+  class='fullscreen-section'
+  id='home'
+  data-title='Katja Turnsek — Front-End Developer & Designer'
+  data-description='Portfolio of Katja Turnsek, a front-end developer and designer blending clean code, thoughtful UX, and animated visuals with GSAP and Vite.'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1 class='h1-narrow'>Flowing Between <br /><em>Code</em> &amp; <em>Design</em></h1>
+      <p class='align-right-60' data-no-reveal>
+        Hi, I'm Katja!
+        <br />A
+        <strong>versatile developer</strong>
+        with a foundation in
+        <strong>art and design</strong>. I craft sleek, functional, and
+        <strong>visually striking</strong>
+        solutions—bold when needed, never excessive.
+      </p>
+      <div class='hire-section'>
+        <a href='./contact' class='hire-button' id='hireBtn'>HIRE ME</a>
+      </div>
+    </div>
+  </div>
+</section> <section
+  class='fullscreen-section'
+  id='work'
+  data-title='Work — Featured Projects | Katja Turnsek'
+  data-description='Selected case studies across web development, interaction design, and branding by front-end developer & designer Katja Turnsek.'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Work - Featured Projects</h1>
+      <h2>Digital &amp; Visual Creations</h2>
+    </div>
+
+    <!-- Web Development -->
+    <div class='section-label-left'><h3>Web Development</h3></div>
+    <div class='work-columns' id='dev-cards'></div>
+
+    <!-- Web & Interaction Design -->
+    <div class='section-label-right'><h3>Web &amp; Interaction Design</h3></div>
+    <div class='work-columns' id='design-cards'></div>
+
+    <!-- Graphic Design -->
+    <div class='section-label-left'><h3>Graphic Design</h3></div>
+    <div class='work-columns' id='logo-cards'></div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='/portfolio/'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Home</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-petart'
+  class='fullscreen-section'
+  data-title='Case Study: Pet Art With Heart — Web Development | Katja Turnsek'
+  data-description='Fast, accessible artist portfolio built with semantic HTML and custom CSS. Focus on performance, a11y, and SEO.'
+  data-case='petart'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web Development</h1>
+      <h2>Pet Art with Heart - Artist Portfolio Website</h2>
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> HTML | CSS</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='petart'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Pet Art With Heart sections'
+        data-auto='switcher'
+        data-case='petart'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To develop a
+        <strong>fast-loading</strong>,
+        <strong>SEO-friendly</strong>, and
+        <strong>fully responsive</strong>
+        portfolio website that supports a visual identity without overshadowing the artwork.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Development Focus</h3>
+            <ul class='bullet-list'>
+              <li>
+                Implemented a
+                <strong>responsive layout</strong>
+                using
+                <strong>semantic HTML</strong>
+                and custom CSS
+              </li>
+              <li>
+                Optimized for
+                <strong>performance</strong>
+                and
+                <strong>accessibility</strong>
+                across all screen sizes
+              </li>
+              <li>
+                Applied
+                <strong>SEO best practices</strong>, including structured content and
+                keyword-optimized copy
+              </li>
+              <li>
+                Integrated lightweight CSS-based animation in hero sections without using JavaScript
+                to keep load times fast
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/site-petart-600.webp'
+              data-src='site-petart-600.webp'
+              alt='Pet Art with Heart - homepage desktop view'
+            />
+            <figcaption class='work-caption'>Desktop version - Homepage</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/site-petartmobile-600.webp'
+              data-src='site-petartmobile-600.webp'
+              alt='Pet Art with Heart - homepage mobile view'
+            />
+            <figcaption class='work-caption'>Mobile version - Homepage and Menu</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li><strong>Fully responsive</strong> across devices</li>
+              <li>Fast performance and optimized load times</li>
+              <li><strong>Clean, semantic HTML</strong> structure</li>
+              <li><strong>SEO-optimized</strong> content and metadata</li>
+              <li>Minimal animation to maintain focus on artwork</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class='row'>
+        <h3>Reflection</h3>
+        <p>
+          This project strengthened my
+          <strong>front-end development skills</strong>, especially in building
+          <strong>fast and accessible websites from scratch</strong>. I focused on
+          <strong>technical performance</strong>
+          while ensuring the design remained
+          <strong>clean and user-friendly</strong>. It gave me hands-on experience balancing
+          creativity with coding best practices.
+        </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-portfolio'
+  class='fullscreen-section'
+  data-title='Case Study: Personal Portfolio — Web Development | Katja Turnsek'
+  data-description='Animated one-page portfolio built with GSAP and Vite; theme switching, responsive layout, and performance tuning.'
+  data-case='portfolio'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web Development</h1>
+      <h2>Personal Portfolio Site</h2>
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'>
+          <strong>Tools:</strong>
+          HTML | CSS | JavaScript | GSAP | Vite
+        </div>
+
+        <!-- Reusable component: Demo Links (JS injects links for this case) -->
+        <div class='demo-links' data-auto='demo' data-case='portfolio'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher (JS builds pills + highlights “Web Development”) -->
+      <nav
+        class='project-switcher'
+        aria-label='KT Portfolio sections'
+        data-auto='switcher'
+        data-case='portfolio'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To create a modern,
+        <strong>one-page portfolio</strong>
+        that merges development expertise with a creative,
+        <strong>adaptive identity</strong>
+        — inspired by the fluidity of design and code.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Development Focus</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built from scratch using
+                <strong>semantic HTML</strong>, modular SCSS, and JavaScript modules
+              </li>
+              <li>
+                Integrated
+                <strong>GSAP</strong>
+                to animate wave lines, page transitions, and blobs with organic motion
+              </li>
+              <li>
+                Configured
+                <strong>Vite</strong>
+                for fast builds, module handling, and optimized performance
+              </li>
+              <li>
+                Implemented theme switching (light/dark) with CSS variables and SVG logic
+              </li>
+              <li>Designed for mobile-first responsiveness and accessibility</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/site-portfolio-600.webp'
+              data-src='site-portfolio-600.webp'
+              alt='Katja Turnsek Portfolio - homepage desktop view'
+            />
+            <figcaption class='work-caption'>Desktop version - Homepage</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/site-portfoliomobile-600.webp'
+              data-src='site-portfoliomobile-600.webp'
+              alt='Katja Turnsek Portfolio - homepage mobile view'
+            />
+            <figcaption class='work-caption'>Mobile version - Homepage and Menu</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                <strong>Fully responsive layout</strong>
+                with adaptive section structure
+              </li>
+              <li>
+                <strong>Theme switcher (light/dark)</strong>
+                with matching assets and animations
+              </li>
+              <li>
+                Animated wave loader, dripping canvas headers, and gooey blob interaction
+              </li>
+              <li><strong>Scroll-triggered transitions with GSAP</strong></li>
+              <li>SEO-optimized structure and metadata</li>
+              <li>Typography mix: Montserrat (sans-serif) and Playfair Display (serif)</li>
+              <li>
+                <strong>Performance-optimized using Vite</strong>
+                and lazy loading for assets
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class='row'>
+        <h3>Reflection</h3>
+        <p>
+          This project allowed me to combine my design background with modern development tools to
+          express who I am — a
+          <strong>fluid, creative front-end developer</strong>. I challenged myself with SVG
+          animation, theme logic, performance optimization, and responsive layout, while maintaining
+          a clear and fun user experience. The result is a digital space that feels uniquely me:
+          bold, thoughtful, and a little playful.
+        </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-agilitybandits'
+  class='fullscreen-section'
+  data-title='Case Study: Agility Bandits Blog — Web Development | Katja Turnsek'
+  data-description='Responsive blog with Noroff API integration, admin authentication, and accessible UI patterns.'
+  data-case='agilitybandits'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web Development</h1>
+      <h2>Agility Bandits Centre Blog - Exam Project 1</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> HTML | CSS | JavaScript | API</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Agility Bandits sections'
+        data-auto='switcher'
+        data-case='agilitybandits'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To develop a
+        <strong>fully responsive blog</strong>
+        for a fictional dog agility training centre, integrating dynamic content from the
+        <strong>Noroff API</strong>, with an
+        <strong>admin login</strong>
+        system for content management.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Development Focus</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built with
+                <strong>semantic HTML</strong>, structured CSS, and vanilla JavaScript
+              </li>
+              <li>
+                Fetched and displayed posts dynamically from the
+                <strong>Noroff API</strong>
+              </li>
+              <li>
+                Implemented
+                <strong>login and registration</strong>
+                for admin content control
+              </li>
+              <li>Optimized for <strong>mobile-first</strong> responsive design</li>
+              <li>
+                Applied
+                <strong>accessibility</strong>
+                best practices for keyboard and screen reader users
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/site-agilitybandits-600.webp'
+              data-src='site-agilitybandits-600.webp'
+              alt='Agility Bandits Centre Blog - homepage desktop view'
+            />
+            <figcaption class='work-caption'>Desktop version - Blog Post</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/site-agilitybanditsmobile-600.webp'
+              data-src='site-agilitybanditsmobile-600.webp'
+              alt='Agility Bandits Centre Blog - mobile view'
+            />
+            <figcaption class='work-caption'>
+              Mobile version - Edit Blog Post and Homepage
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li><strong>Dynamic blog post loading</strong> via Noroff API</li>
+              <li><strong>Admin authentication</strong> for post creation and editing</li>
+              <li>Clean, responsive layout for all devices</li>
+              <li>
+                <strong>Accessible navigation</strong>
+                and headings for better usability
+              </li>
+              <li>Consistent branding with custom logo and agility-inspired graphics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class='row'>
+        <h3>Reflection</h3>
+        <p>
+          This project combined front-end development with real
+          <strong>API integration</strong>, giving me valuable experience in handling
+          <strong>dynamic content and authentication</strong>. I focused on a solid structure,
+          strong accessibility, and a
+          <strong>clean, user-friendly interface</strong>
+          that reflects the agility-themed brand.
+        </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section>
+      <section
+  id='case-semester-project-1'
+  class='fullscreen-section'
+  data-title='Semester Project 1 — Gemenskapet Science Museum | Katja Turnsek'
+  data-description='Mobile-first museum homepage—semantic HTML + modern CSS only; accessible nav, fast and responsive.'
+  data-case='semester-project-1'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web Development</h1>
+      <h2>Semester Project 1 - Gemenskapet Science Museum</h2>
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> HTML | CSS</div>
+
+        <!-- Reusable component: Demo Links (reads from projects.js by caseId) -->
+        <div class='demo-links' data-auto='demo' data-case='semester-project-1'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Gemenskapet Science Museum sections'
+        data-auto='switcher'
+        data-case='semester-project-1'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        Design a playful-yet-serious, homepage for older children and young teens—showcasing
+        exhibits and essential visitor info—built with
+        <strong>semantic HTML</strong>
+        and modern
+        <strong>CSS only</strong>.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Development Focus</h3>
+            <ul class='bullet-list'>
+              <li>Information architecture first: clear landmarks (header/nav/main/footer), logical
+                headings, skip link</li>
+              <li>Typography:
+                <strong>Avenir</strong>
+                site-wide for cohesiveness and readability (logo uses different fonts)</li>
+              <li>Color system:
+                <strong>yellow, green, and multi-hue blues</strong>
+                chosen from audience research</li>
+              <li>Shape language: rounded corners + generous spacing to feel friendly and inviting</li>
+              <li>Responsive layout with
+                <strong>CSS Grid/Flexbox</strong>
+                and fluid type scales</li>
+              <li>Accessibility: focus states, contrast-aware palette, descriptive labels/alt text</li>
+              <li>Performance: lean CSS, optimized images/WebP where possible, zero JavaScript</li>
+              <li>Planned in Figma (user flow, wireframes, mood board, style guide, prototypes)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/site-gemenskapet-science-museum-600.webp'
+              data-src='site-gemenskapet-science-museum-600.webp'
+              alt='Gemenskapet Science Museum — homepage desktop view'
+            />
+            <figcaption class='work-caption'>Desktop — Homepage</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/site-gemenskapet-science-museummobile-600.webp'
+              data-src='site-gemenskapet-science-museummobile-600.webp'
+              alt='Gemenskapet Science Museum — mobile homepage and menu'
+            />
+            <figcaption class='work-caption'>Mobile — Homepage &amp; Menu</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li>Fully responsive homepage</li>
+              <li>Clear IA for exhibits/events and visitor essentials (hours, pricing, map)</li>
+              <li>CSS-only components and interactions (no JS)</li>
+              <li>Consistent tone:
+                <strong>fun, inspiring, curious, exploratory, serious, colorful</strong></li>
+              <li>Uses school-provided imagery, optimized for fast load and clarity</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <h3>Reflection</h3>
+      <p>
+        I balanced a youthful look with museum credibility by pairing
+        <strong>Avenir</strong>
+        with a three-color palette (yellow, green, layered blues). Although I usually limit palettes
+        to one-two colors, this project achieved
+        <strong>harmony with three</strong>, which my teacher highlighted. Keeping the build
+        <strong>HTML/CSS-only</strong>
+        sharpened focus on structure, accessibility, and performance while still delivering a
+        lively, inviting interface.
+      </p>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-petart-design'
+  class='fullscreen-section'
+  data-title='Case Study: Pet Art With Heart — Web & Interaction Design | Katja Turnsek'
+  data-description='Figma mood board to responsive prototype; minimal identity that supports the artwork and clear UX.'
+  data-case='petart'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web &amp; Interaction Design</h1>
+      <h2>Pet Art With Heart - Visual Identity &amp; UX Design</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Figma</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='petart'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Pet Art With Heart sections'
+        data-auto='switcher'
+        data-case='petart'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Design Objective</h3>
+      <p>
+        To create a
+        <strong>visual identity system</strong>
+        for my artist portfolio that's
+        <strong>modern, clean</strong>, and allows the artwork to speak for itself. The focus was on
+        <strong>clarity</strong>, usability, and minimalism.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Process</h3>
+            <ul class='bullet-list'>
+              <li>
+                <strong>Research:</strong>
+                surveyed artist websites for structure and inspiration
+              </li>
+              <li>
+                <strong>Direction:</strong>
+                defined a visual system rooted in my artwork and selected colors
+              </li>
+              <li><strong>Messaging:</strong> keyword research to refine tone and copy</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/design-petartmoodboard-600.webp'
+              data-src='design-petartmoodboard-600.webp'
+              alt='Figma mood board for Pet Art with Heart showing colors, typography, and inspiration images'
+            />
+            <figcaption class='work-caption'>
+              Mood board - Figma exploration of colors, fonts, and visual inspiration for Pet Art
+              with Heart
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/design-petartprototype-600.webp'
+              data-src='design-petartprototype-600.webp'
+              alt='Figma prototype showing the desktop layout of the pet art with heart website'
+            />
+            <figcaption class='work-caption'>
+              Desktop version - Figma prototype of the Pet Art with Heart site layout
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li><strong>Fully responsive</strong> across devices</li>
+              <li>Fast performance and optimized load times</li>
+              <li>Clean, semantic HTML structure</li>
+              <li>SEO-optimized content and metadata</li>
+              <li>Minimal animation to maintain focus on artwork</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-left'>
+            <h3>Wireframing &amp; Mockups</h3>
+            <ul class='bullet-list'>
+              <li>
+                Planned for
+                <strong>minimal interaction</strong>
+                to support rather than distract from the content
+              </li>
+              <li>
+                Focused on
+                <strong>simplicity</strong>, contrast, and intuitive layout decisions
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-right'>
+            <h3>Interaction Design</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                Created user flows, mood boards, and responsive mockups in
+                <strong>Figma</strong>
+              </li>
+              <li>
+                Designed subtle hover states and a single, elegant
+                <strong>CSS animation</strong>
+                in hero sections
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Highlights</h3>
+            <ul class='bullet-list'>
+              <li><strong>Intuitive navigation</strong></li>
+              <li>Balanced visual storytelling</li>
+              <li>Consistent visual identity across pages</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/design-petartwireframes-900.webp'
+              data-src='design-petartwireframes-900.webp'
+              alt='Figma wire frames showing the desktop layout of the pet art with heart website'
+            />
+            <figcaption class='work-caption'>
+              Desktop version - Figma wire frames of Pet Art with Heart website
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class='row'>
+        <h3>Reflection</h3>
+        <p>
+          This project emphasized designing with intention—considering
+          <strong>user behavior</strong>,
+          <strong>visual hierarchy</strong>, and branding. It helped me structure a portfolio that's
+          not only visually appealing but also
+          <strong>user-focused</strong>, with interaction kept subtle to support the work.
+        </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-portfolio-design'
+  class='fullscreen-section'
+  data-title='Case Study: Personal Portfolio — Web & Interaction Design | Katja Turnsek'
+  data-description='Liquid-inspired visual identity, motion design, and UI prototyping for a sleek one-page portfolio.'
+  data-case='portfolio'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web &amp; Interaction Design</h1>
+      <h2>KT Portfolio - A Fluid, Animated Showcase of Design &amp; Code</h2>
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Figma | GSAP | CSS</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='portfolio'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='KT Portfolio sections'
+        data-auto='switcher'
+        data-case='portfolio'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Design Objective</h3>
+      <p>
+        To visually represent myself as a developer and designer who is
+        <strong>fluid, adaptive</strong>, and creatively driven. I wanted a
+        <strong>sleek, minimal</strong>
+        site that balances professional design with personality — calm and elegant, but playful and
+        unique.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Visual Language</h3>
+            <ul class='bullet-list'>
+              <li>
+                Developed a core theme of
+                <strong>water and movement</strong>
+                — “adaptive like liquid” — reflected in wave lines, animated blobs, and a custom
+                loader.
+              </li>
+              <li>
+                Chose a
+                <strong>calm yet energetic color palette</strong>
+                (teal, warm yellow, soft gray, near black) to communicate both professionalism and
+                personality.
+              </li>
+              <li>
+                Designed a
+                <strong>custom logo sketch</strong>
+                around splashes and my initials to reflect artistic roots.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/design-portfoliomoodboard-600.webp'
+              data-src='design-portfoliomoodboard-600.webp'
+              alt='Figma mood board for KT Portfolio showing colors, typography, and inspiration images'
+            />
+            <figcaption class='work-caption'>
+              Mood board - Figma exploration of colors, fonts, and visual inspiration for KT
+              Portfolio
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/design-ktportfolio-600.webp'
+              data-src='design-ktportfolio-600.webp'
+              alt='Figma prototype showing Wire framing layout of the Portfolio website'
+            />
+            <figcaption class='work-caption'>
+              Figma wire frame prototyping of the KT Portfolio site layout
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Figma Design &amp; Prototyping</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                Created
+                <strong>wireframes and mockups</strong>
+                for a single-page layout with interactive elements.
+              </li>
+              <li>
+                Carefully structured
+                <strong>typography</strong>
+                using a mix of Playfair Display and Montserrat for contrast and clarity.
+              </li>
+              <li>
+                Designed layout sections with soft,
+                <strong>flowing divisions</strong>
+                to support content without rigid boxes.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-left'>
+            <h3>Interaction Design</h3>
+            <ul class='bullet-list'>
+              <li>
+                Planned and scripted
+                <strong>multiple animations</strong>: blob hover-follow, dripping top wave, animated
+                loader line, section morph lines.
+              </li>
+              <li>
+                Built a
+                <strong>theme switcher</strong>
+                and responsive layout in Figma and code.
+              </li>
+              <li>
+                Kept transitions
+                <strong>subtle and meaningful</strong>
+                to create a modern, immersive experience.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-right'>
+            <h3>Design Highlights</h3>
+            <ul class='bullet-list-right'>
+              <li>Distinct <strong>liquid-inspired visual identity</strong></li>
+              <li>Cohesive animation system with shared organic motion</li>
+              <li><strong>Mobile-first</strong> and fully responsive layout</li>
+              <li>Balanced tone: clean and professional with playful touches</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Reflection</h3>
+            <p>
+              This project let me
+              <strong>merge design thinking and development</strong>
+              into one coherent identity. I approached the entire experience — from visuals to
+              interactivity — as an extension of myself. Every detail, from font pairing to animated
+              wave physics, was shaped with intention. The result is a personal yet professional
+              site that feels alive.
+            </p>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/design-portfoliogsap-600.webp'
+              data-src='design-portfoliogsap-600.webp'
+              alt='Image of GSAP animation JavaScript code'
+            />
+            <figcaption class='work-caption'>GSAP animation JavaScript code</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class='back-to-work-container'>
+        <a
+          href='./work'
+          class='label-link back-to-work-label'
+          data-action='back'
+          data-back-fallback='./work'
+          aria-label='Go back'
+        >
+          <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+          <span class='label-text'>Back to Work</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section> <section
+  id='case-agilitybandits-design'
+  class='fullscreen-section'
+  data-title='Case Study: Agility Bandits Blog — Web & Interaction Design | Katja Turnsek'
+  data-description='Agility-themed branding, responsive grid, and API-aware layouts designed for clarity and speed.'
+  data-case='agilitybandits'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web &amp; Interaction Design</h1>
+      <h2>Agility Bandits Blog - Design &amp; API Integration</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Figma | JavaScript | API | CSS</div>
+
+        <!-- Auto-filled demo links from projects.js -->
+        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Auto-filled project variant pill links -->
+      <nav
+        class='project-switcher'
+        aria-label='Agility Bandits sections'
+        data-auto='switcher'
+        data-case='agilitybandits'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Design Objective</h3>
+      <p>
+        To create a
+        <strong>modern, user-friendly blog</strong>
+        for a fictional dog agility training centre. The design needed to integrate
+        <strong>dynamic API-driven content</strong>
+        while maintaining a visually engaging, agility-themed style.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Visual Language</h3>
+            <ul class='bullet-list'>
+              <li>Clean, approachable layout with a focus on
+                <strong>readability and usability</strong>.</li>
+              <li><strong>Agility-inspired branding</strong>
+                using speed lines, obstacle icons, and motion cues.</li>
+              <li>Bold, energetic color palette to reflect the sport's fast-paced nature.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              data-src='design-agilitybanditsmoodboard-600.webp'
+              data-path='assets/images'
+              alt='Figma mood board for Agility Bandits Centre Blog'
+            />
+            <figcaption class='work-caption'>
+              Mood board — colors, typography, and agility-themed elements
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              data-src='design-agilitybandits-600.webp'
+              data-path='assets/images'
+              alt='Figma prototype of Agility Bandits Centre Blog layout'
+            />
+            <figcaption class='work-caption'>
+              Figma wireframes &amp; prototypes for desktop
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Figma Design &amp; Prototyping</h3>
+            <ul class='bullet-list-right'>
+              <li>Wireframes for homepage, article pages, and
+                <strong>admin login/register</strong>.</li>
+              <li><strong>Flexible content blocks</strong> designed to adapt to API content.</li>
+              <li><strong>Responsive layouts</strong> tested across multiple breakpoints.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-left'>
+            <h3>Interaction Design</h3>
+            <ul class='bullet-list'>
+              <li>Designed
+                <strong>intuitive user flows</strong>
+                from browsing to reading to admin tasks.</li>
+              <li>Interactive hover/focus states and smooth menu transitions.</li>
+              <li>Fully
+                <strong>accessible interface</strong>
+                for keyboard and screen reader users.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-right'>
+            <h3>Design Highlights</h3>
+            <ul class='bullet-list-right'>
+              <li><strong>API-powered content</strong> integration</li>
+              <li>Custom agility-themed graphics and logo</li>
+              <li><strong>Responsive grid</strong> and clear typography</li>
+              <li><strong>Brand consistency</strong> from logo to UI elements</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Reflection</h3>
+            <p>
+              This project allowed me to design with
+              <strong>API-driven content</strong>
+              in mind from the start. Working from concept to Figma prototype to functional build
+              provided a
+              <strong>full end-to-end workflow</strong>. The
+              <strong>agility-themed branding</strong>
+              tied everything together, making the site visually distinct and aligned with its
+              fictional audience.
+            </p>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              data-src='design-agilitybanditsapi-600.webp'
+              data-path='assets/images'
+              alt='JavaScript API integration code for Agility Bandits Blog'
+            />
+            <figcaption class='work-caption'>JavaScript code integrating the Noroff API</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='/portfolio/work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-semester-project-1-design'
+  class='fullscreen-section'
+  data-title='Case Study: Semester Project 1 — Web & Interaction Design | Katja Turnsek'
+  data-description='Museum identity & UI—yellow/green/blues palette, Avenir type, rounded components; playful yet credible.'
+  data-case='semester-project-1'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web &amp; Interaction Design</h1>
+      <h2>Semester Project 1 - UI Design</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Figma</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='semester-project-1'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Gemenskapet Science Museum sections'
+        data-auto='switcher'
+        data-case='semester-project-1'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Design Objective</h3>
+      <p>
+        Create a
+        <strong>playful yet credible</strong>
+        identity and UI for older children and young teens—supporting curiosity, exploration, and
+        discovery—while keeping the interface clear, accessible, and easy to navigate.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Process</h3>
+            <ul class='bullet-list'>
+              <li><strong>Research:</strong>
+                studied youth-focused museum/education sites and age-appropriate color/type.</li>
+              <li><strong>Direction:</strong>
+                defined style keywords - fun, youthful, inspiring, curiosity, explore, discovery,
+                serious, colorful.</li>
+              <li><strong>System:</strong>
+                three-color palette (bright yellow, green, multi-hue blues) + rounded components.</li>
+              <li><strong>Typography:</strong>
+                standardized on
+                <em>Avenir</em>
+                for cohesive, readable UI (logo uses complementary display fonts).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/design-gemenskapet-science-museumboard-600.webp'
+              data-src='design-gemenskapet-science-museumboard-600.webp'
+              alt='Figma mood board for Gemenskapet Science Museum'
+            />
+            <figcaption class='work-caption'>
+              Mood board - palette, typography, playful/serious balance
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/design-gemenskapet-science-museum-600.webp'
+              data-src='design-gemenskapet-science-museum-600.webp'
+              alt='Figma UI frames and responsive prototypes for Gemenskapet Science Museum'
+            />
+            <figcaption class='work-caption'>
+              Figma wireframes &amp; responsive prototypes
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li><strong>Avenir</strong> typography for cohesion and readability</li>
+              <li>Rounded cards/buttons for a friendly, inviting tone</li>
+              <li>Color hierarchy with yellow/green/blues for emphasis</li>
+              <li>Clear IA for exhibits, events, and visitor essentials</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-left'>
+            <h3>Wireframing &amp; Mockups</h3>
+            <ul class='bullet-list'>
+              <li>User flows, wireframes, style guide, and responsive mockups in
+                <strong>Figma</strong>.</li>
+              <li>Mobile-first layouts validated across multiple breakpoints.</li>
+              <li>Components documented for consistency and reuse.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-right'>
+            <h3>Interaction Design</h3>
+            <ul class='bullet-list-right'>
+              <li>Subtle hover/focus states that support wayfinding.</li>
+              <li>Accessible patterns (focus outlines, labels, alt text).</li>
+              <li>Simple, readable transitions—clarity over embellishment.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Highlights</h3>
+            <ul class='bullet-list'>
+              <li>Balanced <strong>three-color palette</strong> noted positively by the teacher</li>
+              <li>Brand-to-UI continuity from logo to components</li>
+              <li>Friendly shape language without losing museum credibility</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/design-science-museum-wireframes-600.webp'
+              data-src='design-science-museum-wireframes-300.webp'
+              alt='Gemenskapet Science Museum wireframes in Figma'
+            />
+            <figcaption class='work-caption'>Science Museum Wireframes</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class='row'>
+        <h3>Reflection</h3>
+        <p>
+          Using three colors instead of the usual one-two created
+          <strong>energy and variety</strong>
+          without sacrificing harmony-feedback that was
+          <strong>positively noted by my teacher</strong>. Centering the system on Avenir and
+          rounded components kept the experience
+          <strong>youthful, accessible, and trustworthy</strong>. From research and user flows to
+          prototypes, the design invites curiosity while staying practical and easy to use.
+        </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-petart-logotype'
+  class='fullscreen-section'
+  data-title='Case Study: Pet Art With Heart — Logo Design | Katja Turnsek'
+  data-description='Hand-drawn pet-centric symbol refined in Illustrator; warm, approachable identity system.'
+  data-case='petart'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Graphic Design</h1>
+      <h2>Pet Art With Heart - Emotionally Inspired Logo Design</h2>
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='petart'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Pet Art With Heart sections'
+        data-auto='switcher'
+        data-case='petart'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To design a logo that communicates both
+        <strong>elegance and emotional depth</strong>—capturing the heart behind the name Pet Art
+        with Heart while visually reflecting the brand's warmth and artistic style.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Creation</h3>
+            <ul class='bullet-list'>
+              <li>
+                Developed a
+                <strong>hand-drawn icon</strong>
+                combining a dog and cat forming both a heart and an artist's palette
+              </li>
+              <li>
+                Paired the symbol with a
+                <strong>classic serif typeface</strong>
+                to evoke trust and sophistication
+              </li>
+              <li>
+                Selected a
+                <strong>soft, calming color palette</strong>
+                inspired by the tones most frequently used in my oil paintings
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/design-petartlogosuite-600.webp'
+              data-src='design-petartlogosuite-600.webp'
+              alt='Pet Art with Heart Logo Suite Variations'
+            />
+            <figcaption class='work-caption'>
+              Logo Suite Variations - Pet Art with Heart
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/logo-sketch-petart-900.webp'
+              data-src='logo-sketch-petart-900.webp'
+              alt='Pet Art with Heart - Logo Design'
+            />
+            <figcaption class='work-caption'>Sketch and Logotype design - Pet Art with Heart</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Thinking</h3>
+            <p>
+              Born from a
+              <strong>mood board</strong>, the redesign aimed for a
+              <strong>simplified, emotional symbol</strong>
+              with rounded, organic shapes for approachability. It began as a
+              <strong>pencil sketch</strong>, then was
+              <strong>refined in Adobe Illustrator</strong>
+              to balance softness with precision, retaining a
+              <strong>serif typeface</strong>
+              for timeless continuity.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class='row'>
+        <h3>Takeaway</h3>
+        <p>
+          This logo project allowed me to bridge my fine art skills with graphic design principles.
+          From sketching by hand to refining the final logo digitally, I focused on visual
+          storytelling and emotional connection. The end result is a logo that feels both
+          <strong>artistically expressive and professionally crafted</strong>, embodying the heart
+          and soul of my pet portrait brand.
+        </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-portfolio-logotype'
+  class='fullscreen-section'
+  data-title='Case Study: Personal Portfolio — Logo Design | Katja Turnsek'
+  data-description='Initials-based KT splash mark for a fluid, scalable brand identity across web and print.'
+  data-case='portfolio'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Graphic Design</h1>
+      <h2>Personal Logotype - A Fluid Identity for a Fluid Designer</h2>
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'>
+          <strong>Tools:</strong>
+          Adobe Illustrator | Pencil and Paper
+        </div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='portfolio'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher  -->
+      <nav
+        class='project-switcher'
+        aria-label='KT Portfolio sections'
+        data-auto='switcher'
+        data-case='portfolio'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To design a personal logotype that reflects my
+        <strong>adaptive design philosophy</strong>
+        and ties into the portfolio's
+        <strong>“liquid” identity</strong>. The goal was a
+        <strong>memorable, ownable symbol</strong>
+        rooted in hand-drawn expression and modern minimalism.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Creation</h3>
+            <ul class='bullet-list'>
+              <li>Sketched
+                <strong>hand-drawn iterations</strong>
+                to explore fluid shapes and initials</li>
+              <li>Chose the
+                <strong>splash motif</strong>
+                to represent adaptability, creativity, and movement</li>
+              <li>Used my initials
+                <strong>“KT”</strong>
+                as the foundation for a bold, personal mark</li>
+              <li>Finalized the logotype in
+                <strong>Illustrator</strong>, simplifying shapes while retaining organic energy</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/logo-ktportfolio-600.webp'
+              data-src='logo-ktportfolio-600.webp'
+              alt='KT Dev sketch to Vector based Logotype'
+            />
+            <figcaption class='work-caption'>Logotype Design - Katja Dev Portfolio</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/design-portfoliologosuite-600.webp'
+              data-src='design-portfoliologosuite-600.webp'
+              alt='KT Dev - Logo Design'
+            />
+            <figcaption class='work-caption'>Logo Suite Variations - KT DEV</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Thinking</h3>
+            <p>
+              The shape recalls a splash of ink—aligning with the portfolio's
+              <strong>fluid visual concept</strong>. It's a personal emblem and a
+              <strong>scalable brand identity</strong>
+              for digital and print.
+            </p>
+            <p>
+              Starting with
+              <strong>pencil sketches</strong>, I explored form and
+              <strong>negative space</strong>. The result suggests creativity in motion—echoing
+              animated blobs and wave lines—and ties the identity together.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class='row'>
+        <h3>Takeaway</h3>
+        <p>
+          This project blends
+          <strong>analog techniques with vector precision</strong>. The logo is more than a
+          signature—it reflects how I work:
+          <strong>flexible, fluid</strong>, and creatively hands-on.
+        </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-agilitybandits-logotype'
+  class='fullscreen-section'
+  data-title='Case Study: Agility Bandits — Logo & Graphics | Katja Turnsek'
+  data-description='Character-driven mark and motion-centric graphics for a dog agility brand; variants for light/dark and print.'
+  data-case='agilitybandits'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Graphic Design</h1>
+      <h2>Agility Bandits - Logotype &amp; Motion-Themed Graphic Elements</h2>
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <nav
+        class='project-switcher'
+        aria-label='Agility Bandits sections'
+        data-auto='switcher'
+        data-case='agilitybandits'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        Create a
+        <strong>bold, playful identity</strong>
+        for a dog agility brand and blog. The logotype originated on my
+        <strong>agility-themed Instagram</strong>
+        and was adapted for the website, aligning with the site's green color. The dog illustration
+        retains its natural colors to keep the character (<strong>Roi, my red &amp; white Border
+          Collie</strong>) authentic.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Creation</h3>
+            <ul class='bullet-list'>
+              <li>
+                <strong>Vector portrait</strong>
+                in Adobe Illustrator of a red &amp; white Border Collie (Roi) wearing a
+                <strong>bandit-style eye mask</strong>
+                with eye holes.
+              </li>
+              <li>
+                <strong>Wordmark “Agility Bandits”</strong>
+                set in a Western-style display type to echo the outlaw theme while staying readable
+                at small sizes.
+              </li>
+              <li>
+                <strong>Brand palette</strong>
+                pairs with the website; only the dog illustration uses natural fur colors for
+                personality and contrast.
+              </li>
+              <li>
+                Designed as a
+                <strong>flexible system</strong>: full lockup (dog + wordmark), horizontal lockup,
+                and icon-only (mask/head) for small spaces.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='../assets/images/logo-agilitybandits-600.webp'
+              data-src='../assets/images/logo-agilitybandits-600.webp'
+              alt='Agility Bandits logotype: red & white Border Collie with bandit eye mask above a Western-style wordmark'
+            />
+            <figcaption class='work-caption'>
+              Primary Logotype — Dog portrait with bandit mask and Western wordmark
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='../assets/images/design-agilitybandits-elements-600.webp'
+              data-src='../assets/images/design-agilitybandits-elements-600.webp'
+              alt='Agility Bandits speed lines and falling agility obstacle vector graphics'
+            />
+            <figcaption class='work-caption'>
+              Graphic Elements - Speed lines and falling agility obstacles
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Motion Graphics: Speed Lines &amp; Obstacles</h3>
+            <ul class='bullet-list'>
+              <li>
+                Custom vector
+                <strong>speed lines</strong>
+                to communicate pace and direction; tuned angles and spacing for a sense of
+                acceleration.
+              </li>
+              <li>
+                Agility jumping
+                <strong>obstacles tipping/falling</strong>
+                to capture the chaotic fun of a dog “crashing” a jump.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Usage &amp; System</h3>
+            <ul class='bullet-list'>
+              <li>
+                <strong>Color mapping:</strong>
+                logotype integrates with site light green; the dog portrait preserves natural colors
+                for contrast.
+              </li>
+              <li>
+                <strong>Variants:</strong>
+                prepared for light/dark backgrounds and single-color print applications.
+              </li>
+              <li>
+                <strong>Originally Instagram-first;</strong>
+                extended into a cohesive website identity without losing the playful tone.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='../assets/images/graphics-agilitybandits-elements-600.webp'
+              data-src='../assets/images/graphics-agilitybandits-elements-600.webp'
+              alt='Agility Bandits logotype and graphics applied on website'
+            />
+            <figcaption class='work-caption'>
+              Applications — Website header and footer
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <h3>Takeaway</h3>
+      <p>
+        A
+        <strong>character-driven mark</strong>
+        (Roi with the bandit mask) paired with
+        <strong>motion-centric graphics</strong>
+        creates a fun, recognizable identity. The
+        <strong>Western-style wordmark</strong>
+        and agility-themed elements give the brand a distinct voice that scales from social to web
+        UI without losing clarity or energy.
+      </p>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-semester-project-1-logotype'
+  class='fullscreen-section'
+  data-title='Case Study: Gemenskapet Science Museum — Logo Design | Katja Turnsek'
+  data-description='Science-led, curiosity-driven magnifying-glass logo for a youth science museum.'
+  data-case='semester-project-1'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Graphic Design</h1>
+      <h2>Gemenskapet Science Museum - Magnifying-Glass Logotype</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='semester-project-1'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Gemenskapet Science Museum sections'
+        data-auto='switcher'
+        data-case='semester-project-1'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        Design a mark that balances
+        <strong>playfulness and credibility</strong>
+        for older children and young teens. The logo should spark
+        <strong>curiosity</strong>
+        and signal “science,” while remaining
+        <strong>clear, scalable,</strong>
+        and easy to apply across web and print.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Creation</h3>
+            <ul class='bullet-list'>
+              <li>
+                Central motif: a
+                <strong>magnifying glass</strong>—a universal symbol of
+                <strong>exploration</strong>
+                and learning.
+              </li>
+              <li>
+                Lens divided into curved segments in
+                <strong>yellow, green, and layered blues</strong>
+                with simple science glyphs (molecule, atom, hex/network) for
+                chemistry/physics/systems.
+              </li>
+              <li>
+                Arced handwritten tagline
+                <em>“utforska tillsammans :)”</em>
+                adds warmth and a kid-friendly tone.
+              </li>
+              <li>
+                Wordmark in a serious, readable sans (<strong>Avenir</strong>
+                family) to ground the playful mark.
+              </li>
+              <li>
+                Rounded geometry and careful contrast keep the identity
+                <strong>approachable</strong>
+                yet
+                <strong>trustworthy</strong>.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='assets/images/logosuite-gemenskapet-science-museum-900.webp'
+              data-src='assets/images/logosuite-gemenskapet-science-museum-900.webp'
+              alt='Gemenskapet Science Museum logotype with magnifying glass and wordmark'
+            />
+            <figcaption class='work-caption'>Primary logotype — full lockup</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='assets/images/icon-gemenskapet-science-museum-600.webp'
+              data-src='assets/images/icon-gemenskapet-science-museum-600.webp'
+              alt='Gemenskapet Science Museum standalone magnifying-glass icon'
+            />
+            <figcaption class='work-caption'>Icon — standalone symbol</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Thinking</h3>
+            <p>
+              The mark was refined in
+              <strong>Adobe Illustrator</strong>
+              with attention to
+              <strong>legibility at small sizes</strong>, consistent stroke/curve logic, and
+              spacing. Variants include
+              <strong>one-color</strong>
+              and
+              <strong>reversed</strong>
+              versions for dark backgrounds, plus guidance for
+              <strong>clear space</strong>
+              and minimum sizes.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class='row'>
+        <h3>Takeaway</h3>
+        <p>
+          The result is a
+          <strong>science-led, curiosity-driven</strong>
+          identity that feels youthful without losing museum credibility. It scales cleanly from
+          favicon/icon to full lockup and maintains a consistent voice across web and print.
+        </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='./work'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='./work'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  class='fullscreen-section'
+  id='about'
+  data-title='About — Katja Turnsek | Front-End Developer & Designer'
+  data-description='Background, skills, and approach to building clean, accessible interfaces with modern JavaScript, CSS, and thoughtful UX.'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>About</h1>
+      <h2>Shaping the Web with Fluid Creativity</h2>
+      <p class='align-right-60'>
+        I'm a
+        <strong>front-end developer and designer</strong>
+        who pairs clear design with clean, reliable code. The goal is simple: interfaces that feel
+        <strong>intuitive</strong>,
+        <strong>accessible</strong>, and a little bit
+        <strong>delightful</strong>.
+      </p>
+    </div>
+
+    <div class='row'>
+      <h3>My Story</h3>
+      <p>
+        I come from a
+        <strong>visual background</strong>
+        - illustration, branding, and UI — and I bring that eye for clarity into my code. These days
+        I work with
+        <strong>semantic HTML</strong>,
+        <strong>modern CSS</strong>, and
+        <strong>JavaScript modules</strong>, connecting interfaces to real data using
+        <strong>Fetch/API</strong>
+        patterns. I like interfaces that feel effortless:
+        <strong>simple hierarchy</strong>, meaningful micro-interactions, and layouts that adapt
+        like water.
+      </p>
+      <p>
+        I'm currently studying front-end development at Noroff and consolidating my skills through
+        portfolio projects:
+        <strong>responsive layouts</strong>,
+        <strong>Vanilla JavaScript</strong>, and
+        <strong>API integrations</strong>. My goal is to keep shipping small, well-made things -
+        <strong>learn, refine, repeat</strong>.
+      </p>
+      <p>
+        Outside of code, I paint
+        <strong>fine-art pet portraits</strong>
+        in oils and sketch logos &amp; UI icons. That crossover keeps my work grounded in craft -
+        whether I'm shaping pixels or paint, the goal is the same:
+        <strong>simple</strong>,
+        <strong>usable</strong>, and
+        <strong>human</strong>.
+      </p>
+    </div>
+
+    <div class='row'>
+      <h3>Skills at a Glance</h3>
+    </div>
+
+    <div class='animated-bars'>
+      <div class='bar-stack'>
+        <div class='bar bar-bg'></div>
+        <div class='bar bar-1'><span class='bar-label'>DESIGN &amp; PROTOTYPING</span></div>
+      </div>
+      <div class='bar-stack'>
+        <div class='bar bar-bg'></div>
+        <div class='bar bar-2'><span class='bar-label'>WEB DEVELOPMENT</span></div>
+      </div>
+      <div class='bar-stack'>
+        <div class='bar bar-bg'></div>
+        <div class='bar bar-3'><span class='bar-label'>GRAPHIC DESIGN</span></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='demo-links'>
+        <a
+          href='/portfolio/assets/pdf/Katja_Turnsek_FrontEnd_Designer_CV.pdf'
+          target='_blank'
+          class='label-link online-demo-label'
+          rel='noopener'
+        >
+          <span class='label-text'>Download CV (PDF)</span>
+          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
+        </a>
+        <a
+          href='https://github.com/KatjaTurnsek'
+          target='_blank'
+          class='label-link online-demo-label'
+          rel='noopener'
+        >
+          <span class='label-text'>View GitHub</span>
+          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
+        </a>
+        <a href='/contact' class='label-link online-demo-label' aria-label='Go to contact section'>
+          <span class='label-text'>Contact Me</span>
+          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <section class='testimonial-section'>
+    <div class='testimonial'>
+      <div class='testimonial-label'>
+        <i class='fa-solid fa-arrow-down arrow-icon' aria-hidden='true'></i>
+        <h3 class='label-text'>Testimonials</h3>
+      </div>
+      <div class='circle-button'>
+        <i class='fa-regular fa-comment' aria-hidden='true'></i>
+      </div>
+    </div>
+  </section>
+
+  <div class='rows'>
+    <div class='row'>
+      <figure class='testimonial-card'>
+        <blockquote>
+          “Katja is that rare designer-developer who brings clarity to both the Figma file and the
+          codebase. She asks smart questions, keeps accessibility and performance front-of-mind, and
+          uses motion only when it improves the experience. Our API-driven launch shipped on time
+          and looked better than the mockups.”
+        </blockquote>
+        <figcaption>
+          <span class='author'>Maria Lundqvist</span>
+          <span class='role'>Product Manager, Aurora Digital</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/'
+        class='label-link back-to-work-label'
+        data-action='back'
+        data-back-fallback='/'
+        aria-label='Go back'
+      >
+        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <span class='label-text'>Back to Home</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  class='fullscreen-section'
+  id='contact'
+  data-title='Contact — Work with Katja Turnsek'
+  data-description='Get in touch about freelance projects or front-end roles. Email contact@katjadev.com or use the form.'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Contact</h1>
+      <h2>Let's create something great together!</h2>
+      <p class='align-right-60'>
+        Whether you're looking for a creative mind to join your team or need a freelancer for your
+        next project, I'd love to hear from you.
+      </p>
+    </div>
+
+    <div class='row'>
+      <p class='info-text'>Email contact@katjadev.com or use the form</p>
+
+      <div class='contact-form-wrapper'>
+        <form
+          class='contact-form'
+          action='https://formsubmit.co/contact@katjadev.com'
+          method='POST'
+        >
+          <input type='hidden' name='_captcha' value='false' />
+          <input type='hidden' name='_next' value='https://katjadev.com#thank-you' />
+
+          <div class='name-row'>
+            <div class='form-group'>
+              <label for='first-name'>First Name</label>
+              <input
+                type='text'
+                id='first-name'
+                name='first-name'
+                autocomplete='given-name'
+                required
+              />
+            </div>
+            <div class='form-group'>
+              <label for='last-name'>Last Name</label>
+              <input
+                type='text'
+                id='last-name'
+                name='last-name'
+                autocomplete='family-name'
+                required
+              />
+            </div>
+          </div>
+
+          <div class='form-group full-width'>
+            <label for='email'>Email</label>
+            <input type='email' id='email' name='email' autocomplete='email' required />
+          </div>
+
+          <div class='form-group full-width'>
+            <label for='message'>Message</label>
+            <textarea id='message' name='message' rows='4' autocomplete='off' required></textarea>
+          </div>
+
+          <div class='button-wrapper'>
+            <button type='submit' class='submit-button'>
+              Send
+              <i class='fa-solid fa-arrow-right-long' aria-hidden='true'></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section> <section
+  class='fullscreen-section'
+  id='thank-you'
+  data-title='Thank You — Message Sent | Katja Turnsek'
+  data-description='Thanks for your message — I’ll get back to you as soon as possible.'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Thank You!</h1>
+      <p>Your message has been sent successfully. I'll get back to you as soon as possible.</p>
+
+      <div class='back-to-work-container'>
+        <a
+          href='./'
+          class='label-link back-to-work-label'
+          data-action='back'
+          data-back-fallback='./'
+          aria-label='Go back'
+        >
+          <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+          <span class='label-text'>Back to Home</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+    </main>
+
+    <footer>
+      <div class='footer-left'>
+        <a
+          href='https://www.linkedin.com/in/katja-turnsek-943a45328/'
+          rel='noopener noreferrer'
+          target='_blank'
+        >LinkedIn</a>
+      </div>
+      <div class='footer-right'>
+        <p>&copy; 2025</p>
+      </div>
+    </footer>
   </body>
 </html>
