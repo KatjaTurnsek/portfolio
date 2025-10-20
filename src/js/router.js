@@ -1,4 +1,4 @@
-import './gh-redirect.js';
+//import './gh-redirect.js';
 
 /**
  * History-API router with clean, crawlable paths.
