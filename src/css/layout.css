@@ -92,21 +92,20 @@ header {
 header::before {
   content: '';
   position: absolute;
-  top: 0; /* start at page top */
+  top: 0;
   left: 0;
   right: 0;
   height: var(--waves-h);
   pointer-events: none;
   z-index: 0;
 
-  /* layer 1 (SVG on top), layer 2 (WebP underneath) */
   background-repeat: no-repeat, no-repeat;
   background-position:
     top center,
-    /* SVG pinned to top */ top center; /* WebP pinned to top */
+    top center;
   background-size:
     100% auto,
-    /* SVG: full width, natural height */ cover; /* WebP: fill/cover area underneath */
+    cover;
 
   background-image:
     url('/assets/images/vector-waves-light.svg'), url('/assets/images/waves-light.webp');
@@ -135,7 +134,6 @@ header > * {
   gap: 20px;
 }
 
-/* Theme toggle — INLINE next to hamburger (no absolute offsets) */
 #theme-toggle {
   position: relative;
   z-index: 1;
@@ -189,7 +187,6 @@ main {
   min-height: 100vh;
 }
 
-/* Space the first section below the header wave */
 main > .fullscreen-section:first-child {
   padding-top: var(--first-section-pad);
 }
@@ -311,7 +308,7 @@ footer {
 .fullscreen-menu::before {
   content: '';
   position: absolute;
-  top: 0; /* start at top */
+  top: 0;
   left: 0;
   right: 0;
   height: var(--waves-h);
@@ -324,7 +321,7 @@ footer {
     top center;
   background-size:
     100% auto,
-    /* SVG full width, natural height */ cover; /* WebP covers area */
+    cover;
 
   background-image:
     url('/assets/images/vector-waves-light.svg'), url('/assets/images/waves-light.webp');
@@ -335,7 +332,6 @@ footer {
     url('/assets/images/vector-waves-dark.svg'), url('/assets/images/waves-dark.webp');
 }
 
-/* keep menu content above its background */
 .fullscreen-menu > * {
   position: relative;
   z-index: 1;
@@ -641,7 +637,6 @@ footer {
     --menu-toggle-size: 40px;
     --menu-padding: 120px 60px;
 
-    /* waves on mobile */
     --waves-h-min: 120px;
     --waves-h-vw: 28vw;
     --waves-h-max: 380px;
@@ -652,7 +647,6 @@ footer {
     padding-inline: var(--page-gutter);
   }
 
-  /* switcher stays inline next to hamburger on mobile too */
   #theme-toggle {
     width: 55px;
     height: 27px;

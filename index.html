@@ -2,12 +2,13 @@
 <html lang="en">
   <head>
     {{> head }}
-    <base href="{{baseHref}}" />
   </head>
+
   <body class="light-theme">
+    <!-- Top wave host -->
     <div class="top-waves"></div>
 
-    <!-- Gooey blobs background -->
+    <!-- Gooey blobs background (only one copy across the whole site) -->
     <div class="morphing-blob-wrapper" aria-hidden="true">
       <svg
         id="blob-svg"
@@ -43,6 +44,6 @@
 
     {{> footer }}
 
-    <script type="module" src="src/js/index.js"></script>
+    <script type="module" src="/src/js/index.js"></script>
   </body>
 </html>

@@ -5,9 +5,8 @@
 <title>{{site.title}}</title>
 <meta name='description' content='{{site.description}}' />
 
+<!-- Crucial: makes all relative URLs resolve under / or /portfolio/ -->
 <base href='{{baseHref}}' />
-
-<link rel='stylesheet' href='{{baseHref}}src/css/main.css' />
 
 <link
   rel='stylesheet'
@@ -17,6 +16,7 @@
   referrerpolicy='no-referrer'
 />
 
+<!-- Preload header/menu wave layers (public/ assets; base-aware) -->
 <link
   rel='preload'
   as='image'
@@ -44,4 +44,8 @@
   media='(prefers-color-scheme: dark)'
 />
 
+<!-- Favicon / icons (optional but recommended) -->
+<link rel='icon' href='{{baseHref}}assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
+
+<!-- Canonical points to the base (safe for GH Pages paths) -->
 <link rel='canonical' href='{{baseHref}}' />

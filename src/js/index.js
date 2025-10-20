@@ -6,6 +6,11 @@
  * - Loader show/hide + visuals (respects reduced-motion)
  */
 
+const baseFromTag = document.querySelector('base')?.getAttribute('href') || '/';
+const baseFromVite = import.meta?.env?.BASE_URL || '/';
+window.__BASE_URL__ = (baseFromTag || baseFromVite).replace(/\/?$/, '/');
+
+import '../css/main.css';
 import './router.js';
 window.__routerActive = true;
 

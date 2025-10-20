@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <title>Redirecting…</title>
-    <meta http-equiv="refresh" content="0; url=./" />
+    <meta http-equiv="refresh" content="0; url=/portfolio/" />
     <script>
       (function () {
-        var dest =
-          './' +
+        const dest =
+          '/portfolio/' +
           (location.pathname + location.search + location.hash)
             .replace(/^\/+/, '')
             .replace(/^portfolio\/?/, '');
         sessionStorage.setItem('gh_redirect', dest);
-        location.replace('./');
+        location.replace('/portfolio/');
       })();
     </script>
   </head>

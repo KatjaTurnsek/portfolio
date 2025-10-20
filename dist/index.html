@@ -8,9 +8,8 @@
     <title>Katja Turnsek - Front-End Developer &amp; Designer | Portfolio Website</title>
     <meta name='description' content='Creative front-end developer with a background in art and design. Explore a fluid, modern portfolio featuring interactive animations, custom code, and thoughtful UX — built with HTML, CSS, JavaScript, GSAP, and Vite.' />
     
+    <!-- Crucial: makes all relative URLs resolve under / or /portfolio/ -->
     <base href='/portfolio/' />
-    
-    <link rel='stylesheet' href='/portfolio/src/css/main.css' />
     
     <link
       rel='stylesheet'
@@ -20,6 +19,7 @@
       referrerpolicy='no-referrer'
     />
     
+    <!-- Preload header/menu wave layers (public/ assets; base-aware) -->
     <link
       rel='preload'
       as='image'
@@ -47,13 +47,19 @@
       media='(prefers-color-scheme: dark)'
     />
     
-    <link rel='canonical' href='/portfolio/' />    <base href="/portfolio/" />
-    <script type="module" crossorigin src="/portfolio/assets/index-DWyX5s3P.js"></script>
+    <!-- Favicon / icons (optional but recommended) -->
+    <link rel='icon' href='/portfolio/assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
+    
+    <!-- Canonical points to the base (safe for GH Pages paths) -->
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-B4Srff66.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-C8vQ4g-9.css">
   </head>
+
   <body class="light-theme">
+    <!-- Top wave host -->
     <div class="top-waves"></div>
 
-    <!-- Gooey blobs background -->
+    <!-- Gooey blobs background (only one copy across the whole site) -->
     <div class="morphing-blob-wrapper" aria-hidden="true">
       <svg
         id="blob-svg"
@@ -81,14 +87,13 @@
   <div class='header-left'>
     <a href='/portfolio/'>
       <img
-        src='/portfolio/assets/logo-katjadev-dark.svg'
+        src='/portfolio/assets/images/logo-katjadev-dark.svg'
         alt='Katja Dev Logo'
         class='site-logo logo'
         loading='eager'
       />
     </a>
   </div>
-
   <div class='header-controls'>
     <button id='theme-toggle' class='theme-switcher' aria-label='Toggle Theme'></button>
     <button class='menu-toggle' id='menuToggle' aria-label='Toggle menu'>
@@ -96,16 +101,15 @@
     </button>
   </div>
 </header> <div class='fullscreen-menu' id='menu' role='dialog' aria-modal='true'>
-
   <div
     class='menu-waves'
-    data-light-src='/portfolio/assets/waves-light.webp'
-    data-dark-src='/portfolio/assets/waves-dark.webp'
+    data-light-src='/portfolio/assets/images/waves-light.webp'
+    data-dark-src='/portfolio/assets/images/waves-dark.webp'
   ></div>
 
   <a href='/portfolio/'>
     <img
-      src='/portfolio/assets/logo-katjadev-dark.svg'
+      src='/portfolio/assets/images/logo-katjadev-dark.svg'
       alt='Katja Dev Logo'
       class='site-logo site-logo-menu'
       loading='eager'
@@ -117,9 +121,9 @@
   </button>
 
   <nav>
-    <a href='/portfolio/work'>Work</a>
-    <a href='/portfolio/about'>About</a>
-    <a href='/portfolio/contact'>Contact</a>
+    <a href='#work'>Work</a>
+    <a href='#about'>About</a>
+    <a href='#contact'>Contact</a>
   </nav>
 </div>
 
@@ -173,10 +177,10 @@
 
     <div class='back-to-work-container'>
       <a
-        href='./'
+        href='/portfolio/'
         class='label-link back-to-work-label'
         data-action='back'
-        data-back-fallback='./'
+        data-back-fallback='/portfolio/'
         aria-label='Go back'
       >
         <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
@@ -261,7 +265,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/site-petart-600-DEUPJk4e.webp'
+              src='assets/images/site-petart-600.webp'
               data-src='site-petart-600.webp'
               alt='Pet Art with Heart - homepage desktop view'
             />
@@ -273,7 +277,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/site-petartmobile-600-CuG43K1n.webp'
+              src='assets/images/site-petartmobile-600.webp'
               data-src='site-petartmobile-600.webp'
               alt='Pet Art with Heart - homepage mobile view'
             />
@@ -397,7 +401,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/site-portfolio-600-C5YuTD1P.webp'
+              src='assets/images/site-portfolio-600.webp'
               data-src='site-portfolio-600.webp'
               alt='Katja Turnsek Portfolio - homepage desktop view'
             />
@@ -409,7 +413,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/site-portfoliomobile-600-DOaxicOS.webp'
+              src='assets/images/site-portfoliomobile-600.webp'
               data-src='site-portfoliomobile-600.webp'
               alt='Katja Turnsek Portfolio - homepage mobile view'
             />
@@ -545,7 +549,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/site-agilitybandits-600-CwHuQzzg.webp'
+              src='assets/images/site-agilitybandits-600.webp'
               data-src='site-agilitybandits-600.webp'
               alt='Agility Bandits Centre Blog - homepage desktop view'
             />
@@ -557,7 +561,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/site-agilitybanditsmobile-600-C7gpu858.webp'
+              src='assets/images/site-agilitybanditsmobile-600.webp'
               data-src='site-agilitybanditsmobile-600.webp'
               alt='Agility Bandits Centre Blog - mobile view'
             />
@@ -680,7 +684,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/site-gemenskapet-science-museum-600-BAXYrELy.webp'
+              src='assets/images/site-gemenskapet-science-museum-600.webp'
               data-src='site-gemenskapet-science-museum-600.webp'
               alt='Gemenskapet Science Museum — homepage desktop view'
             />
@@ -692,7 +696,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/site-gemenskapet-science-museummobile-600-iXbjfcrd.webp'
+              src='assets/images/site-gemenskapet-science-museummobile-600.webp'
               data-src='site-gemenskapet-science-museummobile-600.webp'
               alt='Gemenskapet Science Museum — mobile homepage and menu'
             />
@@ -807,7 +811,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-petartmoodboard-600-qxPjHHvJ.webp'
+              src='assets/images/design-petartmoodboard-600.webp'
               data-src='design-petartmoodboard-600.webp'
               alt='Figma mood board for Pet Art with Heart showing colors, typography, and inspiration images'
             />
@@ -822,7 +826,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-petartprototype-600-Bz4znOpD.webp'
+              src='assets/images/design-petartprototype-600.webp'
               data-src='design-petartprototype-600.webp'
               alt='Figma prototype showing the desktop layout of the pet art with heart website'
             />
@@ -894,7 +898,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-petartwireframes-900-DrVN2m4Q.webp'
+              src='assets/images/design-petartwireframes-900.webp'
               data-src='design-petartwireframes-900.webp'
               alt='Figma wire frames showing the desktop layout of the pet art with heart website'
             />
@@ -1001,7 +1005,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-portfoliomoodboard-600-vzLnJYv0.webp'
+              src='assets/images/design-portfoliomoodboard-600.webp'
               data-src='design-portfoliomoodboard-600.webp'
               alt='Figma mood board for KT Portfolio showing colors, typography, and inspiration images'
             />
@@ -1016,7 +1020,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-ktportfolio-600-C9hDCY4x.webp'
+              src='assets/images/design-ktportfolio-600.webp'
               data-src='design-ktportfolio-600.webp'
               alt='Figma prototype showing Wire framing layout of the Portfolio website'
             />
@@ -1102,7 +1106,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-portfoliogsap-600-DPtUr82A.webp'
+              src='assets/images/design-portfoliogsap-600.webp'
               data-src='design-portfoliogsap-600.webp'
               alt='Image of GSAP animation JavaScript code'
             />
@@ -1140,13 +1144,11 @@
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> Figma | JavaScript | API | CSS</div>
 
-        <!-- Reusable component: Demo Links -->
         <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
       </div>
     </div>
 
     <div class='row'>
-      <!-- Reusable component: Project Switcher -->
       <nav
         class='project-switcher'
         aria-label='Agility Bandits sections'
@@ -1172,14 +1174,10 @@
           <div class='case-study-text'>
             <h3>Concept &amp; Visual Language</h3>
             <ul class='bullet-list'>
-              <li>
-                Clean, approachable layout with a focus on
-                <strong>readability and usability</strong>.
-              </li>
-              <li>
-                <strong>Agility-inspired branding</strong>
-                using speed lines, obstacle icons, and motion cues.
-              </li>
+              <li>Clean, approachable layout with a focus on
+                <strong>readability and usability</strong>.</li>
+              <li><strong>Agility-inspired branding</strong>
+                using speed lines, obstacle icons, and motion cues.</li>
               <li>Bold, energetic color palette to reflect the sport's fast-paced nature.</li>
             </ul>
           </div>
@@ -1189,13 +1187,12 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-agilitybanditsmoodboard-600-DWDxmzFd.webp'
               data-src='design-agilitybanditsmoodboard-600.webp'
+              data-path='assets/images'
               alt='Figma mood board for Agility Bandits Centre Blog'
             />
-            <figcaption class='work-caption'>
-              Mood board — colors, typography, and agility-themed elements
-            </figcaption>
+            <figcaption class='work-caption'>Mood board — colors, typography, and agility-themed
+              elements</figcaption>
           </figure>
         </div>
 
@@ -1203,13 +1200,11 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-agilitybandits-600-DRSjSnD4.webp'
               data-src='design-agilitybandits-600.webp'
+              data-path='assets/images'
               alt='Figma prototype of Agility Bandits Centre Blog layout'
             />
-            <figcaption class='work-caption'>
-              Figma wireframes &amp; prototypes for desktop
-            </figcaption>
+            <figcaption class='work-caption'>Figma wireframes &amp; prototypes for desktop</figcaption>
           </figure>
         </div>
 
@@ -1272,8 +1267,8 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-agilitybanditsapi-600-BqyriCZk.webp'
               data-src='design-agilitybanditsapi-600.webp'
+              data-path='assets/images'
               alt='JavaScript API integration code for Agility Bandits Blog'
             />
             <figcaption class='work-caption'>JavaScript code integrating the Noroff API</figcaption>
@@ -1360,7 +1355,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-gemenskapet-science-museumboard-600-DQWGFRKt.webp'
+              src='assets/images/design-gemenskapet-science-museumboard-600.webp'
               data-src='design-gemenskapet-science-museumboard-600.webp'
               alt='Figma mood board for Gemenskapet Science Museum'
             />
@@ -1374,7 +1369,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-gemenskapet-science-museum-600-BfM9x-T_.webp'
+              src='assets/images/design-gemenskapet-science-museum-600.webp'
               data-src='design-gemenskapet-science-museum-600.webp'
               alt='Figma UI frames and responsive prototypes for Gemenskapet Science Museum'
             />
@@ -1434,7 +1429,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-science-museum-wireframes-600-BZW-mR7q.webp'
+              src='assets/images/design-science-museum-wireframes-600.webp'
               data-src='design-science-museum-wireframes-300.webp'
               alt='Gemenskapet Science Museum wireframes in Figma'
             />
@@ -1537,7 +1532,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-petartlogosuite-600-CVSspQ15.webp'
+              src='assets/images/design-petartlogosuite-600.webp'
               data-src='design-petartlogosuite-600.webp'
               alt='Pet Art with Heart Logo Suite Variations'
             />
@@ -1551,7 +1546,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/logo-sketch-petart-900-st0Jm5hf.webp'
+              src='assets/images/logo-sketch-petart-900.webp'
               data-src='logo-sketch-petart-900.webp'
               alt='Pet Art with Heart - Logo Design'
             />
@@ -1671,7 +1666,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/logo-ktportfolio-600-B6kgUf-x.webp'
+              src='assets/images/logo-ktportfolio-600.webp'
               data-src='logo-ktportfolio-600.webp'
               alt='KT Dev sketch to Vector based Logotype'
             />
@@ -1683,7 +1678,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-portfoliologosuite-600-CejwjaWF.webp'
+              src='assets/images/design-portfoliologosuite-600.webp'
               data-src='design-portfoliologosuite-600.webp'
               alt='KT Dev - Logo Design'
             />
@@ -1748,13 +1743,12 @@
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
 
-        <!-- Reusable component: Demo Links) -->
+        <!-- Reusable component: Demo Links -->
         <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
       </div>
     </div>
 
     <div class='row'>
-      <!-- Reusable component: Project Switcher -->
       <nav
         class='project-switcher'
         aria-label='Agility Bandits sections'
@@ -1811,8 +1805,8 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/logo-agilitybandits-600-DDD-pmG7.webp'
-              data-src='logo-agilitybandits-600.webp'
+              src='../assets/images/logo-agilitybandits-600.webp'
+              data-src='../assets/images/logo-agilitybandits-600.webp'
               alt='Agility Bandits logotype: red & white Border Collie with bandit eye mask above a Western-style wordmark'
             />
             <figcaption class='work-caption'>
@@ -1825,8 +1819,8 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/design-agilitybandits-elements-600-BUkmkjfw.webp'
-              data-src='design-agilitybandits-elements-600.webp'
+              src='../assets/images/design-agilitybandits-elements-600.webp'
+              data-src='../assets/images/design-agilitybandits-elements-600.webp'
               alt='Agility Bandits speed lines and falling agility obstacle vector graphics'
             />
             <figcaption class='work-caption'>
@@ -1879,8 +1873,8 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/graphics-agilitybandits-elements-600-Br5w3A5T.webp'
-              data-src='graphics-agilitybandits-elements-600.webp'
+              src='../assets/images/graphics-agilitybandits-elements-600.webp'
+              data-src='../assets/images/graphics-agilitybandits-elements-600.webp'
               alt='Agility Bandits logotype and graphics applied on website'
             />
             <figcaption class='work-caption'>
@@ -2002,7 +1996,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='/portfolio/assets/logosuite-gemenskapet-science-museum-900-DOPKAXL5.webp'
+              src='assets/images/logosuite-gemenskapet-science-museum-900.webp'
               data-src='assets/images/logosuite-gemenskapet-science-museum-900.webp'
               alt='Gemenskapet Science Museum logotype with magnifying glass and wordmark'
             />
@@ -2014,7 +2008,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='/portfolio/assets/icon-gemenskapet-science-museum-600-BG2Micj9.webp'
+              src='assets/images/icon-gemenskapet-science-museum-600.webp'
               data-src='assets/images/icon-gemenskapet-science-museum-600.webp'
               alt='Gemenskapet Science Museum standalone magnifying-glass icon'
             />
@@ -2159,11 +2153,7 @@
           <span class='label-text'>View GitHub</span>
           <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
         </a>
-        <a
-          href='/portfolio/contact'
-          class='label-link online-demo-label'
-          aria-label='Go to contact section'
-        >
+        <a href='/contact' class='label-link online-demo-label' aria-label='Go to contact section'>
           <span class='label-text'>Contact Me</span>
           <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
         </a>
@@ -2201,10 +2191,10 @@
 
     <div class='back-to-work-container'>
       <a
-        href='/portfolio/'
+        href='/'
         class='label-link back-to-work-label'
         data-action='back'
-        data-back-fallback='/portfolio/'
+        data-back-fallback='/'
         aria-label='Go back'
       >
         <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
