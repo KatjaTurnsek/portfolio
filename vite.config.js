@@ -1,4 +1,3 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import handlebars from 'vite-plugin-handlebars';
 
@@ -6,7 +5,7 @@ const isGh = process.env.GH_PAGES === '1';
 const base = isGh ? '/portfolio/' : '/';
 
 export default defineConfig({
-  base,
+  base, // lets Vite handle public base
   plugins: [
     handlebars({
       partialDirectory: ['src/partials', 'src/partials/sections'],
@@ -16,23 +15,11 @@ export default defineConfig({
           description:
             'Creative front-end developer with a background in art and design. Explore a fluid, modern portfolio featuring interactive animations, custom code, and thoughtful UX — built with HTML, CSS, JavaScript, GSAP, and Vite.',
         },
-        baseHref: base,
+        // Use these in templates
+        base, // e.g. "/portfolio/" or "/"
+        baseHref: base, // same value, used for assets for clarity
       },
-      helpers: {
-        // {{asset 'assets/images/foo.webp'}}
-        asset: (p) => `${base}${String(p).replace(/^\//, '')}`,
-
-        // {{route '/work'}} or {{route './work'}}
-        route: (p) => {
-          const s = String(p || '');
-          if (/^(https?:|mailto:|tel:|#)/i.test(s)) return s;
-          const cleaned = s.replace(/^\.\//, '').replace(/^\//, '');
-          return `${base}${cleaned}`;
-        },
-
-        // {{base}}
-        base: () => base,
-      },
+      // NO helpers — avoids “Missing helper” land forever
     }),
   ],
 });

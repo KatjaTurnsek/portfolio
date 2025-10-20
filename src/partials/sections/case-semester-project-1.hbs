@@ -67,7 +67,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='{{asset "assets/images/site-gemenskapet-science-museum-600.webp"}}'
+              src='{{base}}assets/images/site-gemenskapet-science-museum-600.webp'
               data-src='site-gemenskapet-science-museum-600.webp'
               alt='Gemenskapet Science Museum — homepage desktop view'
             />
@@ -79,7 +79,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='{{asset "assets/images/site-gemenskapet-science-museummobile-600.webp"}}'
+              src='{{base}}assets/images/site-gemenskapet-science-museummobile-600.webp'
               data-src='site-gemenskapet-science-museummobile-600.webp'
               alt='Gemenskapet Science Museum — mobile homepage and menu'
             />
@@ -119,15 +119,16 @@
 
     <div class='back-to-work-container'>
       <a
-        href='{{route "/work"}}'
+        href='{{base}}work'
         class='label-link back-to-work-label'
         data-back
-        data-back-fallback='{{route "/work"}}'
+        data-back-fallback='{{base}}work'
         aria-label='Go back'
       >
         <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
+
   </div>
 </section>

@@ -1,13 +1,13 @@
 <div class='fullscreen-menu' id='menu' role='dialog' aria-modal='true'>
   <div
     class='menu-waves'
-    data-light-src='{{asset "assets/images/waves-light.webp"}}'
-    data-dark-src='{{asset "assets/images/waves-dark.webp"}}'
+    data-light-src='{{baseHref}}assets/images/waves-light.webp'
+    data-dark-src='{{baseHref}}assets/images/waves-dark.webp'
   ></div>
 
-  <a href='{{route "/"}}'>
+  <a href='{{base}}' aria-label='Go to home'>
     <img
-      src='{{asset "assets/images/logo-katjadev-dark.svg"}}'
+      src='{{baseHref}}assets/images/logo-katjadev-dark.svg'
       alt='Katja Dev Logo'
       class='site-logo site-logo-menu'
       loading='eager'
@@ -19,8 +19,8 @@
   </button>
 
   <nav>
-    <a href='{{route "/work"}}'>Work</a>
-    <a href='{{route "/about"}}'>About</a>
-    <a href='{{route "/contact"}}'>Contact</a>
+    <a href='{{base}}#work'>Work</a>
+    <a href='{{base}}#about'>About</a>
+    <a href='{{base}}#contact'>Contact</a>
   </nav>
 </div>

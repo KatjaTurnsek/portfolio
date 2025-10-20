@@ -1,21 +1,22 @@
 import { render } from '../../lib/render.js';
 import { projects, featuredProjects } from '../../data/projects.js';
 
-// Resolve 'work/...' against <base href> or Vite BASE_URL
+// Resolve hrefs against <base href> (or Vite BASE_URL)
 function resolveHref(href = '') {
   if (!href) return '#';
-  if (href.startsWith('#')) return href;
   if (/^(https?:|mailto:|tel:|data:|blob:)/i.test(href)) return href;
 
   const baseFromTag = document.querySelector('base')?.getAttribute('href') || '/';
   const baseFromVite = (typeof import.meta !== 'undefined' && import.meta?.env?.BASE_URL) || '/';
-
-  // ensure trailing slash
   const BASE = (baseFromTag || baseFromVite).replace(/\/?$/, '/');
 
-  // if href starts with '/', it would escape the base → avoid that
-  const clean = href.replace(/^\//, '');
+  // Anchor links should jump from the site root (works on static hosts)
+  if (href.startsWith('#')) {
+    return `${BASE}${href}`;
+  }
 
+  // Avoid escaping BASE when given a leading slash
+  const clean = href.replace(/^\//, '');
   return BASE + clean;
 }
 
@@ -49,7 +50,8 @@ export function renderCategory(mountSelector, category) {
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((p) =>
       WorkTile({
-        href: p.routeUrl || p.caseUrl || '#',
+        // Prefer hash anchors (caseUrl) — they work on static hosting
+        href: p.caseUrl || p.routeUrl || '#',
         imgSrc: p.imgSrc,
         imgAlt: p.imgAlt,
         title: p.title,
@@ -66,7 +68,7 @@ export function renderFeatured(mountSelector) {
   const htmlList = featuredProjects
     .map((p) =>
       WorkTile({
-        href: p.routeUrl || p.caseUrl || '#',
+        href: p.caseUrl || p.routeUrl || '#',
         imgSrc: p.imgSrc,
         imgAlt: p.imgAlt,
         title: p.title,

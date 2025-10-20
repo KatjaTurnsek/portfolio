@@ -6,21 +6,28 @@ const SWITCHER_LABELS = {
   logotype: 'Graphic Design',
 };
 
-// Normalize the app's base (supports GH Pages subpaths, etc.)
-const BASE = (import.meta?.env?.BASE_URL || '/').replace(/\/$/, '');
-
 // Is an absolute external/special link?
 function isExternal(href = '') {
   return /^(?:https?:|mailto:|tel:|data:|blob:)/i.test(href);
 }
 
-// Resolve hrefs so "assets/pdf/file.pdf" & "/assets/pdf/file.pdf" work from any route
+// Resolve hrefs so app works from any base (/, /portfolio/, etc.)
 function resolveHref(href = '') {
   if (!href) return '#';
-  if (href.startsWith('#')) return href;
   if (isExternal(href)) return href;
-  if (href.startsWith('/')) return BASE + href;
-  return BASE + '/' + href;
+
+  const baseFromTag = document.querySelector('base')?.getAttribute('href') || '/';
+  const baseFromVite = (typeof import.meta !== 'undefined' && import.meta?.env?.BASE_URL) || '/';
+  const BASE = (baseFromTag || baseFromVite).replace(/\/?$/, '/');
+
+  // Make hashes root-anchored (static-host friendly)
+  if (href.startsWith('#')) {
+    return `${BASE}${href}`;
+  }
+
+  // Normalize leading slash
+  const clean = href.replace(/^\//, '');
+  return BASE + clean;
 }
 
 function siblingVariants(p) {
@@ -68,8 +75,8 @@ function renderProjectSwitcherAuto(el, p) {
   for (const s of sibs) {
     const a = document.createElement('a');
 
-    // Prefer pretty route; fall back to hash (router converts hash→pretty path)
-    const href = s.routeUrl || s.caseUrl || '#';
+    // Prefer hash anchors; they work on static hosting
+    const href = s.caseUrl || s.routeUrl || '#';
     a.href = resolveHref(href);
 
     a.className = 'pill';

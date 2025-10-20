@@ -65,7 +65,7 @@
           <figure class='case-study-item item-right'>
             <img
               class='thumb'
-              src='{{asset "assets/images/design-petartlogosuite-600.webp"}}'
+              src='{{base}}assets/images/design-petartlogosuite-600.webp'
               data-src='design-petartlogosuite-600.webp'
               alt='Pet Art with Heart Logo Suite Variations'
             />
@@ -79,7 +79,7 @@
           <figure class='case-study-item item-left'>
             <img
               class='thumb'
-              src='{{asset "assets/images/logo-sketch-petart-900.webp"}}'
+              src='{{base}}assets/images/logo-sketch-petart-900.webp'
               data-src='logo-sketch-petart-900.webp'
               alt='Pet Art with Heart - Logo Design'
             />
@@ -119,15 +119,16 @@
 
     <div class='back-to-work-container'>
       <a
-        href='{{route "/work"}}'
+        href='{{base}}#work'
         class='label-link back-to-work-label'
         data-back
-        data-back-fallback='{{route "/work"}}'
+        data-back-fallback='{{base}}#work'
         aria-label='Go back'
       >
         <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
+
   </div>
 </section>

@@ -16,36 +16,36 @@
   referrerpolicy='no-referrer'
 />
 
-<!-- Preload header/menu wave layers (base-aware via {{asset}}) -->
+<!-- Preload header/menu wave layers (base-aware) -->
 <link
   rel='preload'
   as='image'
-  href='{{asset "assets/images/waves-light.webp"}}'
+  href='{{baseHref}}assets/images/waves-light.webp'
   media='(prefers-color-scheme: light)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{asset "assets/images/waves-dark.webp"}}'
+  href='{{baseHref}}assets/images/waves-dark.webp'
   media='(prefers-color-scheme: dark)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{asset "assets/images/vector-waves-light.svg"}}'
+  href='{{baseHref}}assets/images/vector-waves-light.svg'
   type='image/svg+xml'
   media='(prefers-color-scheme: light)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{asset "assets/images/vector-waves-dark.svg"}}'
+  href='{{baseHref}}assets/images/vector-waves-dark.svg'
   type='image/svg+xml'
   media='(prefers-color-scheme: dark)'
 />
 
 <!-- Favicon / icons -->
-<link rel='icon' href='{{asset "assets/images/logo-katjadev-dark.svg"}}' type='image/svg+xml' />
+<link rel='icon' href='{{baseHref}}assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
 
-<!-- Canonical points to the site base (relative is fine here; router updates it later) -->
+<!-- Canonical points to the site base; router will update at runtime -->
 <link rel='canonical' href='{{base}}' />
