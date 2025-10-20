@@ -1,13 +1,31 @@
 import { render } from '../../lib/render.js';
 import { projects, featuredProjects } from '../../data/projects.js';
 
+/* ---------------------------------------------------------
+   Href resolver (handles /work/... with Vite's BASE, externals, hashes)
+--------------------------------------------------------- */
+const BASE = (import.meta?.env?.BASE_URL || '/').replace(/\/$/, '');
+
+function isExternal(href = '') {
+  return /^(?:https?:|mailto:|tel:|data:|blob:)/i.test(href);
+}
+
+function resolveHref(href = '') {
+  if (!href) return '#';
+  if (href.startsWith('#')) return href; // in-page anchors
+  if (isExternal(href)) return href; // external links untouched
+  if (href.startsWith('/')) return BASE + href; // absolute → prefix BASE (/work/..)
+  // relative (incl. ./work/.. fallback)
+  return BASE + '/' + href.replace(/^\.\//, '');
+}
+
 /** Build one Work tile matching your existing .work-item markup. */
 function WorkTile(p = {}) {
   const { href, imgSrc, imgAlt = '', title = '', caption = '', aria } = p;
   return `
     <div class="work-item-wrapper">
       <div class="work-item">
-        <a href="${href}" class="work-link" aria-label="${aria || `View ${title} case study`}">
+        <a href="${resolveHref(href)}" class="work-link" aria-label="${aria || `View ${title} case study`}">
           <img class="thumb" src="${imgSrc}" alt="${imgAlt}" loading="lazy" />
           <div class="work-overlay"><h4>${title}</h4></div>
         </a>
