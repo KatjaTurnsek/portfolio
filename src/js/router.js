@@ -1,19 +1,15 @@
-//import './gh-redirect.js';
-
-/**
- * History-API router with clean, crawlable paths.
- * - Static routes: "/", "/work", "/about", "/contact"
- * - Dynamic case routes: "/work/:slug" → "#case-:slug",
- *                        "/work/:slug/:sub" → "#case-:slug-:sub"
- * - Shows the target immediately; lets init.js animate inner content.
- * - Avoids writing inline transforms/opacity on section containers.
- */
+// src/js/router.js
+// History-API router with clean, crawlable paths.
+// - Static routes: "/", "/work", "/about", "/contact"
+// - Dynamic: "/work/:slug" → "case-:slug", "/work/:slug/:sub" → "case-:slug-:sub"
+// - Shows target immediately; lets init.js animate inner content.
 
 (function initRouter() {
   if (typeof window !== 'undefined') window.__routerActive = true;
 
   const ACTIVE_CLASS = 'is-active';
-  const BASE = (import.meta?.env?.BASE_URL || '/').replace(/\/$/, '');
+  // Prefer runtime base set in index.js, fall back to Vite env, then "/"
+  const BASE = (window.__BASE_URL__ || import.meta?.env?.BASE_URL || '/').replace(/\/$/, '');
 
   /** @type {Record<string,string>} */
   const routes = {
@@ -29,6 +25,7 @@
   const sections = () => $$('.fullscreen-section');
 
   function normalizePathname(pathname) {
+    // Strip the base prefix ("/portfolio") if present
     let p = pathname.startsWith(BASE) ? pathname.slice(BASE.length) : pathname;
     if (!p.startsWith('/')) p = '/' + p;
     if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
@@ -37,6 +34,7 @@
 
   function pathToId(path) {
     if (path in routes) return routes[path];
+
     if (path.startsWith('/work/')) {
       const parts = path.split('/').filter(Boolean); // ["work","slug","sub?"]
       const slug = parts[1];
@@ -45,6 +43,11 @@
       const id = 'case-' + slug + (sub ? '-' + sub : '');
       if (document.getElementById(id)) return id;
     }
+
+    // allow top-level ids like "/about", "/contact", "/thank-you"
+    const top = path.slice(1); // drop leading "/"
+    if (top && document.getElementById(top)) return top;
+
     return null;
   }
 
@@ -69,7 +72,6 @@
       s.style.display = on ? 'block' : 'none';
       s.style.visibility = on ? 'visible' : 'hidden';
       s.style.pointerEvents = on ? 'auto' : 'none';
-      // clear any leftover layout-affecting styles (don’t set transform)
       s.style.transform = 'none';
       s.style.opacity = on ? '1' : '0';
     });
@@ -93,7 +95,8 @@
     document.querySelectorAll('nav a').forEach((a) => {
       let isActive = false;
       try {
-        const u = new URL(a.getAttribute('href') || '', location.origin);
+        const href = a.getAttribute('href') || '';
+        const u = new URL(href, location.origin);
         isActive = normalizePathname(u.pathname) === routedPath;
       } catch {}
       a.classList.toggle(ACTIVE_CLASS, isActive);
@@ -111,7 +114,8 @@
     setActiveLinkById(id);
     window.__currentSectionId = id;
 
-    history.replaceState({ path: idToPath(id) }, '', BASE + idToPath(id));
+    const newPath = idToPath(id);
+    history.replaceState({ path: newPath }, '', BASE + newPath);
 
     // Let init.js handle animation and event emission.
     if (typeof window.revealSection === 'function') window.revealSection(id);
@@ -119,12 +123,14 @@
 
   function render(path, { replace = false } = {}) {
     const id = pathToId(path) || routes['/'];
+    window.__currentSectionId = id; // <-- keep index.js in sync for its timed reveal
+
     immediateShow(id);
 
     const el = document.getElementById(id);
     if (el) {
       window.scrollTo({ top: 0, behavior: 'auto' });
-      const h = el.querySelector('h1, h2, h3');
+      const h = el.querySelector('h1, h2, h3, [role="heading"]');
       if (h && !h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
       if (h) setTimeout(() => h.focus?.(), 50);
 
@@ -134,8 +140,9 @@
     }
 
     const state = { path };
-    if (replace) history.replaceState(state, '', BASE + path);
-    else history.pushState(state, '', BASE + path);
+    const url = BASE + path;
+    if (replace) history.replaceState(state, '', url);
+    else history.pushState(state, '', url);
   }
 
   function smartBack(href) {
@@ -170,7 +177,8 @@
 
     let url;
     try {
-      url = new URL(el.href, location.origin);
+      // resolve relative links correctly
+      url = new URL(el.getAttribute('href') || '', location.href);
     } catch {
       return;
     }
