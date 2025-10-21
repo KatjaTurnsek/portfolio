@@ -1,6 +1,6 @@
 # KT Dev Portfolio
 
-![Portfolio Screenshot](assets/images/site-portfolio-900.webp)
+![Portfolio Screenshot](https://katjaturnsek.github.io/portfolio/assets/images/site-portfolio-900.webp)
 
 A personal front-end portfolio showcasing selected web, interaction, and graphic design work. Built with accessibility, responsiveness, and performance in mind. Includes theme-aware UI, animated menu backdrop, and optimized media loading.
 
@@ -33,6 +33,23 @@ This project presents featured work with a clean, component-based layout. It foc
 - CSS3 (Custom properties, responsive layout)  
 - JavaScript (ES Modules)  
 - GSAP (GreenSock) + MorphSVGPlugin
+
+## 🚀 Deployment
+
+This project is automatically deployed to GitHub Pages via **GitHub Actions**.
+
+- **Branch:** `main` → triggers the `deploy.yml` workflow  
+- **Output folder:** `dist/`  
+- **Published branch:** `gh-pages`  
+- **Live URL:** [https://katjaturnsek.github.io/portfolio/](https://katjaturnsek.github.io/portfolio/)
+
+To redeploy manually (not usually needed):
+
+```bash
+git add .
+git commit -m "update: site changes"
+git push origin main
+```
 
 ## 📦 Installation / Local Use
 
@@ -152,6 +169,7 @@ Ensure you have rights to any assets you add and include proper attributions (fo
 
 ## 🙋‍♀️ Author
 
-** Katja Turnšek **
-Frontend Development Student
-[Portfolio Website](https://katjaturnsek.github.io/portfolio/)
+**Katja Turnšek**  
+Front-End Developer & Designer  
+[Portfolio Website](https://katjaturnsek.github.io/portfolio/)  
+[GitHub](https://github.com/KatjaTurnsek)
