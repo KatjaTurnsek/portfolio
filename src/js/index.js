@@ -7,15 +7,15 @@
  */
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* GH Pages SPA deep-link restore (runs before router boot)                   */
+/* GH Pages SPA deep-link restore + base hardening                            */
 /* ────────────────────────────────────────────────────────────────────────── */
 (() => {
   const l = window.location;
 
-  // Resolve base from <base> tag or Vite env
+  // Resolve base from <base> or Vite and HARD-LOCK it
   const baseFromTag = document.querySelector('base')?.getAttribute('href') || '';
   const baseFromVite = (import.meta?.env?.BASE_URL || '/').replace(/\/?$/, '/');
-  const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/');
+  const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/'); // expect "/portfolio/"
 
   // 1) Primary: rafgraph "?/path" redirect restore
   if (l.search && l.search.startsWith('?/')) {
@@ -25,27 +25,68 @@
     return; // URL fixed; let the app/router boot now
   }
 
-  // 2) Optional: restore from sessionStorage (older 404 approach)
+  // 2) Optional legacy: sessionStorage-based restore (if any)
   try {
     const saved = sessionStorage.getItem('gh_redirect');
     if (saved) {
       sessionStorage.removeItem('gh_redirect');
       const target = saved.startsWith('/') ? saved : BASE + saved.replace(/^\//, '');
       history.replaceState(null, null, target);
-      return; // URL fixed; let the app/router boot now
+      return;
     }
   } catch (_) {}
+
+  // 3) Safety: if we somehow landed at domain root with a project URL,
+  // normalize "/?/<x>" or "/<x>" to "/portfolio/<x>"
+  if (!l.pathname.startsWith(BASE)) {
+    // Keep plain "/" as-is; only fix app routes we recognize
+    const path = l.pathname.replace(/^\//, '');
+    if (path && !/^portfolio\/?$/.test(path)) {
+      const target = BASE + path;
+      history.replaceState(null, null, target + l.search + l.hash);
+    }
+  }
+
+  // 4) Patch history APIs so absolute paths keep the base
+  const wrap = (fn) =>
+    function (state, title, url) {
+      if (typeof url === 'string') {
+        // If someone calls pushState("/work"), turn it into "/portfolio/work"
+        if (url.startsWith('/')) url = BASE + url.replace(/^\//, '');
+        // If they pass a relative "work", make it "/portfolio/work"
+        else if (!/^[a-z]+:/i.test(url) && !url.startsWith('#')) {
+          url = BASE + url.replace(/^\//, '');
+        }
+      }
+      return fn.call(this, state, title, url);
+    };
+  history.pushState = wrap(history.pushState);
+  history.replaceState = wrap(history.replaceState);
+
+  // 5) Intercept anchor clicks to normalize hrefs like "/work" → "/portfolio/work"
+  addEventListener(
+    'click',
+    (ev) => {
+      const a = ev.target instanceof Element ? ev.target.closest('a') : null;
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#'))
+        return;
+      // Normalize absolute and relative SPA paths
+      const normalized = href.startsWith('/')
+        ? BASE + href.replace(/^\//, '')
+        : BASE + href.replace(/^\//, '');
+      a.setAttribute('href', normalized);
+    },
+    { capture: true }
+  );
+
+  // Expose for other modules that might need it
+  window.__BASE_URL__ = BASE;
 })();
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Base URL (available to the rest of the app)                                */
-/* ────────────────────────────────────────────────────────────────────────── */
-const baseFromTag = document.querySelector('base')?.getAttribute('href') || '/';
-const baseFromVite = import.meta?.env?.BASE_URL || '/';
-window.__BASE_URL__ = (baseFromTag || baseFromVite).replace(/\/?$/, '/');
-
-/* ────────────────────────────────────────────────────────────────────────── */
-/* Imports (router is loaded dynamically after the restore)                   */
+/* Imports (router is loaded dynamically AFTER the restore/base hardening)    */
 /* ────────────────────────────────────────────────────────────────────────── */
 import '../css/main.css';
 
