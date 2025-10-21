@@ -12,17 +12,16 @@
 (() => {
   const l = window.location;
 
-  // Resolve base from <base> tag or Vite env
+  // Resolve base from <base> tag or Vite env (expect "/portfolio/" in prod)
   const baseFromTag = document.querySelector('base')?.getAttribute('href') || '';
   const baseFromVite = (import.meta?.env?.BASE_URL || '/').replace(/\/?$/, '/');
-  const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/'); // expect "/portfolio/"
+  const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/');
 
   // 1) Primary: rafgraph "?/path" redirect restore
   if (l.search && l.search.startsWith('?/')) {
     const restored = l.search.slice(2).replace(/~and~/g, '&'); // undo encoding
     const target = BASE + restored.replace(/^\//, '') + l.hash;
     history.replaceState(null, null, target);
-    // Expose base for the rest of the app
     window.__BASE_URL__ = BASE;
     return; // URL fixed; let the app/router boot now
   }
@@ -45,19 +44,34 @@
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Only fix bare "/" or absolute root paths to keep the /portfolio/ base      */
-/* (avoids double-prefixing like "/portfolio/portfolio/...")                  */
+/* (handles both "/portfolio" and "/portfolio/")                              */
 /* ────────────────────────────────────────────────────────────────────────── */
 (() => {
-  const BASE = (window.__BASE_URL__ || '/portfolio/').replace(/\/?$/, '/');
+  const RAW = window.__BASE_URL__ || '/portfolio/';
+  const BASE_SLASH = RAW.replace(/\/?$/, '/'); // "/portfolio/"
+  const BASE_NOSLASH = BASE_SLASH.slice(0, -1); // "/portfolio"
 
   const normalize = (url) => {
     if (typeof url !== 'string') return url;
-    if (url === '' || url === '/') return BASE; // home → /portfolio/
-    if (url.startsWith('/') && !url.startsWith(BASE)) {
-      // e.g. "/work" → "/portfolio/work"
-      return BASE + url.replace(/^\//, '');
+
+    // Home → always "/portfolio/"
+    if (url === '' || url === '/') return BASE_SLASH;
+
+    // Exactly "/portfolio" → normalize to "/portfolio/"
+    if (url === BASE_NOSLASH) return BASE_SLASH;
+
+    // Already under base ("/portfolio/..." or "/portfolio.../") → leave it
+    if (url.startsWith(BASE_SLASH) || url.startsWith(BASE_NOSLASH + '/')) return url;
+
+    // Absolute root path like "/work" → prefix with base
+    if (url.startsWith('/')) return BASE_SLASH + url.replace(/^\//, '');
+
+    // Relative path (e.g., "work", "./work") → make it base-relative
+    if (!/^[a-z]+:/i.test(url) && !url.startsWith('#')) {
+      return BASE_SLASH + url.replace(/^\.?\//, '');
     }
-    return url; // already OK (relative or starts with BASE)
+
+    return url;
   };
 
   const wrap = (fn) =>

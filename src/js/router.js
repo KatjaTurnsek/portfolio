@@ -8,8 +8,11 @@
   if (typeof window !== 'undefined') window.__routerActive = true;
 
   const ACTIVE_CLASS = 'is-active';
+
   // Prefer runtime base set in index.js, fall back to Vite env, then "/"
-  const BASE = (window.__BASE_URL__ || import.meta?.env?.BASE_URL || '/').replace(/\/$/, '');
+  const RAW_BASE = window.__BASE_URL__ || import.meta?.env?.BASE_URL || '/';
+  const BASE = RAW_BASE.replace(/\/?$/, ''); // "/portfolio"
+  const BASE_SLASH = BASE + '/'; // "/portfolio/"
 
   /** @type {Record<string,string>} */
   const routes = {
@@ -25,8 +28,10 @@
   const sections = () => $$('.fullscreen-section');
 
   function normalizePathname(pathname) {
-    // Strip the base prefix ("/portfolio") if present
-    let p = pathname.startsWith(BASE) ? pathname.slice(BASE.length) : pathname;
+    // Strip the "/portfolio" prefix (with or without trailing slash)
+    let p = pathname;
+    if (p.startsWith(BASE_SLASH)) p = '/' + p.slice(BASE_SLASH.length);
+    else if (p.startsWith(BASE)) p = '/' + p.slice(BASE.length);
     if (!p.startsWith('/')) p = '/' + p;
     if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
     return p;
@@ -87,7 +92,11 @@
     if (desc && meta) meta.setAttribute('content', desc);
 
     const canonical = document.querySelector('link[rel="canonical"]');
-    if (canonical) canonical.setAttribute('href', location.origin + BASE + idToPath(el.id));
+    if (canonical)
+      canonical.setAttribute(
+        'href',
+        location.origin + BASE_SLASH + idToPath(el.id).replace(/^\//, '')
+      );
   }
 
   function setActiveLinkById(id) {
@@ -96,7 +105,7 @@
       let isActive = false;
       try {
         const href = a.getAttribute('href') || '';
-        const u = new URL(href, location.origin);
+        const u = new URL(href, location.href);
         isActive = normalizePathname(u.pathname) === routedPath;
       } catch {}
       a.classList.toggle(ACTIVE_CLASS, isActive);
@@ -109,13 +118,13 @@
     const el = document.getElementById(id);
     if (!el) return;
 
+    window.__currentSectionId = id;
     immediateShow(id);
     setMetaFromSection(el);
     setActiveLinkById(id);
-    window.__currentSectionId = id;
 
     const newPath = idToPath(id);
-    history.replaceState({ path: newPath }, '', BASE + newPath);
+    history.replaceState({ path: newPath }, '', BASE_SLASH + newPath.replace(/^\//, ''));
 
     // Let init.js handle animation and event emission.
     if (typeof window.revealSection === 'function') window.revealSection(id);
@@ -123,7 +132,7 @@
 
   function render(path, { replace = false } = {}) {
     const id = pathToId(path) || routes['/'];
-    window.__currentSectionId = id; // <-- keep index.js in sync for its timed reveal
+    window.__currentSectionId = id; // keep index.js in sync
 
     immediateShow(id);
 
@@ -140,7 +149,7 @@
     }
 
     const state = { path };
-    const url = BASE + path;
+    const url = BASE_SLASH + path.replace(/^\//, '');
     if (replace) history.replaceState(state, '', url);
     else history.pushState(state, '', url);
   }
@@ -177,7 +186,7 @@
 
     let url;
     try {
-      // resolve relative links correctly
+      // resolve relative links correctly against current document URL
       url = new URL(el.getAttribute('href') || '', location.href);
     } catch {
       return;
