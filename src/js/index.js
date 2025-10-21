@@ -15,29 +15,58 @@
   // Resolve base from <base> tag or Vite env
   const baseFromTag = document.querySelector('base')?.getAttribute('href') || '';
   const baseFromVite = (import.meta?.env?.BASE_URL || '/').replace(/\/?$/, '/');
-  const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/');
+  const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/'); // expect "/portfolio/"
 
-  // Primary: rafgraph "?/path" redirect restore
+  // 1) Primary: rafgraph "?/path" redirect restore
   if (l.search && l.search.startsWith('?/')) {
-    const restored = l.search.slice(2).replace(/~and~/g, '&');
+    const restored = l.search.slice(2).replace(/~and~/g, '&'); // undo encoding
     const target = BASE + restored.replace(/^\//, '') + l.hash;
     history.replaceState(null, null, target);
+    // Expose base for the rest of the app
+    window.__BASE_URL__ = BASE;
     return; // URL fixed; let the app/router boot now
   }
 
-  // Optional legacy: sessionStorage-based restore (if your old 404 ever set it)
+  // 2) Optional legacy: sessionStorage-based restore (older 404 approach)
   try {
     const saved = sessionStorage.getItem('gh_redirect');
     if (saved) {
       sessionStorage.removeItem('gh_redirect');
       const target = saved.startsWith('/') ? saved : BASE + saved.replace(/^\//, '');
       history.replaceState(null, null, target);
+      window.__BASE_URL__ = BASE;
       return;
     }
   } catch (_) {}
 
   // Expose base for the rest of the app
   window.__BASE_URL__ = BASE;
+})();
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Only fix bare "/" or absolute root paths to keep the /portfolio/ base      */
+/* (avoids double-prefixing like "/portfolio/portfolio/...")                  */
+/* ────────────────────────────────────────────────────────────────────────── */
+(() => {
+  const BASE = (window.__BASE_URL__ || '/portfolio/').replace(/\/?$/, '/');
+
+  const normalize = (url) => {
+    if (typeof url !== 'string') return url;
+    if (url === '' || url === '/') return BASE; // home → /portfolio/
+    if (url.startsWith('/') && !url.startsWith(BASE)) {
+      // e.g. "/work" → "/portfolio/work"
+      return BASE + url.replace(/^\//, '');
+    }
+    return url; // already OK (relative or starts with BASE)
+  };
+
+  const wrap = (fn) =>
+    function (state, title, url) {
+      return fn.call(this, state, title, normalize(url));
+    };
+
+  history.pushState = wrap(history.pushState);
+  history.replaceState = wrap(history.replaceState);
 })();
 
 /* ────────────────────────────────────────────────────────────────────────── */
