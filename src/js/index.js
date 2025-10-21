@@ -17,7 +17,15 @@
   const baseFromVite = (import.meta?.env?.BASE_URL || '/').replace(/\/?$/, '/');
   const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/');
 
-  // 1) Restore from sessionStorage set by 404.html
+  // 1) Primary: rafgraph "?/path" redirect restore
+  if (l.search && l.search.startsWith('?/')) {
+    const restored = l.search.slice(2).replace(/~and~/g, '&'); // undo encoding
+    const target = BASE + restored.replace(/^\//, '') + l.hash;
+    history.replaceState(null, null, target);
+    return; // URL fixed; let the app/router boot now
+  }
+
+  // 2) Optional: restore from sessionStorage (older 404 approach)
   try {
     const saved = sessionStorage.getItem('gh_redirect');
     if (saved) {
@@ -27,13 +35,6 @@
       return; // URL fixed; let the app/router boot now
     }
   } catch (_) {}
-
-  // 2) Optional fallback for "?/path" redirects (rafgraph style)
-  if (l.search && l.search.startsWith('?/')) {
-    const restored = l.search.slice(2).replace(/~and~/g, '&');
-    const target = BASE + restored.replace(/^\//, '') + l.hash;
-    history.replaceState(null, null, target);
-  }
 })();
 
 /* ────────────────────────────────────────────────────────────────────────── */
