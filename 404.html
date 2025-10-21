@@ -2,21 +2,24 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Redirecting…</title>
-    <meta http-equiv="refresh" content="0; url=/portfolio/" />
-    <script>
-      (function () {
-        const dest =
-          '/portfolio/' +
-          (location.pathname + location.search + location.hash)
-            .replace(/^\/+/, '')
-            .replace(/^portfolio\/?/, '');
-        sessionStorage.setItem('gh_redirect', dest);
-        location.replace('/portfolio/');
-      })();
-    </script>
+    <title>KT SPA Redirect</title>
+    <meta name="robots" content="noindex" />
   </head>
   <body>
-    Redirecting…
+    <script>
+      (function () {
+        if (!/^\/portfolio\/?$/.test(location.pathname)) {
+          var dest =
+            '/portfolio/' +
+            (location.pathname + location.search + location.hash)
+              .replace(/^\/+/, '')
+              .replace(/^portfolio\/?/, '');
+          try {
+            sessionStorage.setItem('gh_redirect', dest);
+          } catch (e) {}
+          location.replace('/portfolio/');
+        }
+      })();
+    </script>
   </body>
 </html>
