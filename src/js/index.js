@@ -6,13 +6,47 @@
  * - Loader show/hide + visuals (respects reduced-motion)
  */
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* GH Pages SPA deep-link restore (runs before router boot)                   */
+/* ────────────────────────────────────────────────────────────────────────── */
+(() => {
+  const l = window.location;
+
+  // Resolve base from <base> tag or Vite env
+  const baseFromTag = document.querySelector('base')?.getAttribute('href') || '';
+  const baseFromVite = (import.meta?.env?.BASE_URL || '/').replace(/\/?$/, '/');
+  const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/');
+
+  // 1) Restore from sessionStorage set by 404.html
+  try {
+    const saved = sessionStorage.getItem('gh_redirect');
+    if (saved) {
+      sessionStorage.removeItem('gh_redirect');
+      const target = saved.startsWith('/') ? saved : BASE + saved.replace(/^\//, '');
+      history.replaceState(null, null, target);
+      return; // URL fixed; let the app/router boot now
+    }
+  } catch (_) {}
+
+  // 2) Optional fallback for "?/path" redirects (rafgraph style)
+  if (l.search && l.search.startsWith('?/')) {
+    const restored = l.search.slice(2).replace(/~and~/g, '&');
+    const target = BASE + restored.replace(/^\//, '') + l.hash;
+    history.replaceState(null, null, target);
+  }
+})();
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Base URL (available to the rest of the app)                                */
+/* ────────────────────────────────────────────────────────────────────────── */
 const baseFromTag = document.querySelector('base')?.getAttribute('href') || '/';
 const baseFromVite = import.meta?.env?.BASE_URL || '/';
 window.__BASE_URL__ = (baseFromTag || baseFromVite).replace(/\/?$/, '/');
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Imports (router is loaded dynamically after the restore)                   */
+/* ────────────────────────────────────────────────────────────────────────── */
 import '../css/main.css';
-import './router.js';
-window.__routerActive = true;
 
 import gsap from 'gsap';
 import './toggle.js';
@@ -47,6 +81,11 @@ import {
 } from './components/ux.js';
 
 import { setupActions } from '../lib/actions.js';
+
+/* Load the router AFTER we’ve potentially rewritten the URL */
+import('./router.js').then(() => {
+  window.__routerActive = true;
+});
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Utilities                                                                  */

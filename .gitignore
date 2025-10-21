@@ -1,6 +1,12 @@
-node_modules/
+# OS / tooling
 .DS_Store
-dist/
+
+# Dependencies / build
 node_modules/
 dist/
-.DS_Store
+
+# Local deploy/preview (keep out of main)
+.gh-pages/
+preview-root/
+preview/
+__deploy/
