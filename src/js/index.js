@@ -12,21 +12,18 @@
 (() => {
   const l = window.location;
 
-  // Resolve base from <base> tag or Vite env (expect "/portfolio/" in prod)
   const baseFromTag = document.querySelector('base')?.getAttribute('href') || '';
   const baseFromVite = (import.meta?.env?.BASE_URL || '/').replace(/\/?$/, '/');
   const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/');
 
-  // 1) Primary: rafgraph "?/path" redirect restore
   if (l.search && l.search.startsWith('?/')) {
-    const restored = l.search.slice(2).replace(/~and~/g, '&'); // undo encoding
+    const restored = l.search.slice(2).replace(/~and~/g, '&');
     const target = BASE + restored.replace(/^\//, '') + l.hash;
     history.replaceState(null, null, target);
     window.__BASE_URL__ = BASE;
-    return; // URL fixed; let the app/router boot now
+    return;
   }
 
-  // 2) Optional legacy: sessionStorage-based restore (older 404 approach)
   try {
     const saved = sessionStorage.getItem('gh_redirect');
     if (saved) {
@@ -38,39 +35,26 @@
     }
   } catch (_) {}
 
-  // Expose base for the rest of the app
   window.__BASE_URL__ = BASE;
 })();
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Only fix bare "/" or absolute root paths to keep the /portfolio/ base      */
-/* (handles both "/portfolio" and "/portfolio/")                              */
+/* Keep /portfolio/ base for internal navigation                              */
 /* ────────────────────────────────────────────────────────────────────────── */
 (() => {
   const RAW = window.__BASE_URL__ || '/portfolio/';
-  const BASE_SLASH = RAW.replace(/\/?$/, '/'); // "/portfolio/"
-  const BASE_NOSLASH = BASE_SLASH.slice(0, -1); // "/portfolio"
+  const BASE_SLASH = RAW.replace(/\/?$/, '/');
+  const BASE_NOSLASH = BASE_SLASH.slice(0, -1);
 
   const normalize = (url) => {
     if (typeof url !== 'string') return url;
-
-    // Home → always "/portfolio/"
     if (url === '' || url === '/') return BASE_SLASH;
-
-    // Exactly "/portfolio" → normalize to "/portfolio/"
     if (url === BASE_NOSLASH) return BASE_SLASH;
-
-    // Already under base ("/portfolio/..." or "/portfolio.../") → leave it
     if (url.startsWith(BASE_SLASH) || url.startsWith(BASE_NOSLASH + '/')) return url;
-
-    // Absolute root path like "/work" → prefix with base
     if (url.startsWith('/')) return BASE_SLASH + url.replace(/^\//, '');
-
-    // Relative path (e.g., "work", "./work") → make it base-relative
     if (!/^[a-z]+:/i.test(url) && !url.startsWith('#')) {
       return BASE_SLASH + url.replace(/^\.?\//, '');
     }
-
     return url;
   };
 
@@ -84,7 +68,7 @@
 })();
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Imports (router is loaded dynamically AFTER the restore/base hardening)    */
+/* Imports                                                                    */
 /* ────────────────────────────────────────────────────────────────────────── */
 import '../css/main.css';
 
@@ -111,7 +95,6 @@ import {
 } from './init.js';
 import { animateTextInSection } from './animatedTexts.js';
 
-/* Split components */
 import { renderCategory, renderFeatured } from './components/workGrid.js';
 import {
   isSafari,
@@ -131,16 +114,11 @@ import('./router.js').then(() => {
 /* Utilities                                                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** @type {boolean} Honor user’s reduced-motion setting (animations handle it internally). */
 const prefersReducedMotion =
   typeof window !== 'undefined' &&
   window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/**
- * Remove any scroll locking side effects that could linger after menu close.
- * @returns {void}
- */
 function releaseScrollLock() {
   [document.documentElement, document.body].forEach((el) => {
     el.classList.remove('menu-open', 'no-scroll', 'overflow-hidden', 'locked');
@@ -153,7 +131,7 @@ function releaseScrollLock() {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Section visibility: hydrate + effects + resize-based min-height            */
+/* Section visibility                                                         */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 document.addEventListener('sectionVisible', async (e) => {
@@ -171,7 +149,6 @@ document.addEventListener('sectionVisible', async (e) => {
 
   if (sectionId === 'about') {
     const { animateTealBars } = await import('./animations.js');
-    // Run regardless; the function snaps to end-state if user prefers reduced motion.
     animateTealBars();
   }
 
@@ -196,14 +173,11 @@ document.addEventListener('sectionVisible', async (e) => {
 })();
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Menu open/close (lazy-init menu wave; animate links)                       */
+/* Menu open/close                                                            */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** @type {HTMLElement|null} */
 const menu = document.getElementById('menu');
-/** @type {null | (() => void)} */
 let stopWaveThemeObserver = null;
-/** @type {boolean} */
 let menuWaveInited = false;
 
 if (menu) {
@@ -211,7 +185,6 @@ if (menu) {
     const open = menu.classList.contains('open');
 
     if (open) {
-      // Initialize MENU wave image on first open (header wave is CSS-only)
       if (!menuWaveInited) {
         setupStaticWaves();
         const maybeDisposer = observeThemeChangesForWaves();
@@ -222,7 +195,6 @@ if (menu) {
       const { animateMenuLinks } = await import('./animatedTexts.js');
       if (!prefersReducedMotion) animateMenuLinks();
     } else {
-      // Optionally stop observing while menu is closed
       if (typeof stopWaveThemeObserver === 'function') {
         stopWaveThemeObserver();
         stopWaveThemeObserver = null;
@@ -234,14 +206,10 @@ if (menu) {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Actions (delegated UI events)                                              */
+/* Actions                                                                    */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 setupActions({
-  /**
-   * Open a case card or smooth-scroll to in-page anchor.
-   * @param {{el:HTMLElement, ev?:Event}} args
-   */
   'open-case': ({ el, ev }) => {
     if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
 
@@ -261,7 +229,7 @@ setupActions({
 });
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* DOM ready: boot loader, mounts, and global effects                         */
+/* DOM ready                                                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -270,45 +238,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (isSafari) gsap.ticker.fps(50);
 
-  // Mount project grids if their mounts exist.
   if (document.getElementById('dev-cards')) renderCategory('#dev-cards', 'website');
   if (document.getElementById('design-cards')) renderCategory('#design-cards', 'design');
   if (document.getElementById('logo-cards')) renderCategory('#logo-cards', 'logotype');
   if (document.getElementById('work-cards')) renderFeatured('#work-cards');
 
-  // Defer loader exit + most visuals a bit.
   setTimeout(() => {
     hideLoader();
     releaseScrollLock();
 
     insertWaveLines();
-
-    // Always run these (each function internally respects reduced motion).
     animateWaveLine();
     animateCustomWaveLines();
 
-    // Blobs: always prime + generate; interaction is lightweight.
     const blobWrapper = document.querySelector('.morphing-blob-wrapper');
     if (blobWrapper) {
-      // Prime blob group opacity so ScrollTrigger scrub at 0% isn't invisible on mobile
-      const primeBlobs = () => {
-        const g = document.getElementById('blobs-g');
-        if (g) {
-          gsap.set(g, { opacity: 0.3 });
-          return true;
-        }
-        return false;
-      };
-      if (!primeBlobs()) setTimeout(primeBlobs, 60); // try again next tick
-
-      // Fade the wrapper itself
       gsap.fromTo(
         blobWrapper,
         { opacity: 0 },
         { opacity: 1, duration: 1.2, delay: 0.6, ease: 'power2.out' }
       );
 
-      // Generate blobs + interaction on idle (shorter timeout for iOS)
       deferHeavy(() => {
         animateGooeyBlobs();
         enableInteractiveJellyBlob();
@@ -323,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 1500);
 
-  // CTA → scroll to contact
   const hireBtn = document.getElementById('hireBtn');
   if (hireBtn) {
     hireBtn.addEventListener(
@@ -339,7 +288,6 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }
 
-  // Global fallbacks / effects
   initSections();
   setupHeaderScrollEffect();
   enableNoSelectDuringInteraction();

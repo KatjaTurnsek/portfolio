@@ -20,19 +20,11 @@ const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 /* Static waves (single <img> per host; dark/light swap)                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * @returns {boolean} True when the current theme is dark.
- */
 function isDarkTheme() {
   const b = document.body;
   return b.classList.contains('dark-theme') || b.getAttribute('data-theme') === 'dark';
 }
 
-/**
- * Remove legacy canvases/pictures/extra images/SVGs inside a wave host.
- * @param {Element} host
- * @returns {void}
- */
 function purgeLegacyWavesInside(host) {
   host.querySelectorAll('#top-waves-canvas, #menu-waves-canvas').forEach((n) => n.remove());
   host.querySelectorAll('picture').forEach((n) => n.remove());
@@ -40,14 +32,7 @@ function purgeLegacyWavesInside(host) {
   host.querySelectorAll('svg').forEach((n) => n.remove());
 }
 
-/**
- * Ensure a single managed <img.waves-fallback> exists in the host.
- * @param {Element} host
- * @param {string} [idHint]
- * @returns {HTMLImageElement}
- */
 function ensureWaveImg(host, idHint) {
-  /** @type {HTMLImageElement|null} */
   let img = host.querySelector('img.waves-fallback');
   if (!img) {
     img = document.createElement('img');
@@ -73,11 +58,6 @@ function ensureWaveImg(host, idHint) {
   return img;
 }
 
-/**
- * Choose the appropriate image URL for the current theme.
- * @param {Element} host
- * @returns {string}
- */
 function pickSrcForTheme(host) {
   const single = host.getAttribute('data-src');
   if (single) return single;
@@ -86,11 +66,6 @@ function pickSrcForTheme(host) {
   return isDarkTheme() ? dark || light || '' : light || dark || '';
 }
 
-/**
- * Initialize static wave images for eligible hosts (e.g., menu).
- * Skips hosts that lack data-* src attributes (e.g., header now CSS-only).
- * @returns {void}
- */
 export function setupStaticWaves() {
   const topHost =
     document.querySelector('.top-waves') ||
@@ -102,8 +77,7 @@ export function setupStaticWaves() {
     document.getElementById('menu-waves') ||
     document.querySelector('[data-waves="menu"]');
 
-  /** @type {Element[]} */
-  const hosts = [topHost, menuHost].filter((h) => !!h);
+  const hosts = [topHost, menuHost].filter(Boolean);
   const eligible = hosts.filter(
     (h) =>
       h.hasAttribute('data-src') ||
@@ -146,10 +120,6 @@ export function setupStaticWaves() {
   });
 }
 
-/**
- * Refresh static wave images when theme toggles.
- * @returns {void}
- */
 export function refreshStaticWaveImages() {
   const hosts = [
     document.querySelector('.top-waves') ||
@@ -165,7 +135,7 @@ export function refreshStaticWaveImages() {
       host.hasAttribute('data-src') ||
       host.hasAttribute('data-light-src') ||
       host.hasAttribute('data-dark-src');
-    if (!hasAttrs) return; // skip header (CSS background)
+    if (!hasAttrs) return;
 
     const img = host.querySelector('img.waves-fallback');
     const nextSrc = pickSrcForTheme(host);
@@ -189,10 +159,6 @@ export function refreshStaticWaveImages() {
   });
 }
 
-/**
- * Observe theme changes on <body> and refresh images. Returns a disposer.
- * @returns {() => void}
- */
 export function observeThemeChangesForWaves() {
   const mo = new MutationObserver(() => refreshStaticWaveImages());
   mo.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
@@ -203,11 +169,6 @@ export function observeThemeChangesForWaves() {
 /* Heading wavy lines (SVG)                                                   */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Animate an existing hero wavy path (#wavy-line path) if present.
- * Uses MorphSVG when available; otherwise a simple bob.
- * @returns {void}
- */
 export function animateWaveLine() {
   const path = /** @type {SVGPathElement|null} */ (document.querySelector('#wavy-line path'));
   if (!path) return;
@@ -228,10 +189,6 @@ export function animateWaveLine() {
   }
 }
 
-/**
- * Insert a small inline SVG “wavy line” right after each <h2>.
- * @returns {void}
- */
 export function insertWaveLines() {
   const waveSVG = `
     <svg class="wavy-line" viewBox="0 0 500 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -246,23 +203,9 @@ export function insertWaveLines() {
   });
 }
 
-/**
- * @typedef {Object} PolyItem
- * @property {SVGPolylineElement} polyline
- * @property {SVGPoint[]} points
- * @property {number} segments
- * @property {number} amplitude
- * @property {number} frequency
- */
-
-/** @type {PolyItem[]} */
 let _polylineItems = [];
 let _polylineTickerAdded = false;
 
-/**
- * Animate subtle wave motion on each `.wavy-polyline` using one GSAP ticker.
- * @returns {void}
- */
 export function animateCustomWaveLines() {
   const polylines = document.querySelectorAll('.wavy-polyline');
 
@@ -278,10 +221,9 @@ export function animateCustomWaveLines() {
     const segments = isSafari ? 50 : 100;
     const interval = width / segments;
 
-    /** @type {SVGPoint[]} */
     const points = [];
     for (let i = 0; i <= segments; i++) {
-      // @ts-ignore createSVGPoint exists on SVGSVGElement
+      // @ts-ignore
       const pt = svg.createSVGPoint();
       pt.x = i * interval;
       pt.y = 15;
@@ -298,7 +240,6 @@ export function animateCustomWaveLines() {
   }
 }
 
-/** @returns {void} */
 function _updateAllPolylines() {
   const time = performance.now() * 0.002;
   for (const item of _polylineItems) {
@@ -315,31 +256,21 @@ function _updateAllPolylines() {
 /* Teal bars (About) — mobile-safe version                                    */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Animate the teal skill bars on the About section.
- * - Waits until the container has non-zero width (common mobile/layout issue)
- * - Uses transform scaleX instead of width for robust animation
- * - Guards against double init; respects reduced motion
- * @returns {void}
- */
 export function animateTealBars() {
   const stack = document.querySelector('.bar-stack');
-  if (!stack) return; // nothing to do on this view
-  if (stack.dataset.animated === '1') return; // already ran
+  if (!stack) return;
+  if (stack.dataset.animated === '1') return;
 
-  // Ensure transforms animate from the left edge
   gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { transformOrigin: 'left center' });
 
   const ready = () => stack.getBoundingClientRect().width > 2;
 
   const run = () => {
-    // Make sure the bars have a base width to scale from
     gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { width: '100%' });
 
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (reduce) {
-      // Static final state for accessibility
       gsap.set('.bar-bg', { scaleX: 1 });
       gsap.set('.bar-1', { scaleX: 0.9 });
       gsap.set('.bar-2', { scaleX: 0.7 });
@@ -349,7 +280,6 @@ export function animateTealBars() {
       return;
     }
 
-    // Start collapsed, then animate open
     gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { scaleX: 0 });
     gsap.set('.bar-label', { opacity: 0 });
 
@@ -363,7 +293,6 @@ export function animateTealBars() {
     stack.dataset.animated = '1';
   };
 
-  // If layout is ready, run now; otherwise wait for width > 0
   if (ready()) {
     run();
   } else {
@@ -378,7 +307,6 @@ export function animateTealBars() {
         : null;
     if (ro) ro.observe(stack);
 
-    // Safety fallback in case ResizeObserver is slow/unavailable
     setTimeout(() => {
       if (!stack.dataset.animated && ready()) run();
     }, 400);
@@ -389,36 +317,80 @@ export function animateTealBars() {
 /* Gooey blobs + interactive jelly drag                                       */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Create multiple SVG blobs and animate slow floating/scale motion.
- * Links opacity to scroll via ScrollTrigger.
- * Requires #blob-svg > #blobs-g container.
- * @returns {void}
- */
-export function animateGooeyBlobs() {
+function ensureBlobDOM() {
+  let wrapper = document.querySelector('.morphing-blob-wrapper');
+  if (!wrapper) {
+    wrapper = document.createElement('div');
+    wrapper.className = 'morphing-blob-wrapper';
+    Object.assign(wrapper.style, {
+      position: 'fixed',
+      inset: '0',
+      zIndex: '0',
+      pointerEvents: 'none',
+      willChange: 'transform',
+      transform: 'translateZ(0)',
+      overflow: 'hidden',
+    });
+    document.body.prepend(wrapper);
+  } else if (getComputedStyle(wrapper).zIndex === '-1000') {
+    wrapper.style.zIndex = '0';
+  }
+
+  let svg = document.getElementById('blob-svg');
+  if (!svg) {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.id = 'blob-svg';
+    wrapper.appendChild(svg);
+  }
+
   const VW = window.innerWidth;
   const VH = window.innerHeight;
-  const mobile = VW < 768;
-  const svgns = 'http://www.w3.org/2000/svg';
-  const container = document.getElementById('blobs-g');
+  svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  svg.style.width = '100%';
+  svg.style.height = '100%';
+  svg.style.display = 'block';
+  svg.style.filter = 'blur(10px)';
+
+  let g = document.getElementById('blobs-g');
+  if (!g) {
+    g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.id = 'blobs-g';
+    g.setAttribute('class', 'blobs');
+    svg.appendChild(g);
+  }
+
+  return { wrapper, svg, g, VW, VH };
+}
+
+function clamp(n, min, max) {
+  return Math.min(max, Math.max(min, n));
+}
+
+export function animateGooeyBlobs() {
+  const { svg, g: container, VW, VH } = ensureBlobDOM();
   if (!container) return;
 
+  container.querySelectorAll('.blob-group').forEach((n) => n.remove());
+
+  const mobile = VW < 768;
+  const svgns = 'http://www.w3.org/2000/svg';
+
   const blobCount = 30;
-  const spread = mobile ? 400 : 700;
+  const spread = mobile ? 0.45 * Math.min(VW, 700) : 0.65 * Math.min(VW, 1200);
   const motionDistance = mobile ? 120 : 400;
 
   const centers = [
-    { x: VW * 0.3, y: VH * 0.5 },
-    { x: VW * 0.7, y: VH * 0.5 },
+    { x: clamp(VW * 0.3, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
+    { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
   ];
 
-  // Safari filter perf quirk
-  if (isSafari) container.removeAttribute('filter');
+  container.removeAttribute('filter');
 
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
-    const x = center.x + Math.random() * spread - spread / 2;
-    const y = center.y + Math.random() * spread - spread / 2;
+    const x = clamp(center.x + Math.random() * spread - spread / 2, 0, VW);
+    const y = clamp(center.y + Math.random() * spread - spread / 2, 0, VH);
     const size = Math.floor(Math.random() * 50) + 80;
 
     const group = document.createElementNS(svgns, 'g');
@@ -437,8 +409,8 @@ export function animateGooeyBlobs() {
     const pos = { x, y, rotation: 0 };
     gsap.to(pos, {
       duration: 12 + Math.random() * 4,
-      x: x + Math.random() * motionDistance - motionDistance / 2,
-      y: y + Math.random() * motionDistance - motionDistance / 2,
+      x: clamp(x + Math.random() * motionDistance - motionDistance / 2, 0, VW),
+      y: clamp(y + Math.random() * motionDistance - motionDistance / 2, 0, VH),
       rotation: Math.random() > 0.5 ? '+=180' : '-=180',
       ease: 'sine.inOut',
       repeat: -1,
@@ -458,24 +430,36 @@ export function animateGooeyBlobs() {
     });
   }
 
-  // Restore original behavior: do NOT clamp the starting opacity.
-  // It will fade toward 0.3 as you scroll with scrub.
+  gsap.set(container, { opacity: 0.6 });
+
   if (gsap.plugins?.ScrollTrigger) {
     gsap.to(container, {
-      opacity: 0.3,
+      opacity: 0.35,
       ease: 'none',
-      scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: true },
+      scrollTrigger: {
+        trigger: document.scrollingElement || document.body,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      },
     });
   }
+
+  const onResize = () => {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  };
+  window.addEventListener('resize', onResize, { passive: true });
 }
 
 /**
- * Enable “closest blob follows pointer while dragging” interaction.
- * Requires #blob-svg and generated .blob-group nodes.
- * @returns {void}
+ * Restore the earlier “feel” of the interactive jelly drag.
+ * Finds the closest blob to the pointer and lets it lag-follow the cursor/finger,
+ * then animates it back to its original transform on release.
  */
 export function enableInteractiveJellyBlob() {
-  const svg = document.getElementById('blob-svg');
+  const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
   if (!svg) return;
 
   const target = { x: 0, y: 0 };
@@ -487,15 +471,9 @@ export function enableInteractiveJellyBlob() {
   const originalTransforms = new Map();
   let lastSwitchTime = 0;
 
-  const getScale = (dx, dy) => Math.min(Math.sqrt(dx * dx + dy * dy) / 500, isSafari ? 0.18 : 0.25);
+  const getScale = (dx, dy) => Math.min(Math.hypot(dx, dy) / 500, isSafari ? 0.18 : 0.25);
   const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
 
-  /**
-   * Screen → SVG coordinates
-   * @param {number} clientX
-   * @param {number} clientY
-   * @returns {{x:number,y:number}}
-   */
   function getSVGCoords(clientX, clientY) {
     // @ts-ignore
     const pt = svg.createSVGPoint();
@@ -506,22 +484,17 @@ export function enableInteractiveJellyBlob() {
     return { x: res.x, y: res.y };
   }
 
-  /**
-   * Use screen-space geometric center to find the closest blob to the pointer.
-   * @param {number} xScreen
-   * @param {number} yScreen
-   * @returns {SVGGElement|null}
-   */
-  function getClosestBlob(xScreen, yScreen) {
+  function getClosestBlob(x, y) {
     const blobs = document.querySelectorAll('.blob-group');
     let closest = null;
     let minDist = Infinity;
 
     blobs.forEach((blob) => {
-      const r = blob.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height / 2;
-      const dist = Math.hypot(cx - xScreen, cy - yScreen);
+      const matrix = blob.getScreenCTM();
+      if (!matrix) return;
+      const cx = matrix.e;
+      const cy = matrix.f;
+      const dist = Math.hypot(cx - x, cy - y);
       if (dist < minDist) {
         minDist = dist;
         closest = blob;
@@ -531,30 +504,20 @@ export function enableInteractiveJellyBlob() {
     return /** @type {SVGGElement|null} */ (closest);
   }
 
-  /**
-   * Return blob to its original transform.
-   * @param {SVGGElement} blob
-   * @returns {void}
-   */
   function returnBlobToOriginal(blob) {
     const original = originalTransforms.get(blob);
     if (!original) return;
     gsap.to(blob, {
       x: original.x,
-      y: original.y, // exact original (no forced push down)
-      rotation: 0,
+      y: original.y,
+      rotation: original.rotation || 0,
       scaleX: 1,
       scaleY: 1,
-      duration: 1.8,
+      duration: 1.5,
       ease: 'power2.out',
     });
   }
 
-  /**
-   * Pointer update handler.
-   * @param {MouseEvent|TouchEvent} e
-   * @returns {void}
-   */
   function updatePointer(e) {
     if (!isDragging) return;
     const clientX = /** @type {TouchEvent} */ (e).touches
@@ -574,16 +537,6 @@ export function enableInteractiveJellyBlob() {
     const closestBlob = getClosestBlob(clientX, clientY);
 
     if (closestBlob && closestBlob !== activeBlob) {
-      const newMatrix = closestBlob.getScreenCTM();
-      const oldMatrix = activeBlob?.getScreenCTM();
-
-      const newDist = Math.hypot(newMatrix.e - clientX, newMatrix.f - clientY);
-      const oldDist = oldMatrix
-        ? Math.hypot(oldMatrix.e - clientX, oldMatrix.f - clientY)
-        : Infinity;
-
-      if (newDist >= oldDist - 15) return;
-
       if (activeBlob) returnBlobToOriginal(activeBlob);
       activeBlob = closestBlob;
       lastSwitchTime = now;
@@ -598,13 +551,6 @@ export function enableInteractiveJellyBlob() {
           scaleY: gp('scaleY'),
         });
       }
-
-      // Sync the drag state to the blob's current position so it doesn't "fly in".
-      const gp2 = gsap.getProperty(activeBlob);
-      current.x = Number(gp2('x')) || 0;
-      current.y = Number(gp2('y')) || 0;
-      target.x = current.x;
-      target.y = current.y;
 
       gsap.killTweensOf(activeBlob);
     }
@@ -629,9 +575,9 @@ export function enableInteractiveJellyBlob() {
     gsap.set(activeBlob, {
       x: current.x,
       y: current.y,
-      rotation: isSafari ? angle : angle + '_short',
-      scaleX: 1 + (isSafari ? scale * 0.7 : scale),
-      scaleY: 1 - (isSafari ? scale * 0.7 : scale),
+      rotation: angle, // simpler/earlier feel
+      scaleX: 1 + scale,
+      scaleY: 1 - scale,
       transformOrigin: 'center',
     });
   }
@@ -639,24 +585,10 @@ export function enableInteractiveJellyBlob() {
   window.addEventListener('mousedown', (e) => {
     isDragging = true;
     updatePointer(e);
-    if (activeBlob) {
-      const gp = gsap.getProperty(activeBlob);
-      current.x = Number(gp('x')) || 0;
-      current.y = Number(gp('y')) || 0;
-      target.x = current.x;
-      target.y = current.y;
-    }
   });
   window.addEventListener('touchstart', (e) => {
     isDragging = true;
     updatePointer(e);
-    if (activeBlob) {
-      const gp = gsap.getProperty(activeBlob);
-      current.x = Number(gp('x')) || 0;
-      current.y = Number(gp('y')) || 0;
-      target.x = current.x;
-      target.y = current.y;
-    }
   });
   window.addEventListener('mousemove', updatePointer, { passive: false });
   window.addEventListener('touchmove', updatePointer, { passive: false });
@@ -678,12 +610,6 @@ export function enableInteractiveJellyBlob() {
 /* Defer helper                                                               */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Defer heavy work until the browser is idle (or next tick fallback).
- * @param {() => void} cb Work to run later.
- * @param {number} [timeout=2000] Max wait in ms for requestIdleCallback.
- * @returns {() => void} Cancel function.
- */
 export function deferHeavy(cb, timeout = 2000) {
   let cancelled = false;
   let started = false;
