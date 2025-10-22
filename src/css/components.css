@@ -8,6 +8,11 @@
    --pill-active-bg, --pill-active-border, --error-color, --success-color
    ========================================================================== */
 
+:root {
+  --blob-opacity-start: 0.55;
+  --blob-opacity-end: 0.1;
+}
+
 /* 0) Utilities */
 .no-select,
 .no-select * {

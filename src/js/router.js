@@ -1,4 +1,3 @@
-// src/js/router.js
 // History-API router with clean, crawlable paths.
 // - Static routes: "/", "/work", "/about", "/contact"
 // - Dynamic: "/work/:slug" → "case-:slug", "/work/:slug/:sub" → "case-:slug-:sub"
@@ -11,8 +10,8 @@
 
   // Prefer runtime base set in index.js, fall back to Vite env, then "/"
   const RAW_BASE = window.__BASE_URL__ || import.meta?.env?.BASE_URL || '/';
-  const BASE = RAW_BASE.replace(/\/?$/, ''); // "/portfolio"
-  const BASE_SLASH = BASE + '/'; // "/portfolio/"
+  const BASE = RAW_BASE.replace(/\/?$/, ''); // "/portfolio" or ""
+  const BASE_SLASH = BASE + '/'; // "/portfolio/" or "/"
 
   /** @type {Record<string,string>} */
   const routes = {
@@ -28,7 +27,7 @@
   const sections = () => $$('.fullscreen-section');
 
   function normalizePathname(pathname) {
-    // Strip the "/portfolio" prefix (with or without trailing slash)
+    // Strip the "/portfolio" (BASE) prefix (with or without trailing slash)
     let p = pathname;
     if (p.startsWith(BASE_SLASH)) p = '/' + p.slice(BASE_SLASH.length);
     else if (p.startsWith(BASE)) p = '/' + p.slice(BASE.length);
@@ -184,10 +183,23 @@
     if (el.target && el.target !== '_self') return;
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
+    // --- BYPASS: let the browser handle real downloads / external-ish links ---
+    const rawHref = el.getAttribute('href') || '';
+    const isExternalRel = (el.getAttribute('rel') || '').includes('external');
+    const isNoRouter = el.classList.contains('no-router');
+    const isDownloadAttr = el.hasAttribute('download');
+    const looksLikePdf = /\.pdf(\?|$)/i.test(rawHref);
+
+    if (isExternalRel || isNoRouter || isDownloadAttr || looksLikePdf) {
+      // Do NOT preventDefault — allow normal navigation/download
+      return;
+    }
+    // --------------------------------------------------------------------------
+
     let url;
     try {
       // resolve relative links correctly against current document URL
-      url = new URL(el.getAttribute('href') || '', location.href);
+      url = new URL(rawHref, location.href);
     } catch {
       return;
     }

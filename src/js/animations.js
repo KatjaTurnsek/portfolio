@@ -7,7 +7,7 @@
  * - Defer helper
  */
 
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { MorphSVGPlugin } from '../../node_modules/gsap/MorphSVGPlugin.js';
 import { ScrollTrigger } from '../../node_modules/gsap/ScrollTrigger.js';
 
@@ -338,7 +338,7 @@ function ensureBlobDOM() {
   if (!svg) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.id = 'blob-svg';
-    wrapper.appendChild(svg);
+    document.querySelector('.morphing-blob-wrapper')?.appendChild(svg);
   }
 
   const VW = window.innerWidth;
@@ -369,7 +369,7 @@ export function animateGooeyBlobs() {
   const { svg, g: container, VW, VH } = ensureBlobDOM();
   if (!container) return;
 
-  // clear previous
+  // clear old
   container.querySelectorAll('.blob-group').forEach((n) => n.remove());
 
   const mobile = VW < 768;
@@ -384,14 +384,13 @@ export function animateGooeyBlobs() {
     { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
   ];
 
-  // Safari sometimes darkens with filters on groups; keep clean
   container.removeAttribute('filter');
 
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
     const x = clamp(center.x + Math.random() * spread - spread / 2, 0, VW);
     const y = clamp(center.y + Math.random() * spread - spread / 2, 0, VH);
-    const size = Math.floor(Math.random() * 50) + (mobile ? 60 : 80); // slightly smaller on mobile
+    const size = Math.floor(Math.random() * 50) + 80;
 
     const group = document.createElementNS(svgns, 'g');
     group.setAttribute('class', 'blob-group');
@@ -430,24 +429,49 @@ export function animateGooeyBlobs() {
     });
   }
 
-  // visible baseline
-  gsap.set(container, { opacity: 0.3 });
+  // ---------- Opacity: start strong, fade with scroll (CSS-variable friendly)
+  const css = getComputedStyle(document.documentElement);
+  const OPACITY_START = parseFloat(css.getPropertyValue('--blob-opacity-start')) || 0.55; // more visible at top
+  const OPACITY_END = parseFloat(css.getPropertyValue('--blob-opacity-end')) || 0.1; // faint while scrolled
 
-  // fade with scroll (works on desktop & mobile, avoids 0 → invisible-at-top)
+  // Set explicit start
+  gsap.set(container, { opacity: OPACITY_START });
+
   if (gsap.plugins?.ScrollTrigger) {
-    gsap.to(container, {
-      opacity: 0.06,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: 'body',
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: true,
-      },
-    });
+    const endFn = () =>
+      Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) -
+      window.innerHeight;
+
+    gsap.fromTo(
+      container,
+      { opacity: OPACITY_START },
+      {
+        opacity: OPACITY_END,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: document.documentElement,
+          start: 'top top',
+          end: endFn,
+          scrub: true,
+          // markers: true,
+        },
+      }
+    );
+  } else {
+    // Fallback when ST isn’t available/active
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight || 1;
+      const t = Math.min(Math.max(doc.scrollTop / max, 0), 1);
+      const o = lerp(OPACITY_START, OPACITY_END, t);
+      container.style.opacity = String(o);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  // keep the SVG fitted to viewport
+  // keep viewBox synced
   const onResize = () => {
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -457,7 +481,7 @@ export function animateGooeyBlobs() {
 }
 
 /**
- * Restore the earlier “feel” of the interactive jelly drag.
+ * Interactive jelly drag:
  * Finds the closest blob to the pointer and lets it lag-follow the cursor/finger,
  * then animates it back to its original transform on release.
  */
@@ -578,7 +602,7 @@ export function enableInteractiveJellyBlob() {
     gsap.set(activeBlob, {
       x: current.x,
       y: current.y,
-      rotation: angle, // simpler/earlier feel
+      rotation: angle, // simple/earlier feel
       scaleX: 1 + scale,
       scaleY: 1 - scale,
       transformOrigin: 'center',
