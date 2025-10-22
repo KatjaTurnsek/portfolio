@@ -376,6 +376,13 @@ textarea:valid:focus {
   background-color: var(--teal);
   z-index: 1;
 }
+
+.bar,
+.bar-bg {
+  transform-origin: left center;
+  will-change: transform;
+}
+
 .bar-1,
 .bar-2,
 .bar-3 {
@@ -462,6 +469,7 @@ textarea:valid:focus {
   height: 100%;
   display: block;
   filter: blur(10px);
+  pointer-events: none;
 }
 .blobs .blob {
   fill: var(--blob-color);

@@ -2,8 +2,8 @@
  * GSAP-powered visuals (lightweight after removing heavy canvases).
  * - Static waves (menu header image swap on theme)
  * - Heading wavy lines
- * - Teal skill bars
- * - Gooey blobs + “jelly” drag
+ * - Teal skill bars (mobile-safe)
+ * - Gooey blobs + “jelly” drag (mobile-visible)
  * - Defer helper
  */
 
@@ -312,20 +312,77 @@ function _updateAllPolylines() {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Teal bars (About)                                                          */
+/* Teal bars (About) — mobile-safe version                                    */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
  * Animate the teal skill bars on the About section.
+ * - Waits until the container has non-zero width (mobile/layout issue)
+ * - Uses transform scaleX instead of width for robust animation
+ * - Guards against double init; respects reduced motion
  * @returns {void}
  */
 export function animateTealBars() {
-  const tl = gsap.timeline();
-  tl.to('.bar-bg', { width: '100%', duration: 1.5, stagger: 1, ease: 'power4.out' });
-  tl.to('.bar-1', { width: '90%', duration: 1, ease: 'power4.out' }, '<+0.5');
-  tl.to('.bar-2', { width: '70%', duration: 1, ease: 'power4.out' }, '-=0.6');
-  tl.to('.bar-3', { width: '80%', duration: 1, ease: 'power4.out' }, '-=0.6');
-  tl.to('.bar-label', { opacity: 1, duration: 1.2, ease: 'power2.out', stagger: 0.2 }, '-=0.4');
+  const stack = document.querySelector('.bar-stack');
+  if (!stack) return; // nothing to do on this view
+  if (stack.dataset.animated === '1') return; // already ran
+
+  // Ensure transforms animate from the left edge and keep layout width
+  gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], {
+    transformOrigin: 'left center',
+    width: '100%',
+  });
+
+  const ready = () => stack.getBoundingClientRect().width > 2;
+
+  const run = () => {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduce) {
+      // Static final state for accessibility
+      gsap.set('.bar-bg', { scaleX: 1 });
+      gsap.set('.bar-1', { scaleX: 0.9 });
+      gsap.set('.bar-2', { scaleX: 0.7 });
+      gsap.set('.bar-3', { scaleX: 0.8 });
+      gsap.set('.bar-label', { opacity: 1 });
+      stack.dataset.animated = '1';
+      return;
+    }
+
+    // Start collapsed, then animate open
+    gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { scaleX: 0 });
+    gsap.set('.bar-label', { opacity: 0 });
+
+    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+    tl.to('.bar-bg', { scaleX: 1, duration: 1.2, stagger: 0.2 })
+      .to('.bar-1', { scaleX: 0.9, duration: 0.9 }, '<+0.2')
+      .to('.bar-2', { scaleX: 0.7, duration: 0.9 }, '-=0.5')
+      .to('.bar-3', { scaleX: 0.8, duration: 0.9 }, '-=0.5')
+      .to('.bar-label', { opacity: 1, duration: 0.8, stagger: 0.15 }, '-=0.3');
+
+    stack.dataset.animated = '1';
+  };
+
+  // If layout is ready, run now; otherwise wait for width > 0
+  if (ready()) {
+    run();
+  } else {
+    const ro =
+      'ResizeObserver' in window
+        ? new ResizeObserver(() => {
+            if (ready()) {
+              ro.disconnect();
+              run();
+            }
+          })
+        : null;
+    if (ro) ro.observe(stack);
+
+    // Safety fallback in case ResizeObserver is slow/unavailable
+    setTimeout(() => {
+      if (!stack.dataset.animated && ready()) run();
+    }, 400);
+  }
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -400,11 +457,17 @@ export function animateGooeyBlobs() {
     });
   }
 
-  gsap.to(container, {
-    opacity: 0.3,
-    ease: 'none',
-    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: true },
-  });
+  // Ensure a visible starting value so scrub 0% isn’t invisible.
+  gsap.set(container, { opacity: 0.3 });
+
+  // Keep your scrub linkage (now it won’t start at 0).
+  if (gsap.plugins?.ScrollTrigger) {
+    gsap.to(container, {
+      opacity: 0.3,
+      ease: 'none',
+      scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: true },
+    });
+  }
 }
 
 /**

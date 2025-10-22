@@ -289,22 +289,29 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!prefersReducedMotion) {
       const blobWrapper = document.querySelector('.morphing-blob-wrapper');
       if (blobWrapper) {
+        // Prime blob group opacity so ScrollTrigger scrub at 0% isn't invisible on mobile
+        const primeBlobs = () => {
+          const g = document.getElementById('blobs-g');
+          if (g) {
+            gsap.set(g, { opacity: 0.3 });
+            return true;
+          }
+          return false;
+        };
+        if (!primeBlobs()) setTimeout(primeBlobs, 60); // try again next tick
+
+        // Fade the wrapper itself
         gsap.fromTo(
           blobWrapper,
           { opacity: 0 },
-          {
-            opacity: 1,
-            duration: 1.5,
-            delay: 0.8,
-            ease: 'power2.out',
-            onStart: () => {
-              deferHeavy(() => {
-                animateGooeyBlobs();
-                enableInteractiveJellyBlob();
-              });
-            },
-          }
+          { opacity: 1, duration: 1.2, delay: 0.6, ease: 'power2.out' }
         );
+
+        // Generate blobs + interaction on idle (shorter timeout for iOS)
+        deferHeavy(() => {
+          animateGooeyBlobs();
+          enableInteractiveJellyBlob();
+        }, 800);
       }
     }
 
