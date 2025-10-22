@@ -20,11 +20,19 @@ const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 /* Static waves (single <img> per host; dark/light swap)                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * @returns {boolean} True when the current theme is dark.
+ */
 function isDarkTheme() {
   const b = document.body;
   return b.classList.contains('dark-theme') || b.getAttribute('data-theme') === 'dark';
 }
 
+/**
+ * Remove legacy canvases/pictures/extra images/SVGs inside a wave host.
+ * @param {Element} host
+ * @returns {void}
+ */
 function purgeLegacyWavesInside(host) {
   host.querySelectorAll('#top-waves-canvas, #menu-waves-canvas').forEach((n) => n.remove());
   host.querySelectorAll('picture').forEach((n) => n.remove());
@@ -32,7 +40,14 @@ function purgeLegacyWavesInside(host) {
   host.querySelectorAll('svg').forEach((n) => n.remove());
 }
 
+/**
+ * Ensure a single managed <img.waves-fallback> exists in the host.
+ * @param {Element} host
+ * @param {string} [idHint]
+ * @returns {HTMLImageElement}
+ */
 function ensureWaveImg(host, idHint) {
+  /** @type {HTMLImageElement|null} */
   let img = host.querySelector('img.waves-fallback');
   if (!img) {
     img = document.createElement('img');
@@ -58,6 +73,11 @@ function ensureWaveImg(host, idHint) {
   return img;
 }
 
+/**
+ * Choose the appropriate image URL for the current theme.
+ * @param {Element} host
+ * @returns {string}
+ */
 function pickSrcForTheme(host) {
   const single = host.getAttribute('data-src');
   if (single) return single;
@@ -66,6 +86,11 @@ function pickSrcForTheme(host) {
   return isDarkTheme() ? dark || light || '' : light || dark || '';
 }
 
+/**
+ * Initialize static wave images for eligible hosts (e.g., menu).
+ * Skips hosts that lack data-* src attributes (e.g., header now CSS-only).
+ * @returns {void}
+ */
 export function setupStaticWaves() {
   const topHost =
     document.querySelector('.top-waves') ||
@@ -77,7 +102,8 @@ export function setupStaticWaves() {
     document.getElementById('menu-waves') ||
     document.querySelector('[data-waves="menu"]');
 
-  const hosts = [topHost, menuHost].filter(Boolean);
+  /** @type {Element[]} */
+  const hosts = [topHost, menuHost].filter((h) => !!h);
   const eligible = hosts.filter(
     (h) =>
       h.hasAttribute('data-src') ||
@@ -120,6 +146,10 @@ export function setupStaticWaves() {
   });
 }
 
+/**
+ * Refresh static wave images when theme toggles.
+ * @returns {void}
+ */
 export function refreshStaticWaveImages() {
   const hosts = [
     document.querySelector('.top-waves') ||
@@ -170,12 +200,10 @@ export function observeThemeChangesForWaves() {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 export function animateWaveLine() {
-  const path = /** @type {SVGPathElement|null} */ (document.querySelector('#wavy-line path'));
+  const path = document.querySelector('#wavy-line path');
   if (!path) return;
-
   const ALT_D = 'M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15';
   gsap.killTweensOf(path);
-
   if (gsap.plugins?.MorphSVGPlugin) {
     gsap.to(path, {
       duration: 3,
@@ -193,8 +221,7 @@ export function insertWaveLines() {
   const waveSVG = `
     <svg class="wavy-line" viewBox="0 0 500 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <polyline class="wavy-polyline" fill="none" stroke="currentColor" stroke-width="1" />
-    </svg>
-  `;
+    </svg>`;
   document.querySelectorAll('h2').forEach((heading) => {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = waveSVG;
@@ -203,25 +230,21 @@ export function insertWaveLines() {
   });
 }
 
-/** @typedef {{ polyline: SVGPolylineElement, points: SVGPoint[], segments:number, amplitude:number, frequency:number }} PolyItem */
 let _polylineItems = [];
 let _polylineTickerAdded = false;
 
 export function animateCustomWaveLines() {
   const polylines = document.querySelectorAll('.wavy-polyline');
-
   polylines.forEach((polyline) => {
     if (!(polyline instanceof SVGPolylineElement)) return;
     if (polyline.dataset.waveInit === '1') return;
     polyline.dataset.waveInit = '1';
-
     const svg = polyline.closest('svg');
     const width = 500;
     const amplitude = 10;
     const frequency = 2;
     const segments = isSafari ? 50 : 100;
     const interval = width / segments;
-
     const points = [];
     for (let i = 0; i <= segments; i++) {
       const pt = svg.createSVGPoint();
@@ -230,10 +253,8 @@ export function animateCustomWaveLines() {
       points.push(pt);
       polyline.points.appendItem(pt);
     }
-
     _polylineItems.push({ polyline, points, segments, amplitude, frequency });
   });
-
   if (!_polylineTickerAdded && _polylineItems.length > 0) {
     _polylineTickerAdded = true;
     gsap.ticker.add(_updateAllPolylines);
@@ -269,131 +290,37 @@ export function animateTealBars() {
 /* Gooey blobs + interactive jelly drag                                       */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Ensure there is a top-level fixed host appended to <body> with #blob-svg.
- * This avoids transformed ancestor stacking issues on iOS.
- * @returns {SVGSVGElement}
- */
-function ensureBlobHost() {
-  // Host wrapper
-  let host = document.querySelector('.morphing-blob-wrapper');
-  if (!host) {
-    host = document.createElement('div');
-    host.className = 'morphing-blob-wrapper';
-  }
-
-  // SVG element
-  let svg = document.getElementById('blob-svg');
-  if (!svg) {
-    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('id', 'blob-svg');
-  }
-
-  // Group container
-  let g = svg.querySelector('#blobs-g');
-  if (!g) {
-    g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('id', 'blobs-g');
-    svg.appendChild(g);
-  }
-
-  // Move/append to <body> as the last child to win stacking
-  if (host.parentNode !== document.body) {
-    host.appendChild(svg);
-    document.body.appendChild(host);
-  } else if (svg.parentNode !== host) {
-    host.appendChild(svg);
-  }
-
-  // Minimal inline safety (in case CSS didn’t load yet)
-  Object.assign(host.style, {
-    position: 'fixed',
-    inset: '0',
-    width: '100vw',
-    height: '100vh',
-    overflow: 'hidden',
-    zIndex: '9',
-    pointerEvents: 'none',
-  });
-  Object.assign(svg.style, {
-    position: 'fixed',
-    inset: '0',
-    width: '100vw',
-    height: '100vh',
-    display: 'block',
-    pointerEvents: 'none',
-    zIndex: '9',
-  });
-
-  return /** @type {SVGSVGElement} */ (svg);
-}
-
-/** Ensure #blob-svg has correct viewBox to match viewport. */
-function ensureBlobSvgSizing() {
-  const svg = ensureBlobHost();
-  const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-  const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-  svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
-  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '100%');
-  svg.style.opacity = '1';
-  return svg;
-}
-
 export function animateGooeyBlobs() {
-  // Avoid double init
-  const existing = document.getElementById('blobs-g');
-  if (existing && existing.dataset.init === '1') return;
-
-  const svg = ensureBlobSvgSizing();
-  const container = /** @type {SVGGElement} */ (document.getElementById('blobs-g'));
-  if (!container) return;
-  container.dataset.init = '1';
-
-  const rect = svg.viewBox.baseVal;
-  const VW = rect.width || window.innerWidth;
-  const VH = rect.height || window.innerHeight;
-
+  const VW = window.innerWidth;
+  const VH = window.innerHeight;
   const mobile = VW < 768;
   const svgns = 'http://www.w3.org/2000/svg';
-
-  // Be visible immediately.
-  gsap.set(container, { opacity: 0.4 });
-
+  const container = document.getElementById('blobs-g');
+  if (!container) return;
   const blobCount = 30;
   const spread = mobile ? 400 : 700;
   const motionDistance = mobile ? 120 : 400;
-
   const centers = [
     { x: VW * 0.3, y: VH * 0.5 },
     { x: VW * 0.7, y: VH * 0.5 },
   ];
-
-  // iOS Safari + SVG filter = sometimes hidden; remove filter to be safe
   if (isSafari) container.removeAttribute('filter');
-
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
     const x = center.x + Math.random() * spread - spread / 2;
     const y = center.y + Math.random() * spread - spread / 2;
     const size = Math.floor(Math.random() * 50) + 80;
-
     const group = document.createElementNS(svgns, 'g');
     group.setAttribute('class', 'blob-group');
     group.setAttribute('id', `blob-group-${i}`);
     group.setAttribute('transform', `translate(${x},${y})`);
     container.appendChild(group);
-
     const circle = document.createElementNS(svgns, 'circle');
     circle.setAttribute('class', 'blob');
     circle.setAttribute('cx', '0');
     circle.setAttribute('cy', '0');
     circle.setAttribute('r', String(size));
-    circle.setAttribute('fill', 'var(--blob-color, #22d3ee)');
-    circle.setAttribute('opacity', 'var(--blob-opacity, 0.45)');
     group.appendChild(circle);
-
     const pos = { x, y, rotation: 0 };
     gsap.to(pos, {
       duration: 12 + Math.random() * 4,
@@ -407,7 +334,6 @@ export function animateGooeyBlobs() {
         group.setAttribute('transform', `translate(${pos.x},${pos.y}) rotate(${pos.rotation})`);
       },
     });
-
     gsap.to(circle, {
       scaleX: 'random(0.9, 1.1)',
       scaleY: 'random(0.9, 1.1)',
@@ -417,182 +343,9 @@ export function animateGooeyBlobs() {
       ease: 'sine.inOut',
     });
   }
-
-  // Keep sized correctly on rotate/resize
-  const resize = () => ensureBlobSvgSizing();
-  window.addEventListener('resize', resize, { passive: true });
-  window.addEventListener('orientationchange', () => setTimeout(resize, 120), { passive: true });
-}
-
-export function enableInteractiveJellyBlob() {
-  const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
-  if (!svg) return;
-
-  const target = { x: 0, y: 0 };
-  const current = { x: 0, y: 0 };
-  const vel = { x: 0, y: 0 };
-  /** @type {SVGGElement|null} */
-  let activeBlob = null;
-  let isDragging = false;
-  const originalTransforms = new Map();
-  let lastSwitchTime = 0;
-
-  const getScale = (dx, dy) => Math.min(Math.sqrt(dx * dx + dy * dy) / 500, isSafari ? 0.18 : 0.25);
-  const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
-
-  function getSVGCoords(clientX, clientY) {
-    const pt = svg.createSVGPoint();
-    pt.x = clientX;
-    pt.y = clientY;
-    const res = pt.matrixTransform(svg.getScreenCTM().inverse());
-    return { x: res.x, y: res.y };
-  }
-
-  function getClosestBlob(x, y) {
-    const blobs = document.querySelectorAll('.blob-group');
-    let closest = null;
-    let minDist = Infinity;
-    blobs.forEach((blob) => {
-      const m = blob.getScreenCTM();
-      if (!m) return;
-      const cx = m.e;
-      const cy = m.f;
-      const d = Math.hypot(cx - x, cy - y);
-      if (d < minDist) {
-        minDist = d;
-        closest = blob;
-      }
-    });
-    return /** @type {SVGGElement|null} */ (closest);
-  }
-
-  function returnBlobToOriginal(blob) {
-    const original = originalTransforms.get(blob);
-    if (!original) return;
-    gsap.to(blob, {
-      x: original.x,
-      y: Math.max(original.y, 400),
-      rotation: 0,
-      scaleX: 1,
-      scaleY: 1,
-      duration: 1.8,
-      ease: 'power2.out',
-    });
-  }
-
-  function updatePointer(e) {
-    if (!isDragging) return;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const svgPos = getSVGCoords(clientX, clientY);
-
-    target.x = svgPos.x;
-    target.y = svgPos.y;
-
-    const now = Date.now();
-    if (now - lastSwitchTime < 200) return;
-
-    const closestBlob = getClosestBlob(clientX, clientY);
-
-    if (closestBlob && closestBlob !== activeBlob) {
-      const newM = closestBlob.getScreenCTM();
-      const oldM = activeBlob?.getScreenCTM();
-      const newDist = Math.hypot(newM.e - clientX, newM.f - clientY);
-      const oldDist = oldM ? Math.hypot(oldM.e - clientX, oldM.f - clientY) : Infinity;
-      if (newDist >= oldDist - 15) return;
-
-      if (activeBlob) returnBlobToOriginal(activeBlob);
-      activeBlob = closestBlob;
-      lastSwitchTime = now;
-
-      if (!originalTransforms.has(activeBlob)) {
-        const gp = gsap.getProperty(activeBlob);
-        originalTransforms.set(activeBlob, {
-          x: gp('x'),
-          y: gp('y'),
-          rotation: gp('rotation'),
-          scaleX: gp('scaleX'),
-          scaleY: gp('scaleY'),
-        });
-      }
-      gsap.killTweensOf(activeBlob);
-    }
-  }
-
-  let lastUpdate = 0;
-  function loop() {
-    requestAnimationFrame(loop);
-    const now = Date.now();
-    if (!isDragging || !activeBlob || now - lastUpdate < 16) return;
-    lastUpdate = now;
-
-    vel.x = target.x - current.x;
-    vel.y = target.y - current.y;
-    current.x += vel.x * 0.2;
-    current.y += vel.y * 0.2;
-
-    const angle = getAngle(vel.x, vel.y);
-    const scale = getScale(vel.x, vel.y);
-
-    gsap.set(activeBlob, {
-      x: current.x,
-      y: current.y,
-      rotation: isSafari ? angle : angle + '_short',
-      scaleX: 1 + (isSafari ? scale * 0.7 : scale),
-      scaleY: 1 - (isSafari ? scale * 0.7 : scale),
-      transformOrigin: 'center',
-    });
-  }
-
-  window.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    updatePointer(e);
+  gsap.to(container, {
+    opacity: 0.3,
+    ease: 'none',
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: true },
   });
-  window.addEventListener('touchstart', (e) => {
-    isDragging = true;
-    updatePointer(e);
-  });
-  window.addEventListener('mousemove', updatePointer, { passive: false });
-  window.addEventListener('touchmove', updatePointer, { passive: false });
-  window.addEventListener('mouseup', () => {
-    isDragging = false;
-    if (activeBlob) returnBlobToOriginal(activeBlob);
-    activeBlob = null;
-  });
-  window.addEventListener('touchend', () => {
-    isDragging = false;
-    if (activeBlob) returnBlobToOriginal(activeBlob);
-    activeBlob = null;
-  });
-
-  loop();
-}
-
-/* ────────────────────────────────────────────────────────────────────────── */
-/* Defer helper                                                               */
-/* ────────────────────────────────────────────────────────────────────────── */
-
-export function deferHeavy(cb, timeout = 2000) {
-  let cancelled = false;
-  let started = false;
-  const start = () => {
-    if (!cancelled && !started) {
-      started = true;
-      cb();
-    }
-  };
-
-  if ('requestIdleCallback' in window) {
-    const id = window.requestIdleCallback(start, { timeout });
-    return () => {
-      cancelled = true;
-      if ('cancelIdleCallback' in window) window.cancelIdleCallback(id);
-    };
-  } else {
-    const id = setTimeout(start, 0);
-    return () => {
-      cancelled = true;
-      clearTimeout(id);
-    };
-  }
 }

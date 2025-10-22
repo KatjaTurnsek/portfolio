@@ -444,45 +444,32 @@ textarea:valid:focus {
   fill: none;
 }
 
-/* 10) Animated Blob (background)
-   The blob layer is fixed but sits BEHIND UI: z-index: 0.
-   Avoid negative z-index (mobile Safari quirk). */
+/* 10) Animated Blob (background) */
 .morphing-blob-wrapper {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  z-index: 0; /* behind header/footer/content */
+  z-index: -999;
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0);
 }
-
 #blob-svg {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: block;
-  filter: blur(8px);
-  pointer-events: none;
-  z-index: 0; /* keep in same stacking as wrapper */
+  filter: blur(10px);
 }
-
+.blobs .blob {
+  fill: var(--blob-color);
+}
 .blob {
   transform-box: fill-box;
   transform-origin: center;
   stroke: none;
-  fill: var(--blob-color, #22d3ee);
-  opacity: var(--blob-opacity, 0.45);
-}
-
-/* iOS tweak — disable heavy blur if it risks invisibility */
-@supports (-webkit-touch-callout: none) {
-  #blob-svg {
-    filter: none;
-  }
 }
 
 /* 11) Hire Button */
@@ -596,6 +583,8 @@ textarea:valid:focus {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: auto;
+    padding-top: 30px;
   }
   .bullet-list,
   .bullet-list-right {
