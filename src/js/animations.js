@@ -333,18 +333,54 @@ export function animateTealBars() {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
+ * Ensure #blob-svg has a real box and group.
+ * @returns {SVGSVGElement|null}
+ */
+function ensureBlobSvgSizing() {
+  const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
+  if (!svg) return null;
+
+  const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+  svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '100%');
+
+  // Ensure container group
+  let g = svg.querySelector('#blobs-g');
+  if (!g) {
+    g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('id', 'blobs-g');
+    svg.appendChild(g);
+  }
+  return svg;
+}
+
+/**
  * Create multiple SVG blobs and animate slow floating/scale motion.
  * Links opacity to scroll via ScrollTrigger.
  * Requires #blob-svg > #blobs-g container.
  * @returns {void}
  */
 export function animateGooeyBlobs() {
-  const VW = window.innerWidth;
-  const VH = window.innerHeight;
+  // Avoid double init
+  if (document.getElementById('blobs-g')?.dataset.init === '1') return;
+
+  const svg = ensureBlobSvgSizing();
+  if (!svg) return;
+
+  const rect = svg.viewBox.baseVal;
+  const VW = rect.width || window.innerWidth;
+  const VH = rect.height || window.innerHeight;
+
   const mobile = VW < 768;
   const svgns = 'http://www.w3.org/2000/svg';
-  const container = document.getElementById('blobs-g');
+  const container = /** @type {SVGGElement} */ (document.getElementById('blobs-g'));
   if (!container) return;
+
+  container.dataset.init = '1';
 
   const blobCount = 30;
   const spread = mobile ? 400 : 700;
@@ -355,6 +391,7 @@ export function animateGooeyBlobs() {
     { x: VW * 0.7, y: VH * 0.5 },
   ];
 
+  // iOS Safari can hide filtered SVGs—remove the filter if present.
   if (isSafari) container.removeAttribute('filter');
 
   for (let i = 1; i <= blobCount; i++) {
@@ -405,6 +442,11 @@ export function animateGooeyBlobs() {
     ease: 'none',
     scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: true },
   });
+
+  // Keep SVG sized correctly on rotate/resize (iOS needs a little delay).
+  const resize = () => ensureBlobSvgSizing();
+  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('orientationchange', () => setTimeout(resize, 100), { passive: true });
 }
 
 /**
@@ -413,7 +455,7 @@ export function animateGooeyBlobs() {
  * @returns {void}
  */
 export function enableInteractiveJellyBlob() {
-  const svg = document.getElementById('blob-svg');
+  const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
   if (!svg) return;
 
   const target = { x: 0, y: 0 };
@@ -445,7 +487,7 @@ export function enableInteractiveJellyBlob() {
 
   /**
    * @param {number} x
-   * @param {number} y
+   * @param {number} y}
    * @returns {SVGGElement|null}
    */
   function getClosestBlob(x, y) {

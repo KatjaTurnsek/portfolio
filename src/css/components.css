@@ -445,24 +445,32 @@ textarea:valid:focus {
 }
 
 /* 10) Animated Blob (background) */
+/* Use a safe stacking level so it's visible on iOS even with backgrounds */
 .morphing-blob-wrapper {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  z-index: -999;
+  z-index: 0; /* was -999; 0 is safer on mobile */
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0);
 }
+
+/* Make the SVG own the viewport box (important for mobile Safari) */
 #blob-svg {
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
   display: block;
   filter: blur(10px);
+  pointer-events: none;
+  z-index: 0;
 }
+
+/* If you mount blobs inside a .blobs wrapper, keep color too */
 .blobs .blob {
   fill: var(--blob-color);
 }
@@ -470,6 +478,7 @@ textarea:valid:focus {
   transform-box: fill-box;
   transform-origin: center;
   stroke: none;
+  fill: var(--blob-color);
 }
 
 /* 11) Hire Button */
@@ -488,7 +497,7 @@ textarea:valid:focus {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 0;
+  z-index: 1;
   overflow: hidden;
   transition: background-color 0.4s ease;
 }
