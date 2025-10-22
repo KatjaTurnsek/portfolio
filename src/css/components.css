@@ -452,7 +452,7 @@ textarea:valid:focus {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  z-index: -999;
+  z-index: -1000;
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0);
