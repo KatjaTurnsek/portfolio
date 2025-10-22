@@ -7,7 +7,7 @@
  * - Defer helper
  */
 
-import { gsap } from 'gsap';
+import gsap from 'gsap';
 import { MorphSVGPlugin } from '../../node_modules/gsap/MorphSVGPlugin.js';
 import { ScrollTrigger } from '../../node_modules/gsap/ScrollTrigger.js';
 
@@ -325,15 +325,13 @@ function ensureBlobDOM() {
     Object.assign(wrapper.style, {
       position: 'fixed',
       inset: '0',
-      zIndex: '0',
+      // keep whatever z-index CSS sets (don’t override to keep it behind header/footer)
       pointerEvents: 'none',
       willChange: 'transform',
       transform: 'translateZ(0)',
       overflow: 'hidden',
     });
     document.body.prepend(wrapper);
-  } else if (getComputedStyle(wrapper).zIndex === '-1000') {
-    wrapper.style.zIndex = '0';
   }
 
   let svg = document.getElementById('blob-svg');
@@ -346,7 +344,7 @@ function ensureBlobDOM() {
   const VW = window.innerWidth;
   const VH = window.innerHeight;
   svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
-  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  svg.setAttribute('preserveAspectRatio', 'none'); // fill viewport; no gutters/padding
   svg.style.width = '100%';
   svg.style.height = '100%';
   svg.style.display = 'block';
@@ -371,6 +369,7 @@ export function animateGooeyBlobs() {
   const { svg, g: container, VW, VH } = ensureBlobDOM();
   if (!container) return;
 
+  // clear previous
   container.querySelectorAll('.blob-group').forEach((n) => n.remove());
 
   const mobile = VW < 768;
@@ -385,13 +384,14 @@ export function animateGooeyBlobs() {
     { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
   ];
 
+  // Safari sometimes darkens with filters on groups; keep clean
   container.removeAttribute('filter');
 
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
     const x = clamp(center.x + Math.random() * spread - spread / 2, 0, VW);
     const y = clamp(center.y + Math.random() * spread - spread / 2, 0, VH);
-    const size = Math.floor(Math.random() * 50) + 80;
+    const size = Math.floor(Math.random() * 50) + (mobile ? 60 : 80); // slightly smaller on mobile
 
     const group = document.createElementNS(svgns, 'g');
     group.setAttribute('class', 'blob-group');
@@ -430,8 +430,10 @@ export function animateGooeyBlobs() {
     });
   }
 
+  // visible baseline
   gsap.set(container, { opacity: 0.3 });
 
+  // fade with scroll (works on desktop & mobile, avoids 0 → invisible-at-top)
   if (gsap.plugins?.ScrollTrigger) {
     gsap.to(container, {
       opacity: 0.06,
@@ -439,12 +441,13 @@ export function animateGooeyBlobs() {
       scrollTrigger: {
         trigger: 'body',
         start: 'top top',
-        end: 'bottom top',
+        end: 'bottom bottom',
         scrub: true,
       },
     });
   }
 
+  // keep the SVG fitted to viewport
   const onResize = () => {
     const w = window.innerWidth;
     const h = window.innerHeight;

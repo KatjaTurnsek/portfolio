@@ -451,7 +451,7 @@ textarea:valid:focus {
   fill: none;
 }
 
-/* 10) Animated Blob (background) */
+/* Animated Blob (background) */
 .morphing-blob-wrapper {
   position: fixed;
   top: 0;
@@ -464,6 +464,7 @@ textarea:valid:focus {
   will-change: transform;
   transform: translateZ(0);
 }
+
 #blob-svg {
   width: 100%;
   height: 100%;
@@ -600,7 +601,7 @@ textarea:valid:focus {
   }
   #blob-svg,
   #blob-svg #blobs-g {
-    transform: scale(0.75);
+    transform: none;
     transform-origin: 50% 40%;
   }
 }
