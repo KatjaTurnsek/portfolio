@@ -3,7 +3,7 @@
  * - Router setup
  * - Safe section reveal + runtime min-height sizing
  * - Menu open/close (lazy-init menu wave image) + cleanup
- * - Loader show/hide + visuals (respects reduced-motion)
+ * - Loader show/hide + visuals (mobile-safe; animations handle reduced-motion internally)
  */
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -131,7 +131,7 @@ import('./router.js').then(() => {
 /* Utilities                                                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** @type {boolean} Honor user’s reduced-motion setting. */
+/** @type {boolean} Honor user’s reduced-motion setting (animations handle it internally). */
 const prefersReducedMotion =
   typeof window !== 'undefined' &&
   window.matchMedia &&
@@ -171,7 +171,8 @@ document.addEventListener('sectionVisible', async (e) => {
 
   if (sectionId === 'about') {
     const { animateTealBars } = await import('./animations.js');
-    if (!prefersReducedMotion) animateTealBars();
+    // Run regardless; the function snaps to end-state if user prefers reduced motion.
+    animateTealBars();
   }
 
   animateTextInSection(section);
@@ -281,38 +282,37 @@ document.addEventListener('DOMContentLoaded', () => {
     releaseScrollLock();
 
     insertWaveLines();
-    if (!prefersReducedMotion) {
-      animateWaveLine();
-      animateCustomWaveLines();
-    }
 
-    if (!prefersReducedMotion) {
-      const blobWrapper = document.querySelector('.morphing-blob-wrapper');
-      if (blobWrapper) {
-        // Prime blob group opacity so ScrollTrigger scrub at 0% isn't invisible on mobile
-        const primeBlobs = () => {
-          const g = document.getElementById('blobs-g');
-          if (g) {
-            gsap.set(g, { opacity: 0.3 });
-            return true;
-          }
-          return false;
-        };
-        if (!primeBlobs()) setTimeout(primeBlobs, 60); // try again next tick
+    // Always run these (each function internally respects reduced motion).
+    animateWaveLine();
+    animateCustomWaveLines();
 
-        // Fade the wrapper itself
-        gsap.fromTo(
-          blobWrapper,
-          { opacity: 0 },
-          { opacity: 1, duration: 1.2, delay: 0.6, ease: 'power2.out' }
-        );
+    // Blobs: always prime + generate; interaction is lightweight.
+    const blobWrapper = document.querySelector('.morphing-blob-wrapper');
+    if (blobWrapper) {
+      // Prime blob group opacity so ScrollTrigger scrub at 0% isn't invisible on mobile
+      const primeBlobs = () => {
+        const g = document.getElementById('blobs-g');
+        if (g) {
+          gsap.set(g, { opacity: 0.3 });
+          return true;
+        }
+        return false;
+      };
+      if (!primeBlobs()) setTimeout(primeBlobs, 60); // try again next tick
 
-        // Generate blobs + interaction on idle (shorter timeout for iOS)
-        deferHeavy(() => {
-          animateGooeyBlobs();
-          enableInteractiveJellyBlob();
-        }, 800);
-      }
+      // Fade the wrapper itself
+      gsap.fromTo(
+        blobWrapper,
+        { opacity: 0 },
+        { opacity: 1, duration: 1.2, delay: 0.6, ease: 'power2.out' }
+      );
+
+      // Generate blobs + interaction on idle (shorter timeout for iOS)
+      deferHeavy(() => {
+        animateGooeyBlobs();
+        enableInteractiveJellyBlob();
+      }, 800);
     }
 
     const currentId = window.__currentSectionId || 'home';

@@ -2,8 +2,8 @@
  * GSAP-powered visuals (lightweight after removing heavy canvases).
  * - Static waves (menu header image swap on theme)
  * - Heading wavy lines
- * - Teal skill bars (mobile-safe)
- * - Gooey blobs + “jelly” drag (mobile-visible)
+ * - Teal skill bars (mobile-safe; internal reduce-motion handling)
+ * - Gooey blobs + “jelly” drag
  * - Defer helper
  */
 
@@ -317,29 +317,32 @@ function _updateAllPolylines() {
 
 /**
  * Animate the teal skill bars on the About section.
- * - Waits until the container has non-zero width (mobile/layout issue)
+ * - Waits until the container has non-zero width (common mobile/layout issue)
  * - Uses transform scaleX instead of width for robust animation
- * - Guards against double init; respects reduced motion
+ * - Guards against double init; gracefully handles reduced motion
  * @returns {void}
  */
 export function animateTealBars() {
   const stack = document.querySelector('.bar-stack');
-  if (!stack) return; // nothing to do on this view
-  if (stack.dataset.animated === '1') return; // already ran
+  if (!stack) return;
+  if (stack.dataset.animated === '1') return;
 
-  // Ensure transforms animate from the left edge and keep layout width
-  gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], {
-    transformOrigin: 'left center',
-    width: '100%',
-  });
+  // Ensure transforms animate from the left edge
+  gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { transformOrigin: 'left center' });
 
   const ready = () => stack.getBoundingClientRect().width > 2;
 
   const run = () => {
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Bars should occupy the container; we animate via scaleX
+    gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { width: '100%' });
+
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (reduce) {
-      // Static final state for accessibility
+      // Static final state (accessibility)
       gsap.set('.bar-bg', { scaleX: 1 });
       gsap.set('.bar-1', { scaleX: 0.9 });
       gsap.set('.bar-2', { scaleX: 0.7 });
@@ -363,7 +366,6 @@ export function animateTealBars() {
     stack.dataset.animated = '1';
   };
 
-  // If layout is ready, run now; otherwise wait for width > 0
   if (ready()) {
     run();
   } else {
@@ -391,7 +393,7 @@ export function animateTealBars() {
 
 /**
  * Create multiple SVG blobs and animate slow floating/scale motion.
- * Links opacity to scroll via ScrollTrigger.
+ * Links opacity to scroll via ScrollTrigger (kept constant by default).
  * Requires #blob-svg > #blobs-g container.
  * @returns {void}
  */
@@ -413,6 +415,9 @@ export function animateGooeyBlobs() {
   ];
 
   if (isSafari) container.removeAttribute('filter');
+
+  // Make sure they’re visible immediately (mobile scrub 0% issue)
+  gsap.set(container, { opacity: 0.3 });
 
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
@@ -457,10 +462,7 @@ export function animateGooeyBlobs() {
     });
   }
 
-  // Ensure a visible starting value so scrub 0% isn’t invisible.
-  gsap.set(container, { opacity: 0.3 });
-
-  // Keep your scrub linkage (now it won’t start at 0).
+  // Keep your scrub linkage (won’t drop to 0 on load)
   if (gsap.plugins?.ScrollTrigger) {
     gsap.to(container, {
       opacity: 0.3,
