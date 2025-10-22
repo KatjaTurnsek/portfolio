@@ -7,16 +7,19 @@
   </head>
   <body>
     <script>
-      (function (l) {
-        var segmentCount = 1;
-        var parts = l.pathname.replace(/^\//, '').split('/');
-        var base = parts.slice(0, segmentCount).join('/');
-        var rest = parts.slice(segmentCount).join('/');
-        var qs = l.search ? l.search.slice(1).replace(/&/g, '~and~') : '';
-        if (!/^\/portfolio\/?$/.test(l.pathname)) {
-          l.replace('/' + base + '/?/' + rest + (qs ? '&' + qs : '') + l.hash);
-        }
-      })(window.location);
+      (function () {
+        var l = window.location;
+
+        var BASE = '/portfolio/';
+
+        if (/\.[^\/]+$/.test(l.pathname)) return;
+
+        if (l.pathname === BASE || l.pathname === BASE.slice(0, -1)) return;
+
+        var target = BASE + '?p=' + encodeURIComponent(l.pathname + l.search + l.hash);
+        l.replace(target);
+      })();
     </script>
+    <h1>Redirecting…</h1>
   </body>
 </html>
