@@ -1,8 +1,15 @@
-// src/js/router.js
 // History-API router with clean, crawlable paths.
 // - Static routes: "/", "/work", "/about", "/contact"
 // - Dynamic: "/work/:slug" → "case-:slug", "/work/:slug/:sub" → "case-:slug-:sub"
 // - Shows target immediately; lets init.js animate inner content.
+
+import { BASE } from './paths.js';
+
+(function initRouter() {
+  const ACTIVE_CLASS = 'is-active';
+  const BASE_SLASH = BASE;
+  const BASE_NO_SLASH = BASE.replace(/\/$/, '');
+})();
 
 (function initRouter() {
   if (typeof window !== 'undefined') window.__routerActive = true;

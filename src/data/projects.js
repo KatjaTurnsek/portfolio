@@ -1,6 +1,4 @@
-const BASE = import.meta.env.BASE_URL; // "/" (dev) or "/portfolio/" (GH Pages)
-const img = (file) => `${BASE}assets/images/${file}`;
-const pdf = (file) => `${BASE}assets/pdf/${file}`;
+import { img, pdf } from '../js/paths.js';
 
 export const projects = [
   // WEBSITES

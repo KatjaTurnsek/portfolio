@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Redirecting…</title>
@@ -7,19 +7,16 @@
   </head>
   <body>
     <script>
-      (function () {
-        var l = window.location;
-
-        var BASE = '/portfolio/';
-
-        if (/\.[^\/]+$/.test(l.pathname)) return;
-
+      (() => {
+        const l = window.location;
+        const BASE = '/portfolio/';
+        if (/\.[^/]+$/.test(l.pathname)) return;
         if (l.pathname === BASE || l.pathname === BASE.slice(0, -1)) return;
-
-        var target = BASE + '?p=' + encodeURIComponent(l.pathname + l.search + l.hash);
+        const target = `${BASE}?p=${encodeURIComponent(l.pathname + l.search + l.hash)}`;
         l.replace(target);
       })();
     </script>
+
     <h1>Redirecting…</h1>
   </body>
 </html>
