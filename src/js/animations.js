@@ -2,7 +2,7 @@
  * GSAP-powered visuals (lightweight after removing heavy canvases).
  * - Static waves (menu header image swap on theme)
  * - Heading wavy lines
- * - Teal skill bars (mobile-safe; internal reduce-motion handling)
+ * - Teal skill bars
  * - Gooey blobs + “jelly” drag
  * - Defer helper
  */
@@ -319,13 +319,13 @@ function _updateAllPolylines() {
  * Animate the teal skill bars on the About section.
  * - Waits until the container has non-zero width (common mobile/layout issue)
  * - Uses transform scaleX instead of width for robust animation
- * - Guards against double init; gracefully handles reduced motion
+ * - Guards against double init; respects reduced motion
  * @returns {void}
  */
 export function animateTealBars() {
   const stack = document.querySelector('.bar-stack');
-  if (!stack) return;
-  if (stack.dataset.animated === '1') return;
+  if (!stack) return; // nothing to do on this view
+  if (stack.dataset.animated === '1') return; // already ran
 
   // Ensure transforms animate from the left edge
   gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { transformOrigin: 'left center' });
@@ -333,16 +333,13 @@ export function animateTealBars() {
   const ready = () => stack.getBoundingClientRect().width > 2;
 
   const run = () => {
-    // Bars should occupy the container; we animate via scaleX
+    // Make sure the bars have a base width to scale from
     gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { width: '100%' });
 
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (reduce) {
-      // Static final state (accessibility)
+      // Static final state for accessibility
       gsap.set('.bar-bg', { scaleX: 1 });
       gsap.set('.bar-1', { scaleX: 0.9 });
       gsap.set('.bar-2', { scaleX: 0.7 });
@@ -366,6 +363,7 @@ export function animateTealBars() {
     stack.dataset.animated = '1';
   };
 
+  // If layout is ready, run now; otherwise wait for width > 0
   if (ready()) {
     run();
   } else {
@@ -393,7 +391,7 @@ export function animateTealBars() {
 
 /**
  * Create multiple SVG blobs and animate slow floating/scale motion.
- * Links opacity to scroll via ScrollTrigger (kept constant by default).
+ * Links opacity to scroll via ScrollTrigger.
  * Requires #blob-svg > #blobs-g container.
  * @returns {void}
  */
@@ -414,10 +412,8 @@ export function animateGooeyBlobs() {
     { x: VW * 0.7, y: VH * 0.5 },
   ];
 
+  // Safari filter perf quirk
   if (isSafari) container.removeAttribute('filter');
-
-  // Make sure they’re visible immediately (mobile scrub 0% issue)
-  gsap.set(container, { opacity: 0.3 });
 
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
@@ -462,7 +458,8 @@ export function animateGooeyBlobs() {
     });
   }
 
-  // Keep your scrub linkage (won’t drop to 0 on load)
+  // Restore original behavior: do NOT clamp the starting opacity.
+  // It will fade toward 0.3 as you scroll with scrub.
   if (gsap.plugins?.ScrollTrigger) {
     gsap.to(container, {
       opacity: 0.3,
@@ -494,6 +491,7 @@ export function enableInteractiveJellyBlob() {
   const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
 
   /**
+   * Screen → SVG coordinates
    * @param {number} clientX
    * @param {number} clientY
    * @returns {{x:number,y:number}}
@@ -509,21 +507,21 @@ export function enableInteractiveJellyBlob() {
   }
 
   /**
-   * @param {number} x
-   * @param {number} y
+   * Use screen-space geometric center to find the closest blob to the pointer.
+   * @param {number} xScreen
+   * @param {number} yScreen
    * @returns {SVGGElement|null}
    */
-  function getClosestBlob(x, y) {
+  function getClosestBlob(xScreen, yScreen) {
     const blobs = document.querySelectorAll('.blob-group');
     let closest = null;
     let minDist = Infinity;
 
     blobs.forEach((blob) => {
-      const matrix = blob.getScreenCTM();
-      if (!matrix) return;
-      const cx = matrix.e;
-      const cy = matrix.f;
-      const dist = Math.hypot(cx - x, cy - y);
+      const r = blob.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const dist = Math.hypot(cx - xScreen, cy - yScreen);
       if (dist < minDist) {
         minDist = dist;
         closest = blob;
@@ -534,6 +532,7 @@ export function enableInteractiveJellyBlob() {
   }
 
   /**
+   * Return blob to its original transform.
    * @param {SVGGElement} blob
    * @returns {void}
    */
@@ -542,7 +541,7 @@ export function enableInteractiveJellyBlob() {
     if (!original) return;
     gsap.to(blob, {
       x: original.x,
-      y: Math.max(original.y, 400),
+      y: original.y, // exact original (no forced push down)
       rotation: 0,
       scaleX: 1,
       scaleY: 1,
@@ -552,6 +551,7 @@ export function enableInteractiveJellyBlob() {
   }
 
   /**
+   * Pointer update handler.
    * @param {MouseEvent|TouchEvent} e
    * @returns {void}
    */
@@ -599,6 +599,13 @@ export function enableInteractiveJellyBlob() {
         });
       }
 
+      // Sync the drag state to the blob's current position so it doesn't "fly in".
+      const gp2 = gsap.getProperty(activeBlob);
+      current.x = Number(gp2('x')) || 0;
+      current.y = Number(gp2('y')) || 0;
+      target.x = current.x;
+      target.y = current.y;
+
       gsap.killTweensOf(activeBlob);
     }
   }
@@ -632,10 +639,24 @@ export function enableInteractiveJellyBlob() {
   window.addEventListener('mousedown', (e) => {
     isDragging = true;
     updatePointer(e);
+    if (activeBlob) {
+      const gp = gsap.getProperty(activeBlob);
+      current.x = Number(gp('x')) || 0;
+      current.y = Number(gp('y')) || 0;
+      target.x = current.x;
+      target.y = current.y;
+    }
   });
   window.addEventListener('touchstart', (e) => {
     isDragging = true;
     updatePointer(e);
+    if (activeBlob) {
+      const gp = gsap.getProperty(activeBlob);
+      current.x = Number(gp('x')) || 0;
+      current.y = Number(gp('y')) || 0;
+      target.x = current.x;
+      target.y = current.y;
+    }
   });
   window.addEventListener('mousemove', updatePointer, { passive: false });
   window.addEventListener('touchmove', updatePointer, { passive: false });
