@@ -10,7 +10,7 @@
 
 :root {
   --blob-opacity-start: 0.55;
-  --blob-opacity-end: 0.1;
+  --blob-opacity-end: 0.25;
 }
 
 /* 0) Utilities */

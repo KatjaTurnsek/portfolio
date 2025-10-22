@@ -1,3 +1,4 @@
+// src/js/router.js
 // History-API router with clean, crawlable paths.
 // - Static routes: "/", "/work", "/about", "/contact"
 // - Dynamic: "/work/:slug" → "case-:slug", "/work/:slug/:sub" → "case-:slug-:sub"
@@ -27,7 +28,7 @@
   const sections = () => $$('.fullscreen-section');
 
   function normalizePathname(pathname) {
-    // Strip the "/portfolio" (BASE) prefix (with or without trailing slash)
+    // Strip the BASE prefix (with or without trailing slash)
     let p = pathname;
     if (p.startsWith(BASE_SLASH)) p = '/' + p.slice(BASE_SLASH.length);
     else if (p.startsWith(BASE)) p = '/' + p.slice(BASE.length);
@@ -49,7 +50,7 @@
     }
 
     // allow top-level ids like "/about", "/contact", "/thank-you"
-    const top = path.slice(1); // drop leading "/"
+    const top = path.slice(1);
     if (top && document.getElementById(top)) return top;
 
     return null;
@@ -124,14 +125,12 @@
 
     const newPath = idToPath(id);
     history.replaceState({ path: newPath }, '', BASE_SLASH + newPath.replace(/^\//, ''));
-
-    // Let init.js handle animation and event emission.
     if (typeof window.revealSection === 'function') window.revealSection(id);
   }
 
   function render(path, { replace = false } = {}) {
     const id = pathToId(path) || routes['/'];
-    window.__currentSectionId = id; // keep index.js in sync
+    window.__currentSectionId = id;
 
     immediateShow(id);
 
@@ -183,30 +182,38 @@
     if (el.target && el.target !== '_self') return;
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
-    // --- BYPASS: let the browser handle real downloads / external-ish links ---
+    // 1) QUICK RAW-HREF BYPASS
     const rawHref = el.getAttribute('href') || '';
     const isExternalRel = (el.getAttribute('rel') || '').includes('external');
     const isNoRouter = el.classList.contains('no-router');
     const isDownloadAttr = el.hasAttribute('download');
-    const looksLikePdf = /\.pdf(\?|$)/i.test(rawHref);
+    const looksLikeFileByText = /\.[a-z0-9]{2,8}(\?|#|$)/i.test(rawHref); // .pdf/.png/.zip etc.
 
-    if (isExternalRel || isNoRouter || isDownloadAttr || looksLikePdf) {
-      // Do NOT preventDefault — allow normal navigation/download
-      return;
+    if (isExternalRel || isNoRouter || isDownloadAttr || looksLikeFileByText) {
+      return; // let the browser handle real files/externals
     }
-    // --------------------------------------------------------------------------
 
+    // 2) RESOLVE TO URL AND DOUBLE-CHECK IT'S NOT A FILE OR AN ASSET
     let url;
     try {
-      // resolve relative links correctly against current document URL
-      url = new URL(rawHref, location.href);
+      url = new URL(rawHref, location.href); // robust for relative links
     } catch {
       return;
     }
     if (url.origin !== location.origin) return;
 
-    const path = normalizePathname(url.pathname);
+    const pathname = url.pathname;
+    const path = normalizePathname(pathname);
     const hash = url.hash ? url.hash.slice(1) : null;
+
+    // Skip anything in the static assets folder under BASE (e.g. /portfolio/assets/...)
+    const isUnderAssets = pathname.startsWith(BASE_SLASH + 'assets/');
+    // Skip any URL that ends with a "file-ish" extension (safer than only .pdf)
+    const looksLikeFileByPath = /\.[a-z0-9]{2,8}$/i.test(pathname);
+
+    if (isUnderAssets || looksLikeFileByPath) {
+      return; // don't intercept static files
+    }
 
     if (hash && document.getElementById(hash)) {
       e.preventDefault();
@@ -215,7 +222,7 @@
     }
 
     const id = pathToId(path);
-    if (!id) return; // let browser handle non-routed links
+    if (!id) return; // non-routed internal URL → let the browser handle it
 
     e.preventDefault();
     render(path);
