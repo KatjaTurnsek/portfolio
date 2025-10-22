@@ -598,4 +598,9 @@ textarea:valid:focus {
   .bullet-list-right {
     padding: 20px;
   }
+  #blob-svg,
+  #blob-svg #blobs-g {
+    transform: scale(0.75);
+    transform-origin: 50% 40%;
+  }
 }

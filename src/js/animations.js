@@ -430,14 +430,14 @@ export function animateGooeyBlobs() {
     });
   }
 
-  gsap.set(container, { opacity: 0.6 });
+  gsap.set(container, { opacity: 0.3 });
 
   if (gsap.plugins?.ScrollTrigger) {
     gsap.to(container, {
-      opacity: 0.35,
+      opacity: 0.06,
       ease: 'none',
       scrollTrigger: {
-        trigger: document.scrollingElement || document.body,
+        trigger: 'body',
         start: 'top top',
         end: 'bottom top',
         scrub: true,

@@ -193,6 +193,7 @@ main > .fullscreen-section:first-child {
 
 footer {
   width: 100%;
+  z-index: 999;
   margin-top: auto;
   padding: var(--footer-pad);
   background-color: var(--footer-bg);
