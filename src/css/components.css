@@ -444,14 +444,16 @@ textarea:valid:focus {
   fill: none;
 }
 
-/* 10) Animated Blob (background) */
+/* 10) Animated Blob (background)
+   The blob layer is fixed but sits BEHIND UI: z-index: 0.
+   Avoid negative z-index (mobile Safari quirk). */
 .morphing-blob-wrapper {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  z-index: 1; /* ensure visible even on mobile */
+  z-index: 0; /* behind header/footer/content */
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0);
@@ -465,7 +467,7 @@ textarea:valid:focus {
   display: block;
   filter: blur(8px);
   pointer-events: none;
-  z-index: 1;
+  z-index: 0; /* keep in same stacking as wrapper */
 }
 
 .blob {
@@ -476,7 +478,7 @@ textarea:valid:focus {
   opacity: var(--blob-opacity, 0.45);
 }
 
-/* iOS tweak — disable heavy blur if invisible */
+/* iOS tweak — disable heavy blur if it risks invisibility */
 @supports (-webkit-touch-callout: none) {
   #blob-svg {
     filter: none;
@@ -594,8 +596,6 @@ textarea:valid:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: auto;
-    padding-top: 30px;
   }
   .bullet-list,
   .bullet-list-right {

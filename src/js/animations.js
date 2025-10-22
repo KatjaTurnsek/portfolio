@@ -269,38 +269,87 @@ export function animateTealBars() {
 /* Gooey blobs + interactive jelly drag                                       */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** Ensure #blob-svg has a real box and group. */
-function ensureBlobSvgSizing() {
-  const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
-  if (!svg) return null;
+/**
+ * Ensure there is a top-level fixed host appended to <body> with #blob-svg.
+ * This avoids transformed ancestor stacking issues on iOS.
+ * @returns {SVGSVGElement}
+ */
+function ensureBlobHost() {
+  // Host wrapper
+  let host = document.querySelector('.morphing-blob-wrapper');
+  if (!host) {
+    host = document.createElement('div');
+    host.className = 'morphing-blob-wrapper';
+  }
 
-  // iOS viewport dance — prefer client* to match layout viewport
-  const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-  const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+  // SVG element
+  let svg = document.getElementById('blob-svg');
+  if (!svg) {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('id', 'blob-svg');
+  }
 
-  svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
-  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '100%');
-  svg.style.display = 'block';
-  svg.style.visibility = 'visible';
-  svg.style.opacity = '1';
-
+  // Group container
   let g = svg.querySelector('#blobs-g');
   if (!g) {
     g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('id', 'blobs-g');
     svg.appendChild(g);
   }
+
+  // Move/append to <body> as the last child to win stacking
+  if (host.parentNode !== document.body) {
+    host.appendChild(svg);
+    document.body.appendChild(host);
+  } else if (svg.parentNode !== host) {
+    host.appendChild(svg);
+  }
+
+  // Minimal inline safety (in case CSS didn’t load yet)
+  Object.assign(host.style, {
+    position: 'fixed',
+    inset: '0',
+    width: '100vw',
+    height: '100vh',
+    overflow: 'hidden',
+    zIndex: '9',
+    pointerEvents: 'none',
+  });
+  Object.assign(svg.style, {
+    position: 'fixed',
+    inset: '0',
+    width: '100vw',
+    height: '100vh',
+    display: 'block',
+    pointerEvents: 'none',
+    zIndex: '9',
+  });
+
+  return /** @type {SVGSVGElement} */ (svg);
+}
+
+/** Ensure #blob-svg has correct viewBox to match viewport. */
+function ensureBlobSvgSizing() {
+  const svg = ensureBlobHost();
+  const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+  svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '100%');
+  svg.style.opacity = '1';
   return svg;
 }
 
 export function animateGooeyBlobs() {
   // Avoid double init
-  if (document.getElementById('blobs-g')?.dataset.init === '1') return;
+  const existing = document.getElementById('blobs-g');
+  if (existing && existing.dataset.init === '1') return;
 
   const svg = ensureBlobSvgSizing();
-  if (!svg) return;
+  const container = /** @type {SVGGElement} */ (document.getElementById('blobs-g'));
+  if (!container) return;
+  container.dataset.init = '1';
 
   const rect = svg.viewBox.baseVal;
   const VW = rect.width || window.innerWidth;
@@ -308,13 +357,9 @@ export function animateGooeyBlobs() {
 
   const mobile = VW < 768;
   const svgns = 'http://www.w3.org/2000/svg';
-  const container = /** @type {SVGGElement} */ (document.getElementById('blobs-g'));
-  if (!container) return;
 
-  container.dataset.init = '1';
-
-  // Make them visible immediately; scrub will keep ~constant anyway.
-  gsap.set(container, { opacity: 0.35 });
+  // Be visible immediately.
+  gsap.set(container, { opacity: 0.4 });
 
   const blobCount = 30;
   const spread = mobile ? 400 : 700;
@@ -325,7 +370,7 @@ export function animateGooeyBlobs() {
     { x: VW * 0.7, y: VH * 0.5 },
   ];
 
-  // iOS Safari + filters: drop any filter to avoid fully hidden SVGs
+  // iOS Safari + SVG filter = sometimes hidden; remove filter to be safe
   if (isSafari) container.removeAttribute('filter');
 
   for (let i = 1; i <= blobCount; i++) {
@@ -345,8 +390,8 @@ export function animateGooeyBlobs() {
     circle.setAttribute('cx', '0');
     circle.setAttribute('cy', '0');
     circle.setAttribute('r', String(size));
-    // If CSS var missing, ensure a painted fill anyway (safety)
     circle.setAttribute('fill', 'var(--blob-color, #22d3ee)');
+    circle.setAttribute('opacity', 'var(--blob-opacity, 0.45)');
     group.appendChild(circle);
 
     const pos = { x, y, rotation: 0 };
@@ -373,12 +418,7 @@ export function animateGooeyBlobs() {
     });
   }
 
-  gsap.to(container, {
-    opacity: 0.35,
-    ease: 'none',
-    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: true },
-  });
-
+  // Keep sized correctly on rotate/resize
   const resize = () => ensureBlobSvgSizing();
   window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('orientationchange', () => setTimeout(resize, 120), { passive: true });
