@@ -599,17 +599,30 @@ textarea:valid:focus {
   /* Lists */
   .bullet-list,
   .bullet-list-right {
-    list-style-position: outside;
+    list-style: none;
+    margin: 0;
     padding-block: 12px;
     padding-inline: 16px;
-    padding-inline-start: 36px;
-    margin-inline-start: 0;
+    margin-inline-start: 18px;
   }
 
   .bullet-list li,
   .bullet-list-right li {
-    padding-inline-start: 20px;
+    position: relative;
+    padding-inline-start: 1.1rem;
     margin-bottom: 8px;
+  }
+
+  .bullet-list li::before,
+  .bullet-list-right li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.65em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
   }
 
   /* Forms */
