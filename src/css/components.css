@@ -24,7 +24,7 @@
   width: 100%;
 }
 
-/* keep core containers from becoming containing blocks in Safari */
+/* Keep core containers from becoming containing blocks when transforms exist */
 main,
 header,
 footer,
@@ -32,7 +32,7 @@ footer,
   transform: none !important;
 }
 
-/* Background host for waves (out of flow) */
+/* Background host for header/menu waves (present in HTML as .top-waves) */
 .top-waves {
   position: fixed;
   inset: 0;
@@ -505,7 +505,7 @@ textarea:valid:focus {
   transform-box: view-box;
 }
 
-/* 11) Hire Button */
+/* 11) Hire Button (desktop absolute; mobile centered) */
 .hire-button {
   position: relative;
   width: 200px;
@@ -549,18 +549,16 @@ textarea:valid:focus {
   color: var(--dark);
 }
 
-/* Desktop placement: restore your old visual, but keep layout safe.
-   We set absolute positioning on desktop AND reserve space on #home .rows
-   so the footer never overlaps. */
+/* Desktop: keep original absolute placement, but reserve space so footer never overlaps */
 @media (min-width: 851px) {
   .hire-section {
     position: absolute;
     bottom: -30px;
     left: 70px;
   }
-  /* Reserve room for the 200px circle (+ margin) so content + footer never collide */
   #home .rows {
-    padding-bottom: 240px; /* adjust 220–260px to taste */
+    position: relative;
+    padding-bottom: 240px; /* adjust 220–260px if needed */
   }
 }
 
@@ -622,7 +620,7 @@ textarea:valid:focus {
     --label-line: 20px;
   }
 
-  /* Lists (compact bullets) */
+  /* Lists (compact dots) */
   .bullet-list,
   .bullet-list-right {
     list-style: none;
@@ -705,11 +703,11 @@ textarea:valid:focus {
     line-height: 28px;
   }
 
-  /* Hire: center on mobile and keep in flow */
+  /* Mobile: center Hire button and keep it in flow */
   .hire-section {
     position: static;
     display: flex;
-    justify-content: center; /* center horizontally */
+    justify-content: center;
     align-items: center;
     margin-top: 30px;
     width: 100%;
