@@ -597,7 +597,7 @@ textarea:valid:focus {
   }
 
   /* Lists */
-  bullet-list,
+  .bullet-list,
   .bullet-list-right {
     list-style-position: outside;
     padding-block: 12px;
