@@ -24,22 +24,6 @@
   width: 100%;
 }
 
-/* Keep core containers from becoming containing blocks when transforms exist */
-main,
-header,
-footer,
-.rows {
-  transform: none !important;
-}
-
-/* Background host for header/menu waves (present in HTML as .top-waves) */
-.top-waves {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1001;
-}
-
 /* 1) Links & CTAs */
 .label-link,
 .submit-button {
@@ -505,7 +489,7 @@ textarea:valid:focus {
   transform-box: view-box;
 }
 
-/* 11) Hire Button (desktop absolute; mobile centered) */
+/* 11) Hire Button */
 .hire-button {
   position: relative;
   width: 200px;
@@ -548,18 +532,10 @@ textarea:valid:focus {
 .hire-button a:hover {
   color: var(--dark);
 }
-
-/* Desktop: keep original absolute placement, but reserve space so footer never overlaps */
-@media (min-width: 851px) {
-  .hire-section {
-    position: absolute;
-    bottom: -30px;
-    left: 70px;
-  }
-  #home .rows {
-    position: relative;
-    padding-bottom: 240px; /* adjust 220–260px if needed */
-  }
+.hire-section {
+  position: absolute;
+  bottom: -30px;
+  left: 70px;
 }
 
 /* 12) Responsive Tweaks (Mobile) ----------------------------------------- */
@@ -575,8 +551,8 @@ textarea:valid:focus {
     margin-top: 20px;
   }
   .tech-stack {
-    font-size: 20px;
-    line-height: 30px;
+    font-size: 20px; /* was 22px */
+    line-height: 30px; /* was 32px */
     margin-bottom: 15px;
     white-space: normal;
   }
@@ -584,8 +560,8 @@ textarea:valid:focus {
   /* CTAs / Links */
   .label-link,
   .submit-button {
-    --label-size: 22px;
-    --label-line: 30px;
+    --label-size: 22px; /* was 30px */
+    --label-line: 30px; /* was 40px */
     --icon-scale: 0.9em;
     gap: 8px;
     justify-content: center;
@@ -598,7 +574,7 @@ textarea:valid:focus {
     gap: 0.2rem;
   }
 
-  /* Project switcher */
+  /* Project switcher: comfy taps */
   .project-switcher {
     justify-content: center;
     gap: 0.4rem;
@@ -620,7 +596,7 @@ textarea:valid:focus {
     --label-line: 20px;
   }
 
-  /* Lists (compact dots) */
+  /* Lists */
   .bullet-list,
   .bullet-list-right {
     list-style: none;
@@ -629,12 +605,14 @@ textarea:valid:focus {
     padding-inline: 16px;
     margin-inline-start: 18px;
   }
+
   .bullet-list li,
   .bullet-list-right li {
     position: relative;
     padding-inline-start: 1.1rem;
     margin-bottom: 8px;
   }
+
   .bullet-list li::before,
   .bullet-list-right li::before {
     content: '';
@@ -664,16 +642,16 @@ textarea:valid:focus {
     height: 46px;
   }
   .info-text {
-    font-size: 26px;
-    line-height: 36px;
-    padding-top: 40px;
+    font-size: 26px; /* was 30px */
+    line-height: 36px; /* was 40px */
+    padding-top: 40px; /* was 60px */
     text-align: center;
   }
 
   /* Testimonials */
   .testimonial-section {
     padding-bottom: 60px;
-  }
+  } /* was 100px */
   .testimonial {
     height: 80px;
     padding-right: 1rem;
@@ -703,19 +681,15 @@ textarea:valid:focus {
     line-height: 28px;
   }
 
-  /* Mobile: center Hire button and keep it in flow */
+  /* Hire */
   .hire-section {
     position: static;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 30px;
-    width: 100%;
+    height: auto;
+    padding-top: 30px;
   }
-  #home .rows {
-    padding-bottom: 120px;
-  }
-
   .hire-button {
     width: 180px;
     height: 180px;

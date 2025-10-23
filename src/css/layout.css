@@ -44,25 +44,6 @@
   --first-section-pad: clamp(0px, calc(var(--waves-h) - var(--header-h)), 40vh);
 }
 
-/* Page shell: reliable sticky footer on Chrome Mobile / Safari ------------ */
-
-html {
-  height: 100%;
-  height: -webkit-fill-available;
-}
-
-body {
-  min-height: 100vh;
-  min-height: 100svh;
-  min-height: 100dvh; /* dynamic viewport for mobile */
-  height: auto;
-  height: -webkit-fill-available;
-
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-}
-
 /* Utilities --------------------------------------------------------------- */
 
 .container {
@@ -107,25 +88,6 @@ header {
   transition: background-color var(--transition-fast);
 }
 
-/* Keep group wrappers so spacing stays consistent */
-.header-left {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-.header-left a {
-  display: inline-flex;
-  align-items: center;
-}
-
-.header-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 20px; /* space between theme toggle & hamburger */
-  min-width: 0;
-}
-
 /* Header background — SVG over WebP, both pinned to TOP (no bleed) */
 header::before {
   content: '';
@@ -136,6 +98,7 @@ header::before {
   height: var(--waves-h);
   pointer-events: none;
   z-index: 0;
+
   background-repeat: no-repeat, no-repeat;
   background-position:
     top center,
@@ -143,7 +106,9 @@ header::before {
   background-size:
     100% auto,
     cover;
+
   background-image: url('images/vector-waves-light.svg'), url('images/waves-light.webp');
+
   transform: translateZ(0);
 }
 
@@ -160,6 +125,12 @@ header > * {
 }
 
 /* Header controls (logo + theme switcher + hamburger) -------------------- */
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
 #theme-toggle {
   position: relative;
@@ -203,21 +174,15 @@ header > * {
   display: block;
   transition: filter var(--transition-fast);
 }
-.menu-toggle {
-  line-height: 1;
-}
 
 /* Main / Footer ----------------------------------------------------------- */
 
 main {
-  flex: 1 1 auto;
-  min-height: 0; /* allow flex child to shrink on mobile URL bar changes */
+  flex: 1;
+  padding-top: 30px;
   width: 100%;
   margin-inline: auto;
-  padding-top: 30px;
-  padding-bottom: max(24px, env(safe-area-inset-bottom)); /* safe-area room */
-  transform: none !important;
-  min-width: 0;
+  min-height: 100vh;
 }
 
 main > .fullscreen-section:first-child {
@@ -235,8 +200,7 @@ main > .fullscreen-section:first-child {
 footer {
   width: 100%;
   z-index: 999;
-  margin-top: auto; /* sticky */
-  flex-shrink: 0; /* never collapse */
+  margin-top: auto;
   padding: var(--footer-pad);
   background-color: var(--footer-bg);
   color: var(--footer-text-color);
@@ -263,6 +227,7 @@ footer {
 }
 
 /* Fullscreen Section ------------------------------------------------------ */
+/* Router toggles only the .visible class; no inline visibility styles needed. */
 
 .fullscreen-section {
   display: none;
@@ -339,7 +304,7 @@ footer {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: 100dvh; /* avoid accidental page scroll */
+  height: 100vh;
   background-color: var(--bg-color);
   color: var(--text-color);
   display: flex;
@@ -363,6 +328,7 @@ footer {
   height: var(--waves-h);
   pointer-events: none;
   z-index: 0;
+
   background-repeat: no-repeat, no-repeat;
   background-position:
     top center,
@@ -370,6 +336,7 @@ footer {
   background-size:
     100% auto,
     cover;
+
   background-image: url('images/vector-waves-light.svg'), url('images/waves-light.webp');
 }
 .dark-theme .fullscreen-menu::before,
@@ -381,6 +348,7 @@ footer {
   position: relative;
   z-index: 1;
 }
+
 .fullscreen-menu.open {
   opacity: 1;
   pointer-events: all;
@@ -424,8 +392,7 @@ footer {
   max-width: var(--container-w);
   margin-inline: auto;
   padding-bottom: 100px;
-  position: relative; /* positioning context for absolute children (Hire) */
-  min-width: 0;
+  position: relative;
 }
 
 .row {
@@ -456,7 +423,6 @@ footer {
   max-width: var(--container-w);
   margin-inline: auto;
   padding: 0;
-  min-width: 0;
 }
 @media (max-width: 1100px) {
   .work-columns {
@@ -516,7 +482,7 @@ footer {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.8);
-  display: flex;
+  display: flex; /* default flex; visibility handled by media queries */
   place-items: center;
   flex-direction: column;
   justify-content: center;
@@ -700,8 +666,9 @@ footer {
     --waves-h-max: 380px;
     --waves-h: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
 
-    --row-gap: 22px; /* tighter vertical rhythm on mobile */
-    --cs-gutter: 16px;
+    /* Tighter vertical rhythm on mobile */
+    --row-gap: 22px; /* was 40px */
+    --cs-gutter: 16px; /* was 40px */
   }
 
   /* Mobile typography (bigger, but capped) */
@@ -729,12 +696,15 @@ footer {
   header {
     padding-inline: var(--page-gutter);
   }
+
+  #theme-toggle {
+    width: 55px;
+    height: 27px;
+  }
+
   .site-logo,
   .fullscreen-menu .menu-logo {
     height: 45px;
-  }
-  .header-controls {
-    gap: 16px;
   }
 
   .menu-toggle.opened {
@@ -769,23 +739,24 @@ footer {
 
   /* Use more of the screen width, less floatiness */
   .rows {
-    width: 92%;
+    width: 92%; /* was 80% */
     gap: var(--row-gap);
-    padding-bottom: 48px;
+    padding-bottom: 48px; /* was 100px */
   }
 
   /* First section under header wave: slightly lower cap */
   main > .fullscreen-section:first-child {
-    padding-top: clamp(0px, calc(var(--waves-h) - var(--header-h)), 24vh);
+    padding-top: clamp(0px, calc(var(--waves-h) - var(--header-h)), 24vh); /* was 40vh */
   }
 
+  /* Headline at top of a section: less top padding on mobile */
   .fullscreen-section h1:first-child {
     padding-top: 1rem;
-  }
+  } /* was 2rem */
 
   .row {
     padding: 0.25rem;
-  }
+  } /* was 0.5rem */
   .row:has(.case-study-columns) {
     padding-left: 0;
     padding-right: 0;
@@ -805,14 +776,15 @@ footer {
     height: auto;
   }
 
+  /* Work grid: slightly tighter gaps on mobile */
   .work-columns {
-    gap: 16px;
-  } /* tighter */
+    gap: 16px; /* override var(--row-gap) */
+  }
 
   .section-label-left,
   .section-label-right {
     text-align: center;
-    margin: 1rem 0 0.5rem;
+    margin: 1rem 0 0.5rem; /* was 2rem 0 1rem */
   }
 
   .case-study-wrapper,
