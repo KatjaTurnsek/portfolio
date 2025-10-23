@@ -1,6 +1,5 @@
-// src/js/router.js
 // History-API router with clean, crawlable paths.
-// - Static routes: "/", "/work", "/about", "/contact"
+// - Static: "/", "/work", "/about", "/contact"
 // - Dynamic: "/work/:slug" → "case-:slug", "/work/:slug/:sub" → "case-:slug-:sub"
 // - Shows target immediately; lets init.js animate inner content.
 
@@ -16,7 +15,7 @@ import { BASE } from './paths.js';
   const ACTIVE_CLASS = 'is-active';
 
   /** BASE variants: with and without trailing slash. */
-  const BASE_SLASH = BASE; // already ends with "/"
+  const BASE_SLASH = BASE; // ends with "/"
   const BASE_NO_SLASH = BASE.replace(/\/$/, ''); // e.g. "/portfolio"
 
   /** @type {Record<string,string>} Path → Section ID mapping for top-level routes. */
@@ -31,14 +30,6 @@ import { BASE } from './paths.js';
   const idsToPaths = Object.fromEntries(Object.entries(routes).map(([p, id]) => [id, p]));
 
   /**
-   * @template {Element} T
-   * @param {string} sel
-   * @param {ParentNode} [root=document]
-   * @returns {T|null}
-   */
-  const $ = (sel, root = document) => root.querySelector(sel);
-
-  /**
    * @param {string} sel
    * @param {ParentNode} [root=document]
    * @returns {Element[]}
@@ -51,7 +42,7 @@ import { BASE } from './paths.js';
   /**
    * Normalize a pathname by stripping the site BASE and trailing slash.
    * @param {string} pathname
-   * @returns {string} normalized (e.g. "/work/slug" → "/work/slug")
+   * @returns {string}
    */
   function normalizePathname(pathname) {
     let p = pathname;
@@ -105,20 +96,27 @@ import { BASE } from './paths.js';
   }
 
   /**
-   * Immediately show only the requested section.
-   * Avoid animating container transforms/opacity; just toggle visibility.
+   * Remove any inline visibility/layout styles that could conflict with CSS.
+   * (Fixes BFCache restores where old inline styles win over class toggles.)
+   */
+  function purgeInlineSectionStyles() {
+    sections().forEach((s) => {
+      s.style.removeProperty('display');
+      s.style.removeProperty('visibility');
+      s.style.removeProperty('pointer-events');
+      s.style.removeProperty('transform');
+      s.style.removeProperty('opacity');
+    });
+  }
+
+  /**
+   * Show only the requested section via class toggle (no inline styles).
    * @param {string} id
    */
   function immediateShow(id) {
-    sections().forEach((s) => {
-      const on = s.id === id;
-      s.classList.toggle('visible', on);
-      s.style.display = on ? 'block' : 'none';
-      s.style.visibility = on ? 'visible' : 'hidden';
-      s.style.pointerEvents = on ? 'auto' : 'none';
-      s.style.transform = 'none';
-      s.style.opacity = on ? '1' : '0';
-    });
+    // Always clear stale inline styles first
+    purgeInlineSectionStyles();
+    sections().forEach((s) => s.classList.toggle('visible', s.id === id));
   }
 
   /**
@@ -311,6 +309,9 @@ import { BASE } from './paths.js';
       history.scrollRestoration = 'manual';
     }
 
+    // Clean up any stale inline section styles from previous sessions/restores
+    purgeInlineSectionStyles();
+
     const initialPath = normalizePathname(location.pathname);
     const initialHash = location.hash ? location.hash.slice(1) : null;
 
@@ -318,7 +319,7 @@ import { BASE } from './paths.js';
     document.addEventListener('click', onClick, { passive: false });
     window.addEventListener('popstate', onPopState);
 
-    // --- Guard that the right section is actually visible (mobile BFCache, etc.) ---
+    // Guard that the right section is actually visible (mobile BFCache, etc.)
     const ensureSectionSync = () => {
       const current = document.querySelector('.fullscreen-section.visible');
       const hidden =
@@ -326,27 +327,21 @@ import { BASE } from './paths.js';
         getComputedStyle(current).display === 'none' ||
         getComputedStyle(current).visibility === 'hidden' ||
         current.style.opacity === '0';
-
       if (hidden) {
         const path = normalizePathname(location.pathname);
-        // Re-render and run reveal hooks; use replace to avoid growing history
         requestAnimationFrame(() => render(path, { replace: true }));
       }
     };
 
     // Re-hydrate after back/forward cache restores (iOS Safari & others)
     window.addEventListener('pageshow', () => {
-      // Unconditionally sync — some browsers don’t flag BFCache consistently
       ensureSectionSync();
-      // One extra tick in case styles apply late
       setTimeout(ensureSectionSync, 60);
     });
 
     // If the tab was backgrounded and returns, ensure the section is correct
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        ensureSectionSync();
-      }
+      if (document.visibilityState === 'visible') ensureSectionSync();
     });
   }
 

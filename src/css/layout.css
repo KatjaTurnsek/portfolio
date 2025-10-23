@@ -189,7 +189,8 @@ main > .fullscreen-section:first-child {
   padding-top: var(--first-section-pad);
 }
 
-#home {
+/* No-JS fallback: show Home so the page isn’t blank before JS initializes */
+.no-js #home {
   display: block;
   opacity: 1;
   transform: none;
@@ -226,6 +227,7 @@ footer {
 }
 
 /* Fullscreen Section ------------------------------------------------------ */
+/* Router toggles only the .visible class; no inline visibility styles needed. */
 
 .fullscreen-section {
   display: none;
@@ -246,6 +248,13 @@ footer {
 .fullscreen-section h1:first-child {
   margin-top: 0;
   padding-top: 2rem;
+}
+
+/* BFCache backstop: ensure rows are visible when a section is visible.
+   Prevents "missing headlines" when animations don’t replay after history restores. */
+.fullscreen-section.visible .row {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 /* Menu ------------------------------------------------------------------- */
