@@ -599,11 +599,12 @@ textarea:valid:focus {
   /* Lists */
   .bullet-list,
   .bullet-list-right {
-    padding: 12px 16px;
+    list-style-position: outside;
+    padding: 12px 16px 12px 28px;
   }
   .bullet-list li,
   .bullet-list-right li {
-    padding-left: 22px;
+    padding-left: 32px;
     margin-bottom: 8px;
   }
 
