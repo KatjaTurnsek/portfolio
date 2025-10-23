@@ -597,14 +597,18 @@ textarea:valid:focus {
   }
 
   /* Lists */
-  .bullet-list,
+  bullet-list,
   .bullet-list-right {
     list-style-position: outside;
-    padding: 12px 16px 12px 28px;
+    padding-block: 12px;
+    padding-inline: 16px;
+    padding-inline-start: 36px;
+    margin-inline-start: 0;
   }
+
   .bullet-list li,
   .bullet-list-right li {
-    padding-left: 32px;
+    padding-inline-start: 20px;
     margin-bottom: 8px;
   }
 
