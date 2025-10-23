@@ -3,8 +3,7 @@
  * - Static waves (menu header image swap on theme)
  * - Heading wavy lines
  * - Teal skill bars
- * - Gooey blobs + “jelly” drag  (ORIGINAL behavior kept)
- *   * Only change: circles -> irregular paths + tiny spread tighten
+ * - Gooey blobs + “jelly” drag   ← soft rounded shapes, closer & slower
  * - Defer helper
  */
 
@@ -315,15 +314,42 @@ export function animateTealBars() {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Gooey blobs + interactive jelly drag (ORIGINAL layout, slight tweak)       */
+/* Gooey blobs + interactive jelly drag (soft, rounded shapes)                */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** tiny helper */
 function clamp(n, min, max) {
   return Math.min(max, Math.max(min, n));
 }
 
-/** ORIGINAL DOM setup (keeps CSS blur on the whole SVG) */
+/**
+ * Soft rounded blob:
+ * radius(theta) = r * (1 + a1*sin(k1*t + p1) + a2*sin(k2*t + p2))
+ * Small amplitudes & low harmonics keep edges smooth/round.
+ */
+function makeSoftBlobPath(r = 120, a1 = 0.06, a2 = 0.04, k1 = 3, k2 = 5, p1 = 0, p2 = 0) {
+  const TWO_PI = Math.PI * 2;
+  const steps = 48; // enough for smoothness after blur
+  const pts = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * TWO_PI;
+    const rad = r * (1 + a1 * Math.sin(k1 * t + p1) + a2 * Math.sin(k2 * t + p2));
+    pts.push({ x: Math.cos(t) * rad, y: Math.sin(t) * rad });
+  }
+  // Convert to a smooth path using mid-point quadratic segments
+  let d = '';
+  for (let i = 0; i < pts.length; i++) {
+    const p0 = pts[i];
+    const p1p = pts[(i + 1) % pts.length];
+    const cx = (p0.x + p1p.x) / 2;
+    const cy = (p0.y + p1p.y) / 2;
+    if (i === 0) d += `M ${cx} ${cy} `;
+    d += `Q ${p0.x} ${p0.y} ${p1p.x} ${p1p.y} `;
+  }
+  d += 'Z';
+  return d;
+}
+
+/** DOM setup — relies on your CSS blur on #blob-svg (no JS blur set) */
 function ensureBlobDOM() {
   let wrapper = document.querySelector('.morphing-blob-wrapper');
   if (!wrapper) {
@@ -336,7 +362,6 @@ function ensureBlobDOM() {
       willChange: 'transform',
       transform: 'translateZ(0)',
       overflow: 'hidden',
-      // keep z-index controlled by CSS; do not override here
     });
     document.body.prepend(wrapper);
   }
@@ -345,54 +370,27 @@ function ensureBlobDOM() {
   if (!svg) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.id = 'blob-svg';
-    document.querySelector('.morphing-blob-wrapper')?.appendChild(svg);
+    wrapper.appendChild(svg);
   }
 
   const VW = window.innerWidth;
   const VH = window.innerHeight;
   svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
-  svg.setAttribute('preserveAspectRatio', 'none'); // fill viewport; no gutters/padding
+  svg.setAttribute('preserveAspectRatio', 'none');
   svg.style.width = '100%';
   svg.style.height = '100%';
   svg.style.display = 'block';
-  // ORIGINAL blur-on-root approach (works with your CSS as well)
-  svg.style.filter = 'blur(10px)';
+  // IMPORTANT: do NOT set svg.style.filter here; your CSS already adds blur.
 
   let g = document.getElementById('blobs-g');
   if (!g) {
     g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.id = 'blobs-g';
-    g.setAttribute('class', 'blobs'); // keep .blobs for your CSS selector compatibility
+    g.setAttribute('class', 'blobs');
     svg.appendChild(g);
   }
 
   return { wrapper, svg, g, VW, VH };
-}
-
-/** NEW: make an irregular, closed blob path (replaces circle) */
-function makeIrregularBlobPath(rBase = 120, irregularity = 0.18, points = 12) {
-  const pts = [];
-  const TWO_PI = Math.PI * 2;
-  for (let i = 0; i < points; i++) {
-    const t = (i / points) * TWO_PI;
-    const r = rBase * (1 + (Math.random() * 2 - 1) * irregularity);
-    const x = Math.cos(t) * r;
-    const y = Math.sin(t) * r;
-    pts.push({ x, y });
-  }
-
-  // smooth-ish with quadratic beziers between midpoints
-  let d = '';
-  for (let i = 0; i < pts.length; i++) {
-    const p0 = pts[i];
-    const p1 = pts[(i + 1) % pts.length];
-    const cx = (p0.x + p1.x) / 2;
-    const cy = (p0.y + p1.y) / 2;
-    if (i === 0) d += `M ${cx} ${cy} `;
-    d += `Q ${p0.x} ${p0.y} ${p1.x} ${p1.y} `;
-  }
-  d += 'Z';
-  return d;
 }
 
 export function animateGooeyBlobs() {
@@ -405,25 +403,20 @@ export function animateGooeyBlobs() {
   const mobile = VW < 768;
   const svgns = 'http://www.w3.org/2000/svg';
 
-  // ORIGINAL spread was roughly:
-  //   mobile: 0.45 * min(VW, 700)
-  //   desktop: 0.65 * min(VW, 1200)
-  // We tighten just a little (as requested) without crowding:
+  // Closer than before, but not cramped
   const spread = mobile
-    ? 0.4 * Math.min(VW, 700) // was 0.45
-    : 0.58 * Math.min(VW, 1200); // was 0.65
+    ? 0.36 * Math.min(VW, 700) // was 0.45 → 0.36 (closer on mobile)
+    : 0.52 * Math.min(VW, 1200); // was 0.65 → 0.52 (closer on desktop)
 
   const blobCount = 30;
-  const motionDistance = mobile ? 120 : 400;
+  // Slower movement: shorter drift & longer durations
+  const motionDistance = mobile ? 90 : 220;
 
-  // keep the original two-center feel
+  // Two soft clusters like your original
   const centers = [
     { x: clamp(VW * 0.3, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
     { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
   ];
-
-  // no goo filter here — we rely on the same CSS/root blur as before
-  container.removeAttribute('filter');
 
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
@@ -437,19 +430,29 @@ export function animateGooeyBlobs() {
     group.setAttribute('transform', `translate(${x},${y})`);
     container.appendChild(group);
 
-    // REPLACE circle with irregular path (keeps your original “blob” class & CSS)
+    // Soft rounded shape (not a perfect circle)
     const path = document.createElementNS(svgns, 'path');
     path.setAttribute('class', 'blob');
-    path.setAttribute('d', makeIrregularBlobPath(size, 0.22, 12 + Math.floor(Math.random() * 5)));
+    // very gentle irregularity
+    const d = makeSoftBlobPath(
+      size,
+      0.055 + Math.random() * 0.015, // a1: 0.055–0.07
+      0.03 + Math.random() * 0.015, // a2: 0.03–0.045
+      3,
+      5,
+      Math.random() * Math.PI * 2, // random phase for variety
+      Math.random() * Math.PI * 2
+    );
+    path.setAttribute('d', d);
     group.appendChild(path);
 
-    // ORIGINAL motion style: positional drift
+    // Slow positional drift (longer duration, smaller rotation)
     const pos = { x, y, rotation: 0 };
     gsap.to(pos, {
-      duration: 12 + Math.random() * 4,
+      duration: 16 + Math.random() * 6, // 16–22s (slower)
       x: clamp(x + Math.random() * motionDistance - motionDistance / 2, 0, VW),
       y: clamp(y + Math.random() * motionDistance - motionDistance / 2, 0, VH),
-      rotation: Math.random() > 0.5 ? '+=180' : '-=180',
+      rotation: Math.random() > 0.5 ? '+=60' : '-=60', // gentler rotation
       ease: 'sine.inOut',
       repeat: -1,
       yoyo: true,
@@ -458,34 +461,48 @@ export function animateGooeyBlobs() {
       },
     });
 
-    // ORIGINAL gentle wobble — keep scale wiggle;
-    // if MorphSVG available, softly morph between two nearby shapes (subtle)
+    // Subtle wobble — prefer small morph changes if MorphSVG is available
     if (gsap.plugins?.MorphSVGPlugin) {
-      const alt1 = makeIrregularBlobPath(size * 1.03, 0.24, 13);
-      const alt2 = makeIrregularBlobPath(size * 0.97, 0.2, 11);
+      const alt1 = makeSoftBlobPath(
+        size * 1.02,
+        0.06,
+        0.035,
+        3,
+        5,
+        Math.random() * 6.28,
+        Math.random() * 6.28
+      );
+      const alt2 = makeSoftBlobPath(
+        size * 0.98,
+        0.05,
+        0.03,
+        3,
+        5,
+        Math.random() * 6.28,
+        Math.random() * 6.28
+      );
       gsap
         .timeline({ repeat: -1, yoyo: true })
-        .to(path, { duration: 3.0 + Math.random(), ease: 'sine.inOut', morphSVG: { shape: alt1 } })
-        .to(path, { duration: 3.0 + Math.random(), ease: 'sine.inOut', morphSVG: { shape: alt2 } });
+        .to(path, { duration: 4.0 + Math.random(), ease: 'sine.inOut', morphSVG: { shape: alt1 } })
+        .to(path, { duration: 4.0 + Math.random(), ease: 'sine.inOut', morphSVG: { shape: alt2 } });
     } else {
       gsap.to(path, {
-        scaleX: 'random(0.95, 1.05)',
-        scaleY: 'random(0.95, 1.05)',
-        duration: 'random(2, 4)',
+        duration: 3.8,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
+        scaleX: 'random(0.98, 1.03)',
+        scaleY: 'random(0.98, 1.03)',
         transformOrigin: 'center',
       });
     }
   }
 
-  // ---------- Opacity: start strong, fade with scroll (CSS-variable friendly)
+  // Opacity with scroll (same as before, with your CSS variables)
   const css = getComputedStyle(document.documentElement);
   const OPACITY_START = parseFloat(css.getPropertyValue('--blob-opacity-start')) || 0.55;
   const OPACITY_END = parseFloat(css.getPropertyValue('--blob-opacity-end')) || 0.25;
 
-  // Set explicit start
   gsap.set(container, { opacity: OPACITY_START });
 
   if (gsap.plugins?.ScrollTrigger) {
@@ -504,7 +521,6 @@ export function animateGooeyBlobs() {
           start: 'top top',
           end: endFn,
           scrub: true,
-          // markers: true,
         },
       }
     );
@@ -548,7 +564,7 @@ export function enableInteractiveJellyBlob() {
   const originalTransforms = new Map();
   let lastSwitchTime = 0;
 
-  const getScale = (dx, dy) => Math.min(Math.hypot(dx, dy) / 500, isSafari ? 0.18 : 0.25);
+  const getScale = (dx, dy) => Math.min(Math.hypot(dx, dy) / 500, isSafari ? 0.16 : 0.22);
   const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
 
   function getClosestBlob(x, y) {
@@ -580,7 +596,7 @@ export function enableInteractiveJellyBlob() {
       rotation: original.rotation || 0,
       scaleX: 1,
       scaleY: 1,
-      duration: 1.5,
+      duration: 1.4,
       ease: 'power2.out',
     });
   }
@@ -598,7 +614,7 @@ export function enableInteractiveJellyBlob() {
     target.y = clientY;
 
     const now = Date.now();
-    if (now - lastSwitchTime < 200) return;
+    if (now - lastSwitchTime < 180) return;
 
     const closestBlob = getClosestBlob(clientX, clientY);
 
@@ -632,8 +648,8 @@ export function enableInteractiveJellyBlob() {
     vel.x = target.x - current.x;
     vel.y = target.y - current.y;
 
-    current.x += vel.x * 0.2;
-    current.y += vel.y * 0.2;
+    current.x += vel.x * 0.22;
+    current.y += vel.y * 0.22;
 
     const angle = getAngle(vel.x, vel.y);
     const scale = getScale(vel.x, vel.y);
@@ -641,7 +657,7 @@ export function enableInteractiveJellyBlob() {
     gsap.set(activeBlob, {
       x: current.x,
       y: current.y,
-      rotation: angle, // original earlier feel
+      rotation: angle,
       scaleX: 1 + scale,
       scaleY: 1 - scale,
       transformOrigin: 'center',
@@ -664,26 +680,17 @@ export function enableInteractiveJellyBlob() {
     },
     { passive: true }
   );
+
   window.addEventListener('mousemove', updatePointer, { passive: true });
   window.addEventListener('touchmove', updatePointer, { passive: false });
-  window.addEventListener(
-    'mouseup',
-    () => {
-      isDragging = false;
-      if (activeBlob) returnBlobToOriginal(activeBlob);
-      activeBlob = null;
-    },
-    { passive: true }
-  );
-  window.addEventListener(
-    'touchend',
-    () => {
-      isDragging = false;
-      if (activeBlob) returnBlobToOriginal(activeBlob);
-      activeBlob = null;
-    },
-    { passive: true }
-  );
+
+  const endDrag = () => {
+    isDragging = false;
+    if (activeBlob) returnBlobToOriginal(activeBlob);
+    activeBlob = null;
+  };
+  window.addEventListener('mouseup', endDrag, { passive: true });
+  window.addEventListener('touchend', endDrag, { passive: true });
 
   loop();
 }
