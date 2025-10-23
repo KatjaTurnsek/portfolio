@@ -405,23 +405,15 @@ export function animateGooeyBlobs() {
   // Mobile vs desktop
   const mobile = VW < 850;
 
-  // --- NEW mobile/desktop tuning ---
+  // counts
   const blobCount = isSafari ? (mobile ? 10 : 16) : mobile ? 14 : 28;
 
-  // Wider spread on mobile so blobs don’t merge into one mass.
-  // (Use viewport *width* so landscape phones still get room.)
-  const spread = mobile
-    ? 0.6 * VW // was ~0.42*min(VW,700)
-    : 0.52 * Math.min(VW, 1200);
-
-  // A bit more drift on mobile so motion is visible
+  // spread & motion
+  const spread = mobile ? 0.6 * VW : 0.52 * Math.min(VW, 1200);
   const motionDistance = mobile ? Math.max(160, VW * 0.28) : 220;
+  const durationBase = mobile ? 15 : 16; // <-- keep this defined!
 
-  // Slightly smaller shapes on mobile to avoid fusing under blur
-  const baseSizeMin = mobile ? 60 : 80;
-  const baseSizeVar = mobile ? 45 : 50;
-
-  // 3-center triangle on mobile; 2-center on desktop
+  // centers: 3 on mobile (triangle), 2 on desktop
   const centers = mobile
     ? [
         { x: clamp(VW * 0.25, 40, VW - 40), y: clamp(VH * 0.35, 40, VH - 40) },
@@ -432,6 +424,10 @@ export function animateGooeyBlobs() {
         { x: clamp(VW * 0.3, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
         { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
       ];
+
+  // sizes: slightly smaller on mobile to avoid fusing under blur
+  const baseSizeMin = mobile ? 60 : 80;
+  const baseSizeVar = mobile ? 45 : 50;
 
   const svgns = 'http://www.w3.org/2000/svg';
 
@@ -564,7 +560,7 @@ export function animateGooeyBlobs() {
 
 /**
  * Interactive jelly drag (closest blob follows pointer while pressed).
- * (This is the original interaction behavior used with the first Safari fallback.)
+ * (Original interaction behavior used with the first Safari fallback.)
  */
 export function enableInteractiveJellyBlob() {
   const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
