@@ -11,6 +11,7 @@
 :root {
   --blob-opacity-start: 0.55;
   --blob-opacity-end: 0.25;
+  --blob-blur: 10;
 }
 
 /* 0) Utilities */
@@ -461,6 +462,7 @@ textarea:valid:focus {
   position: fixed;
   top: 0;
   left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -474,12 +476,18 @@ textarea:valid:focus {
   width: 100%;
   height: 100%;
   display: block;
-  filter: blur(10px);
   pointer-events: none;
+  opacity: 1;
 }
-.blobs .blob {
+
+#blob-svg .blob {
   fill: var(--blob-color);
+  mix-blend-mode: multiply;
+  transform-box: fill-box;
+  transform-origin: center;
+  stroke: none;
 }
+
 .blob {
   transform-box: fill-box;
   transform-origin: center;

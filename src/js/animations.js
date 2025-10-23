@@ -3,7 +3,7 @@
  * - Static waves (menu header image swap on theme)
  * - Heading wavy lines
  * - Teal skill bars
- * - Gooey blobs + “jelly” drag
+ * - Gooey blobs (irregular paths) + “jelly” drag
  * - Defer helper
  */
 
@@ -314,9 +314,15 @@ export function animateTealBars() {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Gooey blobs + interactive jelly drag                                       */
+/* Gooey blobs (irregular paths) + interactive jelly drag                     */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/** Utility */
+function clamp(n, min, max) {
+  return Math.min(max, Math.max(min, n));
+}
+
+/** SVG host + <defs> goo filter */
 function ensureBlobDOM() {
   let wrapper = document.querySelector('.morphing-blob-wrapper');
   if (!wrapper) {
@@ -325,7 +331,6 @@ function ensureBlobDOM() {
     Object.assign(wrapper.style, {
       position: 'fixed',
       inset: '0',
-      // keep whatever z-index CSS sets (don’t override to keep it behind header/footer)
       pointerEvents: 'none',
       willChange: 'transform',
       transform: 'translateZ(0)',
@@ -338,103 +343,205 @@ function ensureBlobDOM() {
   if (!svg) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.id = 'blob-svg';
-    document.querySelector('.morphing-blob-wrapper')?.appendChild(svg);
+    wrapper.appendChild(svg);
   }
 
   const VW = window.innerWidth;
   const VH = window.innerHeight;
   svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
-  svg.setAttribute('preserveAspectRatio', 'none'); // fill viewport; no gutters/padding
-  svg.style.width = '100%';
-  svg.style.height = '100%';
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.style.width = '100vw';
+  svg.style.height = '100vh';
   svg.style.display = 'block';
-  svg.style.filter = 'blur(10px)';
+
+  // defs (goo)
+  let defs = svg.querySelector('defs');
+  if (!defs) {
+    defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    svg.appendChild(defs);
+  }
+
+  let goo = svg.querySelector('#goo');
+  if (!goo) {
+    goo = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+    goo.setAttribute('id', 'goo');
+    goo.setAttribute('color-interpolation-filters', 'sRGB');
+
+    const blur = document.createElementNS('http://www.w3.org/2000/svg', 'feGaussianBlur');
+    blur.setAttribute('in', 'SourceGraphic');
+    blur.setAttribute(
+      'stdDeviation',
+      getComputedStyle(document.documentElement).getPropertyValue('--blob-blur').trim() || '14'
+    ); // CSS variable override
+
+    const matrix = document.createElementNS('http://www.w3.org/2000/svg', 'feColorMatrix');
+    matrix.setAttribute('mode', 'matrix');
+    // threshold to make overlaps merge (tweak last column ~17–22)
+    matrix.setAttribute(
+      'values',
+      `
+      1 0 0 0 0
+      0 1 0 0 0
+      0 0 1 0 0
+      0 0 0 22 -10
+    `.trim()
+    );
+
+    const comp = document.createElementNS('http://www.w3.org/2000/svg', 'feBlend');
+    comp.setAttribute('in2', 'SourceGraphic');
+    comp.setAttribute('mode', 'normal');
+
+    goo.appendChild(blur);
+    goo.appendChild(matrix);
+    goo.appendChild(comp);
+    defs.appendChild(goo);
+  }
 
   let g = document.getElementById('blobs-g');
   if (!g) {
     g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.id = 'blobs-g';
-    g.setAttribute('class', 'blobs');
     svg.appendChild(g);
   }
+  g.setAttribute('filter', 'url(#goo)');
 
   return { wrapper, svg, g, VW, VH };
 }
 
-function clamp(n, min, max) {
-  return Math.min(max, Math.max(min, n));
+/** Generate a blobby closed path with slight irregularity */
+function makeIrregularBlobPath(rBase = 120, irregularity = 0.18, points = 10) {
+  const pts = [];
+  const TWO_PI = Math.PI * 2;
+  for (let i = 0; i < points; i++) {
+    const t = (i / points) * TWO_PI;
+    // radius with small random wobble
+    const r = rBase * (1 + (Math.random() * 2 - 1) * irregularity);
+    const x = Math.cos(t) * r;
+    const y = Math.sin(t) * r;
+    pts.push({ x, y });
+  }
+
+  // Smooth with quadratic beziers
+  let d = '';
+  for (let i = 0; i < pts.length; i++) {
+    const p0 = pts[i];
+    const p1 = pts[(i + 1) % pts.length];
+    const cx = (p0.x + p1.x) / 2;
+    const cy = (p0.y + p1.y) / 2;
+    if (i === 0) d += `M ${cx} ${cy} `;
+    d += `Q ${p0.x} ${p0.y} ${p1.x} ${p1.y} `;
+  }
+  d += 'Z';
+  return d;
 }
 
+/**
+ * Main: create clustered, overlapping irregular blobs and animate them.
+ * - Desktop: tighter clusters & bigger radii for strong merging
+ * - Mobile: fewer, smaller blobs; same full-viewport host (no side padding)
+ */
 export function animateGooeyBlobs() {
   const { svg, g: container, VW, VH } = ensureBlobDOM();
   if (!container) return;
 
-  // clear old
+  // Clear old
   container.querySelectorAll('.blob-group').forEach((n) => n.remove());
 
-  const mobile = VW < 768;
+  const isMobile = VW < 768;
+
+  // Cluster layout → keeps blobs close = more "liquid"
+  const clusters = isMobile
+    ? [
+        { x: VW * 0.45, y: VH * 0.5 },
+        { x: VW * 0.55, y: VH * 0.55 },
+      ]
+    : [
+        { x: VW * 0.42, y: VH * 0.48 },
+        { x: VW * 0.58, y: VH * 0.52 },
+        { x: VW * 0.5, y: VH * 0.56 },
+      ];
+
+  const blobCount = isMobile ? 12 : 18;
+  const spread = isMobile ? Math.min(VW, VH) * 0.18 : Math.min(VW, VH) * 0.22;
+
+  // Sizes
+  const rMin = isMobile ? 50 : 90;
+  const rMax = isMobile ? 110 : 180;
+
+  // Motion range
+  const motion = isMobile ? 90 : 220;
+
   const svgns = 'http://www.w3.org/2000/svg';
 
-  const blobCount = 30;
-  const spread = mobile ? 0.45 * Math.min(VW, 700) : 0.65 * Math.min(VW, 1200);
-  const motionDistance = mobile ? 120 : 400;
+  for (let i = 0; i < blobCount; i++) {
+    const c = clusters[i % clusters.length];
+    const x = clamp(c.x + (Math.random() - 0.5) * spread, 40, VW - 40);
+    const y = clamp(c.y + (Math.random() - 0.5) * spread, 40, VH - 40);
+    const r = Math.floor(Math.random() * (rMax - rMin)) + rMin;
 
-  const centers = [
-    { x: clamp(VW * 0.3, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
-    { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
-  ];
-
-  container.removeAttribute('filter');
-
-  for (let i = 1; i <= blobCount; i++) {
-    const center = centers[i % 2];
-    const x = clamp(center.x + Math.random() * spread - spread / 2, 0, VW);
-    const y = clamp(center.y + Math.random() * spread - spread / 2, 0, VH);
-    const size = Math.floor(Math.random() * 50) + 80;
-
+    // Group (positioned)
     const group = document.createElementNS(svgns, 'g');
     group.setAttribute('class', 'blob-group');
-    group.setAttribute('id', `blob-group-${i}`);
     group.setAttribute('transform', `translate(${x},${y})`);
     container.appendChild(group);
 
-    const circle = document.createElementNS(svgns, 'circle');
-    circle.setAttribute('class', 'blob');
-    circle.setAttribute('cx', '0');
-    circle.setAttribute('cy', '0');
-    circle.setAttribute('r', String(size));
-    group.appendChild(circle);
+    // Irregular blob <path> (non-circle)
+    const path = document.createElementNS(svgns, 'path');
+    path.setAttribute('class', 'blob'); // color via CSS
+    path.setAttribute('d', makeIrregularBlobPath(r, 0.22, 12 + Math.floor(Math.random() * 5)));
+    group.appendChild(path);
 
-    const pos = { x, y, rotation: 0 };
+    // Gentle path morphing between variants (organic wobble)
+    if (gsap.plugins?.MorphSVGPlugin) {
+      const alt1 = makeIrregularBlobPath(r * 1.04, 0.24, 13);
+      const alt2 = makeIrregularBlobPath(r * 0.96, 0.2, 11);
+
+      gsap
+        .timeline({ repeat: -1, yoyo: true })
+        .to(path, {
+          duration: 3.2 + Math.random(),
+          ease: 'sine.inOut',
+          morphSVG: { shape: alt1 },
+        })
+        .to(path, {
+          duration: 3.0 + Math.random(),
+          ease: 'sine.inOut',
+          morphSVG: { shape: alt2 },
+        });
+    } else {
+      // Scale wiggle fallback
+      gsap.to(path, {
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        scaleX: 'random(0.95, 1.05)',
+        scaleY: 'random(0.95, 1.05)',
+        transformOrigin: 'center',
+      });
+    }
+
+    // Slow positional drift to keep clusters alive
+    const pos = { x, y, rot: 0 };
     gsap.to(pos, {
-      duration: 12 + Math.random() * 4,
-      x: clamp(x + Math.random() * motionDistance - motionDistance / 2, 0, VW),
-      y: clamp(y + Math.random() * motionDistance - motionDistance / 2, 0, VH),
-      rotation: Math.random() > 0.5 ? '+=180' : '-=180',
+      duration: 8 + Math.random() * 4,
+      x: clamp(x + (Math.random() - 0.5) * motion, 20, VW - 20),
+      y: clamp(y + (Math.random() - 0.5) * motion, 20, VH - 20),
+      rot: (Math.random() > 0.5 ? 1 : -1) * (20 + Math.random() * 40),
       ease: 'sine.inOut',
       repeat: -1,
       yoyo: true,
       onUpdate: () => {
-        group.setAttribute('transform', `translate(${pos.x},${pos.y}) rotate(${pos.rotation})`);
+        group.setAttribute('transform', `translate(${pos.x},${pos.y}) rotate(${pos.rot})`);
       },
-    });
-
-    gsap.to(circle, {
-      scaleX: 'random(0.9, 1.1)',
-      scaleY: 'random(0.9, 1.1)',
-      duration: 'random(2, 4)',
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
     });
   }
 
-  // ---------- Opacity: start strong, fade with scroll (CSS-variable friendly)
+  // Opacity vs scroll (CSS var friendly)
   const css = getComputedStyle(document.documentElement);
-  const OPACITY_START = parseFloat(css.getPropertyValue('--blob-opacity-start')) || 0.55; // more visible at top
-  const OPACITY_END = parseFloat(css.getPropertyValue('--blob-opacity-end')) || 0.1; // faint while scrolled
+  const OPACITY_START = parseFloat(css.getPropertyValue('--blob-opacity-start')) || 0.5;
+  const OPACITY_END = parseFloat(css.getPropertyValue('--blob-opacity-end')) || 0.12;
 
-  // Set explicit start
   gsap.set(container, { opacity: OPACITY_START });
 
   if (gsap.plugins?.ScrollTrigger) {
@@ -453,12 +560,10 @@ export function animateGooeyBlobs() {
           start: 'top top',
           end: endFn,
           scrub: true,
-          // markers: true,
         },
       }
     );
   } else {
-    // Fallback when ST isn’t available/active
     const lerp = (a, b, t) => a + (b - a) * t;
     const onScroll = () => {
       const doc = document.documentElement;
@@ -482,8 +587,8 @@ export function animateGooeyBlobs() {
 
 /**
  * Interactive jelly drag:
- * Finds the closest blob to the pointer and lets it lag-follow the cursor/finger,
- * then animates it back to its original transform on release.
+ * Now uses the irregular <path> blobs inside each .blob-group.
+ * Picks the nearest group to the pointer and stretches it.
  */
 export function enableInteractiveJellyBlob() {
   const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
@@ -498,36 +603,24 @@ export function enableInteractiveJellyBlob() {
   const originalTransforms = new Map();
   let lastSwitchTime = 0;
 
-  const getScale = (dx, dy) => Math.min(Math.hypot(dx, dy) / 500, isSafari ? 0.18 : 0.25);
+  const getScale = (dx, dy) => Math.min(Math.hypot(dx, dy) / 500, isSafari ? 0.16 : 0.22);
   const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
-
-  function getSVGCoords(clientX, clientY) {
-    // @ts-ignore
-    const pt = svg.createSVGPoint();
-    pt.x = clientX;
-    pt.y = clientY;
-    // @ts-ignore
-    const res = pt.matrixTransform(svg.getScreenCTM().inverse());
-    return { x: res.x, y: res.y };
-  }
 
   function getClosestBlob(x, y) {
     const blobs = document.querySelectorAll('.blob-group');
     let closest = null;
     let minDist = Infinity;
-
     blobs.forEach((blob) => {
-      const matrix = blob.getScreenCTM();
-      if (!matrix) return;
-      const cx = matrix.e;
-      const cy = matrix.f;
-      const dist = Math.hypot(cx - x, cy - y);
-      if (dist < minDist) {
-        minDist = dist;
+      const m = blob.getScreenCTM();
+      if (!m) return;
+      const cx = m.e;
+      const cy = m.f;
+      const d = Math.hypot(cx - x, cy - y);
+      if (d < minDist) {
+        minDist = d;
         closest = blob;
       }
     });
-
     return /** @type {SVGGElement|null} */ (closest);
   }
 
@@ -540,7 +633,7 @@ export function enableInteractiveJellyBlob() {
       rotation: original.rotation || 0,
       scaleX: 1,
       scaleY: 1,
-      duration: 1.5,
+      duration: 1.2,
       ease: 'power2.out',
     });
   }
@@ -553,13 +646,12 @@ export function enableInteractiveJellyBlob() {
     const clientY = /** @type {TouchEvent} */ (e).touches
       ? /** @type {TouchEvent} */ (e).touches[0].clientY
       : /** @type {MouseEvent} */ (e).clientY;
-    const svgPos = getSVGCoords(clientX, clientY);
 
-    target.x = svgPos.x;
-    target.y = svgPos.y;
+    target.x = clientX;
+    target.y = clientY;
 
     const now = Date.now();
-    if (now - lastSwitchTime < 200) return;
+    if (now - lastSwitchTime < 160) return;
 
     const closestBlob = getClosestBlob(clientX, clientY);
 
@@ -578,7 +670,6 @@ export function enableInteractiveJellyBlob() {
           scaleY: gp('scaleY'),
         });
       }
-
       gsap.killTweensOf(activeBlob);
     }
   }
@@ -593,8 +684,8 @@ export function enableInteractiveJellyBlob() {
     vel.x = target.x - current.x;
     vel.y = target.y - current.y;
 
-    current.x += vel.x * 0.2;
-    current.y += vel.y * 0.2;
+    current.x += vel.x * 0.22;
+    current.y += vel.y * 0.22;
 
     const angle = getAngle(vel.x, vel.y);
     const scale = getScale(vel.x, vel.y);
@@ -602,7 +693,7 @@ export function enableInteractiveJellyBlob() {
     gsap.set(activeBlob, {
       x: current.x,
       y: current.y,
-      rotation: angle, // simple/earlier feel
+      rotation: angle,
       scaleX: 1 + scale,
       scaleY: 1 - scale,
       transformOrigin: 'center',
@@ -613,22 +704,25 @@ export function enableInteractiveJellyBlob() {
     isDragging = true;
     updatePointer(e);
   });
-  window.addEventListener('touchstart', (e) => {
-    isDragging = true;
-    updatePointer(e);
-  });
-  window.addEventListener('mousemove', updatePointer, { passive: false });
+  window.addEventListener(
+    'touchstart',
+    (e) => {
+      isDragging = true;
+      updatePointer(e);
+    },
+    { passive: true }
+  );
+
+  window.addEventListener('mousemove', updatePointer, { passive: true });
   window.addEventListener('touchmove', updatePointer, { passive: false });
-  window.addEventListener('mouseup', () => {
+
+  const endDrag = () => {
     isDragging = false;
     if (activeBlob) returnBlobToOriginal(activeBlob);
     activeBlob = null;
-  });
-  window.addEventListener('touchend', () => {
-    isDragging = false;
-    if (activeBlob) returnBlobToOriginal(activeBlob);
-    activeBlob = null;
-  });
+  };
+  window.addEventListener('mouseup', endDrag);
+  window.addEventListener('touchend', endDrag);
 
   loop();
 }
