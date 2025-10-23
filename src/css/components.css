@@ -485,6 +485,12 @@ textarea:valid:focus {
   stroke: none;
 }
 
+#blob-svg #blobs-g {
+  transform: none;
+  transform-origin: 50% 50%;
+  transform-box: view-box;
+}
+
 /* 11) Hire Button */
 .hire-button {
   position: relative;
@@ -536,6 +542,9 @@ textarea:valid:focus {
 
 /* 12) Responsive Tweaks */
 @media (max-width: 850px) {
+  :root {
+    --blob-scale-mobile: 0.85;
+  }
   .tech-demo-wrapper {
     display: block;
     text-align: center;
@@ -603,9 +612,9 @@ textarea:valid:focus {
   .bullet-list-right {
     padding: 20px;
   }
-  #blob-svg,
   #blob-svg #blobs-g {
-    transform: none;
-    transform-origin: 50% 40%;
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    transform: scale(var(--blob-scale-mobile));
   }
 }
