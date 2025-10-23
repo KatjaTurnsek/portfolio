@@ -36,7 +36,6 @@ footer,
 /* 0.1) Background host for header/menu waves present in HTML as <div class="top-waves">.
    Keep it out of layout flow so it never pushes footer around. */
 .top-waves {
-  /* FIX: new */
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -551,10 +550,18 @@ textarea:valid:focus {
 .hire-button a:hover {
   color: var(--dark);
 }
+
+/* Keep the Hire section IN FLOW on desktop so footer reserves space. */
 .hire-section {
-  position: absolute;
-  bottom: -30px;
-  left: 70px;
+  position: relative; /* was absolute */
+  bottom: auto;
+  left: auto;
+  margin-top: 30px; /* gentle nudge for desktop look */
+}
+
+/* Reserve space at the bottom of the first section so the circle has room */
+#home .rows {
+  padding-bottom: 220px; /* ~200px circle + breathing room */
 }
 
 /* 12) Responsive Tweaks (Mobile) ----------------------------------------- */
@@ -570,8 +577,8 @@ textarea:valid:focus {
     margin-top: 20px;
   }
   .tech-stack {
-    font-size: 20px; /* was 22px */
-    line-height: 30px; /* was 32px */
+    font-size: 20px;
+    line-height: 30px;
     margin-bottom: 15px;
     white-space: normal;
   }
@@ -579,8 +586,8 @@ textarea:valid:focus {
   /* CTAs / Links */
   .label-link,
   .submit-button {
-    --label-size: 22px; /* was 30px */
-    --label-line: 30px; /* was 40px */
+    --label-size: 22px;
+    --label-line: 30px;
     --icon-scale: 0.9em;
     gap: 8px;
     justify-content: center;
@@ -615,7 +622,7 @@ textarea:valid:focus {
     --label-line: 20px;
   }
 
-  /* Lists (custom compact dots with better left padding on mobile) */
+  /* Lists (compact bullets) */
   .bullet-list,
   .bullet-list-right {
     list-style: none;
@@ -659,16 +666,16 @@ textarea:valid:focus {
     height: 46px;
   }
   .info-text {
-    font-size: 26px; /* was 30px */
-    line-height: 36px; /* was 40px */
-    padding-top: 40px; /* was 60px */
+    font-size: 26px;
+    line-height: 36px;
+    padding-top: 40px;
     text-align: center;
   }
 
   /* Testimonials */
   .testimonial-section {
     padding-bottom: 60px;
-  } /* was 100px */
+  }
   .testimonial {
     height: 80px;
     padding-right: 1rem;
@@ -698,15 +705,17 @@ textarea:valid:focus {
     line-height: 28px;
   }
 
-  /* Hire */
+  /* Hire: already in flow; keep spacing lighter on mobile */
   .hire-section {
-    position: static;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-    padding-top: 30px;
+    position: relative;
+    bottom: auto;
+    left: auto;
+    margin-top: 30px;
   }
+  #home .rows {
+    padding-bottom: 120px; /* reduce extra space on small screens */
+  }
+
   .hire-button {
     width: 180px;
     height: 180px;

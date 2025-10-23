@@ -44,17 +44,16 @@
   --first-section-pad: clamp(0px, calc(var(--waves-h) - var(--header-h)), 40vh);
 }
 
-/* FIX: make page a flex column so footer:margin-top:auto works everywhere */
 html {
-  /* new */
   height: 100%;
+  height: -webkit-fill-available;
 }
 body {
-  /* new */
-  min-height: 100svh;
-  min-height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
+  min-height: 100svh;
   height: auto;
+  height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -196,14 +195,14 @@ header > * {
 /* Main / Footer ----------------------------------------------------------- */
 
 main {
-  /* FIX: let main be the flexible area; avoid forced 100vh here */
   flex: 1 1 auto;
   padding-top: 30px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
   width: 100%;
   margin-inline: auto;
-  min-height: auto; /* FIX: was 100vh; causes bounce on iOS/Safari */
-  transform: none !important; /* backstop for Safari quirks */
-  min-width: 0; /* prevent overflow from grids flexing */
+  min-height: auto;
+  transform: none !important;
+  min-width: 0;
 }
 
 main > .fullscreen-section:first-child {
