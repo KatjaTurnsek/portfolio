@@ -617,4 +617,7 @@ textarea:valid:focus {
     transform-origin: 50% 50%;
     transform: scale(var(--blob-scale-mobile));
   }
+  #blob-svg {
+    filter: blur(8px);
+  }
 }

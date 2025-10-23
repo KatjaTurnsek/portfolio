@@ -1,9 +1,10 @@
 /**
+ * animations.js
  * GSAP-powered visuals (lightweight after removing heavy canvases).
- * - Static waves (menu header image swap on theme)
+ * - Static waves (menu/header image swap on theme)
  * - Heading wavy lines
  * - Teal skill bars
- * - Gooey blobs + “jelly” drag   ← soft rounded shapes, closer & slower
+ * - Gooey blobs + “jelly” drag  ← soft rounded shapes, closer & slower
  * - Defer helper
  */
 
@@ -400,23 +401,29 @@ export function animateGooeyBlobs() {
   // clear old
   container.querySelectorAll('.blob-group').forEach((n) => n.remove());
 
-  const mobile = VW < 768;
+  // Mobile breakpoint per your request
+  const mobile = VW < 850;
   const svgns = 'http://www.w3.org/2000/svg';
 
-  // Closer than before, but not cramped
+  // Closer than original, but not cramped
   const spread = mobile
-    ? 0.36 * Math.min(VW, 700) // was 0.45 → 0.36 (closer on mobile)
-    : 0.52 * Math.min(VW, 1200); // was 0.65 → 0.52 (closer on desktop)
+    ? 0.42 * Math.min(VW, 700) // wider than too-tight setup to avoid a single lump
+    : 0.52 * Math.min(VW, 1200); // closer than your very first version
 
-  const blobCount = 30;
-  // Slower movement: shorter drift & longer durations
-  const motionDistance = mobile ? 90 : 220;
+  const blobCount = mobile ? 12 : 30; // fewer on mobile
+  const motionDistance = mobile ? 140 : 220; // a bit more drift on mobile so motion reads
+  const durationBase = mobile ? 15 : 16; // slightly slower on both, but similar feel
 
-  // Two soft clusters like your original
-  const centers = [
-    { x: clamp(VW * 0.3, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
-    { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
-  ];
+  // Two clusters; on mobile, offset vertically so the mass separates
+  const centers = mobile
+    ? [
+        { x: clamp(VW * 0.38, 60, VW - 60), y: clamp(VH * 0.45, 60, VH - 60) },
+        { x: clamp(VW * 0.62, 60, VW - 60), y: clamp(VH * 0.62, 60, VH - 60) },
+      ]
+    : [
+        { x: clamp(VW * 0.3, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
+        { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
+      ];
 
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
@@ -433,26 +440,25 @@ export function animateGooeyBlobs() {
     // Soft rounded shape (not a perfect circle)
     const path = document.createElementNS(svgns, 'path');
     path.setAttribute('class', 'blob');
-    // very gentle irregularity
     const d = makeSoftBlobPath(
       size,
       0.055 + Math.random() * 0.015, // a1: 0.055–0.07
       0.03 + Math.random() * 0.015, // a2: 0.03–0.045
       3,
       5,
-      Math.random() * Math.PI * 2, // random phase for variety
+      Math.random() * Math.PI * 2,
       Math.random() * Math.PI * 2
     );
     path.setAttribute('d', d);
     group.appendChild(path);
 
-    // Slow positional drift (longer duration, smaller rotation)
+    // Slow positional drift (longer duration, gentle rotation)
     const pos = { x, y, rotation: 0 };
     gsap.to(pos, {
-      duration: 16 + Math.random() * 6, // 16–22s (slower)
+      duration: durationBase + Math.random() * 6, // ~15–21s mobile, ~16–22s desktop
       x: clamp(x + Math.random() * motionDistance - motionDistance / 2, 0, VW),
       y: clamp(y + Math.random() * motionDistance - motionDistance / 2, 0, VH),
-      rotation: Math.random() > 0.5 ? '+=60' : '-=60', // gentler rotation
+      rotation: Math.random() > 0.5 ? '+=60' : '-=60',
       ease: 'sine.inOut',
       repeat: -1,
       yoyo: true,
@@ -498,7 +504,7 @@ export function animateGooeyBlobs() {
     }
   }
 
-  // Opacity with scroll (same as before, with your CSS variables)
+  // Opacity with scroll (CSS variables with fallback)
   const css = getComputedStyle(document.documentElement);
   const OPACITY_START = parseFloat(css.getPropertyValue('--blob-opacity-start')) || 0.55;
   const OPACITY_END = parseFloat(css.getPropertyValue('--blob-opacity-end')) || 0.25;
@@ -571,19 +577,17 @@ export function enableInteractiveJellyBlob() {
     const blobs = document.querySelectorAll('.blob-group');
     let closest = null;
     let minDist = Infinity;
-
     blobs.forEach((blob) => {
-      const matrix = blob.getScreenCTM();
-      if (!matrix) return;
-      const cx = matrix.e;
-      const cy = matrix.f;
-      const dist = Math.hypot(cx - x, cy - y);
-      if (dist < minDist) {
-        minDist = dist;
+      const m = blob.getScreenCTM();
+      if (!m) return;
+      const cx = m.e;
+      const cy = m.f;
+      const d = Math.hypot(cx - x, cy - y);
+      if (d < minDist) {
+        minDist = d;
         closest = blob;
       }
     });
-
     return /** @type {SVGGElement|null} */ (closest);
   }
 
