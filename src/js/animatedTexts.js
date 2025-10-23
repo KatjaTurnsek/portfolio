@@ -1,33 +1,64 @@
 /**
- * animatedTexts.js
- *
- * Handles text reveal animations using GSAP + SplitType:
- * - Animates headings (H1–H4) and paragraphs within sections
- * - Animates fullscreen menu links word-by-word
- * - Provides Safari-specific fallbacks for smoother text easing
- * - Skips any element marked with [data-no-reveal] (e.g., LCP text)
+ * Text reveal animations using GSAP + SplitType (lighter across all browsers):
+ * - H1: words (Safari-lite: lines)
+ * - H2–H4: lines
+ * - P: lines, but skip splitting very long paragraphs (fade/slide instead)
+ * - Fullscreen menu links: words (simpler on Safari-lite)
+ * - Optional IntersectionObserver to animate only when visible
+ * - Respect prefers-reduced-motion
  */
 
 import gsap from 'gsap';
 import SplitType from 'split-type';
 
-/** True if current browser is Safari (lighter ease applied). */
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Environment & perf profile                                                 */
+/* ────────────────────────────────────────────────────────────────────────── */
+
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const HW_THREADS = navigator.hardwareConcurrency || 4;
 
-/** Default easing used for text animations, adjusted for Safari. */
-const textEase = isSafari ? 'power1.out' : 'power2.out';
+// “Lite” when Safari + modest cores, smaller viewport, or reduced motion
+const SAFARI_LITE = isSafari && (HW_THREADS <= 6 || window.innerWidth < 900 || REDUCED);
 
-/** Selector suffix to skip elements you don’t want animated (e.g., LCP). */
+/** Default easing used for text animations */
+const textEase = SAFARI_LITE ? 'power1.out' : 'power2.out';
+
+/** Skip selector (e.g., LCP text) */
 const SKIP = ':not([data-no-reveal])';
+
+/** Long paragraph threshold (applies to all browsers) */
+const LONG_P_THRESHOLD = 560;
+
+/* Utilities */
+function safeSplit(el, opts) {
+  try {
+    return new SplitType(el, opts);
+  } catch {
+    return null;
+  }
+}
+function markOnce(el) {
+  if (el.dataset.revealed === '1') return false;
+  el.dataset.revealed = '1';
+  return true;
+}
+function clearInline(el, props) {
+  props.forEach((p) => el.style.removeProperty(p));
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Main: animate all text in a section                                        */
+/* ────────────────────────────────────────────────────────────────────────── */
 
 /**
  * Animates all text elements within a given section:
- * - H1: springs in word-by-word
- * - H2–H4: slides in line-by-line (Safari: only lines)
- * - P: slides in line-by-line with slight delay
+ * - H1: words (Safari-lite: lines; no scale to avoid blur)
+ * - H2–H4: lines
+ * - P: lines (skip splitting very long paragraphs → simple fade/slide)
  *
- * Elements with [data-no-reveal] are NOT animated.
- * Respects prefers-reduced-motion (renders text visible, no motion).
+ * Respects [data-no-reveal] and prefers-reduced-motion.
  *
  * @param {HTMLElement} section
  * @returns {void}
@@ -35,117 +66,236 @@ const SKIP = ':not([data-no-reveal])';
 export function animateTextInSection(section) {
   if (!section) return;
 
-  // Respect reduced motion: just ensure visibility and bail.
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // Reduced motion: just ensure visibility and bail.
+  if (REDUCED) {
     section
       .querySelectorAll(`h1${SKIP}, h2${SKIP}, h3${SKIP}, h4${SKIP}, p${SKIP}`)
       .forEach((el) => (el.style.opacity = 1));
     return;
   }
 
-  // H1 (words)
+  // Temporary paint hints (helps Safari & long sections)
+  section.style.willChange = 'transform, opacity';
+  section.style.contain = 'layout style paint';
+
+  /* H1 — hero headings */
   section.querySelectorAll(`h1${SKIP}`).forEach((heading) => {
-    try {
-      const split = new SplitType(heading, { types: 'words', tagName: 'span' });
-      const words = split.words;
-      gsap.set(heading, { opacity: 1 });
+    if (!markOnce(heading)) return;
 
-      gsap
-        .timeline({
-          defaults: { ease: isSafari ? 'power1.out' : 'elastic.out(1, 0.4)' },
-          onComplete: () => split.revert(),
-        })
-        .fromTo(
-          words,
-          { y: 60, opacity: 0, scale: 0.85 },
-          { y: 0, opacity: 1, scale: 1, duration: 1.8, stagger: 0.06 }
-        );
-    } catch {
+    const types = SAFARI_LITE ? 'lines' : 'words';
+    const split = safeSplit(heading, { types, tagName: 'span' });
+    if (!split) {
       heading.style.opacity = 1;
+      return;
     }
+
+    const items = SAFARI_LITE ? split.lines : split.words;
+    if (!items?.length) {
+      split.revert();
+      heading.style.opacity = 1;
+      return;
+    }
+
+    gsap.set(heading, { opacity: 1 });
+    gsap.set(items, {
+      y: SAFARI_LITE ? 40 : 60,
+      opacity: 0,
+      ...(SAFARI_LITE ? {} : { scale: 0.92 }),
+      willChange: 'transform, opacity',
+      force3D: false,
+    });
+
+    gsap
+      .timeline({
+        defaults: { ease: SAFARI_LITE ? 'power1.out' : 'elastic.out(1, 0.4)' },
+        onComplete: () => {
+          split.revert();
+          clearInline(heading, ['will-change', 'contain', 'opacity', 'transform']);
+        },
+      })
+      .to(items, {
+        y: 0,
+        opacity: 1,
+        ...(SAFARI_LITE ? {} : { scale: 1 }),
+        duration: SAFARI_LITE ? 0.9 : 1.6,
+        stagger: SAFARI_LITE ? 0.05 : 0.06,
+        clearProps: 'transform,opacity',
+      });
   });
 
-  // H2–H4 (lines; Safari: lines only)
+  /* H2–H4 — subheadings (lines) */
   section.querySelectorAll(`h2${SKIP}, h3${SKIP}, h4${SKIP}`).forEach((el) => {
-    try {
-      const split = new SplitType(el, {
-        types: isSafari ? 'lines' : 'lines, words',
-        tagName: 'span',
-      });
+    if (!markOnce(el)) return;
 
-      gsap.set(split.lines, { yPercent: 100, opacity: 0 });
-
-      gsap
-        .timeline({
-          defaults: { ease: textEase },
-          onComplete: () => split.revert(),
-        })
-        .to(split.lines, {
-          yPercent: 0,
-          opacity: 1,
-          duration: 1.4,
-          stagger: 0.12,
-        });
-    } catch {
+    const split = safeSplit(el, { types: 'lines', tagName: 'span' });
+    if (!split?.lines?.length) {
+      split?.revert?.();
       el.style.opacity = 1;
+      return;
     }
+
+    gsap.set(split.lines, {
+      yPercent: 100,
+      opacity: 0,
+      willChange: 'transform, opacity',
+      force3D: false,
+    });
+
+    gsap
+      .timeline({
+        defaults: { ease: textEase },
+        onComplete: () => {
+          split.revert();
+          clearInline(el, ['will-change', 'contain', 'opacity', 'transform']);
+        },
+      })
+      .to(split.lines, {
+        yPercent: 0,
+        opacity: 1,
+        duration: SAFARI_LITE ? 0.85 : 1.2,
+        stagger: 0.1,
+        clearProps: 'transform,opacity',
+      });
   });
 
-  // Paragraphs (lines)
-  // NOTE: Anything with [data-no-reveal] (e.g., your LCP p.align-right-60) is skipped.
+  /* Paragraphs — lines (skip splitting very long ones for ALL browsers) */
   section.querySelectorAll(`p${SKIP}`).forEach((el) => {
-    try {
-      const split = new SplitType(el, {
-        types: isSafari ? 'lines' : 'lines, words',
-        tagName: 'span',
+    if (!markOnce(el)) return;
+
+    const isLong = (el.textContent?.trim().length || 0) > LONG_P_THRESHOLD;
+
+    if (isLong) {
+      // Cheaper: no splitting; simple fade/slide
+      gsap.set(el, { y: 24, opacity: 0, willChange: 'transform, opacity', force3D: false });
+      gsap.to(el, {
+        y: 0,
+        opacity: 1,
+        duration: 0.9,
+        ease: textEase,
+        delay: 0.05,
+        onComplete: () => clearInline(el, ['will-change', 'opacity', 'transform']),
       });
-
-      gsap.set(split.lines, { yPercent: 100, opacity: 0 });
-
-      gsap
-        .timeline({
-          defaults: { ease: textEase },
-          onComplete: () => split.revert(),
-        })
-        .to(split.lines, {
-          yPercent: 0,
-          opacity: 1,
-          duration: 1.6,
-          stagger: 0.12,
-          delay: 0.1,
-        });
-    } catch {
-      el.style.opacity = 1;
+      return;
     }
+
+    const split = safeSplit(el, { types: 'lines', tagName: 'span' });
+    if (!split?.lines?.length) {
+      split?.revert?.();
+      el.style.opacity = 1;
+      return;
+    }
+
+    gsap.set(split.lines, {
+      yPercent: 100,
+      opacity: 0,
+      willChange: 'transform, opacity',
+      force3D: false,
+    });
+
+    gsap
+      .timeline({
+        defaults: { ease: textEase },
+        onComplete: () => {
+          split.revert();
+          clearInline(el, ['will-change', 'contain', 'opacity', 'transform']);
+        },
+      })
+      .to(split.lines, {
+        yPercent: 0,
+        opacity: 1,
+        duration: SAFARI_LITE ? 0.9 : 1.2,
+        stagger: 0.1,
+        delay: 0.05,
+        clearProps: 'transform,opacity',
+      });
+  });
+
+  // Clean paint hints after a tick
+  requestAnimationFrame(() => {
+    clearInline(section, ['will-change', 'contain']);
   });
 }
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Fullscreen menu links                                                      */
+/* ────────────────────────────────────────────────────────────────────────── */
+
 /**
  * Animates menu navigation links (`.fullscreen-menu nav a`) word-by-word.
- * @returns {void}
+ * (Safari-lite: simpler transform — no scale)
+ * Call this each time the menu opens to retrigger.
  */
 export function animateMenuLinks() {
   const links = document.querySelectorAll('.fullscreen-menu nav a');
 
   links.forEach((link) => {
     try {
-      // Revert any previous split on this element, then re-split.
       SplitType.revert(link);
-      link.classList.remove('animated');
+    } catch {}
+    link.classList.remove('animated');
 
-      const split = new SplitType(link, { types: 'words', tagName: 'span' });
-      const words = split.words;
-      link.classList.add('animated');
-
-      gsap
-        .timeline({ defaults: { ease: textEase } })
-        .fromTo(
-          words,
-          { y: 50, opacity: 0, scale: 0.9 },
-          { y: 0, opacity: 1, scale: 1, duration: 1.2, stagger: 0.08 }
-        );
-    } catch {
+    const split = safeSplit(link, { types: 'words', tagName: 'span' });
+    if (!split?.words?.length) {
       link.style.opacity = 1;
+      return;
     }
+
+    const words = split.words;
+    link.classList.add('animated');
+
+    gsap.set(words, {
+      y: 48,
+      opacity: 0,
+      ...(SAFARI_LITE ? {} : { scale: 0.94 }),
+      willChange: 'transform, opacity',
+      force3D: false,
+    });
+
+    gsap
+      .timeline({
+        defaults: { ease: textEase },
+        onComplete: () => {
+          split.revert();
+          clearInline(link, ['will-change', 'opacity', 'transform']);
+        },
+      })
+      .to(words, {
+        y: 0,
+        opacity: 1,
+        ...(SAFARI_LITE ? {} : { scale: 1 }),
+        duration: SAFARI_LITE ? 0.7 : 1.0,
+        stagger: 0.07,
+        clearProps: 'transform,opacity',
+      });
   });
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Optional: animate only when visible                                        */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Observe sections and run `animateTextInSection` when they enter the viewport.
+ * Usage:
+ *   observeTextSections(document.querySelectorAll('.fullscreen-section'));
+ *
+ * @param {NodeListOf<HTMLElement>|HTMLElement[]} sections
+ * @param {string} rootMargin
+ */
+export function observeTextSections(sections, rootMargin = '0px 0px -10% 0px') {
+  if (!sections || typeof IntersectionObserver === 'undefined') return;
+
+  const io = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateTextInSection(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { root: null, rootMargin, threshold: 0.15 }
+  );
+
+  sections.forEach((s) => io.observe(s));
 }
