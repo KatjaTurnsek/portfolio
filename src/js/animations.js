@@ -402,21 +402,31 @@ export function animateGooeyBlobs() {
   // clear old
   container.querySelectorAll('.blob-group').forEach((n) => n.remove());
 
+  // Mobile vs desktop
   const mobile = VW < 850;
 
-  // FIRST fallback logic:
-  // - fewer blobs on Safari
-  const blobCount = isSafari ? (mobile ? 8 : 16) : mobile ? 12 : 30;
-  const motionDistance = mobile ? 140 : 220;
-  const durationBase = mobile ? 15 : 16;
+  // --- NEW mobile/desktop tuning ---
+  const blobCount = isSafari ? (mobile ? 10 : 16) : mobile ? 14 : 28;
 
-  // spread tuned to avoid a single lump on mobile
-  const spread = mobile ? 0.42 * Math.min(VW, 700) : 0.52 * Math.min(VW, 1200);
+  // Wider spread on mobile so blobs don’t merge into one mass.
+  // (Use viewport *width* so landscape phones still get room.)
+  const spread = mobile
+    ? 0.6 * VW // was ~0.42*min(VW,700)
+    : 0.52 * Math.min(VW, 1200);
 
+  // A bit more drift on mobile so motion is visible
+  const motionDistance = mobile ? Math.max(160, VW * 0.28) : 220;
+
+  // Slightly smaller shapes on mobile to avoid fusing under blur
+  const baseSizeMin = mobile ? 60 : 80;
+  const baseSizeVar = mobile ? 45 : 50;
+
+  // 3-center triangle on mobile; 2-center on desktop
   const centers = mobile
     ? [
-        { x: clamp(VW * 0.38, 60, VW - 60), y: clamp(VH * 0.45, 60, VH - 60) },
-        { x: clamp(VW * 0.62, 60, VW - 60), y: clamp(VH * 0.62, 60, VH - 60) },
+        { x: clamp(VW * 0.25, 40, VW - 40), y: clamp(VH * 0.35, 40, VH - 40) },
+        { x: clamp(VW * 0.75, 40, VW - 40), y: clamp(VH * 0.38, 40, VH - 40) },
+        { x: clamp(VW * 0.5, 40, VW - 40), y: clamp(VH * 0.75, 40, VH - 40) },
       ]
     : [
         { x: clamp(VW * 0.3, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
@@ -426,10 +436,10 @@ export function animateGooeyBlobs() {
   const svgns = 'http://www.w3.org/2000/svg';
 
   for (let i = 1; i <= blobCount; i++) {
-    const center = centers[i % 2];
+    const center = centers[i % centers.length];
     const x = clamp(center.x + Math.random() * spread - spread / 2, 0, VW);
     const y = clamp(center.y + Math.random() * spread - spread / 2, 0, VH);
-    const size = Math.floor(Math.random() * 50) + 80;
+    const size = Math.floor(Math.random() * baseSizeVar) + baseSizeMin;
 
     const group = document.createElementNS(svgns, 'g');
     group.setAttribute('class', 'blob-group');
