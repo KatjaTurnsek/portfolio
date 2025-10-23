@@ -1,6 +1,7 @@
 /**
+ * animations.js
  * GSAP-powered visuals (lightweight after removing heavy canvases).
- * - Static waves (menu header image swap on theme)
+ * - Static waves (menu/header image swap on theme)
  * - Heading wavy lines
  * - Teal skill bars
  * - Gooey blobs (irregular paths) + “jelly” drag
@@ -15,6 +16,40 @@ gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger);
 
 /** Safari detection (minor perf tweaks). */
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Gooey & Layout Tunables — adjust without digging through code             */
+/* ────────────────────────────────────────────────────────────────────────── */
+const BLOB_CFG = {
+  // Gaussian blur feeding the goo filter. null = use CSS --blob-blur.
+  BLUR_STDDEV: null, // e.g. set 16 or 18 to force stronger goo
+
+  // Goo “merge” threshold (feColorMatrix row 4 col 4 & 5)
+  // ↑A (18→24) = thicker merge; B is negative offset (-6..-12 typical).
+  GOO_THRESHOLD_A: 22,
+  GOO_THRESHOLD_B: -8,
+
+  // Counts / sizes
+  COUNT_DESKTOP: 18,
+  COUNT_MOBILE: 12,
+  R_MIN_DESKTOP: 80,
+  R_MAX_DESKTOP: 160,
+  R_MIN_MOBILE: 48,
+  R_MAX_MOBILE: 110,
+
+  // Positioning (spread controls distance from cluster centers)
+  // ↑ spread = looser clustering (was tighter earlier).
+  SPREAD_FACTOR_DESKTOP: 0.32, // 0.30–0.34 nice range
+  SPREAD_FACTOR_MOBILE: 0.22,
+
+  // Drift/motion amplitude (px)
+  MOTION_DESKTOP: 180,
+  MOTION_MOBILE: 90,
+
+  // Opacity scroll fallback (used if CSS vars missing)
+  OPACITY_START_FALLBACK: 0.5,
+  OPACITY_END_FALLBACK: 0.12,
+};
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Static waves (single <img> per host; dark/light swap)                      */
@@ -322,7 +357,7 @@ function clamp(n, min, max) {
   return Math.min(max, Math.max(min, n));
 }
 
-/** SVG host + <defs> goo filter */
+/** SVG host + <defs> goo filter — applies filter to #blobs-g */
 function ensureBlobDOM() {
   let wrapper = document.querySelector('.morphing-blob-wrapper');
   if (!wrapper) {
@@ -353,6 +388,7 @@ function ensureBlobDOM() {
   svg.style.width = '100vw';
   svg.style.height = '100vh';
   svg.style.display = 'block';
+  // DO NOT set CSS blur here; goo filter below handles blur
 
   // defs (goo)
   let defs = svg.querySelector('defs');
@@ -369,21 +405,25 @@ function ensureBlobDOM() {
 
     const blur = document.createElementNS('http://www.w3.org/2000/svg', 'feGaussianBlur');
     blur.setAttribute('in', 'SourceGraphic');
-    blur.setAttribute(
-      'stdDeviation',
-      getComputedStyle(document.documentElement).getPropertyValue('--blob-blur').trim() || '14'
-    ); // CSS variable override
+
+    // Prefer CSS var --blob-blur unless overridden by BLOB_CFG.BLUR_STDDEV
+    const cssBlur = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--blob-blur')
+    );
+    const blurVal = Number.isFinite(BLOB_CFG.BLUR_STDDEV) ? BLOB_CFG.BLUR_STDDEV : cssBlur || 14;
+    blur.setAttribute('stdDeviation', String(blurVal));
 
     const matrix = document.createElementNS('http://www.w3.org/2000/svg', 'feColorMatrix');
     matrix.setAttribute('mode', 'matrix');
-    // threshold to make overlaps merge (tweak last column ~17–22)
+    const A = BLOB_CFG.GOO_THRESHOLD_A;
+    const B = BLOB_CFG.GOO_THRESHOLD_B;
     matrix.setAttribute(
       'values',
       `
       1 0 0 0 0
       0 1 0 0 0
       0 0 1 0 0
-      0 0 0 22 -10
+      0 0 0 ${A} ${B}
     `.trim()
     );
 
@@ -403,6 +443,7 @@ function ensureBlobDOM() {
     g.id = 'blobs-g';
     svg.appendChild(g);
   }
+  // Apply goo filter to the group (critical)
   g.setAttribute('filter', 'url(#goo)');
 
   return { wrapper, svg, g, VW, VH };
@@ -414,7 +455,6 @@ function makeIrregularBlobPath(rBase = 120, irregularity = 0.18, points = 10) {
   const TWO_PI = Math.PI * 2;
   for (let i = 0; i < points; i++) {
     const t = (i / points) * TWO_PI;
-    // radius with small random wobble
     const r = rBase * (1 + (Math.random() * 2 - 1) * irregularity);
     const x = Math.cos(t) * r;
     const y = Math.sin(t) * r;
@@ -436,9 +476,9 @@ function makeIrregularBlobPath(rBase = 120, irregularity = 0.18, points = 10) {
 }
 
 /**
- * Main: create clustered, overlapping irregular blobs and animate them.
- * - Desktop: tighter clusters & bigger radii for strong merging
- * - Mobile: fewer, smaller blobs; same full-viewport host (no side padding)
+ * Create clustered, overlapping irregular blobs and animate them.
+ * - Desktop: slightly looser clusters than the very-tight version
+ * - Mobile: fewer/smaller blobs; still full viewport without side padding
  */
 export function animateGooeyBlobs() {
   const { svg, g: container, VW, VH } = ensureBlobDOM();
@@ -449,27 +489,26 @@ export function animateGooeyBlobs() {
 
   const isMobile = VW < 768;
 
-  // Cluster layout → keeps blobs close = more "liquid"
+  // Slightly separated cluster centers → still overlap, not cramped
   const clusters = isMobile
     ? [
-        { x: VW * 0.45, y: VH * 0.5 },
-        { x: VW * 0.55, y: VH * 0.55 },
+        { x: VW * 0.46, y: VH * 0.5 },
+        { x: VW * 0.56, y: VH * 0.54 },
       ]
     : [
-        { x: VW * 0.42, y: VH * 0.48 },
-        { x: VW * 0.58, y: VH * 0.52 },
-        { x: VW * 0.5, y: VH * 0.56 },
+        { x: VW * 0.4, y: VH * 0.48 },
+        { x: VW * 0.6, y: VH * 0.52 },
+        { x: VW * 0.5, y: VH * 0.58 },
       ];
 
-  const blobCount = isMobile ? 12 : 18;
-  const spread = isMobile ? Math.min(VW, VH) * 0.18 : Math.min(VW, VH) * 0.22;
+  const minSide = Math.min(VW, VH);
+  const spread =
+    (isMobile ? BLOB_CFG.SPREAD_FACTOR_MOBILE : BLOB_CFG.SPREAD_FACTOR_DESKTOP) * minSide;
 
-  // Sizes
-  const rMin = isMobile ? 50 : 90;
-  const rMax = isMobile ? 110 : 180;
-
-  // Motion range
-  const motion = isMobile ? 90 : 220;
+  const blobCount = isMobile ? BLOB_CFG.COUNT_MOBILE : BLOB_CFG.COUNT_DESKTOP;
+  const rMin = isMobile ? BLOB_CFG.R_MIN_MOBILE : BLOB_CFG.R_MIN_DESKTOP;
+  const rMax = isMobile ? BLOB_CFG.R_MAX_MOBILE : BLOB_CFG.R_MAX_DESKTOP;
+  const motion = isMobile ? BLOB_CFG.MOTION_MOBILE : BLOB_CFG.MOTION_DESKTOP;
 
   const svgns = 'http://www.w3.org/2000/svg';
 
@@ -479,15 +518,13 @@ export function animateGooeyBlobs() {
     const y = clamp(c.y + (Math.random() - 0.5) * spread, 40, VH - 40);
     const r = Math.floor(Math.random() * (rMax - rMin)) + rMin;
 
-    // Group (positioned)
     const group = document.createElementNS(svgns, 'g');
     group.setAttribute('class', 'blob-group');
     group.setAttribute('transform', `translate(${x},${y})`);
     container.appendChild(group);
 
-    // Irregular blob <path> (non-circle)
     const path = document.createElementNS(svgns, 'path');
-    path.setAttribute('class', 'blob'); // color via CSS
+    path.setAttribute('class', 'blob'); // style via CSS (#blob-svg .blob)
     path.setAttribute('d', makeIrregularBlobPath(r, 0.22, 12 + Math.floor(Math.random() * 5)));
     group.appendChild(path);
 
@@ -499,7 +536,7 @@ export function animateGooeyBlobs() {
       gsap
         .timeline({ repeat: -1, yoyo: true })
         .to(path, {
-          duration: 3.2 + Math.random(),
+          duration: 3.1 + Math.random(),
           ease: 'sine.inOut',
           morphSVG: { shape: alt1 },
         })
@@ -537,10 +574,12 @@ export function animateGooeyBlobs() {
     });
   }
 
-  // Opacity vs scroll (CSS var friendly)
+  // Opacity vs scroll (CSS-var friendly with fallback)
   const css = getComputedStyle(document.documentElement);
-  const OPACITY_START = parseFloat(css.getPropertyValue('--blob-opacity-start')) || 0.5;
-  const OPACITY_END = parseFloat(css.getPropertyValue('--blob-opacity-end')) || 0.12;
+  const OPACITY_START =
+    parseFloat(css.getPropertyValue('--blob-opacity-start')) || BLOB_CFG.OPACITY_START_FALLBACK;
+  const OPACITY_END =
+    parseFloat(css.getPropertyValue('--blob-opacity-end')) || BLOB_CFG.OPACITY_END_FALLBACK;
 
   gsap.set(container, { opacity: OPACITY_START });
 
@@ -587,8 +626,8 @@ export function animateGooeyBlobs() {
 
 /**
  * Interactive jelly drag:
- * Now uses the irregular <path> blobs inside each .blob-group.
- * Picks the nearest group to the pointer and stretches it.
+ * Picks the nearest .blob-group to the pointer, stretches it while dragging,
+ * then returns it to original transform on release.
  */
 export function enableInteractiveJellyBlob() {
   const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
@@ -700,10 +739,14 @@ export function enableInteractiveJellyBlob() {
     });
   }
 
-  window.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    updatePointer(e);
-  });
+  window.addEventListener(
+    'mousedown',
+    (e) => {
+      isDragging = true;
+      updatePointer(e);
+    },
+    { passive: true }
+  );
   window.addEventListener(
     'touchstart',
     (e) => {
@@ -721,8 +764,8 @@ export function enableInteractiveJellyBlob() {
     if (activeBlob) returnBlobToOriginal(activeBlob);
     activeBlob = null;
   };
-  window.addEventListener('mouseup', endDrag);
-  window.addEventListener('touchend', endDrag);
+  window.addEventListener('mouseup', endDrag, { passive: true });
+  window.addEventListener('touchend', endDrag, { passive: true });
 
   loop();
 }

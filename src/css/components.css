@@ -11,7 +11,7 @@
 :root {
   --blob-opacity-start: 0.55;
   --blob-opacity-end: 0.25;
-  --blob-blur: 10;
+  --blob-blur: 16;
 }
 
 /* 0) Utilities */
@@ -482,7 +482,6 @@ textarea:valid:focus {
 
 #blob-svg .blob {
   fill: var(--blob-color);
-  mix-blend-mode: multiply;
   transform-box: fill-box;
   transform-origin: center;
   stroke: none;
