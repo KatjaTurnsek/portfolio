@@ -318,22 +318,34 @@ import { BASE } from './paths.js';
     document.addEventListener('click', onClick, { passive: false });
     window.addEventListener('popstate', onPopState);
 
-    // Re-hydrate after back/forward cache restores (iOS Safari & others)
-    window.addEventListener('pageshow', (e) => {
-      const nav = performance.getEntriesByType?.('navigation')?.[0];
-      const cameFromBFCache = e.persisted || (nav && nav.type === 'back_forward');
-      if (cameFromBFCache) {
+    // --- Guard that the right section is actually visible (mobile BFCache, etc.) ---
+    const ensureSectionSync = () => {
+      const current = document.querySelector('.fullscreen-section.visible');
+      const hidden =
+        !current ||
+        getComputedStyle(current).display === 'none' ||
+        getComputedStyle(current).visibility === 'hidden' ||
+        current.style.opacity === '0';
+
+      if (hidden) {
         const path = normalizePathname(location.pathname);
-        // Re-render the correct section and refresh any measurement-based libs
-        requestAnimationFrame(() => {
-          render(path, { replace: true });
-          // Optional hooks if present in your app:
-          window.ScrollTrigger?.refresh?.();
-          const id = window.__currentSectionId;
-          if (id && typeof window.revealSection === 'function') {
-            window.revealSection(id);
-          }
-        });
+        // Re-render and run reveal hooks; use replace to avoid growing history
+        requestAnimationFrame(() => render(path, { replace: true }));
+      }
+    };
+
+    // Re-hydrate after back/forward cache restores (iOS Safari & others)
+    window.addEventListener('pageshow', () => {
+      // Unconditionally sync — some browsers don’t flag BFCache consistently
+      ensureSectionSync();
+      // One extra tick in case styles apply late
+      setTimeout(ensureSectionSync, 60);
+    });
+
+    // If the tab was backgrounded and returns, ensure the section is correct
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        ensureSectionSync();
       }
     });
   }
