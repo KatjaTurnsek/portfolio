@@ -107,8 +107,7 @@ header::before {
     100% auto,
     cover;
 
-  background-image:
-    url('/assets/images/vector-waves-light.svg'), url('/assets/images/waves-light.webp');
+  background-image: url('images/vector-waves-light.svg'), url('images/waves-light.webp');
 
   transform: translateZ(0);
 }
@@ -116,8 +115,7 @@ header::before {
 /* Explicit dark theme only (default stays LIGHT) */
 .dark-theme header::before,
 [data-theme='dark'] header::before {
-  background-image:
-    url('/assets/images/vector-waves-dark.svg'), url('/assets/images/waves-dark.webp');
+  background-image: url('images/vector-waves-dark.svg'), url('images/waves-dark.webp');
 }
 
 /* keep header content above its background */
@@ -189,6 +187,13 @@ main {
 
 main > .fullscreen-section:first-child {
   padding-top: var(--first-section-pad);
+}
+
+#home {
+  display: block;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
 }
 
 footer {
@@ -324,13 +329,11 @@ footer {
     100% auto,
     cover;
 
-  background-image:
-    url('/assets/images/vector-waves-light.svg'), url('/assets/images/waves-light.webp');
+  background-image: url('images/vector-waves-light.svg'), url('images/waves-light.webp');
 }
 .dark-theme .fullscreen-menu::before,
 [data-theme='dark'] .fullscreen-menu::before {
-  background-image:
-    url('/assets/images/vector-waves-dark.svg'), url('/assets/images/waves-dark.webp');
+  background-image: url('images/vector-waves-dark.svg'), url('images/waves-dark.webp');
 }
 
 .fullscreen-menu > * {

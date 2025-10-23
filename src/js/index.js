@@ -33,7 +33,9 @@
       window.__BASE_URL__ = BASE;
       return;
     }
-  } catch (_) {}
+  } catch (_) {
+    // ignore storage errors
+  }
 
   window.__BASE_URL__ = BASE;
 })();
@@ -46,6 +48,7 @@
   const BASE_SLASH = RAW.replace(/\/?$/, '/');
   const BASE_NOSLASH = BASE_SLASH.slice(0, -1);
 
+  /** @param {string} url */
   const normalize = (url) => {
     if (typeof url !== 'string') return url;
     if (url === '' || url === '/') return BASE_SLASH;
@@ -58,6 +61,7 @@
     return url;
   };
 
+  /** @type {(fn:History['pushState']) => History['pushState']} */
   const wrap = (fn) =>
     function (state, title, url) {
       return fn.call(this, state, title, normalize(url));
@@ -89,12 +93,11 @@ import {
 } from './animations.js';
 import {
   initSections,
-  revealSection,
+  revealSection as coreRevealSection,
   setupHeaderScrollEffect,
   sizeSectionMinHeight,
 } from './init.js';
 import { animateTextInSection } from './animatedTexts.js';
-
 import { renderCategory, renderFeatured } from './components/workGrid.js';
 import {
   isSafari,
@@ -102,7 +105,6 @@ import {
   revealImagesSequentially,
   enableNoSelectDuringInteraction,
 } from './components/ux.js';
-
 import { setupActions } from '../lib/actions.js';
 
 /* Load the router AFTER we’ve potentially rewritten the URL */
@@ -114,11 +116,13 @@ import('./router.js').then(() => {
 /* Utilities                                                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/** Respect reduced motion */
 const prefersReducedMotion =
   typeof window !== 'undefined' &&
   window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/** Release any scroll locks applied by menu overlays. */
 function releaseScrollLock() {
   [document.documentElement, document.body].forEach((el) => {
     el.classList.remove('menu-open', 'no-scroll', 'overflow-hidden', 'locked');
@@ -130,10 +134,41 @@ function releaseScrollLock() {
   });
 }
 
+/**
+ * Build Work grids only if they are empty.
+ * Safe to call multiple times (idempotent).
+ */
+function buildWorkGridsIfNeeded() {
+  /** @param {string} sel */
+  const empty = (sel) => {
+    const el = document.querySelector(sel);
+    return !!el && el.childElementCount === 0;
+  };
+
+  if (document.getElementById('dev-cards') && empty('#dev-cards')) {
+    renderCategory('#dev-cards', 'website');
+  }
+  if (document.getElementById('design-cards') && empty('#design-cards')) {
+    renderCategory('#design-cards', 'design');
+  }
+  if (document.getElementById('logo-cards') && empty('#logo-cards')) {
+    renderCategory('#logo-cards', 'logotype');
+  }
+  if (document.getElementById('work-cards') && empty('#work-cards')) {
+    renderFeatured('#work-cards');
+  }
+}
+
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Section visibility                                                         */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Reactions when a section becomes visible (emitted by your init/router).
+ * - Sizes min-height to viewport
+ * - Hydrates case widgets on demand
+ * - Runs section-specific animations
+ */
 document.addEventListener('sectionVisible', async (e) => {
   /** @type {{detail:string}} @ts-ignore */
   const { detail: sectionId } = e;
@@ -177,7 +212,7 @@ document.addEventListener('sectionVisible', async (e) => {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 const menu = document.getElementById('menu');
-let stopWaveThemeObserver = null;
+let stopWaveThemeObserver = /** @type {null | (() => void)} */ (null);
 let menuWaveInited = false;
 
 if (menu) {
@@ -209,6 +244,10 @@ if (menu) {
 /* Actions                                                                    */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Bind global UI actions used in templates.
+ * Note: keep handlers idempotent and side-effect–safe.
+ */
 setupActions({
   'open-case': ({ el, ev }) => {
     if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
@@ -218,7 +257,7 @@ setupActions({
       const target = document.querySelector(href);
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
-        if (target.id) revealSection(target.id);
+        if (target.id) window.revealSection?.(target.id);
         return;
       }
     }
@@ -227,6 +266,43 @@ setupActions({
     if (cardTitle) alert(`Open case study: ${cardTitle}`);
   },
 });
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* revealSection: idempotent, router-friendly                                 */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Reveal/refresh logic per section.
+ * Called by the router after it shows a section.
+ * MUST be safe to call multiple times (idempotent).
+ * @param {string} id - section element id (e.g. "home", "work", "contact", "case-portfolio")
+ */
+window.revealSection = function revealSection(id) {
+  // 1) Close the menu on navigation
+  const menuEl = document.getElementById('menu');
+  const menuToggle = document.getElementById('menuToggle');
+  if (menuEl?.classList.contains('open')) {
+    menuEl.classList.remove('open');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+    releaseScrollLock();
+  }
+
+  // 2) Core reveal (your original logic from init.js)
+  coreRevealSection(id);
+
+  // 3) (Re)hydrate responsive images within the section
+  const sectionEl = document.getElementById(id) || document;
+  const loaded = setupResponsiveImages(sectionEl);
+  revealImagesSequentially(loaded);
+
+  // 4) Build Work grids only if empty
+  if (id === 'work') {
+    buildWorkGridsIfNeeded();
+  }
+
+  // 5) Refresh any measurement-based libs
+  window.ScrollTrigger?.refresh?.();
+};
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* DOM ready                                                                  */
@@ -238,10 +314,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (isSafari) gsap.ticker.fps(50);
 
-  if (document.getElementById('dev-cards')) renderCategory('#dev-cards', 'website');
-  if (document.getElementById('design-cards')) renderCategory('#design-cards', 'design');
-  if (document.getElementById('logo-cards')) renderCategory('#logo-cards', 'logotype');
-  if (document.getElementById('work-cards')) renderFeatured('#work-cards');
+  // Pre-build grids only if their containers exist and are empty (idempotent)
+  buildWorkGridsIfNeeded();
 
   setTimeout(() => {
     hideLoader();
@@ -268,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentId = window.__currentSectionId || 'home';
     const currentEl = document.getElementById(currentId);
     if (currentEl) {
-      revealSection(currentId);
+      window.revealSection?.(currentId);
       sizeSectionMinHeight(currentEl);
     }
   }, 1500);
@@ -281,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const contact = document.getElementById('contact');
         if (contact) {
           contact.scrollIntoView({ behavior: 'smooth' });
-          revealSection('contact');
+          window.revealSection?.('contact');
         }
       },
       { passive: true }
