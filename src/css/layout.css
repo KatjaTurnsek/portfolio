@@ -44,16 +44,22 @@
   --first-section-pad: clamp(0px, calc(var(--waves-h) - var(--header-h)), 40vh);
 }
 
+/* Page shell: make footer reliably sticky on Chrome Mobile / Safari ------- */
+
 html {
   height: 100%;
-  height: -webkit-fill-available;
+  height: -webkit-fill-available; /* WebKit fallback */
 }
+
 body {
+  /* order matters: weakest → strongest so best-supported wins */
   min-height: 100vh;
-  min-height: 100dvh;
   min-height: 100svh;
+  min-height: 100dvh; /* prefer dynamic viewport on modern mobile */
+
   height: auto;
   height: -webkit-fill-available;
+
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -101,8 +107,23 @@ header {
   color: var(--h1-color);
   z-index: 999;
   transition: background-color var(--transition-fast);
-  /* FIX: ensure header is not fixed and not transformed */
-  transform: none !important;
+}
+
+/* restore explicit groups so left/right spacing stays consistent */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-left a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* ensure spacing between theme toggle & hamburger */
 }
 
 /* Header background — SVG over WebP, both pinned to TOP (no bleed) */
@@ -142,12 +163,6 @@ header > * {
 }
 
 /* Header controls (logo + theme switcher + hamburger) -------------------- */
-
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
 
 #theme-toggle {
   position: relative;
@@ -197,10 +212,10 @@ header > * {
 main {
   flex: 1 1 auto;
   padding-top: 30px;
-  padding-bottom: max(24px, env(safe-area-inset-bottom));
+  padding-bottom: max(24px, env(safe-area-inset-bottom)); /* safe bottom room */
   width: 100%;
   margin-inline: auto;
-  min-height: auto;
+  min-height: auto; /* NOT 100vh; footer stickiness handled by body */
   transform: none !important;
   min-width: 0;
 }
@@ -220,7 +235,7 @@ main > .fullscreen-section:first-child {
 footer {
   width: 100%;
   z-index: 999;
-  margin-top: auto; /* key to park footer at bottom when content is short */
+  margin-top: auto; /* sticky */
   padding: var(--footer-pad);
   background-color: var(--footer-bg);
   color: var(--footer-text-color);
@@ -230,7 +245,6 @@ footer {
   font-family: var(--body-font);
   flex-wrap: wrap;
   text-align: center;
-  transform: none !important; /* avoid sticky/transform interactions on WebKit */
 }
 .footer-left a {
   font-family: var(--h1-font);
@@ -248,7 +262,6 @@ footer {
 }
 
 /* Fullscreen Section ------------------------------------------------------ */
-/* Router toggles only the .visible class; no inline visibility styles needed. */
 
 .fullscreen-section {
   display: none;
@@ -325,7 +338,7 @@ footer {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: 100vh; /* acceptable, menu is intentionally full viewport */
+  height: 100dvh; /* avoid accidental page scroll */
   background-color: var(--bg-color);
   color: var(--text-color);
   display: flex;
@@ -413,8 +426,8 @@ footer {
   max-width: var(--container-w);
   margin-inline: auto;
   padding-bottom: 100px;
-  position: relative;
-  min-width: 0; /* FIX: prevent overflow pushing layout */
+  position: relative; /* positioning context for absolute children (Hire) */
+  min-width: 0; /* prevent overflow on narrow screens */
 }
 
 .row {
@@ -445,7 +458,7 @@ footer {
   max-width: var(--container-w);
   margin-inline: auto;
   padding: 0;
-  min-width: 0; /* FIX: grid overflow backstop */
+  min-width: 0;
 }
 @media (max-width: 1100px) {
   .work-columns {
@@ -505,7 +518,7 @@ footer {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.8);
-  display: flex; /* default flex; visibility handled by media queries */
+  display: flex;
   place-items: center;
   flex-direction: column;
   justify-content: center;
@@ -689,9 +702,8 @@ footer {
     --waves-h-max: 380px;
     --waves-h: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
 
-    /* Tighter vertical rhythm on mobile */
-    --row-gap: 22px; /* was 40px */
-    --cs-gutter: 16px; /* was 40px */
+    --row-gap: 22px; /* tighter vertical rhythm on mobile */
+    --cs-gutter: 16px;
   }
 
   /* Mobile typography (bigger, but capped) */
@@ -762,24 +774,23 @@ footer {
 
   /* Use more of the screen width, less floatiness */
   .rows {
-    width: 92%; /* was 80% */
+    width: 92%;
     gap: var(--row-gap);
-    padding-bottom: 48px; /* was 100px */
+    padding-bottom: 48px;
   }
 
   /* First section under header wave: slightly lower cap */
   main > .fullscreen-section:first-child {
-    padding-top: clamp(0px, calc(var(--waves-h) - var(--header-h)), 24vh); /* was 40vh */
+    padding-top: clamp(0px, calc(var(--waves-h) - var(--header-h)), 24vh);
   }
 
-  /* Headline at top of a section: less top padding on mobile */
   .fullscreen-section h1:first-child {
     padding-top: 1rem;
-  } /* was 2rem */
+  }
 
   .row {
     padding: 0.25rem;
-  } /* was 0.5rem */
+  }
   .row:has(.case-study-columns) {
     padding-left: 0;
     padding-right: 0;
@@ -799,15 +810,14 @@ footer {
     height: auto;
   }
 
-  /* Work grid: slightly tighter gaps on mobile */
   .work-columns {
-    gap: 16px; /* override var(--row-gap) */
-  }
+    gap: 16px;
+  } /* tighter */
 
   .section-label-left,
   .section-label-right {
     text-align: center;
-    margin: 1rem 0 0.5rem; /* was 2rem 0 1rem */
+    margin: 1rem 0 0.5rem;
   }
 
   .case-study-wrapper,

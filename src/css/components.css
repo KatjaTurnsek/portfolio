@@ -24,8 +24,7 @@
   width: 100%;
 }
 
-/* FIX: keep core containers from becoming containing blocks in Safari when
-   transforms are applied elsewhere */
+/* keep core containers from becoming containing blocks in Safari */
 main,
 header,
 footer,
@@ -33,8 +32,7 @@ footer,
   transform: none !important;
 }
 
-/* 0.1) Background host for header/menu waves present in HTML as <div class="top-waves">.
-   Keep it out of layout flow so it never pushes footer around. */
+/* Background host for waves (out of flow) */
 .top-waves {
   position: fixed;
   inset: 0;
@@ -551,17 +549,19 @@ textarea:valid:focus {
   color: var(--dark);
 }
 
-/* Keep the Hire section IN FLOW on desktop so footer reserves space. */
-.hire-section {
-  position: relative; /* was absolute */
-  bottom: auto;
-  left: auto;
-  margin-top: 30px; /* gentle nudge for desktop look */
-}
-
-/* Reserve space at the bottom of the first section so the circle has room */
-#home .rows {
-  padding-bottom: 220px; /* ~200px circle + breathing room */
+/* Desktop placement: restore your old visual, but keep layout safe.
+   We set absolute positioning on desktop AND reserve space on #home .rows
+   so the footer never overlaps. */
+@media (min-width: 851px) {
+  .hire-section {
+    position: absolute;
+    bottom: -30px;
+    left: 70px;
+  }
+  /* Reserve room for the 200px circle (+ margin) so content + footer never collide */
+  #home .rows {
+    padding-bottom: 240px; /* adjust 220–260px to taste */
+  }
 }
 
 /* 12) Responsive Tweaks (Mobile) ----------------------------------------- */
@@ -600,7 +600,7 @@ textarea:valid:focus {
     gap: 0.2rem;
   }
 
-  /* Project switcher: comfy taps */
+  /* Project switcher */
   .project-switcher {
     justify-content: center;
     gap: 0.4rem;
@@ -705,15 +705,17 @@ textarea:valid:focus {
     line-height: 28px;
   }
 
-  /* Hire: already in flow; keep spacing lighter on mobile */
+  /* Hire: center on mobile and keep in flow */
   .hire-section {
-    position: relative;
-    bottom: auto;
-    left: auto;
+    position: static;
+    display: flex;
+    justify-content: center; /* center horizontally */
+    align-items: center;
     margin-top: 30px;
+    width: 100%;
   }
   #home .rows {
-    padding-bottom: 120px; /* reduce extra space on small screens */
+    padding-bottom: 120px;
   }
 
   .hire-button {
