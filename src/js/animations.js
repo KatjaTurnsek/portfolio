@@ -18,6 +18,27 @@ gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger);
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 /* ────────────────────────────────────────────────────────────────────────── */
+/* Perf profile (used across features)                                        */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+const HW_THREADS = navigator.hardwareConcurrency || 4;
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// “Lite” when Safari + modest cores or small viewport or reduced motion
+const SAFARI_LITE = isSafari && (HW_THREADS <= 6 || window.innerWidth < 900 || REDUCED);
+
+// Global GSAP throttles (lighter CPU)
+try {
+  gsap.ticker.fps(30); // 30fps is enough for these visuals
+  gsap.ticker.lagSmoothing(500, 33); // avoid big catch-up spikes
+} catch {}
+
+/* Optional: add CSS hook to reduce blur on Safari */
+if (SAFARI_LITE) {
+  document.documentElement.classList.add('safari-lite');
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
 /* Static waves (single <img> per host; dark/light swap)                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
@@ -177,7 +198,7 @@ export function animateWaveLine() {
   const ALT_D = 'M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15';
   gsap.killTweensOf(path);
 
-  if (gsap.plugins?.MorphSVGPlugin) {
+  if (gsap.plugins?.MorphSVGPlugin && !SAFARI_LITE && !REDUCED) {
     gsap.to(path, {
       duration: 3,
       repeat: -1,
@@ -219,7 +240,7 @@ export function animateCustomWaveLines() {
     const width = 500;
     const amplitude = 10;
     const frequency = 2;
-    const segments = isSafari ? 50 : 100;
+    const segments = isSafari ? 50 : 100; // can drop to 32 if needed
     const interval = width / segments;
 
     const points = [];
@@ -269,9 +290,7 @@ export function animateTealBars() {
   const run = () => {
     gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { width: '100%' });
 
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (reduce) {
+    if (REDUCED) {
       gsap.set('.bar-bg', { scaleX: 1 });
       gsap.set('.bar-1', { scaleX: 0.9 });
       gsap.set('.bar-2', { scaleX: 0.7 });
@@ -401,20 +420,26 @@ export function animateGooeyBlobs() {
   // clear old
   container.querySelectorAll('.blob-group').forEach((n) => n.remove());
 
-  // Mobile breakpoint per your request
+  // Mobile & Safari-lite tuning
   const mobile = VW < 850;
-  const svgns = 'http://www.w3.org/2000/svg';
 
-  // Closer than original, but not cramped
-  const spread = mobile
-    ? 0.42 * Math.min(VW, 700) // wider than too-tight setup to avoid a single lump
-    : 0.52 * Math.min(VW, 1200); // closer than your very first version
+  const blobCount = REDUCED ? (mobile ? 4 : 6) : SAFARI_LITE ? (mobile ? 7 : 12) : mobile ? 12 : 24; // cheaper than 30, still full look
 
-  const blobCount = mobile ? 12 : 30; // fewer on mobile
-  const motionDistance = mobile ? 140 : 220; // a bit more drift on mobile so motion reads
-  const durationBase = mobile ? 15 : 16; // slightly slower on both, but similar feel
+  const motionDistance = REDUCED ? 60 : SAFARI_LITE ? (mobile ? 90 : 140) : mobile ? 140 : 220;
 
-  // Two clusters; on mobile, offset vertically so the mass separates
+  const durationBase = REDUCED ? 18 : SAFARI_LITE ? 17 : mobile ? 15 : 16;
+
+  // Slightly wider spread on mobile so it doesn't lump into one disk
+  const spread = REDUCED
+    ? 0.35 * Math.min(VW, 700)
+    : SAFARI_LITE
+      ? mobile
+        ? 0.4 * Math.min(VW, 700)
+        : 0.48 * Math.min(VW, 1100)
+      : mobile
+        ? 0.42 * Math.min(VW, 700)
+        : 0.52 * Math.min(VW, 1200);
+
   const centers = mobile
     ? [
         { x: clamp(VW * 0.38, 60, VW - 60), y: clamp(VH * 0.45, 60, VH - 60) },
@@ -424,6 +449,13 @@ export function animateGooeyBlobs() {
         { x: clamp(VW * 0.3, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
         { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
       ];
+
+  const svgns = 'http://www.w3.org/2000/svg';
+
+  // Cache of blob centers (DOM-free lookup for drag)
+  const blobCenters = new Map(); // SVGGElement -> {x,y}
+  // expose to drag module
+  _blobCentersRef.map = blobCenters;
 
   for (let i = 1; i <= blobCount; i++) {
     const center = centers[i % 2];
@@ -436,6 +468,7 @@ export function animateGooeyBlobs() {
     group.setAttribute('id', `blob-group-${i}`);
     group.setAttribute('transform', `translate(${x},${y})`);
     container.appendChild(group);
+    blobCenters.set(group, { x, y });
 
     // Soft rounded shape (not a perfect circle)
     const path = document.createElementNS(svgns, 'path');
@@ -464,11 +497,13 @@ export function animateGooeyBlobs() {
       yoyo: true,
       onUpdate: () => {
         group.setAttribute('transform', `translate(${pos.x},${pos.y}) rotate(${pos.rotation})`);
+        blobCenters.set(group, { x: pos.x, y: pos.y });
       },
     });
 
-    // Subtle wobble — prefer small morph changes if MorphSVG is available
-    if (gsap.plugins?.MorphSVGPlugin) {
+    // Subtle wobble — prefer small morph changes if MorphSVG is available and not lite
+    const allowMorph = gsap.plugins?.MorphSVGPlugin && !SAFARI_LITE && !REDUCED;
+    if (allowMorph) {
       const alt1 = makeSoftBlobPath(
         size * 1.02,
         0.06,
@@ -493,12 +528,12 @@ export function animateGooeyBlobs() {
         .to(path, { duration: 4.0 + Math.random(), ease: 'sine.inOut', morphSVG: { shape: alt2 } });
     } else {
       gsap.to(path, {
-        duration: 3.8,
+        duration: 4.2,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
-        scaleX: 'random(0.98, 1.03)',
-        scaleY: 'random(0.98, 1.03)',
+        scaleX: 'random(0.985, 1.025)',
+        scaleY: 'random(0.985, 1.025)',
         transformOrigin: 'center',
       });
     }
@@ -509,9 +544,9 @@ export function animateGooeyBlobs() {
   const OPACITY_START = parseFloat(css.getPropertyValue('--blob-opacity-start')) || 0.55;
   const OPACITY_END = parseFloat(css.getPropertyValue('--blob-opacity-end')) || 0.25;
 
-  gsap.set(container, { opacity: OPACITY_START });
+  gsap.set(container, { opacity: REDUCED ? OPACITY_END : OPACITY_START });
 
-  if (gsap.plugins?.ScrollTrigger) {
+  if (!REDUCED && gsap.plugins?.ScrollTrigger) {
     const endFn = () =>
       Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) -
       window.innerHeight;
@@ -530,7 +565,7 @@ export function animateGooeyBlobs() {
         },
       }
     );
-  } else {
+  } else if (!REDUCED) {
     const lerp = (a, b, t) => a + (b - a) * t;
     const onScroll = () => {
       const doc = document.documentElement;
@@ -556,10 +591,15 @@ export function animateGooeyBlobs() {
  * Interactive jelly drag:
  * Finds the closest blob to the pointer and lets it lag-follow the cursor/finger,
  * then animates it back to its original transform on release.
+ * (Now: rAF runs only while dragging, and nearest lookup uses cached centers.)
  */
+const _blobCentersRef = { map: /** @type {Map<SVGGElement, {x:number,y:number}>} */ (new Map()) };
+
 export function enableInteractiveJellyBlob() {
   const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
   if (!svg) return;
+
+  if (REDUCED) return; // skip interaction if user prefers reduced motion
 
   const target = { x: 0, y: 0 };
   const current = { x: 0, y: 0 };
@@ -569,20 +609,16 @@ export function enableInteractiveJellyBlob() {
   let isDragging = false;
   const originalTransforms = new Map();
   let lastSwitchTime = 0;
+  let lastUpdate = 0;
+  let rafId = 0;
 
-  const getScale = (dx, dy) => Math.min(Math.hypot(dx, dy) / 500, isSafari ? 0.16 : 0.22);
-  const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
-
+  // cheaper than screenCTM: read from our cached centers
   function getClosestBlob(x, y) {
-    const blobs = document.querySelectorAll('.blob-group');
     let closest = null;
     let minDist = Infinity;
-    blobs.forEach((blob) => {
-      const m = blob.getScreenCTM();
-      if (!m) return;
-      const cx = m.e;
-      const cy = m.f;
-      const d = Math.hypot(cx - x, cy - y);
+    const blobCenters = _blobCentersRef.map;
+    blobCenters.forEach((c, blob) => {
+      const d = Math.hypot(c.x - x, c.y - y);
       if (d < minDist) {
         minDist = d;
         closest = blob;
@@ -600,19 +636,19 @@ export function enableInteractiveJellyBlob() {
       rotation: original.rotation || 0,
       scaleX: 1,
       scaleY: 1,
-      duration: 1.4,
+      duration: 1.2,
       ease: 'power2.out',
     });
   }
 
+  const getScale = (dx, dy) => Math.min(Math.hypot(dx, dy) / 500, isSafari ? 0.16 : 0.22);
+  const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
+
   function updatePointer(e) {
     if (!isDragging) return;
-    const clientX = /** @type {TouchEvent} */ (e).touches
-      ? /** @type {TouchEvent} */ (e).touches[0].clientX
-      : /** @type {MouseEvent} */ (e).clientX;
-    const clientY = /** @type {TouchEvent} */ (e).touches
-      ? /** @type {TouchEvent} */ (e).touches[0].clientY
-      : /** @type {MouseEvent} */ (e).clientY;
+    const touch = /** @type {TouchEvent} */ (e).touches?.[0];
+    const clientX = touch ? touch.clientX : /** @type {MouseEvent} */ (e).clientX;
+    const clientY = touch ? touch.clientY : /** @type {MouseEvent} */ (e).clientY;
 
     target.x = clientX;
     target.y = clientY;
@@ -642,11 +678,15 @@ export function enableInteractiveJellyBlob() {
     }
   }
 
-  let lastUpdate = 0;
   function loop() {
-    requestAnimationFrame(loop);
+    if (!isDragging) {
+      rafId = 0;
+      return;
+    }
+    rafId = requestAnimationFrame(loop);
+
     const now = Date.now();
-    if (!isDragging || !activeBlob || now - lastUpdate < 16) return;
+    if (!activeBlob || now - lastUpdate < 16) return;
     lastUpdate = now;
 
     vel.x = target.x - current.x;
@@ -668,22 +708,14 @@ export function enableInteractiveJellyBlob() {
     });
   }
 
-  window.addEventListener(
-    'mousedown',
-    (e) => {
-      isDragging = true;
-      updatePointer(e);
-    },
-    { passive: true }
-  );
-  window.addEventListener(
-    'touchstart',
-    (e) => {
-      isDragging = true;
-      updatePointer(e);
-    },
-    { passive: true }
-  );
+  function startDrag(e) {
+    isDragging = true;
+    updatePointer(e);
+    if (!rafId) rafId = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('mousedown', startDrag, { passive: true });
+  window.addEventListener('touchstart', startDrag, { passive: true });
 
   window.addEventListener('mousemove', updatePointer, { passive: true });
   window.addEventListener('touchmove', updatePointer, { passive: false });
@@ -692,11 +724,13 @@ export function enableInteractiveJellyBlob() {
     isDragging = false;
     if (activeBlob) returnBlobToOriginal(activeBlob);
     activeBlob = null;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
   };
   window.addEventListener('mouseup', endDrag, { passive: true });
   window.addEventListener('touchend', endDrag, { passive: true });
-
-  loop();
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
