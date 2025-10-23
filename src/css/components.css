@@ -475,7 +475,7 @@ textarea:valid:focus {
   display: block;
   pointer-events: none;
   opacity: 1;
-  filter: blur(10px);
+  filter: blur(5px);
 }
 #blob-svg .blob {
   fill: var(--blob-color);
@@ -703,6 +703,6 @@ textarea:valid:focus {
     transform: scale(var(--blob-scale-mobile));
   }
   #blob-svg {
-    filter: blur(8px);
+    filter: blur(2px);
   }
 }
