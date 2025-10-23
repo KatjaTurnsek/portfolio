@@ -44,6 +44,22 @@
   --first-section-pad: clamp(0px, calc(var(--waves-h) - var(--header-h)), 40vh);
 }
 
+/* FIX: make page a flex column so footer:margin-top:auto works everywhere */
+html {
+  /* new */
+  height: 100%;
+}
+body {
+  /* new */
+  min-height: 100svh;
+  min-height: 100dvh;
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
 /* Utilities --------------------------------------------------------------- */
 
 .container {
@@ -86,6 +102,8 @@ header {
   color: var(--h1-color);
   z-index: 999;
   transition: background-color var(--transition-fast);
+  /* FIX: ensure header is not fixed and not transformed */
+  transform: none !important;
 }
 
 /* Header background — SVG over WebP, both pinned to TOP (no bleed) */
@@ -178,11 +196,14 @@ header > * {
 /* Main / Footer ----------------------------------------------------------- */
 
 main {
-  flex: 1;
+  /* FIX: let main be the flexible area; avoid forced 100vh here */
+  flex: 1 1 auto;
   padding-top: 30px;
   width: 100%;
   margin-inline: auto;
-  min-height: 100vh;
+  min-height: auto; /* FIX: was 100vh; causes bounce on iOS/Safari */
+  transform: none !important; /* backstop for Safari quirks */
+  min-width: 0; /* prevent overflow from grids flexing */
 }
 
 main > .fullscreen-section:first-child {
@@ -200,7 +221,7 @@ main > .fullscreen-section:first-child {
 footer {
   width: 100%;
   z-index: 999;
-  margin-top: auto;
+  margin-top: auto; /* key to park footer at bottom when content is short */
   padding: var(--footer-pad);
   background-color: var(--footer-bg);
   color: var(--footer-text-color);
@@ -210,6 +231,7 @@ footer {
   font-family: var(--body-font);
   flex-wrap: wrap;
   text-align: center;
+  transform: none !important; /* avoid sticky/transform interactions on WebKit */
 }
 .footer-left a {
   font-family: var(--h1-font);
@@ -304,7 +326,7 @@ footer {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: 100vh;
+  height: 100vh; /* acceptable, menu is intentionally full viewport */
   background-color: var(--bg-color);
   color: var(--text-color);
   display: flex;
@@ -393,6 +415,7 @@ footer {
   margin-inline: auto;
   padding-bottom: 100px;
   position: relative;
+  min-width: 0; /* FIX: prevent overflow pushing layout */
 }
 
 .row {
@@ -423,6 +446,7 @@ footer {
   max-width: var(--container-w);
   margin-inline: auto;
   padding: 0;
+  min-width: 0; /* FIX: grid overflow backstop */
 }
 @media (max-width: 1100px) {
   .work-columns {
