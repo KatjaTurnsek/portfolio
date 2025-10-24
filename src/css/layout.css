@@ -284,7 +284,7 @@ footer {
   height: 50px;
   border-radius: 50%;
   background-color: transparent;
-  border: 2px solid var(--menu-border-color);
+  border: none !important;
   color: var(--menu-color);
   transition:
     color var(--transition-med),

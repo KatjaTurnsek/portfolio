@@ -538,6 +538,29 @@ textarea:valid:focus {
   left: 70px;
 }
 
+.menu-toggle,
+#menuClose {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-toggle::-moz-focus-inner,
+#menuClose::-moz-focus-inner {
+  border: 0;
+}
+
+.menu-toggle:focus,
+.menu-toggle:focus-visible,
+#menuClose:focus,
+#menuClose:focus-visible {
+  outline: none !important;
+}
+
 /* 12) Responsive Tweaks (Mobile) ----------------------------------------- */
 @media (max-width: 850px) {
   :root {
