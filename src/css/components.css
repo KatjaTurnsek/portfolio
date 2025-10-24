@@ -538,7 +538,34 @@ textarea:valid:focus {
   left: 70px;
 }
 
-/* 12) Responsive Tweaks (Mobile) ----------------------------------------- */
+/* 12) Menu icon buttons — Safari/iOS focus & tap clean-up ----------------- */
+/* Applies to both hamburger (.menu-toggle) and close button (#menuClose) */
+.menu-toggle,
+#menuClose {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none !important;
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.menu-toggle:focus,
+#menuClose:focus {
+  outline: none;
+}
+.menu-toggle:focus-visible,
+#menuClose:focus-visible {
+  outline: 2px solid var(--menu-hover-color);
+  outline-offset: 4px;
+}
+.menu-toggle:hover,
+.menu-toggle.opened:hover,
+#menuClose:hover {
+  color: var(--menu-hover-color);
+}
+
+/* 13) Responsive Tweaks (Mobile) ----------------------------------------- */
 @media (max-width: 850px) {
   :root {
     --blob-scale-mobile: 0.85;
@@ -605,14 +632,12 @@ textarea:valid:focus {
     padding-inline: 16px;
     margin-inline-start: 18px;
   }
-
   .bullet-list li,
   .bullet-list-right li {
     position: relative;
     padding-inline-start: 1.1rem;
     margin-bottom: 8px;
   }
-
   .bullet-list li::before,
   .bullet-list-right li::before {
     content: '';
