@@ -3,9 +3,9 @@
  * - H1: words (with subtle scale/blur on capable mobiles), else lines
  * - H2–H4: lines (tiny skew/blur on capable mobiles)
  * - P: lines; skip splitting only for truly long paragraphs on weak devices
- * - Fullscreen menu links: words
- * - Optional IntersectionObserver with a no-IO fallback
- * - Respects prefers-reduced-motion
+ * - Menu links: words
+ * - IO fallback + respects prefers-reduced-motion
+ * - Force override via <html data-anim="rich"> or ?anim=rich
  */
 
 import gsap from 'gsap';
@@ -24,8 +24,14 @@ const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|Edg|EdgiOS/.test(ua);
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const HW_THREADS = navigator.hardwareConcurrency || 4;
 
+/** Allow forcing rich mode globally. */
+const FORCE_RICH =
+  document.documentElement.dataset.anim === 'rich' ||
+  document.body?.dataset?.anim === 'rich' ||
+  /[?&]anim=rich\b/.test(location.search);
+
 /** Devices considered strong enough for richer mobile animations */
-const RICH_MOBILE = HW_THREADS >= 6 && !REDUCED;
+const RICH_MOBILE = FORCE_RICH || (HW_THREADS >= 4 && !REDUCED); // lowered to 4 cores
 
 /** “Lite” only when clearly constrained iOS/Safari */
 const SAFARI_LITE = (isSafari || IS_IOS) && !RICH_MOBILE;
@@ -38,6 +44,23 @@ const SKIP = ':not([data-no-reveal])';
 
 /** Long paragraph threshold (encourage line splits on capable phones) */
 const LONG_P_THRESHOLD = RICH_MOBILE && !REDUCED ? 999 : window.innerWidth < 480 ? 360 : 560;
+
+/* Optional: quick diagnostics (enable with window.__DEBUG_ANIM = true) */
+function debugProfile() {
+  if (!window.__DEBUG_ANIM) return;
+  // eslint-disable-next-line no-console
+  console.table({
+    IS_IOS,
+    isSafari,
+    REDUCED,
+    HW_THREADS,
+    FORCE_RICH,
+    RICH_MOBILE,
+    SAFARI_LITE,
+    LONG_P_THRESHOLD,
+  });
+}
+debugProfile();
 
 /* Utilities */
 function safeSplit(el, opts) {
@@ -73,8 +96,6 @@ export function animateTextInSection(section) {
       .forEach((el) => (el.style.opacity = 1));
     return;
   }
-
-  // ⚠️ Avoid CSS containment during SplitType measuring (breaks iOS line metrics)
 
   /* H1 — hero headings */
   section.querySelectorAll(`h1${SKIP}`).forEach((heading) => {
@@ -229,10 +250,6 @@ export function animateTextInSection(section) {
 /* Fullscreen menu links                                                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Animate menu navigation links (`.fullscreen-menu nav a`) word-by-word.
- * Call this each time the menu opens.
- */
 export function animateMenuLinks() {
   const links = document.querySelectorAll('.fullscreen-menu nav a');
 
