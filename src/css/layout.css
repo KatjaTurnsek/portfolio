@@ -656,12 +656,12 @@ footer {
 
 @media only screen and (max-width: 850px) {
   :root {
-    --header-h: 100px;
+    --header-h: 140px;
     --page-gutter: 30px;
     --menu-toggle-size: 40px;
     --menu-padding: 120px 60px;
 
-    --waves-h-min: 120px;
+    --waves-h-min: 160px;
     --waves-h-vw: 28vw;
     --waves-h-max: 380px;
     --waves-h: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
