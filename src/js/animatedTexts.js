@@ -1,9 +1,9 @@
 /**
  * Text reveal animations using GSAP + SplitType:
- * - H1: words (Safari/iOS-lite: lines)
- * - H2–H4: lines
- * - P: lines, but skip splitting very long paragraphs (fallback fade/slide)
- * - Menu links: words
+ * - H1: words (with subtle scale/blur on capable mobiles), else lines
+ * - H2–H4: lines (tiny skew/blur on capable mobiles)
+ * - P: lines; skip splitting only for truly long paragraphs on weak devices
+ * - Fullscreen menu links: words
  * - Optional IntersectionObserver with a no-IO fallback
  * - Respects prefers-reduced-motion
  */
@@ -24,8 +24,11 @@ const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|Edg|EdgiOS/.test(ua);
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const HW_THREADS = navigator.hardwareConcurrency || 4;
 
-// “Lite” when Safari/iOS + modest cores, smaller viewport, or reduced motion
-const SAFARI_LITE = (isSafari || IS_IOS) && (HW_THREADS <= 6 || window.innerWidth < 900 || REDUCED);
+/** Devices considered strong enough for richer mobile animations */
+const RICH_MOBILE = HW_THREADS >= 6 && !REDUCED;
+
+/** “Lite” only when clearly constrained iOS/Safari */
+const SAFARI_LITE = (isSafari || IS_IOS) && !RICH_MOBILE;
 
 /** Default easing */
 const textEase = SAFARI_LITE ? 'power1.out' : 'power2.out';
@@ -33,8 +36,8 @@ const textEase = SAFARI_LITE ? 'power1.out' : 'power2.out';
 /** Skip selector (e.g., LCP text) */
 const SKIP = ':not([data-no-reveal])';
 
-/** Long paragraph threshold (slightly lower on very small screens) */
-const LONG_P_THRESHOLD = window.innerWidth < 480 ? 360 : 560;
+/** Long paragraph threshold (encourage line splits on capable phones) */
+const LONG_P_THRESHOLD = RICH_MOBILE && !REDUCED ? 999 : window.innerWidth < 480 ? 360 : 560;
 
 /* Utilities */
 function safeSplit(el, opts) {
@@ -63,7 +66,7 @@ function clearInline(el, props) {
 export function animateTextInSection(section) {
   if (!section) return;
 
-  // Reduced motion: just show
+  // Reduced motion: show without anims
   if (REDUCED) {
     section
       .querySelectorAll(`h1${SKIP}, h2${SKIP}, h3${SKIP}, h4${SKIP}, p${SKIP}`)
@@ -71,22 +74,20 @@ export function animateTextInSection(section) {
     return;
   }
 
-  // ⚠️ Do NOT use CSS containment here (breaks SplitType line metrics on iOS)
+  // ⚠️ Avoid CSS containment during SplitType measuring (breaks iOS line metrics)
 
   /* H1 — hero headings */
   section.querySelectorAll(`h1${SKIP}`).forEach((heading) => {
     if (!markOnce(heading)) return;
 
-    const types = SAFARI_LITE ? 'lines' : 'words';
+    // Use words on capable mobiles (gives "desktop-like" feel)
+    const useWords = RICH_MOBILE || !SAFARI_LITE;
+    const types = useWords ? 'words' : 'lines';
     const split = safeSplit(heading, { types, tagName: 'span' });
-    if (!split) {
-      heading.style.opacity = 1;
-      return;
-    }
 
-    const items = SAFARI_LITE ? split.lines : split.words;
-    if (!items?.length) {
-      split.revert();
+    const items = useWords ? split?.words : split?.lines;
+    if (!split || !items?.length) {
+      split?.revert?.();
       heading.style.opacity = 1;
       return;
     }
@@ -95,28 +96,28 @@ export function animateTextInSection(section) {
     heading.style.willChange = 'transform, opacity';
 
     gsap.set(items, {
-      y: SAFARI_LITE ? 40 : 60,
+      y: 40,
       opacity: 0,
-      ...(SAFARI_LITE ? {} : { scale: 0.92 }),
-      willChange: 'transform, opacity',
+      ...(useWords ? { scale: 0.96, filter: 'blur(2px)' } : {}),
+      willChange: 'transform, opacity, filter',
       force3D: false,
     });
 
     gsap
       .timeline({
-        defaults: { ease: SAFARI_LITE ? 'power1.out' : 'elastic.out(1, 0.4)' },
+        defaults: { ease: useWords ? 'elastic.out(1, 0.5)' : 'power1.out' },
         onComplete: () => {
           split.revert();
-          clearInline(heading, ['will-change', 'opacity', 'transform']);
+          clearInline(heading, ['will-change', 'opacity', 'transform', 'filter']);
         },
       })
       .to(items, {
         y: 0,
         opacity: 1,
-        ...(SAFARI_LITE ? {} : { scale: 1 }),
-        duration: SAFARI_LITE ? 0.9 : 1.6,
-        stagger: SAFARI_LITE ? 0.05 : 0.06,
-        clearProps: 'transform,opacity',
+        ...(useWords ? { scale: 1, filter: 'blur(0px)' } : {}),
+        duration: useWords ? 1.2 : 0.9,
+        stagger: useWords ? 0.06 : 0.05,
+        clearProps: 'transform,opacity,filter',
       });
   });
 
@@ -131,12 +132,15 @@ export function animateTextInSection(section) {
       return;
     }
 
+    const rich = RICH_MOBILE && !REDUCED;
     el.style.willChange = 'transform, opacity';
 
     gsap.set(split.lines, {
       yPercent: 100,
       opacity: 0,
-      willChange: 'transform, opacity',
+      ...(rich ? { skewY: 3, filter: 'blur(1.2px)' } : {}),
+      transformOrigin: '0% 100%',
+      willChange: 'transform, opacity, filter',
       force3D: false,
     });
 
@@ -145,19 +149,20 @@ export function animateTextInSection(section) {
         defaults: { ease: textEase },
         onComplete: () => {
           split.revert();
-          clearInline(el, ['will-change', 'opacity', 'transform']);
+          clearInline(el, ['will-change', 'opacity', 'transform', 'filter']);
         },
       })
       .to(split.lines, {
         yPercent: 0,
         opacity: 1,
-        duration: SAFARI_LITE ? 0.85 : 1.2,
-        stagger: 0.1,
-        clearProps: 'transform,opacity',
+        ...(rich ? { skewY: 0, filter: 'blur(0px)' } : {}),
+        duration: SAFARI_LITE ? 0.85 : 1.05,
+        stagger: 0.085,
+        clearProps: 'transform,opacity,filter',
       });
   });
 
-  /* Paragraphs — lines (skip very long ones) */
+  /* Paragraphs — lines (skip truly long ones on weaker devices) */
   section.querySelectorAll(`p${SKIP}`).forEach((el) => {
     if (!markOnce(el)) return;
 
@@ -185,12 +190,14 @@ export function animateTextInSection(section) {
       return;
     }
 
+    const rich = RICH_MOBILE && !REDUCED;
     el.style.willChange = 'transform, opacity';
 
     gsap.set(split.lines, {
       yPercent: 100,
       opacity: 0,
-      willChange: 'transform, opacity',
+      ...(rich ? { filter: 'blur(1px)' } : {}),
+      willChange: 'transform, opacity, filter',
       force3D: false,
     });
 
@@ -199,22 +206,21 @@ export function animateTextInSection(section) {
         defaults: { ease: textEase },
         onComplete: () => {
           split.revert();
-          (clearInline(el, ['will-change', 'opacity', 'transform']),
-            // ensure final layout is clean
-            0);
+          clearInline(el, ['will-change', 'opacity', 'transform', 'filter']);
         },
       })
       .to(split.lines, {
         yPercent: 0,
         opacity: 1,
-        duration: SAFARI_LITE ? 0.9 : 1.2,
-        stagger: 0.1,
-        delay: 0.05,
-        clearProps: 'transform,opacity',
+        ...(rich ? { filter: 'blur(0px)' } : {}),
+        duration: SAFARI_LITE ? 0.9 : 1.05,
+        stagger: 0.085,
+        delay: 0.03,
+        clearProps: 'transform,opacity,filter',
       });
   });
 
-  // Optional: light hint on the section, then clear
+  // Light hint on the section, then clear
   section.style.willChange = 'opacity';
   requestAnimationFrame(() => clearInline(section, ['will-change']));
 }
@@ -223,6 +229,10 @@ export function animateTextInSection(section) {
 /* Fullscreen menu links                                                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Animate menu navigation links (`.fullscreen-menu nav a`) word-by-word.
+ * Call this each time the menu opens.
+ */
 export function animateMenuLinks() {
   const links = document.querySelectorAll('.fullscreen-menu nav a');
 
@@ -246,7 +256,7 @@ export function animateMenuLinks() {
     gsap.set(words, {
       y: 48,
       opacity: 0,
-      ...(SAFARI_LITE ? {} : { scale: 0.94 }),
+      ...(RICH_MOBILE && !REDUCED ? { scale: 0.94 } : {}),
       willChange: 'transform, opacity',
       force3D: false,
     });
@@ -262,7 +272,7 @@ export function animateMenuLinks() {
       .to(words, {
         y: 0,
         opacity: 1,
-        ...(SAFARI_LITE ? {} : { scale: 1 }),
+        ...(RICH_MOBILE && !REDUCED ? { scale: 1 } : {}),
         duration: SAFARI_LITE ? 0.7 : 1.0,
         stagger: 0.07,
         clearProps: 'transform,opacity',
@@ -275,6 +285,12 @@ export function animateMenuLinks() {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
+ * Observe sections and run `animateTextInSection` when they enter the viewport.
+ * Usage:
+ *   observeTextSections(document.querySelectorAll('.fullscreen-section'));
+ *
+ * Includes a fallback for environments without IntersectionObserver.
+ *
  * @param {NodeListOf<HTMLElement>|HTMLElement[]} sections
  * @param {string} rootMargin
  */
@@ -282,7 +298,7 @@ export function observeTextSections(sections, rootMargin = '0px 0px -10% 0px') {
   if (!sections) return;
   const arr = Array.from(sections);
 
-  // Fallback for older iOS or in-app webviews
+  // Fallback: animate immediately if IO is unavailable (older iOS / in-app views)
   if (typeof IntersectionObserver === 'undefined') {
     arr.forEach((s) => animateTextInSection(s));
     return;

@@ -71,4 +71,6 @@ h5,
 h6 {
   overflow-wrap: break-word;
   overflow: visible;
+  will-change: auto;
+  backface-visibility: hidden;
 }
