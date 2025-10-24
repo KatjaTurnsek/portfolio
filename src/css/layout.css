@@ -282,9 +282,9 @@ footer {
   right: 60px;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
   background-color: transparent;
-  border: none !important;
+  border: 2px solid var(--menu-border-color) !important;
+  border-radius: 50%;
   color: var(--menu-color);
   transition:
     color var(--transition-med),
@@ -295,6 +295,7 @@ footer {
   font-size: 24px;
   z-index: 1100;
 }
+
 .menu-toggle.opened:hover {
   color: var(--menu-hover-color);
   border-color: var(--menu-hover-color);

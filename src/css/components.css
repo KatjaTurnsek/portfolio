@@ -539,12 +539,12 @@ textarea:valid:focus {
 }
 
 /* Menu icons */
+/* Menu icons: remove UA focus/tap highlight (do NOT touch border here) */
 .menu-toggle,
 #menuClose {
   -webkit-appearance: none;
   appearance: none;
   background: none;
-  border: none !important;
   outline: none !important;
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
