@@ -538,6 +538,7 @@ textarea:valid:focus {
   left: 70px;
 }
 
+/* Menu icons */
 .menu-toggle,
 #menuClose {
   -webkit-appearance: none;
@@ -549,16 +550,25 @@ textarea:valid:focus {
   -webkit-tap-highlight-color: transparent;
 }
 
+.menu-toggle:focus {
+  outline: none;
+}
+.menu-toggle:focus-visible {
+  box-shadow: 0 0 0 3px var(--menu-hover-color);
+  border-color: var(--menu-hover-color);
+}
+
+#menuClose:focus {
+  outline: none;
+}
+#menuClose:focus-visible {
+  box-shadow: 0 0 0 3px var(--menu-hover-color);
+  border-color: var(--menu-hover-color);
+}
+
 .menu-toggle::-moz-focus-inner,
 #menuClose::-moz-focus-inner {
   border: 0;
-}
-
-.menu-toggle:focus,
-.menu-toggle:focus-visible,
-#menuClose:focus,
-#menuClose:focus-visible {
-  outline: none !important;
 }
 
 /* 12) Responsive Tweaks (Mobile) ----------------------------------------- */
