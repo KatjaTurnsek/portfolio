@@ -42,10 +42,6 @@
 
   /* first section offset under the header wave bg */
   --first-section-pad: clamp(0px, calc(var(--waves-h) - var(--header-h)), 40vh);
-
-  /* Menu button alignment (used for BOTH hamburger and close button) */
-  --menu-btn-top: calc((var(--header-h) - var(--menu-toggle-size)) / 2);
-  --menu-btn-right: var(--page-gutter);
 }
 
 /* Utilities --------------------------------------------------------------- */
@@ -83,7 +79,7 @@ header {
   width: 100%;
   height: var(--header-h);
   display: flex;
-  align-items: flex-start; /* we will place items via a shared top offset */
+  align-items: center;
   justify-content: space-between;
   padding-inline: var(--page-gutter);
   background: transparent;
@@ -129,63 +125,54 @@ header > * {
 }
 
 /* Header controls (logo + theme switcher + hamburger) -------------------- */
-/* Goal: align their TOP exactly to the close button’s TOP. */
+
 .header-controls {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-top: var(--menu-btn-top);
-  height: var(--menu-toggle-size);
 }
 
-/* Ensure the left-side logo block aligns to the same top */
+#theme-toggle {
+  position: relative;
+  z-index: 1;
+  width: 55px;
+  height: 27px;
+  background-color: var(--switch-circle);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+#theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  width: 22px;
+  height: 22px;
+  background-color: var(--switch-bg);
+  border: var(--circle-border);
+  border-radius: 50%;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
+  transform: translateX(0);
+}
+#theme-toggle.dark-mode::before {
+  transform: translateX(30px);
+}
+
+.logo,
+.site-logo,
+.fullscreen-menu .menu-logo {
+  height: 55px;
+}
 .site-logo {
   z-index: 1;
   position: relative;
   display: block;
-  margin-top: var(--menu-btn-top);
-  height: var(--menu-toggle-size); /* match the menu icon height “track” */
-  line-height: var(--menu-toggle-size);
   transition: filter var(--transition-fast);
-}
-.site-logo img,
-.logo {
-  display: block;
-  height: 100%;
-}
-
-/* Hamburger button (in header) shares the same top track */
-.menu-toggle {
-  margin-top: var(--menu-btn-top);
-  width: var(--menu-toggle-size);
-  height: var(--menu-toggle-size);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--menu-color);
-  transition: color var(--transition-med);
-}
-
-/* When menu is open, we convert it to a fixed close button—keep same top/right */
-.menu-toggle.opened {
-  position: fixed;
-  top: var(--menu-btn-top);
-  right: var(--menu-btn-right);
-  width: var(--menu-toggle-size);
-  height: var(--menu-toggle-size);
-  border: none;
-  background-color: transparent;
-  color: var(--menu-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  z-index: 1100;
-  transition: color var(--transition-med);
 }
 
 /* Main / Footer ----------------------------------------------------------- */
@@ -271,6 +258,48 @@ footer {
 
 /* Menu ------------------------------------------------------------------- */
 
+.menu-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--menu-toggle-size);
+  color: var(--menu-color);
+  transition:
+    transform var(--transition-med),
+    color var(--transition-med);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.menu-toggle:hover {
+  color: var(--menu-hover-color);
+  transition: color var(--transition-med);
+}
+
+.menu-toggle.opened {
+  position: fixed;
+  top: 55px;
+  right: 60px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid var(--menu-border-color);
+  color: var(--menu-color);
+  transition:
+    color var(--transition-med),
+    border-color var(--transition-med);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 1100;
+}
+.menu-toggle.opened:hover {
+  color: var(--menu-hover-color);
+  border-color: var(--menu-hover-color);
+}
+
 .fullscreen-menu {
   position: fixed;
   inset: 0;
@@ -332,7 +361,6 @@ footer {
   display: flex;
 }
 
-/* The nav inside menu */
 .fullscreen-menu nav {
   display: flex;
   flex-direction: column;
@@ -628,12 +656,12 @@ footer {
 
 @media only screen and (max-width: 850px) {
   :root {
-    --header-h: 130px; /* tuned per your preference */
+    --header-h: 140px;
     --page-gutter: 30px;
-    --menu-toggle-size: 40px; /* smaller on mobile, but aligned */
+    --menu-toggle-size: 40px;
     --menu-padding: 120px 60px;
 
-    --waves-h-min: 140px; /* keep wave visually tall enough */
+    --waves-h-min: 160px;
     --waves-h-vw: 28vw;
     --waves-h-max: 380px;
     --waves-h: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
@@ -641,10 +669,6 @@ footer {
     /* Tighter vertical rhythm on mobile */
     --row-gap: 22px; /* was 40px */
     --cs-gutter: 16px; /* was 40px */
-
-    /* recompute shared top for all header items */
-    --menu-btn-top: calc((var(--header-h) - var(--menu-toggle-size)) / 2);
-    --menu-btn-right: var(--page-gutter);
   }
 
   /* Mobile typography (bigger, but capped) */
@@ -673,21 +697,21 @@ footer {
     padding-inline: var(--page-gutter);
   }
 
-  .site-logo {
-    height: var(--menu-toggle-size);
-    margin-top: var(--menu-btn-top);
+  #theme-toggle {
+    width: 55px;
+    height: 27px;
   }
 
-  .header-controls {
-    margin-top: var(--menu-btn-top);
-    height: var(--menu-toggle-size);
+  .site-logo,
+  .fullscreen-menu .menu-logo {
+    height: 45px;
   }
 
   .menu-toggle.opened {
-    right: var(--menu-btn-right);
-    top: var(--menu-btn-top);
-    width: var(--menu-toggle-size);
-    height: var(--menu-toggle-size);
+    right: 30px;
+    top: 30px;
+    width: 40px;
+    height: 40px;
   }
 
   .fullscreen-menu nav {
