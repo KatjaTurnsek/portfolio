@@ -1,11 +1,11 @@
 /**
- * Text reveal animations using GSAP + SplitType (lighter across all browsers):
- * - H1: words (Safari-lite: lines)
+ * Text reveal animations using GSAP + SplitType:
+ * - H1: words (Safari/iOS-lite: lines)
  * - H2–H4: lines
- * - P: lines, but skip splitting very long paragraphs (fade/slide instead)
- * - Fullscreen menu links: words (simpler on Safari-lite)
- * - Optional IntersectionObserver to animate only when visible
- * - Respect prefers-reduced-motion
+ * - P: lines, but skip splitting very long paragraphs (fallback fade/slide)
+ * - Menu links: words
+ * - Optional IntersectionObserver with a no-IO fallback
+ * - Respects prefers-reduced-motion
  */
 
 import gsap from 'gsap';
@@ -15,21 +15,26 @@ import SplitType from 'split-type';
 /* Environment & perf profile                                                 */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const ua = navigator.userAgent;
+const IS_IOS =
+  /iP(hone|od|ad)/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|Edg|EdgiOS/.test(ua);
+
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const HW_THREADS = navigator.hardwareConcurrency || 4;
 
-// “Lite” when Safari + modest cores, smaller viewport, or reduced motion
-const SAFARI_LITE = isSafari && (HW_THREADS <= 6 || window.innerWidth < 900 || REDUCED);
+// “Lite” when Safari/iOS + modest cores, smaller viewport, or reduced motion
+const SAFARI_LITE = (isSafari || IS_IOS) && (HW_THREADS <= 6 || window.innerWidth < 900 || REDUCED);
 
-/** Default easing used for text animations */
+/** Default easing */
 const textEase = SAFARI_LITE ? 'power1.out' : 'power2.out';
 
 /** Skip selector (e.g., LCP text) */
 const SKIP = ':not([data-no-reveal])';
 
-/** Long paragraph threshold (applies to all browsers) */
-const LONG_P_THRESHOLD = 560;
+/** Long paragraph threshold (slightly lower on very small screens) */
+const LONG_P_THRESHOLD = window.innerWidth < 480 ? 360 : 560;
 
 /* Utilities */
 function safeSplit(el, opts) {
@@ -45,7 +50,7 @@ function markOnce(el) {
   return true;
 }
 function clearInline(el, props) {
-  props.forEach((p) => el.style.removeProperty(p));
+  for (const p of props) el.style.removeProperty(p);
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -53,20 +58,12 @@ function clearInline(el, props) {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
- * Animates all text elements within a given section:
- * - H1: words (Safari-lite: lines; no scale to avoid blur)
- * - H2–H4: lines
- * - P: lines (skip splitting very long paragraphs → simple fade/slide)
- *
- * Respects [data-no-reveal] and prefers-reduced-motion.
- *
  * @param {HTMLElement} section
- * @returns {void}
  */
 export function animateTextInSection(section) {
   if (!section) return;
 
-  // Reduced motion: just ensure visibility and bail.
+  // Reduced motion: just show
   if (REDUCED) {
     section
       .querySelectorAll(`h1${SKIP}, h2${SKIP}, h3${SKIP}, h4${SKIP}, p${SKIP}`)
@@ -74,9 +71,7 @@ export function animateTextInSection(section) {
     return;
   }
 
-  // Temporary paint hints (helps Safari & long sections)
-  section.style.willChange = 'transform, opacity';
-  section.style.contain = 'layout style paint';
+  // ⚠️ Do NOT use CSS containment here (breaks SplitType line metrics on iOS)
 
   /* H1 — hero headings */
   section.querySelectorAll(`h1${SKIP}`).forEach((heading) => {
@@ -97,6 +92,8 @@ export function animateTextInSection(section) {
     }
 
     gsap.set(heading, { opacity: 1 });
+    heading.style.willChange = 'transform, opacity';
+
     gsap.set(items, {
       y: SAFARI_LITE ? 40 : 60,
       opacity: 0,
@@ -110,7 +107,7 @@ export function animateTextInSection(section) {
         defaults: { ease: SAFARI_LITE ? 'power1.out' : 'elastic.out(1, 0.4)' },
         onComplete: () => {
           split.revert();
-          clearInline(heading, ['will-change', 'contain', 'opacity', 'transform']);
+          clearInline(heading, ['will-change', 'opacity', 'transform']);
         },
       })
       .to(items, {
@@ -134,6 +131,8 @@ export function animateTextInSection(section) {
       return;
     }
 
+    el.style.willChange = 'transform, opacity';
+
     gsap.set(split.lines, {
       yPercent: 100,
       opacity: 0,
@@ -146,7 +145,7 @@ export function animateTextInSection(section) {
         defaults: { ease: textEase },
         onComplete: () => {
           split.revert();
-          clearInline(el, ['will-change', 'contain', 'opacity', 'transform']);
+          clearInline(el, ['will-change', 'opacity', 'transform']);
         },
       })
       .to(split.lines, {
@@ -158,7 +157,7 @@ export function animateTextInSection(section) {
       });
   });
 
-  /* Paragraphs — lines (skip splitting very long ones for ALL browsers) */
+  /* Paragraphs — lines (skip very long ones) */
   section.querySelectorAll(`p${SKIP}`).forEach((el) => {
     if (!markOnce(el)) return;
 
@@ -166,7 +165,8 @@ export function animateTextInSection(section) {
 
     if (isLong) {
       // Cheaper: no splitting; simple fade/slide
-      gsap.set(el, { y: 24, opacity: 0, willChange: 'transform, opacity', force3D: false });
+      el.style.willChange = 'transform, opacity';
+      gsap.set(el, { y: 24, opacity: 0, force3D: false });
       gsap.to(el, {
         y: 0,
         opacity: 1,
@@ -185,6 +185,8 @@ export function animateTextInSection(section) {
       return;
     }
 
+    el.style.willChange = 'transform, opacity';
+
     gsap.set(split.lines, {
       yPercent: 100,
       opacity: 0,
@@ -197,7 +199,9 @@ export function animateTextInSection(section) {
         defaults: { ease: textEase },
         onComplete: () => {
           split.revert();
-          clearInline(el, ['will-change', 'contain', 'opacity', 'transform']);
+          (clearInline(el, ['will-change', 'opacity', 'transform']),
+            // ensure final layout is clean
+            0);
         },
       })
       .to(split.lines, {
@@ -210,21 +214,15 @@ export function animateTextInSection(section) {
       });
   });
 
-  // Clean paint hints after a tick
-  requestAnimationFrame(() => {
-    clearInline(section, ['will-change', 'contain']);
-  });
+  // Optional: light hint on the section, then clear
+  section.style.willChange = 'opacity';
+  requestAnimationFrame(() => clearInline(section, ['will-change']));
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Fullscreen menu links                                                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/**
- * Animates menu navigation links (`.fullscreen-menu nav a`) word-by-word.
- * (Safari-lite: simpler transform — no scale)
- * Call this each time the menu opens to retrigger.
- */
 export function animateMenuLinks() {
   const links = document.querySelectorAll('.fullscreen-menu nav a');
 
@@ -242,6 +240,8 @@ export function animateMenuLinks() {
 
     const words = split.words;
     link.classList.add('animated');
+
+    link.style.willChange = 'transform, opacity';
 
     gsap.set(words, {
       y: 48,
@@ -275,15 +275,18 @@ export function animateMenuLinks() {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
- * Observe sections and run `animateTextInSection` when they enter the viewport.
- * Usage:
- *   observeTextSections(document.querySelectorAll('.fullscreen-section'));
- *
  * @param {NodeListOf<HTMLElement>|HTMLElement[]} sections
  * @param {string} rootMargin
  */
 export function observeTextSections(sections, rootMargin = '0px 0px -10% 0px') {
-  if (!sections || typeof IntersectionObserver === 'undefined') return;
+  if (!sections) return;
+  const arr = Array.from(sections);
+
+  // Fallback for older iOS or in-app webviews
+  if (typeof IntersectionObserver === 'undefined') {
+    arr.forEach((s) => animateTextInSection(s));
+    return;
+  }
 
   const io = new IntersectionObserver(
     (entries, obs) => {
@@ -297,5 +300,5 @@ export function observeTextSections(sections, rootMargin = '0px 0px -10% 0px') {
     { root: null, rootMargin, threshold: 0.15 }
   );
 
-  sections.forEach((s) => io.observe(s));
+  arr.forEach((s) => io.observe(s));
 }

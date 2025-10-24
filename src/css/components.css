@@ -539,7 +539,6 @@ textarea:valid:focus {
 }
 
 /* Menu icons */
-/* Menu icons: remove UA focus/tap highlight (do NOT touch border here) */
 .menu-toggle,
 #menuClose {
   -webkit-appearance: none;
@@ -569,6 +568,18 @@ textarea:valid:focus {
 .menu-toggle::-moz-focus-inner,
 #menuClose::-moz-focus-inner {
   border: 0;
+}
+
+/* SplitType reveal helpers (Text animation) */
+.line {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.word,
+.char {
+  display: inline-block;
 }
 
 /* 12) Responsive Tweaks (Mobile) ----------------------------------------- */
