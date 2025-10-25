@@ -12,15 +12,27 @@
     <base href='/portfolio/' />
     <script>window.__BASE_URL__ = '/portfolio/';</script>
     
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    
+    <link
+      rel='preload'
+      as='style'
+      href='https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap'
+    />
     <link
       rel='stylesheet'
-      href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
-      integrity='sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=='
-      crossorigin='anonymous'
-      referrerpolicy='no-referrer'
+      href='https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap'
+      media='print'
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel='stylesheet'
+        href='https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap'
+      />
+    </noscript>
     
-    <!-- Preload header/menu wave layers (base-aware) -->
     <link
       rel='preload'
       as='image'
@@ -52,12 +64,180 @@
     <link rel='icon' href='/portfolio/assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
     
     <!-- Canonical points to the site base; router will update at runtime -->
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-DzlRWQuf.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-BOtymeZu.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-CcC2hjyk.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-COpzCtSX.css">
   </head>
 
   <body class="light-theme">
-    <!-- Top wave host -->
+    <svg xmlns='http://www.w3.org/2000/svg' style='position:absolute;width:0;height:0;overflow:hidden'>
+      <defs>
+        <!-- Menu / Close -->
+        <symbol id='i-menu' viewBox='0 0 24 24'>
+          <path
+            d='M3 6h18M3 12h18M3 18h18'
+            stroke='currentColor'
+            stroke-width='3'
+            stroke-linecap='round'
+            fill='none'
+          />
+        </symbol>
+        <symbol id='i-close' viewBox='0 0 24 24'>
+          <path
+            d='M6 6l12 12M18 6L6 18'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            fill='none'
+          />
+        </symbol>
+    
+        <!-- Arrows -->
+        <symbol id='i-arrow-right' viewBox='0 0 24 24'>
+          <path
+            d='M5 12h14'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+          <path
+            d='M13 18l6-6'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+          <path
+            d='M13 6l6 6'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+        </symbol>
+    
+        <symbol id='i-arrow-left' viewBox='0 0 24 24'>
+          <path
+            d='M5 12h14'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+          <path
+            d='M5 12l6 6'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+          <path
+            d='M5 12l6 -6'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+        </symbol>
+    
+        <symbol id='i-arrow-up-right' viewBox='0 0 24 24'>
+          <path
+            d='M17 7l-10 10'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+          <path
+            d='M8 7h9v9'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+        </symbol>
+        <symbol id='i-arrow-down' viewBox='0 0 24 24'>
+          <path
+            d='M12 5v14m7-6l-7 7-7-7'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            fill='none'
+          />
+        </symbol>
+        <symbol id='i-chevron-right' viewBox='0 0 24 24'>
+          <path
+            d='M9 6l6 6-6 6'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            fill='none'
+          />
+        </symbol>
+    
+        <!-- External link -->
+        <symbol id='i-external' viewBox='0 0 24 24'>
+          <path
+            d='M14 3h7v7M10 14L21 3M21 13v6a2 2 0 01-2 2h-6'
+            stroke='currentColor'
+            stroke-width='1'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            fill='none'
+          />
+        </symbol>
+    
+        <!-- Comment (yellow circle button) -->
+        <symbol id='i-comment' viewBox='0 0 24 24'>
+          <path
+            d='M6 4h12a2.5 2.5 0 0 1 2.5 2.5v7A2.5 2.5 0 0 1 18 16H10l-4 4v-4H6A2.5 2.5 0 0 1 3.5 13.5v-7A2.5 2.5 0 0 1 6 4Z'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='2'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          />
+        </symbol>
+    
+        <!-- Brand / Services -->
+        <symbol id='i-github' viewBox='0 0 24 24'>
+          <path
+            d='M12 2a10 10 0 00-3.16 19.49c.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.61-3.37-1.19-3.37-1.19-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.61.07-.61 1 .07 1.52 1.03 1.52 1.03.89 1.52 2.34 1.08 2.91.83.09-.64.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.96 0-1.1.39-2 .1-2.71 0 0 .84-.27 2.75 1.03a9.56 9.56 0 015 0c1.91-1.3 2.75-1.03 2.75-1.03.29.71.1 1.61.05 2.71 0 3.86-2.35 4.71-4.59 4.96.36.31.68.92.68 1.86 0 1.34-.01 2.42-.01 2.75 0 .26.18.57.68.48A10 10 0 0012 2z'
+            fill='currentColor'
+          />
+        </symbol>
+    
+        <!-- Simple Figma mark (5 stacked shapes) -->
+        <symbol id='i-figma' viewBox='0 0 24 24'>
+          <path d='M10 3h4a3 3 0 010 6h-4V3z' fill='currentColor' />
+          <path d='M10 9h4a3 3 0 010 6h-4V9z' fill='currentColor' opacity='.85' />
+          <path d='M10 15h1a3 3 0 010 6h-1v-6z' fill='currentColor' opacity='.7' />
+          <path d='M6 12a3 3 0 003 3h1V9H9a3 3 0 00-3 3z' fill='currentColor' opacity='.55' />
+          <path d='M6 6a3 3 0 003 3h1V3H9A3 3 0 006 6z' fill='currentColor' opacity='.4' />
+        </symbol>
+    
+        <!-- Globe (live site) -->
+        <symbol id='i-globe' viewBox='0 0 24 24'>
+          <circle cx='12' cy='12' r='9' fill='none' stroke='currentColor' stroke-width='2' />
+          <path
+            d='M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='2'
+          />
+        </symbol>
+      </defs>
+    </svg>    <!-- Top wave host -->
     <div class="top-waves"></div>
 
     <!-- Gooey blobs background (only one copy across the whole site) -->
@@ -98,7 +278,7 @@
   <div class='header-controls'>
     <button id='theme-toggle' class='theme-switcher' aria-label='Toggle Theme'></button>
     <button class='menu-toggle' id='menuToggle' aria-label='Toggle menu'>
-      <i class='fas fa-bars'></i>
+      <svg class='icon' aria-hidden='true'><use href='#i-menu' /></svg>
     </button>
   </div>
 </header> <div class='fullscreen-menu' id='menu' role='dialog' aria-modal='true'>
@@ -118,7 +298,7 @@
   </a>
 
   <button class='menu-toggle opened' id='menuClose' aria-label='Close menu'>
-    <i class='fas fa-times'></i>
+    <svg class='icon' aria-hidden='true'><use href='#i-close' /></svg>
   </button>
 
   <nav>
@@ -184,7 +364,7 @@
         data-back-fallback='/portfolio/'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Home</span>
       </a>
     </div>
@@ -322,7 +502,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -471,7 +651,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -612,7 +792,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -740,13 +920,13 @@
 
     <div class='back-to-work-container'>
       <a
-        href='/portfolio/work'
+        href='/portfolio/#work'
         class='label-link back-to-work-label'
         data-back
-        data-back-fallback='/portfolio/work'
+        data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -768,7 +948,7 @@
         <div class='tech-stack'><strong>Tools:</strong> Figma</div>
 
         <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='petart'></div>
+        <div class='demo-links' data-auto='demo' data-case='petart-design'></div>
       </div>
     </div>
 
@@ -934,7 +1114,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -955,7 +1135,7 @@
         <div class='tech-stack'><strong>Tools:</strong> Figma | GSAP | CSS</div>
 
         <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='portfolio'></div>
+        <div class='demo-links' data-auto='demo' data-case='portfolio-design'></div>
       </div>
     </div>
 
@@ -1130,7 +1310,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1152,7 +1332,7 @@
         <div class='tech-stack'><strong>Tools:</strong> Figma | JavaScript | API | CSS</div>
 
         <!-- Auto-filled demo links from projects.js -->
-        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
+        <div class='demo-links' data-auto='demo' data-case='agilitybandits-design'></div>
       </div>
     </div>
 
@@ -1300,7 +1480,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1322,7 +1502,7 @@
         <div class='tech-stack'><strong>Tools:</strong> Figma</div>
 
         <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='semester-project-1'></div>
+        <div class='demo-links' data-auto='demo' data-case='semester-project-1-design'></div>
       </div>
     </div>
 
@@ -1470,13 +1650,13 @@
 
     <div class='back-to-work-container'>
       <a
-        href='/portfolio/work'
+        href='/portfolio/#work'
         class='label-link back-to-work-label'
         data-back
-        data-back-fallback='/portfolio/work'
+        data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1496,7 +1676,7 @@
         <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
 
         <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='petart'></div>
+        <div class='demo-links' data-auto='demo' data-case='petart-logotype'></div>
       </div>
     </div>
 
@@ -1608,7 +1788,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1632,7 +1812,7 @@
         </div>
 
         <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='portfolio'></div>
+        <div class='demo-links' data-auto='demo' data-case='portfolio-logotype'></div>
       </div>
     </div>
 
@@ -1741,7 +1921,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1762,7 +1942,7 @@
         <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
 
         <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
+        <div class='demo-links' data-auto='demo' data-case='agilitybandits-logotype'></div>
       </div>
     </div>
 
@@ -1926,7 +2106,7 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1948,7 +2128,7 @@
         <div class='tech-stack'><strong>Tools:</strong> Adobe Illustrator</div>
 
         <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='semester-project-1'></div>
+        <div class='demo-links' data-auto='demo' data-case='semester-project-1-logotype'></div>
       </div>
     </div>
 
@@ -2069,13 +2249,13 @@
 
     <div class='back-to-work-container'>
       <a
-        href='/portfolio/work'
+        href='/portfolio/#work'
         class='label-link back-to-work-label'
         data-back
-        data-back-fallback='/portfolio/work'
+        data-back-fallback='/portfolio/#work'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -2162,7 +2342,9 @@
           rel='noopener'
         >
           <span class='label-text'>Download CV (PDF)</span>
-          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
+          <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use
+              href='#i-arrow-right'
+            /></svg>
         </a>
         <a
           href='https://github.com/KatjaTurnsek'
@@ -2171,7 +2353,9 @@
           rel='noopener'
         >
           <span class='label-text'>View GitHub</span>
-          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
+          <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use
+              href='#i-arrow-right'
+            /></svg>
         </a>
         <a
           href='/portfolio/#contact'
@@ -2179,36 +2363,52 @@
           aria-label='Go to contact section'
         >
           <span class='label-text'>Contact Me</span>
-          <i class='fa-solid fa-arrow-right arrow-icon' aria-hidden='true'></i>
+          <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use
+              href='#i-arrow-right'
+            /></svg>
         </a>
       </div>
     </div>
   </div>
 
-  <section class='testimonial-section'>
+  <div class='testimonial-section'>
     <div class='testimonial'>
       <div class='testimonial-label'>
-        <i class='fa-solid fa-arrow-down arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-14 arrow-icon' aria-hidden='true'><use href='#i-arrow-down' /></svg>
         <h3 class='label-text'>Testimonials</h3>
       </div>
       <div class='circle-button'>
-        <i class='fa-regular fa-comment' aria-hidden='true'></i>
+        <svg class='icon' aria-hidden='true'><use href='#i-comment' /></svg>
       </div>
     </div>
-  </section>
+  </div>
 
   <div class='rows'>
     <div class='row'>
       <figure class='testimonial-card'>
         <blockquote>
-          “Katja is that rare designer-developer who brings clarity to both the Figma file and the
-          codebase. She asks smart questions, keeps accessibility and performance front-of-mind, and
-          uses motion only when it improves the experience. Our API-driven launch shipped on time
-          and looked better than the mockups.”
+          “Katja is creative by nature and approaches every assignment with great dedication. Her
+          work combines strong visual sense with clear structure, and she takes pride in delivering
+          well-crafted, functional designs. Always positive, outgoing, and easy to collaborate with
+          — a true professional and a pleasure to have on the team.”
         </blockquote>
         <figcaption>
-          <span class='author'>Maria Lundqvist</span>
-          <span class='role'>Product Manager, Aurora Digital</span>
+          <span class='author'>Damjan Strucl</span>
+          <span class='role'>CEO, Logina d.o.o</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class='row'>
+      <figure class='testimonial-card'>
+        <blockquote>
+          “Katja is dependable, thoughtful, and highly skilled across graphic and web design. She
+          consistently delivers well-organized work and brings a calm, positive presence to every
+          collaboration. A pleasure to work with.”
+        </blockquote>
+        <figcaption>
+          <span class='author'>Maja K.</span>
+          <span class='role'>Former Creative Lead</span>
         </figcaption>
       </figure>
     </div>
@@ -2221,17 +2421,16 @@
         data-back-fallback='/portfolio/'
         aria-label='Go back'
       >
-        <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Home</span>
       </a>
     </div>
-
   </div>
 </section> <section
   class='fullscreen-section'
   id='contact'
   data-title='Contact — Work with Katja Turnsek'
-  data-description='Get in touch about freelance projects or front-end roles. Email contact@katjadev.com or use the form.'
+  data-description='Get in touch about freelance projects or front-end roles. Email me or use the form.'
 >
   <div class='rows'>
     <div class='row'>
@@ -2246,38 +2445,50 @@
     <div class='row'>
       <p class='info-text'>
         Email
-        <a href='mailto:contact@katjadev.com'>contact@katjadev.com</a>
+        <a
+          id='contact-email'
+          href='mailto:katja@pet-art.net'
+          rel='nofollow noopener'
+        >katja@pet-art.net</a>
         or use the form
       </p>
 
       <div class='contact-form-wrapper'>
         <form
           class='contact-form'
-          action='https://formsubmit.co/contact@katjadev.com'
+          action='https://formsubmit.co/8acfe5c87a66089dd0edfb50f8573706'
           method='POST'
         >
           <input type='hidden' name='_captcha' value='false' />
+          <input type='hidden' name='_template' value='table' />
+          <input type='hidden' name='_subject' value='New message from your portfolio' />
+          <!-- absolute URL so redirect always returns to YOUR page -->
+          <input
+            type='hidden'
+            name='_next'
+            value='https://katjaturnsek.github.io/portfolio/#thank-you'
+          />
 
-          <!-- Will be converted to absolute URL below -->
-          <input type='hidden' name='_next' value='/portfolio/#thank-you' />
+          <!-- a simple honeypot -->
+          <input
+            type='text'
+            name='_honey'
+            tabindex='-1'
+            autocomplete='off'
+            style='position:absolute;left:-9999px;opacity:0;'
+          />
 
           <div class='name-row'>
             <div class='form-group'>
               <label for='first-name'>First Name</label>
-              <input
-                type='text'
-                id='first-name'
-                name='first-name'
-                autocomplete='given-name'
-                required
-              />
+              <input id='first-name' name='name' type='text' autocomplete='given-name' required />
             </div>
             <div class='form-group'>
               <label for='last-name'>Last Name</label>
               <input
-                type='text'
                 id='last-name'
                 name='last-name'
+                type='text'
                 autocomplete='family-name'
                 required
               />
@@ -2286,32 +2497,26 @@
 
           <div class='form-group full-width'>
             <label for='email'>Email</label>
-            <input type='email' id='email' name='email' autocomplete='email' required />
+            <input id='email' name='email' type='email' autocomplete='email' required />
           </div>
 
           <div class='form-group full-width'>
             <label for='message'>Message</label>
-            <textarea id='message' name='message' rows='4' autocomplete='off' required></textarea>
+            <textarea id='message' name='message' rows='4' required></textarea>
           </div>
 
           <div class='button-wrapper'>
             <button type='submit' class='submit-button'>
               Send
-              <i class='fa-solid fa-arrow-right-long' aria-hidden='true'></i>
+              <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use
+                  href='#i-arrow-right'
+                ></use></svg>
             </button>
           </div>
         </form>
       </div>
     </div>
   </div>
-
-  <!-- Make _next absolute (https://<origin><base>#thank-you) -->
-  <script>
-    (function () { try { var baseFromTpl = '/portfolio/'; // e.g. "/" or "/portfolio/" var u = new
-    URL(baseFromTpl, window.location.origin); u.hash = 'thank-you'; var next =
-    document.querySelector('form.contact-form input[name="_next"]'); if (next) next.value = u.href;
-    } catch (e) { /* noop */ } })();
-  </script>
 </section> <section
   class='fullscreen-section'
   id='thank-you'
@@ -2331,7 +2536,7 @@
           data-back-fallback='/portfolio/'
           aria-label='Go back'
         >
-          <i class='fa-solid fa-arrow-left arrow-icon' aria-hidden='true'></i>
+          <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
           <span class='label-text'>Back to Home</span>
         </a>
       </div>
