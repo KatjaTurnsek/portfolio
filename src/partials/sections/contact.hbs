@@ -2,7 +2,7 @@
   class='fullscreen-section'
   id='contact'
   data-title='Contact — Work with Katja Turnsek'
-  data-description='Get in touch about freelance projects or front-end roles. Email contact@katjadev.com or use the form.'
+  data-description='Get in touch about freelance projects or front-end roles. Email me or use the form.'
 >
   <div class='rows'>
     <div class='row'>
@@ -17,38 +17,50 @@
     <div class='row'>
       <p class='info-text'>
         Email
-        <a href='mailto:contact@katjadev.com'>contact@katjadev.com</a>
+        <a
+          id='contact-email'
+          href='mailto:katja@pet-art.net'
+          rel='nofollow noopener'
+        >katja@pet-art.net</a>
         or use the form
       </p>
 
       <div class='contact-form-wrapper'>
         <form
           class='contact-form'
-          action='https://formsubmit.co/contact@katjadev.com'
+          action='https://formsubmit.co/8acfe5c87a66089dd0edfb50f8573706'
           method='POST'
         >
           <input type='hidden' name='_captcha' value='false' />
+          <input type='hidden' name='_template' value='table' />
+          <input type='hidden' name='_subject' value='New message from your portfolio' />
+          <!-- absolute URL so redirect always returns to YOUR page -->
+          <input
+            type='hidden'
+            name='_next'
+            value='https://katjaturnsek.github.io/portfolio/#thank-you'
+          />
 
-          <!-- Will be converted to absolute URL below -->
-          <input type='hidden' name='_next' value='{{base}}#thank-you' />
+          <!-- a simple honeypot -->
+          <input
+            type='text'
+            name='_honey'
+            tabindex='-1'
+            autocomplete='off'
+            style='position:absolute;left:-9999px;opacity:0;'
+          />
 
           <div class='name-row'>
             <div class='form-group'>
               <label for='first-name'>First Name</label>
-              <input
-                type='text'
-                id='first-name'
-                name='first-name'
-                autocomplete='given-name'
-                required
-              />
+              <input id='first-name' name='name' type='text' autocomplete='given-name' required />
             </div>
             <div class='form-group'>
               <label for='last-name'>Last Name</label>
               <input
-                type='text'
                 id='last-name'
                 name='last-name'
+                type='text'
                 autocomplete='family-name'
                 required
               />
@@ -57,30 +69,24 @@
 
           <div class='form-group full-width'>
             <label for='email'>Email</label>
-            <input type='email' id='email' name='email' autocomplete='email' required />
+            <input id='email' name='email' type='email' autocomplete='email' required />
           </div>
 
           <div class='form-group full-width'>
             <label for='message'>Message</label>
-            <textarea id='message' name='message' rows='4' autocomplete='off' required></textarea>
+            <textarea id='message' name='message' rows='4' required></textarea>
           </div>
 
           <div class='button-wrapper'>
             <button type='submit' class='submit-button'>
               Send
-              <i class='fa-solid fa-arrow-right-long' aria-hidden='true'></i>
+              <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use
+                  href='#i-arrow-right'
+                ></use></svg>
             </button>
           </div>
         </form>
       </div>
     </div>
   </div>
-
-  <!-- Make _next absolute (https://<origin><base>#thank-you) -->
-  <script>
-    (function () { try { var baseFromTpl = '{{base}}'; // e.g. "/" or "/portfolio/" var u = new
-    URL(baseFromTpl, window.location.origin); u.hash = 'thank-you'; var next =
-    document.querySelector('form.contact-form input[name="_next"]'); if (next) next.value = u.href;
-    } catch (e) { /* noop */ } })();
-  </script>
 </section>

@@ -120,7 +120,7 @@
   text-decoration: none;
   font-family: var(--body-font);
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1;
   color: var(--text-color);
   background-color: var(--pill-bg);
@@ -315,7 +315,7 @@ textarea:valid:focus {
   align-items: center;
   justify-content: center;
 }
-.circle-button i {
+.circle-button .icon {
   font-size: 58px;
   color: var(--dark);
 }
@@ -582,6 +582,86 @@ textarea:valid:focus {
   display: inline-block;
 }
 
+/* Icon utility (safe defaults) */
+.icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+  line-height: 1;
+  /* no fill/stroke here — let symbols define their own */
+  flex: 0 0 auto;
+}
+
+/* Sizes */
+.icon-14 {
+  font-size: 14px;
+}
+.icon-16 {
+  font-size: 16px;
+}
+.icon-18 {
+  font-size: 18px;
+}
+.icon-20 {
+  font-size: 20px;
+}
+.icon-22 {
+  font-size: 22px;
+}
+.icon-24 {
+  font-size: 24px;
+}
+
+/* Optional stroke-weight helpers (override symbol stroke-width) */
+.icon--thin path,
+.icon--thin circle,
+.icon--thin line,
+.icon--thin polyline,
+.icon--thin polygon {
+  stroke-width: 1.5;
+}
+
+.icon--thick path,
+.icon--thick circle,
+.icon--thick line,
+.icon--thick polyline,
+.icon--thick polygon {
+  stroke-width: 2.5;
+}
+
+/* CTA arrow micro-motion (works with label-link you already use) */
+.label-link:hover .icon,
+.label-link:focus-visible .icon {
+  transform: translateX(2px);
+  transition: transform 160ms ease;
+}
+
+/* Circle button (replaces old Font Awesome <i>) */
+.circle-button .icon {
+  font-size: 58px;
+  color: var(--dark);
+}
+
+/* Let the button control the icon size */
+.menu-toggle .icon {
+  font-size: var(--menu-toggle-size);
+}
+
+/* The fixed close button (top-right circle) already sets 24px on the button.
+   Make the SVG inherit that so the X size matches your old look. */
+.menu-toggle.opened {
+  font-size: 24px;
+}
+.menu-toggle.opened .icon {
+  font-size: inherit;
+}
+
+/* If you use a separate #menuClose button inside the menu, match it too */
+#menuClose .icon {
+  font-size: inherit;
+}
+
 /* 12) Responsive Tweaks (Mobile) ----------------------------------------- */
 @media (max-width: 850px) {
   :root {
@@ -709,7 +789,7 @@ textarea:valid:focus {
     width: 92px;
     height: 92px;
   }
-  .circle-button i {
+  .circle-button .icon {
     font-size: 36px;
   }
   .testimonial-card {

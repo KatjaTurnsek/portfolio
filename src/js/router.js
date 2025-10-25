@@ -3,7 +3,8 @@
 // - Dynamic: "/work/:slug" → "case-:slug", "/work/:slug/:sub" → "case-:slug-:sub"
 // - Shows target immediately; lets init.js animate inner content.
 
-import { BASE } from './paths.js';
+import '../data/projects.js';
+import { BASE, hydrateDemoLinks } from './paths.js';
 
 (function initRouter() {
   if (typeof window !== 'undefined') window.__routerActive = true;
@@ -160,6 +161,7 @@ import { BASE } from './paths.js';
 
   /**
    * Initial render from current URL (path or hash).
+   * Also hydrates per-section demo links (SVG icon render).
    * @param {string} path
    * @param {string|null} hash
    */
@@ -175,6 +177,9 @@ import { BASE } from './paths.js';
     setMetaFromSection(el);
     setActiveLinkById(id);
 
+    // Hydrate demo links only within the visible section (faster)
+    hydrateDemoLinks(el);
+
     const newPath = idToPath(id);
     history.replaceState({ path: newPath }, '', BASE_SLASH + newPath.replace(/^\//, ''));
 
@@ -183,6 +188,7 @@ import { BASE } from './paths.js';
 
   /**
    * Core render: show a path and update history.
+   * Hydrates demo links for the new section.
    * @param {string} path normalized path (e.g. "/work/slug")
    * @param {{ replace?: boolean }} [opts]
    */
@@ -205,6 +211,10 @@ import { BASE } from './paths.js';
 
       setMetaFromSection(el);
       setActiveLinkById(id);
+
+      // Re-hydrate the auto demo links inside the new section
+      hydrateDemoLinks(el);
+
       if (typeof window.revealSection === 'function') window.revealSection(id);
     }
 
@@ -336,6 +346,9 @@ import { BASE } from './paths.js';
     // Re-hydrate after back/forward cache restores (iOS Safari & others)
     window.addEventListener('pageshow', () => {
       ensureSectionSync();
+      // also re-hydrate demo links in the currently visible section
+      const current = document.querySelector('.fullscreen-section.visible');
+      if (current) hydrateDemoLinks(current);
       setTimeout(ensureSectionSync, 60);
     });
 

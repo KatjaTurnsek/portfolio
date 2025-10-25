@@ -24,8 +24,12 @@
   --caption-line-height: 24px;
 
   /* menu sizing */
-  --menu-toggle-size: 50px;
+  --menu-toggle-size: 50px; /* header hamburger glyph size */
   --menu-padding: 170px 80px 50px;
+
+  /* floating close button (top-right circle) */
+  --menu-close-btn: 50px; /* button diameter */
+  --menu-close-icon: 26px; /* “X” glyph size inside */
 
   /* header/footer */
   --header-h: 160px;
@@ -132,18 +136,21 @@ header > * {
   gap: 20px;
 }
 
+/* Toggle track */
 #theme-toggle {
   position: relative;
-  z-index: 1;
+  z-index: 2; /* above header waves */
   width: 55px;
   height: 27px;
-  background-color: var(--switch-circle);
+  background-color: var(--switch-circle, #0d0d0d);
   border: none;
   border-radius: 30px;
   cursor: pointer;
   outline: none;
   transition: background-color 0.3s ease;
 }
+
+/* Toggle knob */
 #theme-toggle::before {
   content: '';
   position: absolute;
@@ -151,16 +158,24 @@ header > * {
   left: 1px;
   width: 22px;
   height: 22px;
-  background-color: var(--switch-bg);
-  border: var(--circle-border);
+  background-color: var(--switch-bg, #f1e9a5);
+  border: var(--circle-border, 2px solid #0d0d0d);
   border-radius: 50%;
+  transform: translateX(0);
   transition:
     transform 0.3s ease,
-    background-color 0.3s ease;
-  transform: translateX(0);
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
+
+/* Dark position (travel ≈ 30px) */
 #theme-toggle.dark-mode::before {
   transform: translateX(30px);
+}
+
+/* Focus ring */
+#theme-toggle:focus-visible {
+  box-shadow: 0 0 0 3px var(--menu-hover-color);
 }
 
 .logo,
@@ -258,11 +273,12 @@ footer {
 
 /* Menu ------------------------------------------------------------------- */
 
+/* Let the button dictate the icon size via variables */
 .menu-toggle {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: var(--menu-toggle-size);
+  font-size: var(--menu-toggle-size); /* this sets the SVG size inside */
   color: var(--menu-color);
   transition:
     transform var(--transition-med),
@@ -271,17 +287,22 @@ footer {
   align-items: center;
   justify-content: center;
 }
+.menu-toggle .icon {
+  font-size: inherit;
+}
+
 .menu-toggle:hover {
   color: var(--menu-hover-color);
   transition: color var(--transition-med);
 }
 
+/* Floating circular close button */
 .menu-toggle.opened {
   position: fixed;
   top: 55px;
   right: 60px;
-  width: 50px;
-  height: 50px;
+  width: var(--menu-close-btn);
+  height: var(--menu-close-btn);
   background-color: transparent;
   border: 2px solid var(--menu-border-color) !important;
   border-radius: 50%;
@@ -292,8 +313,11 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: var(--menu-close-icon); /* this sets the SVG size inside */
   z-index: 1100;
+}
+.menu-toggle.opened .icon {
+  font-size: inherit;
 }
 
 .menu-toggle.opened:hover {
@@ -659,8 +683,11 @@ footer {
   :root {
     --header-h: 140px;
     --page-gutter: 30px;
-    --menu-toggle-size: 40px;
+    --menu-toggle-size: 40px; /* hamburger a tad smaller on mobile */
     --menu-padding: 120px 60px;
+
+    --menu-close-btn: 40px; /* smaller circular close button */
+    --menu-close-icon: 22px;
 
     --waves-h-min: 160px;
     --waves-h-vw: 28vw;
@@ -711,8 +738,6 @@ footer {
   .menu-toggle.opened {
     right: 30px;
     top: 30px;
-    width: 40px;
-    height: 40px;
   }
 
   .fullscreen-menu nav {

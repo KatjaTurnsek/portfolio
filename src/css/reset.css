@@ -16,7 +16,9 @@ html {
   scroll-behavior: smooth;
   overscroll-behavior: none;
   scroll-padding-top: 160px;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
 }
 
 *,
@@ -33,12 +35,21 @@ body {
   flex-direction: column;
   margin: 0;
   padding: 0;
-  font-family: var(--body-font);
   background-color: var(--bg-color);
   color: var(--text-color);
   transition:
     background-color 0.3s,
     color 0.3s;
+}
+
+/* Global typography defaults */
+html,
+body {
+  font-family: var(--body-font);
+  font-weight: 400;
+  font-style: normal;
+  font-synthesis: none;
+  -webkit-text-size-adjust: 100%;
 }
 
 img,

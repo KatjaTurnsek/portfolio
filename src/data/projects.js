@@ -1,5 +1,35 @@
-import { img, pdf } from '../js/paths.js';
+// projects.js
+// -----------------------------------------------------------------------------
 
+import { img, pdf, ICONS, DEMO_LINKS } from '../js/paths.js';
+
+/**
+ * @typedef {Object} DemoLink
+ * @property {string} href      - Link URL (absolute or relative).
+ * @property {string} label     - User-visible label.
+ * @property {boolean} [blank]  - Open in new tab? (default true in renderer)
+ * @property {string}  [icon]   - Sprite href (e.g., "#i-globe"). If omitted, auto-picked.
+ */
+
+/**
+ * @typedef {Object} Project
+ * @property {string} group       - Logical group key (e.g., "petart").
+ * @property {string} caseId      - Unique id per project/case (e.g., "agilitybandits").
+ * @property {string} title
+ * @property {string} stack
+ * @property {string} desc
+ * @property {string} imgSrc
+ * @property {string} imgAlt
+ * @property {"website"|"design"|"logotype"} category
+ * @property {string} routeUrl
+ * @property {string} caseUrl
+ * @property {string} [liveUrl]
+ * @property {string} [repoUrl]
+ * @property {DemoLink[]} demoLinks
+ * @property {number} order
+ */
+
+/** @type {Project[]} */
 export const projects = [
   // WEBSITES
   {
@@ -14,7 +44,7 @@ export const projects = [
     routeUrl: 'work/petart',
     caseUrl: '#case-petart',
     liveUrl: 'https://pet-art.net',
-    demoLinks: [{ href: 'https://pet-art.net', label: 'Visit Live Site' }],
+    demoLinks: [{ href: 'https://pet-art.net', label: 'Visit Live Site', icon: ICONS.globe }],
     order: 10,
   },
   {
@@ -29,7 +59,9 @@ export const projects = [
     routeUrl: 'work/portfolio',
     caseUrl: '#case-portfolio',
     liveUrl: 'https://github.com/KatjaTurnsek/portfolio',
-    demoLinks: [{ href: 'https://github.com/KatjaTurnsek/portfolio', label: 'View on GitHub' }],
+    demoLinks: [
+      { href: 'https://github.com/KatjaTurnsek/portfolio', label: 'View on GitHub' }, // auto-picks GitHub icon
+    ],
     order: 20,
   },
   {
@@ -44,7 +76,13 @@ export const projects = [
     routeUrl: 'work/agilitybandits',
     caseUrl: '#case-agilitybandits',
     liveUrl: 'https://agilitybandits-centre.netlify.app/',
-    demoLinks: [{ href: 'https://agilitybandits-centre.netlify.app/', label: 'Visit Live Site' }],
+    demoLinks: [
+      {
+        href: 'https://agilitybandits-centre.netlify.app/',
+        label: 'Visit Live Site',
+        icon: ICONS.globe,
+      },
+    ],
     order: 30,
   },
   {
@@ -64,8 +102,9 @@ export const projects = [
       {
         href: 'https://katjaturnsek.github.io/Semester-project-1/index.html',
         label: 'Visit Live Site',
+        icon: ICONS.globe,
       },
-      { href: 'https://github.com/KatjaTurnsek/Semester-project-1', label: 'GitHub' },
+      { href: 'https://github.com/KatjaTurnsek/Semester-project-1', label: 'GitHub' }, // auto
     ],
     order: 40,
   },
@@ -83,8 +122,8 @@ export const projects = [
     routeUrl: 'work/petart/design',
     caseUrl: '#case-petart-design',
     demoLinks: [
-      { href: 'http://bit.ly/4nB11O4', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/4kmoXlq', label: 'Open In Figma (Mobile)' },
+      { href: 'http://bit.ly/4nB11O4', label: 'Open In Figma (Desktop)' }, // auto-picks Figma via domain
+      { href: 'https://bit.ly/4kmoXlq', label: 'Open In Figma (Mobile)' }, // auto-picks Figma
     ],
     order: 110,
   },
@@ -100,8 +139,8 @@ export const projects = [
     routeUrl: 'work/portfolio/design',
     caseUrl: '#case-portfolio-design',
     demoLinks: [
-      { href: 'https://bit.ly/459Qlxv', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/45qWxCv', label: 'Open In Figma (Mobile)' },
+      { href: 'https://bit.ly/459Qlxv', label: 'Open In Figma (Desktop)' }, // auto
+      { href: 'https://bit.ly/45qWxCv', label: 'Open In Figma (Mobile)' }, // auto
     ],
     order: 120,
   },
@@ -117,8 +156,8 @@ export const projects = [
     routeUrl: 'work/agilitybandits/design',
     caseUrl: '#case-agilitybandits-design',
     demoLinks: [
-      { href: 'https://bit.ly/3UWMUp0', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/41FuoFo', label: 'Open In Figma (Mobile)' },
+      { href: 'https://bit.ly/3UWMUp0', label: 'Open In Figma (Desktop)' }, // auto
+      { href: 'https://bit.ly/41FuoFo', label: 'Open In Figma (Mobile)' }, // auto
     ],
     order: 130,
   },
@@ -134,8 +173,8 @@ export const projects = [
     routeUrl: 'work/semester-project-1/design',
     caseUrl: '#case-semester-project-1-design',
     demoLinks: [
-      { href: 'https://bit.ly/3KtBYNM', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/3Kxpsg9', label: 'Open In Figma (Mobile)' },
+      { href: 'https://bit.ly/3KtBYNM', label: 'Open In Figma (Desktop)' }, // auto
+      { href: 'https://bit.ly/3Kxpsg9', label: 'Open In Figma (Mobile)' }, // auto
     ],
     order: 140,
   },
@@ -152,7 +191,9 @@ export const projects = [
     category: 'logotype',
     routeUrl: 'work/petart/logotype',
     caseUrl: '#case-petart-logotype',
-    demoLinks: [{ href: pdf('petart-logosuite.pdf'), label: 'Get Design Files (PDF)' }],
+    demoLinks: [
+      { href: pdf('petart-logosuite.pdf'), label: 'Get Design Files (PDF)', icon: ICONS.external },
+    ],
     order: 210,
   },
   {
@@ -166,7 +207,13 @@ export const projects = [
     category: 'logotype',
     routeUrl: 'work/portfolio/logotype',
     caseUrl: '#case-portfolio-logotype',
-    demoLinks: [{ href: pdf('portfolio-logosuite.pdf'), label: 'Get Design Files (PDF)' }],
+    demoLinks: [
+      {
+        href: pdf('portfolio-logosuite.pdf'),
+        label: 'Get Design Files (PDF)',
+        icon: ICONS.external,
+      },
+    ],
     order: 220,
   },
   {
@@ -180,7 +227,13 @@ export const projects = [
     category: 'logotype',
     routeUrl: 'work/agilitybandits/logotype',
     caseUrl: '#case-agilitybandits-logotype',
-    demoLinks: [{ href: pdf('agilitybandits-logosuite.pdf'), label: 'Get Design Files (PDF)' }],
+    demoLinks: [
+      {
+        href: pdf('agilitybandits-logosuite.pdf'),
+        label: 'Get Design Files (PDF)',
+        icon: ICONS.external,
+      },
+    ],
     order: 230,
   },
   {
@@ -194,13 +247,39 @@ export const projects = [
     category: 'logotype',
     routeUrl: 'work/semester-project-1/logotype',
     caseUrl: '#case-semester-project-1-logotype',
-    demoLinks: [{ href: pdf('sciencemuseum-logosuite.pdf'), label: 'Get Design Files (PDF)' }],
+    demoLinks: [
+      {
+        href: pdf('sciencemuseum-logosuite.pdf'),
+        label: 'Get Design Files (PDF)',
+        icon: ICONS.external,
+      },
+    ],
     order: 240,
   },
 ];
 
+/**
+ * Featured “website” projects, ascending by order.
+ * @type {Project[]}
+ */
 export const featuredProjects = projects
   .filter((p) => p.category === 'website')
   .sort((a, b) => a.order - b.order);
 
+/**
+ * All projects, ascending by order.
+ * @type {Project[]}
+ */
 export const allProjectsSorted = [...projects].sort((a, b) => a.order - b.order);
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Register demo links for the reusable component                             */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+// Replace the whole loop with this:
+for (const p of projects) {
+  if (Array.isArray(p.demoLinks) && p.demoLinks.length) {
+    // Use a single, unambiguous key only.
+    DEMO_LINKS.set(p.caseId, p.demoLinks);
+  }
+}

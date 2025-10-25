@@ -7,12 +7,19 @@
 
 /* LIGHT THEME */
 body.light-theme {
+  /* Switcher contrast (track dark, knob yellow) */
+  --switch-circle: var(--dark);
+  --switch-bg: var(--yellow-light);
+  --circle-border: 2px solid var(--dark);
+
+  --menu-hover-color: var(--yellow);
+
   color-scheme: light;
 }
 
 /* DARK THEME */
 body.dark-theme {
-  --bg-color:   var(--dark);
+  --bg-color: var(--dark);
   --text-color: var(--grey);
 
   /* Headings track text color by default via legacy vars */
@@ -21,24 +28,23 @@ body.dark-theme {
   --h3-color: var(--text-color);
 
   /* Footer inversion */
-  --footer-bg:         var(--grey);
+  --footer-bg: var(--grey);
   --footer-text-color: var(--dark);
 
   /* Menus */
-  --menu-color:        var(--dark);
+  --menu-color: var(--dark);
   --menu-border-color: var(--dark);
 
   /* Graphics (waves/blobs) for dark */
-  --blob-color:   var(--teal);
+  --blob-color: var(--teal);
   --wave-color-1: rgba(241, 233, 165, 0.6);
   --wave-color-2: rgba(241, 233, 165, 0.3);
 
   /* Stronger contrast on dark backgrounds */
-  --pill-border: rgba(255,255,255,0.35);
-  --pill-bg: rgba(255,255,255,0.08);
-
-  --pill-active-bg: rgba(123,184,171,0.20);
-  --pill-active-border: rgba(123,184,171,0.45);
+  --pill-border: rgba(255, 255, 255, 0.35);
+  --pill-bg: rgba(255, 255, 255, 0.08);
+  --pill-active-bg: rgba(123, 184, 171, 0.2);
+  --pill-active-border: rgba(123, 184, 171, 0.45);
 
   color-scheme: dark;
 }
