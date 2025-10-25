@@ -136,6 +136,24 @@ header > * {
   gap: 20px;
 }
 
+.header-left a {
+  text-decoration: none;
+  border: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.header-left a img.site-logo {
+  display: block;
+  border: 0;
+  outline: none;
+}
+
+.header-left a:focus-visible {
+  outline: 2px solid var(--menu-hover-color);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
 /* Toggle track */
 #theme-toggle {
   position: relative;
@@ -881,5 +899,11 @@ section.fullscreen-section > h1 {
   .case-study-text .bullet-list-right {
     margin-left: 0;
     padding-left: 0;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-align: center;
   }
 }
