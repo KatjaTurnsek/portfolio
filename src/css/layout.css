@@ -204,6 +204,12 @@ main > .fullscreen-section:first-child {
   padding-top: var(--first-section-pad);
 }
 
+main > .fullscreen-section:first-child h1 {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* No-JS fallback: show Home so the page isn’t blank before JS initializes */
 .no-js #home {
   display: block;
@@ -708,10 +714,10 @@ section.fullscreen-section > h1 {
   :root {
     --header-h: 140px;
     --page-gutter: 30px;
-    --menu-toggle-size: 40px; /* hamburger a tad smaller on mobile */
+    --menu-toggle-size: 40px;
     --menu-padding: 120px 60px;
 
-    --menu-close-btn: 40px; /* smaller circular close button */
+    --menu-close-btn: 40px;
     --menu-close-icon: 22px;
 
     --waves-h-min: 160px;
@@ -719,31 +725,8 @@ section.fullscreen-section > h1 {
     --waves-h-max: 380px;
     --waves-h: clamp(var(--waves-h-min), var(--waves-h-vw), var(--waves-h-max));
 
-    /* Tighter vertical rhythm on mobile */
-    --row-gap: 22px; /* was 40px */
-    --cs-gutter: 16px; /* was 40px */
-  }
-
-  /* Mobile typography (bigger, but capped) */
-  h1 {
-    font-size: clamp(44px, 11vw, 72px);
-    line-height: 1.1;
-    text-align: center;
-  }
-  h2 {
-    font-size: clamp(34px, 8vw, 50px);
-    line-height: 1.2;
-    text-align: center;
-  }
-  h3 {
-    font-size: clamp(26px, 6.5vw, 30px);
-    line-height: 1.25;
-    text-align: center;
-  }
-  h4 {
-    font-size: clamp(20px, 5.5vw, 30px);
-    line-height: 1.35;
-    text-align: center;
+    --row-gap: 22px;
+    --cs-gutter: 16px;
   }
 
   header {
@@ -790,24 +773,24 @@ section.fullscreen-section > h1 {
 
   /* Use more of the screen width, less floatiness */
   .rows {
-    width: 92%; /* was 80% */
+    width: 92%;
     gap: var(--row-gap);
-    padding-bottom: 48px; /* was 100px */
+    padding-bottom: 48px;
   }
 
   /* First section under header wave: slightly lower cap */
   main > .fullscreen-section:first-child {
-    padding-top: clamp(0px, calc(var(--waves-h) - var(--header-h)), 24vh); /* was 40vh */
+    padding-top: clamp(0px, calc(var(--waves-h) - var(--header-h)), 24vh);
   }
 
   /* Headline at top of a section: less top padding on mobile */
   .fullscreen-section h1:first-child {
     padding-top: 1rem;
-  } /* was 2rem */
+  }
 
   .row {
     padding: 0.25rem;
-  } /* was 0.5rem */
+  }
   .row:has(.case-study-columns) {
     padding-left: 0;
     padding-right: 0;
@@ -829,13 +812,13 @@ section.fullscreen-section > h1 {
 
   /* Work grid: slightly tighter gaps on mobile */
   .work-columns {
-    gap: 16px; /* override var(--row-gap) */
+    gap: 16px;
   }
 
   .section-label-left,
   .section-label-right {
     text-align: center;
-    margin: 1rem 0 0.5rem; /* was 2rem 0 1rem */
+    margin: 1rem 0 0.5rem;
   }
 
   .case-study-wrapper,
@@ -898,10 +881,5 @@ section.fullscreen-section > h1 {
   .case-study-text .bullet-list-right {
     margin-left: 0;
     padding-left: 0;
-  }
-  :where(article, aside, nav, section) > h1,
-  section.fullscreen-section > h1 {
-    font-size: clamp(44px, 11vw, 72px) !important;
-    line-height: 1.1 !important;
   }
 }
