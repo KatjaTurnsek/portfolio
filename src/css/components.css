@@ -24,6 +24,46 @@
   width: 100%;
 }
 
+/* Lock heading sizes inside sectioning elements (Chrome deprecation fix) */
+h1 {
+  font-size: var(--h1-font-size);
+  line-height: var(--h1-line-height);
+}
+h2 {
+  font-size: var(--h2-font-size);
+  line-height: var(--h2-line-height);
+}
+h3 {
+  font-size: var(--h3-font-size);
+  line-height: var(--h3-line-height);
+}
+h4 {
+  font-size: var(--h4-font-size);
+  line-height: var(--h4-line-height);
+}
+
+:where(article, aside, nav, section) h1,
+:where(article, aside, nav, section) :where(article, aside, nav, section) h1,
+:where(article, aside, nav, section)
+  :where(article, aside, nav, section)
+  :where(article, aside, nav, section)
+  h1 {
+  font-size: var(--h1-font-size);
+  line-height: var(--h1-line-height);
+}
+:where(article, aside, nav, section) h2 {
+  font-size: var(--h2-font-size);
+  line-height: var(--h2-line-height);
+}
+:where(article, aside, nav, section) h3 {
+  font-size: var(--h3-font-size);
+  line-height: var(--h3-line-height);
+}
+:where(article, aside, nav, section) h4 {
+  font-size: var(--h4-font-size);
+  line-height: var(--h4-line-height);
+}
+
 /* 1) Links & CTAs */
 .label-link,
 .submit-button {
@@ -589,7 +629,6 @@ textarea:valid:focus {
   display: inline-block;
   vertical-align: -0.125em;
   line-height: 1;
-  /* no fill/stroke here — let symbols define their own */
   flex: 0 0 auto;
 }
 
@@ -621,7 +660,6 @@ textarea:valid:focus {
 .icon--thin polygon {
   stroke-width: 1.5;
 }
-
 .icon--thick path,
 .icon--thick circle,
 .icon--thick line,
@@ -630,34 +668,29 @@ textarea:valid:focus {
   stroke-width: 2.5;
 }
 
-/* CTA arrow micro-motion (works with label-link you already use) */
+/* CTA arrow micro-motion */
 .label-link:hover .icon,
 .label-link:focus-visible .icon {
   transform: translateX(2px);
   transition: transform 160ms ease;
 }
 
-/* Circle button (replaces old Font Awesome <i>) */
+/* Circle button icon size */
 .circle-button .icon {
   font-size: 58px;
   color: var(--dark);
 }
 
-/* Let the button control the icon size */
+/* Menu toggle icon size inherit */
 .menu-toggle .icon {
   font-size: var(--menu-toggle-size);
 }
-
-/* The fixed close button (top-right circle) already sets 24px on the button.
-   Make the SVG inherit that so the X size matches your old look. */
 .menu-toggle.opened {
   font-size: 24px;
 }
 .menu-toggle.opened .icon {
   font-size: inherit;
 }
-
-/* If you use a separate #menuClose button inside the menu, match it too */
 #menuClose .icon {
   font-size: inherit;
 }
@@ -675,17 +708,16 @@ textarea:valid:focus {
     margin-top: 20px;
   }
   .tech-stack {
-    font-size: 20px; /* was 22px */
-    line-height: 30px; /* was 32px */
+    font-size: 20px;
+    line-height: 30px;
     margin-bottom: 15px;
     white-space: normal;
   }
 
-  /* CTAs / Links */
   .label-link,
   .submit-button {
-    --label-size: 22px; /* was 30px */
-    --label-line: 30px; /* was 40px */
+    --label-size: 22px;
+    --label-line: 30px;
     --icon-scale: 0.9em;
     gap: 8px;
     justify-content: center;
@@ -698,7 +730,6 @@ textarea:valid:focus {
     gap: 0.2rem;
   }
 
-  /* Project switcher: comfy taps */
   .project-switcher {
     justify-content: center;
     gap: 0.4rem;
@@ -709,7 +740,6 @@ textarea:valid:focus {
     font-size: 13px;
   }
 
-  /* Related links */
   .related-links {
     justify-content: center;
     gap: 0.5rem 0.75rem;
@@ -720,7 +750,6 @@ textarea:valid:focus {
     --label-line: 20px;
   }
 
-  /* Lists */
   .bullet-list,
   .bullet-list-right {
     list-style: none;
@@ -729,14 +758,12 @@ textarea:valid:focus {
     padding-inline: 16px;
     margin-inline-start: 18px;
   }
-
   .bullet-list li,
   .bullet-list-right li {
     position: relative;
     padding-inline-start: 1.1rem;
     margin-bottom: 8px;
   }
-
   .bullet-list li::before,
   .bullet-list-right li::before {
     content: '';
@@ -749,7 +776,6 @@ textarea:valid:focus {
     background: currentColor;
   }
 
-  /* Forms */
   .contact-form-wrapper {
     justify-content: center;
     padding: 2rem 1rem;
@@ -766,16 +792,15 @@ textarea:valid:focus {
     height: 46px;
   }
   .info-text {
-    font-size: 26px; /* was 30px */
-    line-height: 36px; /* was 40px */
-    padding-top: 40px; /* was 60px */
+    font-size: 26px;
+    line-height: 36px;
+    padding-top: 40px;
     text-align: center;
   }
 
-  /* Testimonials */
   .testimonial-section {
     padding-bottom: 60px;
-  } /* was 100px */
+  }
   .testimonial {
     height: 80px;
     padding-right: 1rem;
@@ -799,13 +824,11 @@ textarea:valid:focus {
     margin: 0 0 20px;
   }
 
-  /* Animated bars */
   .bar-label {
     font-size: 18px;
     line-height: 28px;
   }
 
-  /* Hire */
   .hire-section {
     position: static;
     display: flex;
@@ -820,7 +843,6 @@ textarea:valid:focus {
     font-size: 22px;
   }
 
-  /* Blob */
   #blob-svg #blobs-g {
     transform-box: view-box;
     transform-origin: 50% 50%;

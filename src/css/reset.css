@@ -7,7 +7,7 @@
    - Make media elements responsive
    - Inherit typography for form controls
    - Prevent long-word layout breaks
-   - Applied theme colors via CSS variables
+   - Apply theme colors via CSS variables
    ========================================================================== */
 
 html {
@@ -16,9 +16,14 @@ html {
   scroll-behavior: smooth;
   overscroll-behavior: none;
   scroll-padding-top: 160px;
-  -webkit-font-smoothing: auto;
-  -moz-osx-font-smoothing: auto;
+
+  /* Font rendering: keep text crisp and avoid fake bolding look */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+
+  /* Mobile text sizing */
+  -webkit-text-size-adjust: 100%;
 }
 
 *,
@@ -48,10 +53,25 @@ body {
   font-family: var(--body-font);
   font-weight: 400;
   font-style: normal;
-  font-synthesis: none;
-  -webkit-text-size-adjust: 100%;
+  font-synthesis: none; /* don't synthesize faux bold/italic */
 }
 
+/* Basic margin reset for common text elements */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 1em 0;
+  overflow-wrap: break-word;
+  overflow: visible;
+  will-change: auto;
+  backface-visibility: hidden;
+}
+
+/* Media elements: responsive by default */
 img,
 picture,
 video,
@@ -61,27 +81,28 @@ svg {
   max-width: 100%;
 }
 
+/* Let inline SVGs inherit currentColor by default */
 svg {
   fill: currentColor;
   stroke: currentColor;
 }
 
+/* Form controls inherit typography */
 input,
 button,
 textarea,
 select {
   font: inherit;
+  color: inherit;
+  background: none;
 }
 
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  overflow-wrap: break-word;
-  overflow: visible;
-  will-change: auto;
-  backface-visibility: hidden;
+/* Respect reduced motion preferences for any future animations/transitions */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
