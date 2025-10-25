@@ -1,4 +1,12 @@
-<div class='fullscreen-menu' id='menu' role='dialog' aria-modal='true'>
+<div
+  class='fullscreen-menu'
+  id='menu'
+  role='dialog'
+  aria-modal='true'
+  aria-labelledby='menu-title'
+  tabindex='-1'
+  inert
+>
   <div
     class='menu-waves'
     data-light-src='{{baseHref}}assets/images/waves-light.webp'
@@ -18,7 +26,9 @@
     <svg class='icon' aria-hidden='true'><use href='#i-close' /></svg>
   </button>
 
-  <nav>
+  <h2 id='menu-title' class='visually-hidden'>Main menu</h2>
+
+  <nav aria-label='Primary'>
     <a href='{{base}}#work'>Work</a>
     <a href='{{base}}#about'>About</a>
     <a href='{{base}}#contact'>Contact</a>
