@@ -513,17 +513,27 @@ footer {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.8);
-  display: flex; /* default flex; visibility handled by media queries */
+  display: flex;
   place-items: center;
   flex-direction: column;
   justify-content: center;
   opacity: 0;
   transition: opacity var(--transition-fast);
-  padding: 2rem;
+  padding: 1.25rem;
 }
+
 .work-overlay h4 {
+  margin: 0;
   text-align: center;
+  font-family: var(--h1-font);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: #fff;
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.35;
 }
+
 .mobile-title {
   display: none;
   font-family: var(--h1-font);
@@ -532,6 +542,7 @@ footer {
   text-align: center;
   margin: 1em 0 0.5em;
 }
+
 .work-caption {
   font-size: var(--caption-font-size);
   line-height: var(--caption-line-height);
@@ -681,6 +692,13 @@ footer {
 :where(h1, h2, h3):focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 0.2rem;
+}
+
+/* Make h1 size explicit inside sectioning content */
+:where(article, aside, nav, section) h1 {
+  font-size: var(--h1-font-size);
+  line-height: var(--h1-line-height);
+  font-weight: var(--h1-font-weight);
 }
 
 /* Responsive (≤ 850px) --------------------------------------------------- */
@@ -879,5 +897,9 @@ footer {
   .case-study-text .bullet-list-right {
     margin-left: 0;
     padding-left: 0;
+  }
+  :where(article, aside, nav, section) h1 {
+    font-size: clamp(44px, 11vw, 72px);
+    line-height: 1.1;
   }
 }
