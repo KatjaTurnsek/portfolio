@@ -3,7 +3,6 @@
    ========================================================================== */
 
 /* Root / Globals ---------------------------------------------------------- */
-
 :root {
   /* layout */
   --container-w: 1200px;
@@ -49,7 +48,6 @@
 }
 
 /* Utilities --------------------------------------------------------------- */
-
 .container {
   width: 80%;
   max-width: var(--container-w);
@@ -77,7 +75,6 @@
 }
 
 /* Header / Footer --------------------------------------------------------- */
-
 header {
   position: relative;
   width: 100%;
@@ -102,7 +99,6 @@ header::before {
   height: var(--waves-h);
   pointer-events: none;
   z-index: 0;
-
   background-repeat: no-repeat, no-repeat;
   background-position:
     top center,
@@ -110,13 +106,9 @@ header::before {
   background-size:
     100% auto,
     cover;
-
   background-image: url('images/vector-waves-light.svg'), url('images/waves-light.webp');
-
   transform: translateZ(0);
 }
-
-/* Explicit dark theme only (default stays LIGHT) */
 .dark-theme header::before,
 [data-theme='dark'] header::before {
   background-image: url('images/vector-waves-dark.svg'), url('images/waves-dark.webp');
@@ -129,26 +121,34 @@ header > * {
 }
 
 /* Header controls (logo + theme switcher + hamburger) -------------------- */
-
 .header-controls {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.header-left a {
-  text-decoration: none;
-  border: 0;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
+/* Logos (header + menu) */
+.logo,
+.site-logo {
+  height: 55px;
 }
-.header-left a img.site-logo {
+.site-logo {
   display: block;
+  position: relative;
+  z-index: 1;
   border: 0;
-  outline: none;
+  outline: 0;
+  transition: filter var(--transition-fast);
 }
 
-.header-left a:focus-visible {
+/* Any anchor that wraps a .site-logo (works in header + menu) */
+a:has(.site-logo) {
+  text-decoration: none;
+  border: 0;
+  outline: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+a:has(.site-logo):focus-visible {
   outline: 2px solid var(--menu-hover-color);
   outline-offset: 4px;
   border-radius: 8px;
@@ -167,7 +167,6 @@ header > * {
   outline: none;
   transition: background-color 0.3s ease;
 }
-
 /* Toggle knob */
 #theme-toggle::before {
   content: '';
@@ -185,31 +184,16 @@ header > * {
     background-color 0.3s ease,
     border-color 0.3s ease;
 }
-
 /* Dark position (travel ≈ 30px) */
 #theme-toggle.dark-mode::before {
   transform: translateX(30px);
 }
-
 /* Focus ring */
 #theme-toggle:focus-visible {
   box-shadow: 0 0 0 3px var(--menu-hover-color);
 }
 
-.logo,
-.site-logo,
-.fullscreen-menu .menu-logo {
-  height: 55px;
-}
-.site-logo {
-  z-index: 1;
-  position: relative;
-  display: block;
-  transition: filter var(--transition-fast);
-}
-
 /* Main / Footer ----------------------------------------------------------- */
-
 main {
   flex: 1;
   padding-top: 30px;
@@ -217,18 +201,10 @@ main {
   margin-inline: auto;
   min-height: 100vh;
 }
-
 main > .fullscreen-section:first-child {
   padding-top: var(--first-section-pad);
 }
 
-main > .fullscreen-section:first-child h1 {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* No-JS fallback: show Home so the page isn’t blank before JS initializes */
 .no-js #home {
   display: block;
   opacity: 1;
@@ -266,8 +242,6 @@ footer {
 }
 
 /* Fullscreen Section ------------------------------------------------------ */
-/* Router toggles only the .visible class; no inline visibility styles needed. */
-
 .fullscreen-section {
   display: none;
   opacity: 0;
@@ -302,13 +276,11 @@ footer {
 }
 
 /* Menu ------------------------------------------------------------------- */
-
-/* Let the button dictate the icon size via variables */
 .menu-toggle {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: var(--menu-toggle-size); /* this sets the SVG size inside */
+  font-size: var(--menu-toggle-size); /* sets SVG size inside */
   color: var(--menu-color);
   transition:
     transform var(--transition-med),
@@ -320,10 +292,8 @@ footer {
 .menu-toggle .icon {
   font-size: inherit;
 }
-
 .menu-toggle:hover {
   color: var(--menu-hover-color);
-  transition: color var(--transition-med);
 }
 
 /* Floating circular close button */
@@ -343,13 +313,12 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--menu-close-icon); /* this sets the SVG size inside */
+  font-size: var(--menu-close-icon); /* sets SVG size inside */
   z-index: 1100;
 }
 .menu-toggle.opened .icon {
   font-size: inherit;
 }
-
 .menu-toggle.opened:hover {
   color: var(--menu-hover-color);
   border-color: var(--menu-hover-color);
@@ -372,8 +341,6 @@ footer {
   pointer-events: none;
   transition: opacity var(--transition-med);
 }
-
-/* Menu wave (same behavior as header, no bleed) */
 .fullscreen-menu::before {
   content: '';
   position: absolute;
@@ -383,7 +350,6 @@ footer {
   height: var(--waves-h);
   pointer-events: none;
   z-index: 0;
-
   background-repeat: no-repeat, no-repeat;
   background-position:
     top center,
@@ -391,19 +357,16 @@ footer {
   background-size:
     100% auto,
     cover;
-
   background-image: url('images/vector-waves-light.svg'), url('images/waves-light.webp');
 }
 .dark-theme .fullscreen-menu::before,
 [data-theme='dark'] .fullscreen-menu::before {
   background-image: url('images/vector-waves-dark.svg'), url('images/waves-dark.webp');
 }
-
 .fullscreen-menu > * {
   position: relative;
   z-index: 1;
 }
-
 .fullscreen-menu.open {
   opacity: 1;
   pointer-events: all;
@@ -437,7 +400,6 @@ footer {
 }
 
 /* Rows / Generic Content Containers -------------------------------------- */
-
 .rows {
   display: flex;
   flex-direction: column;
@@ -449,7 +411,6 @@ footer {
   padding-bottom: 100px;
   position: relative;
 }
-
 .row {
   width: 100%;
   padding: 0;
@@ -469,7 +430,6 @@ footer {
 }
 
 /* Work Grid (4 → 2 → 1) --------------------------------------------------- */
-
 .work-columns {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -545,7 +505,6 @@ footer {
   transition: opacity var(--transition-fast);
   padding: 1.25rem;
 }
-
 .work-overlay h4 {
   margin: 0;
   text-align: center;
@@ -557,7 +516,6 @@ footer {
   font-size: clamp(16px, 1.4vw, 20px);
   line-height: 1.35;
 }
-
 .mobile-title {
   display: none;
   font-family: var(--h1-font);
@@ -566,7 +524,6 @@ footer {
   text-align: center;
   margin: 1em 0 0.5em;
 }
-
 .work-caption {
   font-size: var(--caption-font-size);
   line-height: var(--caption-line-height);
@@ -574,7 +531,7 @@ footer {
   text-align: center;
 }
 
-/* Desktop: hover overlay works; show .work-title, hide .mobile-title */
+/* Desktop hover */
 @media (hover: hover) and (pointer: fine) {
   .work-item:hover .work-overlay {
     opacity: 1;
@@ -586,7 +543,6 @@ footer {
     display: none;
   }
 }
-
 /* Touch/mobile: no overlay; show mobile title only */
 @media (hover: none), (pointer: coarse) {
   .work-overlay {
@@ -602,7 +558,6 @@ footer {
 }
 
 /* Section labels ---------------------------------------------------------- */
-
 .section-label-left,
 .section-label-right {
   width: 100%;
@@ -623,7 +578,6 @@ footer {
 }
 
 /* Case Study Content ------------------------------------------------------ */
-
 .case-study-columns {
   display: flex;
   flex-wrap: wrap;
@@ -727,7 +681,6 @@ section.fullscreen-section > h1 {
 }
 
 /* Responsive (≤ 850px) --------------------------------------------------- */
-
 @media only screen and (max-width: 850px) {
   :root {
     --header-h: 140px;
@@ -756,8 +709,8 @@ section.fullscreen-section > h1 {
     height: 27px;
   }
 
-  .site-logo,
-  .fullscreen-menu .menu-logo {
+  /* Smaller logos on mobile (header + menu) */
+  .site-logo {
     height: 45px;
   }
 
@@ -900,6 +853,8 @@ section.fullscreen-section > h1 {
     margin-left: 0;
     padding-left: 0;
   }
+
+  /* Center ALL headings on mobile */
   h1,
   h2,
   h3,
