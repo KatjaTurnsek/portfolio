@@ -4,6 +4,23 @@
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <meta name='color-scheme' content='light dark' />
+    <meta
+      http-equiv='Content-Security-Policy'
+      content="
+        default-src 'self';
+        base-uri 'self';
+        object-src 'none';
+        frame-ancestors 'none';
+        upgrade-insecure-requests;
+        block-all-mixed-content;
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: blob:;
+        connect-src 'self';
+        worker-src 'self' blob:;
+      "
+    />
     
     <title>Katja Turnsek - Front-End Developer &amp; Designer | Portfolio Website</title>
     <meta name='description' content='Creative front-end developer with a background in art and design. Explore a fluid, modern portfolio featuring interactive animations, custom code, and thoughtful UX — built with HTML, CSS, JavaScript, GSAP, and Vite.' />
@@ -33,28 +50,14 @@
       />
     </noscript>
     
+    <link href='/portfolio/assets/images/waves-light.webp' media='(prefers-color-scheme: light)' />
+    <link href='/portfolio/assets/images/waves-dark.webp' media='(prefers-color-scheme: dark)' />
     <link
-      rel='preload'
-      as='image'
-      href='/portfolio/assets/images/waves-light.webp'
-      media='(prefers-color-scheme: light)'
-    />
-    <link
-      rel='preload'
-      as='image'
-      href='/portfolio/assets/images/waves-dark.webp'
-      media='(prefers-color-scheme: dark)'
-    />
-    <link
-      rel='preload'
-      as='image'
       href='/portfolio/assets/images/vector-waves-light.svg'
       type='image/svg+xml'
       media='(prefers-color-scheme: light)'
     />
     <link
-      rel='preload'
-      as='image'
       href='/portfolio/assets/images/vector-waves-dark.svg'
       type='image/svg+xml'
       media='(prefers-color-scheme: dark)'
@@ -64,8 +67,8 @@
     <link rel='icon' href='/portfolio/assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
     
     <!-- Canonical points to the site base; router will update at runtime -->
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-CcdbcFpE.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-BEXNtLXF.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-82Qr1Bc5.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DN6mkWHh.css">
   </head>
 
   <body class="light-theme">
@@ -2402,13 +2405,14 @@
     <div class='row'>
       <figure class='testimonial-card'>
         <blockquote>
-          “Katja is dependable, thoughtful, and highly skilled across graphic and web design. She
-          consistently delivers well-organized work and brings a calm, positive presence to every
-          collaboration. A pleasure to work with.”
+          “We are extremely happy with the logo and CD cover design created by Katja Turnsek. Her
+          work perfectly captured the spirit and identity of Heart Asylum, combining creativity and
+          professionalism throughout the process. We highly recommend her for any visual design
+          projects.”
         </blockquote>
         <figcaption>
-          <span class='author'>Maja K.</span>
-          <span class='role'>Former Creative Lead</span>
+          <span class='author'>Heart Asylum</span>
+          <span class='role'>Artists</span>
         </figcaption>
       </figure>
     </div>
