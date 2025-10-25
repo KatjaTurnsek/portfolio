@@ -82,8 +82,8 @@
     <link rel='icon' href='/portfolio/assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
     
     <!-- Canonical points to the site base; router will update at runtime -->
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-82Qr1Bc5.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DN6mkWHh.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-J7Bv2XnE.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-w4KgplmG.css">
   </head>
 
   <body class="light-theme">
@@ -293,13 +293,30 @@
       />
     </a>
   </div>
+
   <div class='header-controls'>
     <button id='theme-toggle' class='theme-switcher' aria-label='Toggle Theme'></button>
-    <button class='menu-toggle' id='menuToggle' aria-label='Toggle menu'>
+
+    <button
+      id='menuToggle'
+      class='menu-toggle'
+      aria-haspopup='dialog'
+      aria-controls='menu'
+      aria-expanded='false'
+    >
+      <span class='visually-hidden'>Open menu</span>
       <svg class='icon' aria-hidden='true'><use href='#i-menu' /></svg>
     </button>
   </div>
-</header> <div class='fullscreen-menu' id='menu' role='dialog' aria-modal='true'>
+</header> <div
+  class='fullscreen-menu'
+  id='menu'
+  role='dialog'
+  aria-modal='true'
+  aria-labelledby='menu-title'
+  tabindex='-1'
+  inert
+>
   <div
     class='menu-waves'
     data-light-src='/portfolio/assets/images/waves-light.webp'
@@ -319,7 +336,9 @@
     <svg class='icon' aria-hidden='true'><use href='#i-close' /></svg>
   </button>
 
-  <nav>
+  <h2 id='menu-title' class='visually-hidden'>Main menu</h2>
+
+  <nav aria-label='Primary'>
     <a href='/portfolio/#work'>Work</a>
     <a href='/portfolio/#about'>About</a>
     <a href='/portfolio/#contact'>Contact</a>
