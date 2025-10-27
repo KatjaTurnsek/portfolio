@@ -520,9 +520,9 @@ footer {
   display: none;
   font-family: var(--h1-font);
   font-weight: var(--h1-font-weight);
-  font-size: 25px;
   text-align: center;
   margin: 1em 0 0.5em;
+  text-transform: none;
 }
 .work-caption {
   font-size: var(--caption-font-size);
@@ -781,7 +781,6 @@ section.fullscreen-section > h1 {
     height: auto;
   }
 
-  /* Work grid: slightly tighter gaps on mobile */
   .work-columns {
     gap: 16px;
   }
@@ -853,7 +852,10 @@ section.fullscreen-section > h1 {
     margin-left: 0;
     padding-left: 0;
   }
-
+  .work-item .mobile-title {
+    font-size: 25px !important;
+    line-height: 1.35;
+  }
   /* Center ALL headings on mobile */
   h1,
   h2,
