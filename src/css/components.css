@@ -330,18 +330,25 @@ textarea:valid:focus {
   align-items: center;
   gap: 10px;
 }
+
+/* Arrow icon (SVG sprite) alignment */
 .testimonial .arrow-icon {
-  font-size: 14px;
   color: var(--dark);
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateY(-1px); /* tiny optical nudge */
 }
+
+/* Tighten label leading so icon centers perfectly with text */
 .testimonial-label .label-text {
   font-family: var(--h1-font);
   font-weight: 300;
   font-size: 30px;
-  line-height: 40px;
+  line-height: 1; /* CHANGED from 40px */
   text-transform: uppercase;
   color: var(--dark);
 }
+
 .circle-button {
   position: absolute;
   left: 50%;
@@ -588,7 +595,6 @@ textarea:valid:focus {
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
 }
-
 .menu-toggle:focus {
   outline: none;
 }
@@ -596,7 +602,6 @@ textarea:valid:focus {
   box-shadow: 0 0 0 3px var(--menu-hover-color);
   border-color: var(--menu-hover-color);
 }
-
 #menuClose:focus {
   outline: none;
 }
@@ -604,7 +609,6 @@ textarea:valid:focus {
   box-shadow: 0 0 0 3px var(--menu-hover-color);
   border-color: var(--menu-hover-color);
 }
-
 .menu-toggle::-moz-focus-inner,
 #menuClose::-moz-focus-inner {
   border: 0;
@@ -629,7 +633,6 @@ textarea:valid:focus {
   position: relative;
   overflow: hidden;
 }
-
 .word,
 .char {
   display: inline-block;
@@ -643,6 +646,7 @@ textarea:valid:focus {
   vertical-align: -0.125em;
   line-height: 1;
   flex: 0 0 auto;
+  fill: currentColor; /* NEW: ensure SVGs inherit text color */
 }
 
 /* Sizes */
@@ -820,7 +824,7 @@ textarea:valid:focus {
   }
   .testimonial-label .label-text {
     font-size: 24px;
-    line-height: 32px;
+    line-height: 1.15;
   }
   .circle-button {
     left: 25%;
