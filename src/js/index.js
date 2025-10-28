@@ -1,40 +1,53 @@
 /**
- * App bootstrap
- * - Router setup
- * - Safe section reveal + runtime min-height sizing
- * - Menu open/close (lazy-init menu wave image) + cleanup
- * - Loader show/hide + visuals (mobile-safe; animations handle reduced-motion internally)
+ * @file app.js
+ * @overview App initialization & wiring:
+ *  - Router setup
+ *  - Safe section reveal + runtime min-height sizing
+ *  - Menu open/close (lazy-init menu wave image) + cleanup
+ *  - Loader show/hide + visuals (animations respect reduced-motion)
+ *
+ * Assumptions:
+ *  - Browser-only module (DOM APIs available)
+ *  - Vite environment (optional import.meta.env.BASE_URL)
  */
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* GH Pages SPA deep-link restore (runs before router boot)                   */
 /* ────────────────────────────────────────────────────────────────────────── */
+/**
+ * Normalize BASE and restore pretty paths that GitHub Pages transformed into
+ * query-based deep links. Writes window.__BASE_URL__ for downstream modules.
+ */
 (() => {
   const l = window.location;
 
   const baseFromTag = document.querySelector('base')?.getAttribute('href') || '';
   const baseFromVite = (import.meta?.env?.BASE_URL || '/').replace(/\/?$/, '/');
+  /** @type {string} */
   const BASE = (baseFromTag || baseFromVite || '/').replace(/\/?$/, '/');
 
+  // Case 1: "?/path" → restore to "/path"
   if (l.search && l.search.startsWith('?/')) {
     const restored = l.search.slice(2).replace(/~and~/g, '&');
     const target = BASE + restored.replace(/^\//, '') + l.hash;
-    history.replaceState(null, null, target);
+    history.replaceState(null, '', target);
+    // Expose for other modules
     window.__BASE_URL__ = BASE;
     return;
   }
 
+  // Case 2: session-stashed path (from 404 redirect script)
   try {
     const saved = sessionStorage.getItem('gh_redirect');
     if (saved) {
       sessionStorage.removeItem('gh_redirect');
       const target = saved.startsWith('/') ? saved : BASE + saved.replace(/^\//, '');
-      history.replaceState(null, null, target);
+      history.replaceState(null, '', target);
       window.__BASE_URL__ = BASE;
       return;
     }
-  } catch (_) {
-    // ignore storage errors
+  } catch {
+    /* ignore storage errors */
   }
 
   window.__BASE_URL__ = BASE;
@@ -43,12 +56,20 @@
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Keep /portfolio/ base for internal navigation                              */
 /* ────────────────────────────────────────────────────────────────────────── */
+/**
+ * Wrap pushState/replaceState so any relative app URLs are coerced to the
+ * configured BASE. Avoids accidental double-/ or wrong-root navigation.
+ */
 (() => {
   const RAW = window.__BASE_URL__ || '/portfolio/';
   const BASE_SLASH = RAW.replace(/\/?$/, '/');
   const BASE_NOSLASH = BASE_SLASH.slice(0, -1);
 
-  /** @param {string} url */
+  /**
+   * Normalize app-internal URLs against BASE.
+   * @param {string} url
+   * @returns {string}
+   */
   const normalize = (url) => {
     if (typeof url !== 'string') return url;
     if (url === '' || url === '/') return BASE_SLASH;
@@ -61,10 +82,10 @@
     return url;
   };
 
-  /** @type {(fn:History['pushState']) => History['pushState']} */
+  /** @param {History['pushState']} fn */
   const wrap = (fn) =>
     function (state, title, url) {
-      return fn.call(this, state, title, normalize(url));
+      return fn.call(this, state, title, normalize(/** @type {string} */ (url)));
     };
 
   history.pushState = wrap(history.pushState);
@@ -107,7 +128,10 @@ import {
 } from './components/ux.js';
 import { setupActions } from '../lib/actions.js';
 
-/* Load the router AFTER we’ve potentially rewritten the URL */
+/**
+ * Load the router AFTER we’ve potentially rewritten the URL so it sees the final path.
+ * Marks window.__routerActive when ready.
+ */
 import('./router.js').then(() => {
   window.__routerActive = true;
 });
@@ -122,7 +146,10 @@ const prefersReducedMotion =
   window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/** Release any scroll locks applied by menu overlays. */
+/**
+ * Release any scroll locks applied by menu overlays.
+ * @returns {void}
+ */
 function releaseScrollLock() {
   [document.documentElement, document.body].forEach((el) => {
     el.classList.remove('menu-open', 'no-scroll', 'overflow-hidden', 'locked');
@@ -135,11 +162,14 @@ function releaseScrollLock() {
 }
 
 /**
- * Build Work grids only if they are empty.
- * Safe to call multiple times (idempotent).
+ * Build Work grids only if they are empty. Safe to call multiple times.
+ * @returns {void}
  */
 function buildWorkGridsIfNeeded() {
-  /** @param {string} sel */
+  /**
+   * @param {string} sel
+   * @returns {boolean}
+   */
   const empty = (sel) => {
     const el = document.querySelector(sel);
     return !!el && el.childElementCount === 0;
@@ -164,7 +194,7 @@ function buildWorkGridsIfNeeded() {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
- * Reactions when a section becomes visible (emitted by your init/router).
+ * Fired by the router/init when a section becomes visible.
  * - Sizes min-height to viewport
  * - Hydrates case widgets on demand
  * - Runs section-specific animations
@@ -200,7 +230,7 @@ document.addEventListener('sectionVisible', async (e) => {
     resizeScheduled = true;
     requestAnimationFrame(() => {
       const current = document.querySelector('.fullscreen-section.visible');
-      if (current) sizeSectionMinHeight(current);
+      if (current) sizeSectionMinHeight(/** @type {HTMLElement} */ (current));
       resizeScheduled = false;
     });
   };
@@ -211,8 +241,10 @@ document.addEventListener('sectionVisible', async (e) => {
 /* Menu open/close                                                            */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/** Menu element reference and theme wave observer cleanup. */
 const menu = document.getElementById('menu');
-let stopWaveThemeObserver = /** @type {null | (() => void)} */ (null);
+/** @type {null | (() => void)} */
+let stopWaveThemeObserver = null;
 let menuWaveInited = false;
 
 if (menu) {
@@ -220,6 +252,7 @@ if (menu) {
     const open = menu.classList.contains('open');
 
     if (open) {
+      // Lazily init static wave images once (menu context)
       if (!menuWaveInited) {
         setupStaticWaves();
         const maybeDisposer = observeThemeChangesForWaves();
@@ -227,9 +260,11 @@ if (menu) {
         menuWaveInited = true;
       }
 
+      // Animate menu link words when opening (if motion allowed)
       const { animateMenuLinks } = await import('./animatedTexts.js');
       if (!prefersReducedMotion) animateMenuLinks();
     } else {
+      // Clean up observers and release any scroll locks
       if (typeof stopWaveThemeObserver === 'function') {
         stopWaveThemeObserver();
         stopWaveThemeObserver = null;
@@ -246,14 +281,20 @@ if (menu) {
 
 /**
  * Bind global UI actions used in templates.
- * Note: keep handlers idempotent and side-effect–safe.
+ * Handlers should be idempotent and side-effect–safe.
  */
 setupActions({
+  /**
+   * Open a case either by in-page #hash scroll or by navigating to href.
+   * (No alerts/console in production.)
+   */
   'open-case': ({ el, ev }) => {
     if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
 
-    const href = el.getAttribute('href') || el.dataset.href || el.getAttribute('data-href');
-    if (href && href.startsWith('#')) {
+    const href = el.getAttribute('href') || el.dataset.href || el.getAttribute('data-href') || '';
+
+    // If it's an in-page anchor, scroll and reveal
+    if (href.startsWith('#')) {
       const target = document.querySelector(href);
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
@@ -262,8 +303,18 @@ setupActions({
       }
     }
 
-    const cardTitle = el.closest('.card')?.querySelector('.card__title')?.textContent?.trim();
-    if (cardTitle) alert(`Open case study: ${cardTitle}`);
+    // If it's an absolute URL or app-relative path, navigate
+    if (href) {
+      // Use router-friendly push if available; fallback to location.assign
+      if (window.__routerActive && !/^[a-z]+:/i.test(href)) {
+        history.pushState({}, '', href);
+        // Router will handle reveal; as a safety, try to reveal by id from path end
+        const idGuess = href.split('/').filter(Boolean).pop();
+        if (idGuess) window.revealSection?.(idGuess);
+      } else {
+        location.assign(href);
+      }
+    }
   },
 });
 
@@ -276,6 +327,7 @@ setupActions({
  * Called by the router after it shows a section.
  * MUST be safe to call multiple times (idempotent).
  * @param {string} id - section element id (e.g. "home", "work", "contact", "case-portfolio")
+ * @returns {void}
  */
 window.revealSection = function revealSection(id) {
   // 1) Close the menu on navigation
@@ -287,7 +339,7 @@ window.revealSection = function revealSection(id) {
     releaseScrollLock();
   }
 
-  // 2) Core reveal (your original logic from init.js)
+  // 2) Core reveal (original logic from init.js)
   coreRevealSection(id);
 
   // 3) (Re)hydrate responsive images within the section
@@ -308,6 +360,15 @@ window.revealSection = function revealSection(id) {
 /* DOM ready                                                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Initial boot:
+ * - Menu toggle + loader show
+ * - Optional Safari ticker tuning
+ * - Pre-build grids (idempotent)
+ * - Hide loader, run decorative animations (waves, blobs), reveal current section
+ * - Hook up "Hire Me" CTA smooth scroll
+ * - Init sections, header scroll effect, UX helpers
+ */
 document.addEventListener('DOMContentLoaded', () => {
   setupMenuToggle();
   showLoader();
@@ -321,10 +382,12 @@ document.addEventListener('DOMContentLoaded', () => {
     hideLoader();
     releaseScrollLock();
 
+    // Headings: line decorations
     insertWaveLines();
     animateWaveLine();
     animateCustomWaveLines();
 
+    // Blob ambience (deferred heavy work)
     const blobWrapper = document.querySelector('.morphing-blob-wrapper');
     if (blobWrapper) {
       gsap.fromTo(
@@ -339,6 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 800);
     }
 
+    // Reveal the current section (from router/init), default to 'home'
     const currentId = window.__currentSectionId || 'home';
     const currentEl = document.getElementById(currentId);
     if (currentEl) {
@@ -347,6 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 1500);
 
+  // Smooth scroll to contact from "Hire Me" button (no alerts)
   const hireBtn = document.getElementById('hireBtn');
   if (hireBtn) {
     hireBtn.addEventListener(
@@ -362,6 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }
 
+  // Core app wiring
   initSections();
   setupHeaderScrollEffect();
   enableNoSelectDuringInteraction();

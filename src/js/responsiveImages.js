@@ -1,7 +1,7 @@
 /**
- * responsiveImages.js
- * Replaces <img.thumb data-src="..."> with <picture>, builds srcsets, and
- * fades images in. Asset URLs ALWAYS honor <base href> (if present) or
+ * @file responsiveImages.js
+ * @description Replaces <img.thumb data-src="..."> with <picture>, builds srcsets,
+ * and fades images in. Asset URLs ALWAYS honor <base href> (if present) or
  * Vite's import.meta.env.BASE_URL, so they work on GH Pages (/portfolio/).
  */
 
@@ -9,36 +9,42 @@
 /* Base resolution                                                            */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Get the site base from <base href> or Vite's BASE_URL.
+ * @returns {string} base path with trailing slash (e.g., "/portfolio/")
+ */
 function getSiteBase() {
-  // 1) Prefer <base href> if present in built HTML (GH Pages has /portfolio/)
   const fromTag = document.querySelector('base')?.getAttribute('href');
   if (fromTag) return ensureTrail(fromTag);
 
-  // 2) Fallback to Vite's BASE_URL when running as a module
   const fromVite = (typeof import.meta !== 'undefined' && import.meta?.env?.BASE_URL) || '/';
   return ensureTrail(fromVite);
 }
 
+/**
+ * Ensure a trailing slash.
+ * @param {string} [s="/"]
+ * @returns {string}
+ */
 function ensureTrail(s = '/') {
   return s.endsWith('/') ? s : s + '/';
 }
 
 /**
- * Join path with site base, avoiding double slashes and double-base.
- * Leaves http(s):, data:, blob: untouched.
+ * Join a relative path with the site base, avoiding double slashes/double base.
+ * Leaves absolute (http/https), data:, and blob: URLs untouched.
+ * @param {string} p
+ * @returns {string}
  */
 function withBase(p) {
   if (!p) return p;
   if (/^(https?:|data:|blob:)/i.test(p)) return p;
 
   const BASE = getSiteBase(); // e.g. "/portfolio/"
-
-  // If already starts with BASE (e.g. "/portfolio/assets/..."), keep as-is
   if (p.startsWith(BASE)) return p;
 
-  // Strip any leading "/" so we don't escape the base path
   const clean = p.replace(/^\/+/, ''); // "assets/images/foo.webp"
-  return BASE + clean; // "/portfolio/assets/images/foo.webp"
+  return BASE + clean;
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -46,32 +52,34 @@ function withBase(p) {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
- * Build a fully-qualified URL for an image from
- *  - data-src="filename.webp" + optional data-path="assets/images"
+ * Build a fully-qualified URL for an image from:
+ *  - data-src="filename.webp" (+ optional data-path="assets/images")
  *  - data-src="assets/images/filename.webp"
  *  - data-src="/assets/images/filename.webp"
  *  - data-src="https://…"
+ * @param {string} filename
+ * @param {string|undefined} dataPath
+ * @returns {string}
  */
 function buildFullPath(filename, dataPath) {
   if (!filename) return filename;
-
-  // External or data/blob → passthrough
   if (/^(https?:|data:|blob:)/i.test(filename)) return filename;
 
-  // If filename already carries a path, still honor base.
+  // If already includes a path, honor base.
   if (filename.includes('/')) {
-    // Avoid double-base; strip leading slash then prefix BASE
     return withBase(filename);
   }
 
-  // Filename only → combine with dataPath (default assets/images), then add base
   const path = String(dataPath || 'assets/images').replace(/\/+$/, '');
   return withBase(`${path}/${filename}`);
 }
 
 /**
- * Convert "foo-600.webp" OR "foo-mobile-600.webp" → { base: "foo[-mobile]", ext: "webp" }
- * Falls back to "name.ext".
+ * Parse file naming like:
+ *   "foo-600.webp" or "foo-mobile-600.webp"
+ * Fallback to "name.ext".
+ * @param {string} filename
+ * @returns {{base:string, ext:string} | null}
  */
 function parseFilePattern(filename) {
   const m = filename.match(/^(.*?)(?:-mobile|-desktop)?-(\d+)\.(webp|jpe?g|png|avif)$/i);
@@ -87,6 +95,11 @@ function parseFilePattern(filename) {
 
 /**
  * Processes images within a section and replaces them with <picture>.
+ * Supports optional attributes:
+ *  - data-priority="eager" (sets loading=eager, fetchpriority=high)
+ *  - data-sizes="(min-width: 1200px) 25vw, 90vw" (override sizes)
+ *  - data-widths="320,640,960" (override srcset widths)
+ *
  * @param {ParentNode} [section=document]
  * @returns {HTMLImageElement[]} processed <img> elements
  */
@@ -106,7 +119,15 @@ export function setupResponsiveImages(section = document) {
 
       // Optional <source> with srcset
       if (parsed) {
-        const widths = [300, 600, 900];
+        const widthsAttr = img.getAttribute('data-widths');
+        const widths = widthsAttr
+          ? widthsAttr
+              .split(',')
+              .map((n) => parseInt(n.trim(), 10))
+              .filter(Boolean)
+          : [300, 600, 900];
+
+        /** @type {Record<string,string>} */
         const mimeMap = {
           webp: 'image/webp',
           jpg: 'image/jpeg',
@@ -119,23 +140,30 @@ export function setupResponsiveImages(section = document) {
 
         const source = document.createElement('source');
         const srcset = widths
-          .map((w) => buildFullPath(`${parsed.base}-${w}.${ext}`, dataPath) + ` ${w}w`)
+          .map((w) => `${buildFullPath(`${parsed.base}-${w}.${ext}`, dataPath)} ${w}w`)
           .join(', ');
+
+        const sizes =
+          img.getAttribute('data-sizes') ||
+          '(min-width: 1024px) 30vw, (min-width: 600px) 45vw, 90vw';
 
         source.setAttribute('type', type);
         source.setAttribute('srcset', srcset);
-        source.setAttribute('sizes', '(min-width: 1024px) 30vw, (min-width: 600px) 45vw, 90vw');
+        source.setAttribute('sizes', sizes);
         picture.appendChild(source);
       }
 
       // Fallback <img>
       const fallback = document.createElement('img');
-      fallback.loading = img.getAttribute('data-priority') === 'eager' ? 'eager' : 'lazy';
+      const eager = img.getAttribute('data-priority') === 'eager';
+      fallback.loading = eager ? 'eager' : 'lazy';
+      fallback.decoding = 'async';
+      if (eager) fallback.fetchPriority = 'high';
 
       // Copy attributes except our data-* inputs
       [...img.attributes].forEach((attr) => {
         const n = attr.name;
-        if (n !== 'data-src' && n !== 'data-path' && n !== 'data-priority') {
+        if (!/^data-(src|path|priority|sizes|widths)$/i.test(n)) {
           fallback.setAttribute(n, attr.value);
         }
       });
@@ -174,25 +202,24 @@ export function setupResponsiveImages(section = document) {
         removeLoader();
       };
 
-      // If already cached
-      setTimeout(() => {
+      picture.appendChild(fallback);
+      img.replaceWith(picture);
+
+      // If the image is already cached, reveal immediately
+      const revealIfCached = () => {
         if (fallback.complete && fallback.naturalWidth) {
           fallback.style.opacity = '1';
           fallback.style.filter = 'blur(0)';
           removeLoader();
         }
-      }, 1200);
-
-      picture.appendChild(fallback);
-      img.replaceWith(picture);
+      };
 
       // Defer setting src so the loader renders first
-      setTimeout(() => {
-        const full = buildFullPath(filename, dataPath);
-        // Debug hint if something 404s
-        // console.debug('[img]', { filename, dataPath, resolved: full });
+      const full = buildFullPath(filename, dataPath);
+      requestAnimationFrame(() => {
         fallback.src = full;
-      }, 0);
+        revealIfCached();
+      });
 
       insertedImages.push(fallback);
     } catch {

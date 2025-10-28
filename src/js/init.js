@@ -1,12 +1,22 @@
 /**
  * @file init.js
  * @description Router-friendly section initialization and reveal utilities.
- * Exposes `revealSection` (also on `window`). Safari-safe: never transform containers.
+ * Exposes `revealSection` (also assigned to `window.revealSection` for router use).
+ * Safari-safe: never transform section containers—animate only inner content.
  */
 
 import gsap from 'gsap';
 
-/** Ensure visible section is tall enough to push footer to page bottom */
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Utilities                                                                  */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Ensure the visible section is tall enough to keep the footer at the bottom.
+ * Uses viewport height minus header & footer heights.
+ * @param {HTMLElement} section
+ * @returns {void}
+ */
 export function sizeSectionMinHeight(section) {
   const header = document.querySelector('header');
   const footer = document.querySelector('footer');
@@ -17,29 +27,39 @@ export function sizeSectionMinHeight(section) {
   section.style.minHeight = `${min}px`;
 }
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Reveal logic                                                               */
+/* ────────────────────────────────────────────────────────────────────────── */
+
 /**
- * Reveal a section:
- * - Hide others (no transforms left behind)
- * - Show target and animate only its inner content ('.rows' or first child)
- * - Dispatch `sectionVisible`
+ * Reveal a section by id:
+ * - Hides other `.fullscreen-section` elements (no transforms left behind)
+ * - Shows the target and animates only its inner content ('.rows' or first child)
+ * - Dispatches a `sectionVisible` CustomEvent with `{ detail: targetId }`
+ *
+ * Idempotent and router-safe.
+ *
+ * @param {string} targetId
+ * @returns {void}
  */
 export function revealSection(targetId) {
+  /** @type {HTMLElement|null} */
   const section = document.getElementById(targetId);
   if (!section) return;
 
   // Hide others
   document.querySelectorAll('.fullscreen-section').forEach((s) => {
     if (s === section) return;
-    s.classList.remove('visible');
-    s.style.display = 'none';
-    s.style.visibility = 'hidden';
-    s.style.pointerEvents = 'none';
-    s.style.transform = 'none'; // do not keep transforms on containers
-    s.style.opacity = '0';
-    s.style.minHeight = ''; // clear sizing from previous visibility
+    /** @type {HTMLElement} */ (s).classList.remove('visible');
+    /** @type {HTMLElement} */ (s).style.display = 'none';
+    /** @type {HTMLElement} */ (s).style.visibility = 'hidden';
+    /** @type {HTMLElement} */ (s).style.pointerEvents = 'none';
+    /** @type {HTMLElement} */ (s).style.transform = 'none'; // never keep transforms on containers (Safari-safe)
+    /** @type {HTMLElement} */ (s).style.opacity = '0';
+    /** @type {HTMLElement} */ (s).style.minHeight = ''; // clear any previous sizing
   });
 
-  // Show target container in normal flow (no transform animation on container)
+  // Show target container in normal flow (no transform on container)
   section.style.display = 'block';
   section.style.visibility = 'visible';
   section.style.pointerEvents = 'auto';
@@ -47,11 +67,15 @@ export function revealSection(targetId) {
   section.style.opacity = '1';
   section.classList.add('visible');
 
-  // Make it at least viewport - header - footer tall
+  // Ensure min-height fits viewport minus header/footer
   sizeSectionMinHeight(section);
 
   // Animate only inner content (safe for Safari layout)
-  const content = section.querySelector('.rows') || section.firstElementChild || section;
+  /** @type {HTMLElement} */
+  let content =
+    /** @type {HTMLElement|null} */ (section.querySelector('.rows')) ||
+    /** @type {HTMLElement|null} */ (section.firstElementChild) ||
+    section;
 
   if (content !== section) {
     content.style.transform = '';
@@ -73,29 +97,53 @@ export function revealSection(targetId) {
   );
 }
 
-/** For router usage */
-if (typeof window !== 'undefined') window.revealSection = revealSection;
+/**
+ * For router usage: expose `revealSection` on window in browser environments.
+ */
+if (typeof window !== 'undefined') {
+  window.revealSection = revealSection;
+}
 
-/** Non-router init (no-op if router is active) */
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Non-router initialization                                                  */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Initialize sections when no router is active:
+ * - Hides all `.fullscreen-section`
+ * - Reveals `#home` by default (if present)
+ * No-op when `window.__routerActive` is truthy (router handles reveal).
+ *
+ * @returns {void}
+ */
 export function initSections() {
   if (window.__routerActive) return;
 
-  const sections = document.querySelectorAll('.fullscreen-section');
-  sections.forEach((section) => {
-    section.style.display = 'none';
-    section.style.opacity = '0';
-    section.style.transform = 'none';
-    section.style.visibility = 'hidden';
-    section.style.pointerEvents = 'none';
-    section.classList.remove('visible');
-    section.style.minHeight = '';
+  document.querySelectorAll('.fullscreen-section').forEach((node) => {
+    const el = /** @type {HTMLElement} */ (node);
+    el.style.display = 'none';
+    el.style.opacity = '0';
+    el.style.transform = 'none';
+    el.style.visibility = 'hidden';
+    el.style.pointerEvents = 'none';
+    el.classList.remove('visible');
+    el.style.minHeight = '';
   });
 
-  const home = document.getElementById('home');
+  const home = /** @type {HTMLElement|null} */ (document.getElementById('home'));
   if (home) revealSection('home');
 }
 
-/** Header scroll effect */
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Header scroll effect                                                       */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Toggle a `.scrolled` class on <header> when the page is scrolled.
+ * Uses a passive scroll listener and runs once on init.
+ *
+ * @returns {void}
+ */
 export function setupHeaderScrollEffect() {
   const header = document.querySelector('header');
   if (!header) return;

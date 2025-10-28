@@ -1,10 +1,20 @@
-// History-API router with clean, crawlable paths.
-// - Static: "/", "/work", "/about", "/contact"
-// - Dynamic: "/work/:slug" → "case-:slug", "/work/:slug/:sub" → "case-:slug-:sub"
-// - Shows target immediately; lets init.js animate inner content.
+/**
+ * @file router.js
+ * @overview History-API router with clean, crawlable paths.
+ *
+ * Routes:
+ *  - Static: "/", "/work", "/about", "/contact"
+ *  - Dynamic: "/work/:slug" → "case-:slug"
+ *             "/work/:slug/:sub" → "case-:slug-:sub"
+ *
+ * Principles:
+ *  - Show target immediately (class toggle); let init.js animate inner content.
+ *  - Never rely on container transforms for visibility (Safari-safe).
+ *  - Keep <title>, <meta name="description">, and <link rel="canonical"> in sync.
+ *  - Respect BASE (e.g., "/portfolio/") from `paths.js`.
+ */
 
-import '../data/projects.js';
-import { BASE, hydrateDemoLinks } from './paths.js';
+import { BASE } from './paths.js';
 
 (function initRouter() {
   if (typeof window !== 'undefined') window.__routerActive = true;
@@ -15,11 +25,12 @@ import { BASE, hydrateDemoLinks } from './paths.js';
   /** Adds/removes this on active nav links. */
   const ACTIVE_CLASS = 'is-active';
 
-  /** BASE variants: with and without trailing slash. */
+  /** BASE variants. */
   const BASE_SLASH = BASE; // ends with "/"
   const BASE_NO_SLASH = BASE.replace(/\/$/, ''); // e.g. "/portfolio"
 
-  /** @type {Record<string,string>} Path → Section ID mapping for top-level routes. */
+  /** Static mapping for top-level routes. */
+  /** @type {Record<string,string>} */
   const routes = {
     '/': 'home',
     '/work': 'work',
@@ -27,18 +38,16 @@ import { BASE, hydrateDemoLinks } from './paths.js';
     '/contact': 'contact',
   };
 
-  /** Reverse mapping (Section ID → Path). */
+  /** Reverse mapping (section id → path). */
   const idsToPaths = Object.fromEntries(Object.entries(routes).map(([p, id]) => [id, p]));
 
-  /**
-   * @param {string} sel
-   * @param {ParentNode} [root=document]
-   * @returns {Element[]}
-   */
+  /** Quick helpers */
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-
-  /** @returns {HTMLElement[]} All fullscreen sections. */
+  /** @returns {HTMLElement[]} */
   const sections = () => /** @type {HTMLElement[]} */ ($$('.fullscreen-section'));
+
+  /** File extension detector (simple heuristic). */
+  const FILE_EXT_RE = /\.[a-z0-9]{2,8}(\?|#|$)/i;
 
   /**
    * Normalize a pathname by stripping the site BASE and trailing slash.
@@ -46,7 +55,7 @@ import { BASE, hydrateDemoLinks } from './paths.js';
    * @returns {string}
    */
   function normalizePathname(pathname) {
-    let p = pathname;
+    let p = pathname || '/';
     if (p.startsWith(BASE_SLASH)) p = '/' + p.slice(BASE_SLASH.length);
     else if (p.startsWith(BASE_NO_SLASH)) p = '/' + p.slice(BASE_NO_SLASH.length);
     if (!p.startsWith('/')) p = '/' + p;
@@ -55,7 +64,7 @@ import { BASE, hydrateDemoLinks } from './paths.js';
   }
 
   /**
-   * Map path → section ID, supporting dynamic cases.
+   * Map path → section ID, supporting dynamic cases under /work.
    * @param {string} path
    * @returns {string|null}
    */
@@ -99,6 +108,7 @@ import { BASE, hydrateDemoLinks } from './paths.js';
   /**
    * Remove any inline visibility/layout styles that could conflict with CSS.
    * (Fixes BFCache restores where old inline styles win over class toggles.)
+   * @returns {void}
    */
   function purgeInlineSectionStyles() {
     sections().forEach((s) => {
@@ -113,19 +123,22 @@ import { BASE, hydrateDemoLinks } from './paths.js';
   /**
    * Show only the requested section via class toggle (no inline styles).
    * @param {string} id
+   * @returns {void}
    */
   function immediateShow(id) {
-    // Always clear stale inline styles first
     purgeInlineSectionStyles();
     sections().forEach((s) => s.classList.toggle('visible', s.id === id));
   }
 
   /**
    * Update title/meta/canonical from the current section element.
+   * Expects data attributes on the section: data-title, data-description.
    * @param {HTMLElement|null} el
+   * @returns {void}
    */
   function setMetaFromSection(el) {
     if (!el) return;
+
     const title = el.getAttribute('data-title');
     if (title) document.title = title;
 
@@ -133,18 +146,18 @@ import { BASE, hydrateDemoLinks } from './paths.js';
     const meta = document.querySelector('meta[name="description"]');
     if (desc && meta) meta.setAttribute('content', desc);
 
+    // Canonical (absolute) = origin + BASE + path (no leading slash)
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) {
-      canonical.setAttribute(
-        'href',
-        location.origin + BASE_SLASH + idToPath(el.id).replace(/^\//, '')
-      );
+      const path = idToPath(el.id).replace(/^\//, '');
+      canonical.setAttribute('href', location.origin + BASE_SLASH + path);
     }
   }
 
   /**
    * Toggle active class on nav links based on current routed path.
    * @param {string} id
+   * @returns {void}
    */
   function setActiveLinkById(id) {
     const routedPath = idToPath(id) || normalizePathname(location.pathname);
@@ -154,16 +167,19 @@ import { BASE, hydrateDemoLinks } from './paths.js';
         const href = a.getAttribute('href') || '';
         const u = new URL(href, location.href);
         isActive = normalizePathname(u.pathname) === routedPath;
-      } catch {}
+      } catch {
+        /* ignore malformed */
+      }
       a.classList.toggle(ACTIVE_CLASS, isActive);
+      a.setAttribute('aria-current', isActive ? 'page' : 'false');
     });
   }
 
   /**
    * Initial render from current URL (path or hash).
-   * Also hydrates per-section demo links (SVG icon render).
    * @param {string} path
    * @param {string|null} hash
+   * @returns {void}
    */
   function initialShow(path, hash) {
     const fallback = 'home';
@@ -177,9 +193,6 @@ import { BASE, hydrateDemoLinks } from './paths.js';
     setMetaFromSection(el);
     setActiveLinkById(id);
 
-    // Hydrate demo links only within the visible section (faster)
-    hydrateDemoLinks(el);
-
     const newPath = idToPath(id);
     history.replaceState({ path: newPath }, '', BASE_SLASH + newPath.replace(/^\//, ''));
 
@@ -188,9 +201,9 @@ import { BASE, hydrateDemoLinks } from './paths.js';
 
   /**
    * Core render: show a path and update history.
-   * Hydrates demo links for the new section.
    * @param {string} path normalized path (e.g. "/work/slug")
    * @param {{ replace?: boolean }} [opts]
+   * @returns {void}
    */
   function render(path, { replace = false } = {}) {
     const fallback = 'home';
@@ -201,7 +214,6 @@ import { BASE, hydrateDemoLinks } from './paths.js';
 
     const el = document.getElementById(id);
     if (el) {
-      // Scroll to top for consistent UX on route change
       window.scrollTo({ top: 0, behavior: 'auto' });
 
       // Make first heading focusable once for a11y
@@ -211,9 +223,6 @@ import { BASE, hydrateDemoLinks } from './paths.js';
 
       setMetaFromSection(el);
       setActiveLinkById(id);
-
-      // Re-hydrate the auto demo links inside the new section
-      hydrateDemoLinks(el);
 
       if (typeof window.revealSection === 'function') window.revealSection(id);
     }
@@ -227,6 +236,7 @@ import { BASE, hydrateDemoLinks } from './paths.js';
   /**
    * Smart back: try history.back(), and if it didn't change, interpret href.
    * @param {string} href
+   * @returns {void}
    */
   function smartBack(href) {
     const before = location.href;
@@ -247,6 +257,7 @@ import { BASE, hydrateDemoLinks } from './paths.js';
   /**
    * Global click handler to route internal links and bypass files.
    * @param {MouseEvent} e
+   * @returns {void}
    */
   function onClick(e) {
     const el = e.target instanceof Element ? e.target.closest('a,button') : null;
@@ -264,18 +275,19 @@ import { BASE, hydrateDemoLinks } from './paths.js';
     if (el.target && el.target !== '_self') return;
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
-    // 1) QUICK RAW-HREF BYPASS (files, external-ish, download)
     const rawHref = el.getAttribute('href') || '';
+    if (!rawHref) return;
+    if (rawHref.startsWith('mailto:') || rawHref.startsWith('tel:')) return;
+
     const isExternalRel = (el.getAttribute('rel') || '').includes('external');
-    const isNoRouter = el.classList.contains('no-router');
+    const isNoRouter = el.classList.contains('no-router') || el.hasAttribute('data-router-ignore');
     const isDownloadAttr = el.hasAttribute('download');
-    const looksLikeFileByText = /\.[a-z0-9]{2,8}(\?|#|$)/i.test(rawHref); // .pdf/.png/.zip etc.
+    const looksLikeFileByText = FILE_EXT_RE.test(rawHref);
     if (isExternalRel || isNoRouter || isDownloadAttr || looksLikeFileByText) return;
 
-    // 2) RESOLVE TO URL AND DOUBLE-CHECK IT'S NOT A FILE OR AN ASSET
     let url;
     try {
-      url = new URL(rawHref, location.href); // robust for relative links
+      url = new URL(rawHref, location.href);
     } catch {
       return;
     }
@@ -285,20 +297,16 @@ import { BASE, hydrateDemoLinks } from './paths.js';
     const path = normalizePathname(pathname);
     const hash = url.hash ? url.hash.slice(1) : null;
 
-    // Skip anything in the static assets folder under BASE (e.g. /portfolio/assets/...)
     const isUnderAssets = pathname.startsWith(BASE_SLASH + 'assets/');
-    // Skip any URL that ends with a "file-ish" extension
-    const looksLikeFileByPath = /\.[a-z0-9]{2,8}$/i.test(pathname);
+    const looksLikeFileByPath = FILE_EXT_RE.test(pathname);
     if (isUnderAssets || looksLikeFileByPath) return;
 
-    // Hash → known section id (e.g. "#contact")
     if (hash && document.getElementById(hash)) {
       e.preventDefault();
       render(idToPath(hash), { replace: false });
       return;
     }
 
-    // Not a routed internal URL → let the browser handle it
     const id = pathToId(path);
     if (!id) return;
 
@@ -312,14 +320,26 @@ import { BASE, hydrateDemoLinks } from './paths.js';
     render(path, { replace: true });
   }
 
+  /** Ensure UI state matches current route (after BFCache/visibility changes). */
+  function ensureSectionSync() {
+    const current = document.querySelector('.fullscreen-section.visible');
+    const hidden =
+      !current ||
+      getComputedStyle(current).display === 'none' ||
+      getComputedStyle(current).visibility === 'hidden' ||
+      current.style.opacity === '0';
+    if (hidden) {
+      const path = normalizePathname(location.pathname);
+      requestAnimationFrame(() => render(path, { replace: true }));
+    }
+  }
+
   /** Initialize router and bind events. */
   function start() {
-    // Let the SPA control scroll; avoids half-restores on mobile browsers
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
 
-    // Clean up any stale inline section styles from previous sessions/restores
     purgeInlineSectionStyles();
 
     const initialPath = normalizePathname(location.pathname);
@@ -329,30 +349,11 @@ import { BASE, hydrateDemoLinks } from './paths.js';
     document.addEventListener('click', onClick, { passive: false });
     window.addEventListener('popstate', onPopState);
 
-    // Guard that the right section is actually visible (mobile BFCache, etc.)
-    const ensureSectionSync = () => {
-      const current = document.querySelector('.fullscreen-section.visible');
-      const hidden =
-        !current ||
-        getComputedStyle(current).display === 'none' ||
-        getComputedStyle(current).visibility === 'hidden' ||
-        current.style.opacity === '0';
-      if (hidden) {
-        const path = normalizePathname(location.pathname);
-        requestAnimationFrame(() => render(path, { replace: true }));
-      }
-    };
-
-    // Re-hydrate after back/forward cache restores (iOS Safari & others)
     window.addEventListener('pageshow', () => {
       ensureSectionSync();
-      // also re-hydrate demo links in the currently visible section
-      const current = document.querySelector('.fullscreen-section.visible');
-      if (current) hydrateDemoLinks(current);
       setTimeout(ensureSectionSync, 60);
     });
 
-    // If the tab was backgrounded and returns, ensure the section is correct
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') ensureSectionSync();
     });

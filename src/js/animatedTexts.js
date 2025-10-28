@@ -1,11 +1,18 @@
 /**
- * Text reveal animations using GSAP + SplitType:
+ * @file text-reveal.js
+ * @overview Text reveal animations using GSAP + SplitType.
+ *
+ * Features:
  * - H1: words (with subtle scale/blur on capable mobiles), else lines
  * - H2–H4: lines (tiny skew/blur on capable mobiles)
- * - P: lines; skip splitting only for truly long paragraphs on weak devices
+ * - P: lines; skip splitting for truly long paragraphs on weak devices
  * - Menu links: words
  * - IO fallback + respects prefers-reduced-motion
  * - Force override via <html data-anim="rich"> or ?anim=rich
+ *
+ * Notes:
+ * - Browser-only module (assumes DOM APIs).
+ * - No diagnostics or console usage; safe for production review.
  */
 
 import gsap from 'gsap';
@@ -15,13 +22,20 @@ import SplitType from 'split-type';
 /* Environment & perf profile                                                 */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/** @type {string} */
 const ua = navigator.userAgent;
+
+/** iOS detection (including iPadOS on Mac hardware). */
 const IS_IOS =
   /iP(hone|od|ad)/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
+/** Safari detection (excludes Chromium/Firefox/iOS variants). */
 const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|Edg|EdgiOS/.test(ua);
 
+/** Reduced-motion preference. */
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Approximate device strength (threads). */
 const HW_THREADS = navigator.hardwareConcurrency || 4;
 
 /** Allow forcing rich mode globally. */
@@ -30,39 +44,31 @@ const FORCE_RICH =
   document.body?.dataset?.anim === 'rich' ||
   /[?&]anim=rich\b/.test(location.search);
 
-/** Devices considered strong enough for richer mobile animations */
-const RICH_MOBILE = FORCE_RICH || (HW_THREADS >= 4 && !REDUCED); // lowered to 4 cores
+/** Devices considered strong enough for richer mobile animations. */
+const RICH_MOBILE = FORCE_RICH || (HW_THREADS >= 4 && !REDUCED);
 
-/** “Lite” only when clearly constrained iOS/Safari */
+/** “Lite” only when clearly constrained iOS/Safari. */
 const SAFARI_LITE = (isSafari || IS_IOS) && !RICH_MOBILE;
 
-/** Default easing */
+/** Default easing for text reveals. */
 const textEase = SAFARI_LITE ? 'power1.out' : 'power2.out';
 
-/** Skip selector (e.g., LCP text) */
+/** Skip selector (e.g., LCP text or flagged elements). */
 const SKIP = ':not([data-no-reveal])';
 
-/** Long paragraph threshold (encourage line splits on capable phones) */
+/** Long paragraph threshold (encourage line splits on capable phones). */
 const LONG_P_THRESHOLD = RICH_MOBILE && !REDUCED ? 999 : window.innerWidth < 480 ? 360 : 560;
 
-/* Optional: quick diagnostics (enable with window.__DEBUG_ANIM = true) */
-function debugProfile() {
-  if (!window.__DEBUG_ANIM) return;
-  // eslint-disable-next-line no-console
-  console.table({
-    IS_IOS,
-    isSafari,
-    REDUCED,
-    HW_THREADS,
-    FORCE_RICH,
-    RICH_MOBILE,
-    SAFARI_LITE,
-    LONG_P_THRESHOLD,
-  });
-}
-debugProfile();
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Utilities                                                                  */
+/* ────────────────────────────────────────────────────────────────────────── */
 
-/* Utilities */
+/**
+ * Create a SplitType instance safely.
+ * @param {Element} el
+ * @param {import('split-type').SplitOptions} opts
+ * @returns {import('split-type').default | null}
+ */
 function safeSplit(el, opts) {
   try {
     return new SplitType(el, opts);
@@ -70,11 +76,24 @@ function safeSplit(el, opts) {
     return null;
   }
 }
+
+/**
+ * Ensure each element is animated once per page view.
+ * @param {HTMLElement} el
+ * @returns {boolean} true if marked for the first time
+ */
 function markOnce(el) {
   if (el.dataset.revealed === '1') return false;
   el.dataset.revealed = '1';
   return true;
 }
+
+/**
+ * Remove inline styles set by GSAP/setup to leave DOM clean.
+ * @param {HTMLElement} el
+ * @param {string[]} props
+ * @returns {void}
+ */
 function clearInline(el, props) {
   for (const p of props) el.style.removeProperty(p);
 }
@@ -84,37 +103,43 @@ function clearInline(el, props) {
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
+ * Animate headings and paragraphs inside a given section element.
+ * Respects prefers-reduced-motion and avoids double-initialization.
  * @param {HTMLElement} section
+ * @returns {void}
  */
 export function animateTextInSection(section) {
   if (!section) return;
 
-  // Reduced motion: show without anims
+  // Reduced motion: reveal without animation
   if (REDUCED) {
     section
       .querySelectorAll(`h1${SKIP}, h2${SKIP}, h3${SKIP}, h4${SKIP}, p${SKIP}`)
-      .forEach((el) => (el.style.opacity = 1));
+      .forEach((el) => /** @type {HTMLElement} */ ((el).style.opacity = '1'));
     return;
   }
 
   /* H1 — hero headings */
   section.querySelectorAll(`h1${SKIP}`).forEach((heading) => {
-    if (!markOnce(heading)) return;
+    const h = /** @type {HTMLElement} */ (heading);
+    if (!markOnce(h)) return;
 
-    // Use words on capable mobiles (gives "desktop-like" feel)
     const useWords = RICH_MOBILE || !SAFARI_LITE;
     const types = useWords ? 'words' : 'lines';
-    const split = safeSplit(heading, { types, tagName: 'span' });
+    const split = safeSplit(h, { types, tagName: 'span' });
 
+    /** @type {HTMLElement[]|undefined} */
+    // @ts-ignore SplitType typing: words/lines arrays are HTMLElements
     const items = useWords ? split?.words : split?.lines;
+
     if (!split || !items?.length) {
       split?.revert?.();
-      heading.style.opacity = 1;
+      h.style.opacity = '1';
       return;
     }
 
-    gsap.set(heading, { opacity: 1 });
-    heading.style.willChange = 'transform, opacity';
+    gsap.set(h, { opacity: 1 });
+    h.style.willChange = 'transform, opacity';
 
     gsap.set(items, {
       y: 40,
@@ -129,7 +154,7 @@ export function animateTextInSection(section) {
         defaults: { ease: useWords ? 'elastic.out(1, 0.5)' : 'power1.out' },
         onComplete: () => {
           split.revert();
-          clearInline(heading, ['will-change', 'opacity', 'transform', 'filter']);
+          clearInline(h, ['will-change', 'opacity', 'transform', 'filter']);
         },
       })
       .to(items, {
@@ -143,20 +168,23 @@ export function animateTextInSection(section) {
   });
 
   /* H2–H4 — subheadings (lines) */
-  section.querySelectorAll(`h2${SKIP}, h3${SKIP}, h4${SKIP}`).forEach((el) => {
+  section.querySelectorAll(`h2${SKIP}, h3${SKIP}, h4${SKIP}`).forEach((node) => {
+    const el = /** @type {HTMLElement} */ (node);
     if (!markOnce(el)) return;
 
     const split = safeSplit(el, { types: 'lines', tagName: 'span' });
-    if (!split?.lines?.length) {
+    // @ts-ignore
+    const lines = split?.lines;
+    if (!split || !lines?.length) {
       split?.revert?.();
-      el.style.opacity = 1;
+      el.style.opacity = '1';
       return;
     }
 
     const rich = RICH_MOBILE && !REDUCED;
     el.style.willChange = 'transform, opacity';
 
-    gsap.set(split.lines, {
+    gsap.set(lines, {
       yPercent: 100,
       opacity: 0,
       ...(rich ? { skewY: 3, filter: 'blur(1.2px)' } : {}),
@@ -173,7 +201,7 @@ export function animateTextInSection(section) {
           clearInline(el, ['will-change', 'opacity', 'transform', 'filter']);
         },
       })
-      .to(split.lines, {
+      .to(lines, {
         yPercent: 0,
         opacity: 1,
         ...(rich ? { skewY: 0, filter: 'blur(0px)' } : {}),
@@ -184,7 +212,8 @@ export function animateTextInSection(section) {
   });
 
   /* Paragraphs — lines (skip truly long ones on weaker devices) */
-  section.querySelectorAll(`p${SKIP}`).forEach((el) => {
+  section.querySelectorAll(`p${SKIP}`).forEach((node) => {
+    const el = /** @type {HTMLElement} */ (node);
     if (!markOnce(el)) return;
 
     const isLong = (el.textContent?.trim().length || 0) > LONG_P_THRESHOLD;
@@ -205,16 +234,18 @@ export function animateTextInSection(section) {
     }
 
     const split = safeSplit(el, { types: 'lines', tagName: 'span' });
-    if (!split?.lines?.length) {
+    // @ts-ignore
+    const lines = split?.lines;
+    if (!split || !lines?.length) {
       split?.revert?.();
-      el.style.opacity = 1;
+      el.style.opacity = '1';
       return;
     }
 
     const rich = RICH_MOBILE && !REDUCED;
     el.style.willChange = 'transform, opacity';
 
-    gsap.set(split.lines, {
+    gsap.set(lines, {
       yPercent: 100,
       opacity: 0,
       ...(rich ? { filter: 'blur(1px)' } : {}),
@@ -230,7 +261,7 @@ export function animateTextInSection(section) {
           clearInline(el, ['will-change', 'opacity', 'transform', 'filter']);
         },
       })
-      .to(split.lines, {
+      .to(lines, {
         yPercent: 0,
         opacity: 1,
         ...(rich ? { filter: 'blur(0px)' } : {}),
@@ -250,25 +281,32 @@ export function animateTextInSection(section) {
 /* Fullscreen menu links                                                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Animate words inside fullscreen menu links.
+ * @returns {void}
+ */
 export function animateMenuLinks() {
   const links = document.querySelectorAll('.fullscreen-menu nav a');
 
   links.forEach((link) => {
+    const a = /** @type {HTMLElement} */ (link);
     try {
-      SplitType.revert(link);
-    } catch {}
-    link.classList.remove('animated');
+      SplitType.revert(a);
+    } catch {
+      /* ignore */
+    }
+    a.classList.remove('animated');
 
-    const split = safeSplit(link, { types: 'words', tagName: 'span' });
-    if (!split?.words?.length) {
-      link.style.opacity = 1;
+    const split = safeSplit(a, { types: 'words', tagName: 'span' });
+    // @ts-ignore
+    const words = split?.words;
+    if (!split || !words?.length) {
+      a.style.opacity = '1';
       return;
     }
 
-    const words = split.words;
-    link.classList.add('animated');
-
-    link.style.willChange = 'transform, opacity';
+    a.classList.add('animated');
+    a.style.willChange = 'transform, opacity';
 
     gsap.set(words, {
       y: 48,
@@ -283,7 +321,7 @@ export function animateMenuLinks() {
         defaults: { ease: textEase },
         onComplete: () => {
           split.revert();
-          clearInline(link, ['will-change', 'opacity', 'transform']);
+          clearInline(a, ['will-change', 'opacity', 'transform']);
         },
       })
       .to(words, {
@@ -303,13 +341,15 @@ export function animateMenuLinks() {
 
 /**
  * Observe sections and run `animateTextInSection` when they enter the viewport.
+ *
  * Usage:
  *   observeTextSections(document.querySelectorAll('.fullscreen-section'));
  *
  * Includes a fallback for environments without IntersectionObserver.
  *
  * @param {NodeListOf<HTMLElement>|HTMLElement[]} sections
- * @param {string} rootMargin
+ * @param {string} [rootMargin='0px 0px -10% 0px']
+ * @returns {void}
  */
 export function observeTextSections(sections, rootMargin = '0px 0px -10% 0px') {
   if (!sections) return;
@@ -325,7 +365,7 @@ export function observeTextSections(sections, rootMargin = '0px 0px -10% 0px') {
     (entries, obs) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          animateTextInSection(entry.target);
+          animateTextInSection(/** @type {HTMLElement} */ (entry.target));
           obs.unobserve(entry.target);
         }
       });

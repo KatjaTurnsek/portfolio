@@ -1,37 +1,57 @@
 /**
- * animations.js
- * GSAP-powered visuals after FIRST Safari fallback.
- * - Static waves (image swap on theme)
- * - Heading wavy lines (polyline)
- * - Teal skill bars
- * - Gooey blobs + “jelly” drag
- * - Basic defer helper
+ * @file animations.js
+ * @overview GSAP-powered visuals after the FIRST Safari fallback.
+ * Implements:
+ *  - Static wave images with theme swap
+ *  - Heading wavy lines (SVG polyline)
+ *  - Teal skill bars animation
+ *  - Gooey blobs with “jelly” drag interaction
+ *  - A tiny defer helper (idle or setTimeout)
  *
  * Safari fallback (first version):
- * - Detect Safari
- * - Use fewer blobs on Safari
- * - Disable MorphSVG blob wobble on Safari (use scale wobble instead)
- * - Use fewer polyline segments for headings on Safari
+ *  - Detect Safari
+ *  - Fewer blobs on Safari
+ *  - Disable MorphSVG blob wobble on Safari (use scale wobble instead)
+ *  - Fewer polyline segments for headings on Safari
+ *
+ * @remarks
+ * - Browser-only. All functions assume a DOM environment.
+ * - Uses GSAP + optional plugins (MorphSVGPlugin, ScrollTrigger).
  */
 
 import { gsap } from 'gsap';
-import { MorphSVGPlugin } from '../../node_modules/gsap/MorphSVGPlugin.js';
-import { ScrollTrigger } from '../../node_modules/gsap/ScrollTrigger.js';
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger);
 
-/** True if current browser is Safari (used for simple perf fallback). */
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+/**
+ * True if current browser is Safari (used for perf fallback).
+ * @type {boolean}
+ */
+const isSafari =
+  typeof navigator !== 'undefined'
+    ? /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+    : false;
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Static waves (single <img> per host; dark/light swap)                      */
+/* #region Static waves (single <img> per host; dark/light swap)              */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Check if current theme is dark (by class or data attribute).
+ * @returns {boolean}
+ */
 function isDarkTheme() {
   const b = document.body;
   return b.classList.contains('dark-theme') || b.getAttribute('data-theme') === 'dark';
 }
 
+/**
+ * Remove any legacy wave canvases/pictures/SVGs from a host container.
+ * @param {HTMLElement} host
+ * @returns {void}
+ */
 function purgeLegacyWavesInside(host) {
   host.querySelectorAll('#top-waves-canvas, #menu-waves-canvas').forEach((n) => n.remove());
   host.querySelectorAll('picture').forEach((n) => n.remove());
@@ -39,7 +59,14 @@ function purgeLegacyWavesInside(host) {
   host.querySelectorAll('svg').forEach((n) => n.remove());
 }
 
+/**
+ * Ensure a single <img.waves-fallback> exists for a host.
+ * @param {HTMLElement} host
+ * @param {string} [idHint]
+ * @returns {HTMLImageElement}
+ */
 function ensureWaveImg(host, idHint) {
+  /** @type {HTMLImageElement|null} */
   let img = host.querySelector('img.waves-fallback');
   if (!img) {
     img = document.createElement('img');
@@ -65,6 +92,11 @@ function ensureWaveImg(host, idHint) {
   return img;
 }
 
+/**
+ * Pick the best image src for current theme from host data attributes.
+ * @param {HTMLElement} host
+ * @returns {string} Resolved (possibly relative) URL string or "".
+ */
 function pickSrcForTheme(host) {
   const single = host.getAttribute('data-src');
   if (single) return single;
@@ -73,7 +105,14 @@ function pickSrcForTheme(host) {
   return isDarkTheme() ? dark || light || '' : light || dark || '';
 }
 
+/**
+ * Initialize static wave images for the top/menu wave hosts.
+ * Expects hosts to have either data-src or (data-light-src/data-dark-src).
+ * @returns {void}
+ */
 export function setupStaticWaves() {
+  if (typeof document === 'undefined') return;
+
   const topHost =
     document.querySelector('.top-waves') ||
     document.getElementById('top-waves') ||
@@ -84,17 +123,18 @@ export function setupStaticWaves() {
     document.getElementById('menu-waves') ||
     document.querySelector('[data-waves="menu"]');
 
-  const hosts = [topHost, menuHost].filter(Boolean);
-  const eligible = hosts.filter(
-    (h) =>
-      h.hasAttribute('data-src') ||
-      h.hasAttribute('data-light-src') ||
-      h.hasAttribute('data-dark-src')
-  );
+  /** @type {HTMLElement[]} */
+  const eligible = [topHost, menuHost]
+    .filter(Boolean)
+    .filter(
+      (h) =>
+        h.hasAttribute('data-src') ||
+        h.hasAttribute('data-light-src') ||
+        h.hasAttribute('data-dark-src')
+    );
 
   eligible.forEach((host, i) => {
-    if (!(host instanceof HTMLElement)) return;
-
+    // Defensive: inline positioning for reliable stacking.
     host.style.position = host.style.position || 'absolute';
     host.style.left = host.style.left || '0';
     host.style.top = host.style.top || '0';
@@ -103,6 +143,7 @@ export function setupStaticWaves() {
     host.style.zIndex = host.style.zIndex || '0';
 
     purgeLegacyWavesInside(host);
+
     const img = ensureWaveImg(host, i === 0 ? 'top-waves-img' : 'menu-waves-img');
     const nextSrc = pickSrcForTheme(host);
     if (!nextSrc) return;
@@ -127,7 +168,14 @@ export function setupStaticWaves() {
   });
 }
 
+/**
+ * Re-compute and swap static wave images when the theme changes.
+ * @returns {void}
+ */
 export function refreshStaticWaveImages() {
+  if (typeof document === 'undefined') return;
+
+  /** @type {HTMLElement[]} */
   const hosts = [
     document.querySelector('.top-waves') ||
       document.getElementById('top-waves') ||
@@ -144,6 +192,7 @@ export function refreshStaticWaveImages() {
       host.hasAttribute('data-dark-src');
     if (!hasAttrs) return;
 
+    /** @type {HTMLImageElement|null} */
     const img = host.querySelector('img.waves-fallback');
     const nextSrc = pickSrcForTheme(host);
     if (!img || !nextSrc) return;
@@ -166,16 +215,27 @@ export function refreshStaticWaveImages() {
   });
 }
 
+/**
+ * Observe body class/theme attribute changes and refresh wave images.
+ * @returns {() => void} Call to disconnect the observer.
+ */
 export function observeThemeChangesForWaves() {
   const mo = new MutationObserver(() => refreshStaticWaveImages());
   mo.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
   return () => mo.disconnect();
 }
 
+/* #endregion Static waves --------------------------------------------------- */
+
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Heading wavy lines (SVG)                                                   */
+/* #region Heading wavy lines (SVG)                                           */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Animate a single path inside #wavy-line using MorphSVG when available.
+ * Graceful fallback uses a subtle Y translation.
+ * @returns {void}
+ */
 export function animateWaveLine() {
   const path = /** @type {SVGPathElement|null} */ (document.querySelector('#wavy-line path'));
   if (!path) return;
@@ -196,6 +256,10 @@ export function animateWaveLine() {
   }
 }
 
+/**
+ * Insert minimal wavy-line SVGs after each <h2>.
+ * @returns {void}
+ */
 export function insertWaveLines() {
   const waveSVG = `
     <svg class="wavy-line" viewBox="0 0 500 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -210,9 +274,23 @@ export function insertWaveLines() {
   });
 }
 
+/**
+ * @typedef {Object} PolylineItem
+ * @property {SVGPolylineElement} polyline
+ * @property {{x:number,y:number}[]} points
+ * @property {number} segments
+ * @property {number} amplitude
+ * @property {number} frequency
+ */
+
+/** @type {PolylineItem[]} */
 let _polylineItems = [];
 let _polylineTickerAdded = false;
 
+/**
+ * Animate all inserted .wavy-polyline elements by mutating their points each tick.
+ * @returns {void}
+ */
 export function animateCustomWaveLines() {
   const polylines = document.querySelectorAll('.wavy-polyline');
 
@@ -228,9 +306,10 @@ export function animateCustomWaveLines() {
     const segments = isSafari ? 50 : 100; // fewer points on Safari
     const interval = width / segments;
 
+    /** @type {{x:number,y:number}[]} */
     const points = [];
     for (let i = 0; i <= segments; i++) {
-      // @ts-ignore
+      // @ts-ignore - SVGSVGElement has createSVGPoint
       const pt = svg.createSVGPoint();
       pt.x = i * interval;
       pt.y = 15;
@@ -247,6 +326,10 @@ export function animateCustomWaveLines() {
   }
 }
 
+/**
+ * Internal ticker update for polyline waves.
+ * @returns {void}
+ */
 function _updateAllPolylines() {
   const time = performance.now() * 0.002;
   for (const item of _polylineItems) {
@@ -259,10 +342,17 @@ function _updateAllPolylines() {
   }
 }
 
+/* #endregion Heading wavy lines -------------------------------------------- */
+
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Teal bars (About)                                                          */
+/* #region Teal bars (About)                                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Animate the three teal bars and labels inside .bar-stack.
+ * Respects prefers-reduced-motion.
+ * @returns {void}
+ */
 export function animateTealBars() {
   const stack = document.querySelector('.bar-stack');
   if (!stack) return;
@@ -312,27 +402,46 @@ export function animateTealBars() {
         : null;
     if (ro) ro.observe(stack);
 
+    // Last-resort kick if RO never fires (extremely rare)
     setTimeout(() => {
       if (!stack.dataset.animated && ready()) run();
     }, 400);
   }
 }
 
+/* #endregion Teal bars ----------------------------------------------------- */
+
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Gooey blobs + interactive jelly drag                                       */
+/* #region Gooey blobs + interactive jelly drag                               */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Clamp a number to a range.
+ * @param {number} n
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 function clamp(n, min, max) {
   return Math.min(max, Math.max(min, n));
 }
 
 /**
- * Soft rounded blob:
- * radius(theta) = r * (1 + a1*sin(k1*t + p1) + a2*sin(k2*t + p2))
+ * Create a soft rounded blob path (closed) using quadratic segments.
+ * Formula: radius(theta) = r * (1 + a1*sin(k1*t + p1) + a2*sin(k2*t + p2))
+ * @param {number} [r=120] Base radius
+ * @param {number} [a1=0.06]
+ * @param {number} [a2=0.04]
+ * @param {number} [k1=3]
+ * @param {number} [k2=5]
+ * @param {number} [p1=0]
+ * @param {number} [p2=0]
+ * @returns {string} SVG path data string
  */
 function makeSoftBlobPath(r = 120, a1 = 0.06, a2 = 0.04, k1 = 3, k2 = 5, p1 = 0, p2 = 0) {
   const TWO_PI = Math.PI * 2;
   const steps = 48;
+  /** @type {{x:number,y:number}[]} */
   const pts = [];
   for (let i = 0; i <= steps; i++) {
     const t = (i / steps) * TWO_PI;
@@ -352,8 +461,12 @@ function makeSoftBlobPath(r = 120, a1 = 0.06, a2 = 0.04, k1 = 3, k2 = 5, p1 = 0,
   return d;
 }
 
-/** DOM setup — CSS controls the blur on #blob-svg */
+/**
+ * Ensure the SVG wrapper for blobs exists and is sized to the viewport.
+ * @returns {{wrapper:HTMLElement, svg:SVGSVGElement, g:SVGGElement, VW:number, VH:number}}
+ */
 function ensureBlobDOM() {
+  /** @type {HTMLElement|null} */
   let wrapper = document.querySelector('.morphing-blob-wrapper');
   if (!wrapper) {
     wrapper = document.createElement('div');
@@ -369,6 +482,7 @@ function ensureBlobDOM() {
     document.body.prepend(wrapper);
   }
 
+  /** @type {SVGSVGElement|null} */
   let svg = document.getElementById('blob-svg');
   if (!svg) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -384,6 +498,7 @@ function ensureBlobDOM() {
   svg.style.height = '100%';
   svg.style.display = 'block';
 
+  /** @type {SVGGElement|null} */
   let g = document.getElementById('blobs-g');
   if (!g) {
     g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -395,25 +510,32 @@ function ensureBlobDOM() {
   return { wrapper, svg, g, VW, VH };
 }
 
+/**
+ * Build and animate the ambient gooey blob field (non-interactive part).
+ * - Counts & sizes adapt to viewport + Safari fallback.
+ * - Uses MorphSVG wobble when available (except on Safari).
+ * - Opacity interpolates from CSS vars with scroll (ScrollTrigger when present).
+ * @returns {void}
+ */
 export function animateGooeyBlobs() {
   const { svg, g: container, VW, VH } = ensureBlobDOM();
   if (!container) return;
 
-  // clear old
+  // Clear old blobs for idempotency.
   container.querySelectorAll('.blob-group').forEach((n) => n.remove());
 
   // Mobile vs desktop
   const mobile = VW < 850;
 
-  // counts
+  // Blob counts
   const blobCount = isSafari ? (mobile ? 10 : 16) : mobile ? 14 : 28;
 
-  // spread & motion
+  // Spread & motion
   const spread = mobile ? 0.6 * VW : 0.52 * Math.min(VW, 1200);
   const motionDistance = mobile ? Math.max(160, VW * 0.28) : 220;
-  const durationBase = mobile ? 15 : 16; // <-- keep this defined!
+  const durationBase = mobile ? 15 : 16;
 
-  // centers: 3 on mobile (triangle), 2 on desktop
+  // Centers: 3 on mobile (triangle), 2 on desktop
   const centers = mobile
     ? [
         { x: clamp(VW * 0.25, 40, VW - 40), y: clamp(VH * 0.35, 40, VH - 40) },
@@ -425,7 +547,7 @@ export function animateGooeyBlobs() {
         { x: clamp(VW * 0.7, 60, VW - 60), y: clamp(VH * 0.5, 60, VH - 60) },
       ];
 
-  // sizes: slightly smaller on mobile to avoid fusing under blur
+  // Sizes: slightly smaller on mobile to avoid fusing under blur
   const baseSizeMin = mobile ? 60 : 80;
   const baseSizeVar = mobile ? 45 : 50;
 
@@ -443,7 +565,7 @@ export function animateGooeyBlobs() {
     group.setAttribute('transform', `translate(${x},${y})`);
     container.appendChild(group);
 
-    // shape
+    // Shape
     const path = document.createElementNS(svgns, 'path');
     path.setAttribute('class', 'blob');
     const d = makeSoftBlobPath(
@@ -458,7 +580,7 @@ export function animateGooeyBlobs() {
     path.setAttribute('d', d);
     group.appendChild(path);
 
-    // positional drift
+    // Positional drift
     const pos = { x, y, rotation: 0 };
     gsap.to(pos, {
       duration: durationBase + Math.random() * 6,
@@ -473,7 +595,7 @@ export function animateGooeyBlobs() {
       },
     });
 
-    // wobble: MorphSVG on non-Safari; scale wobble on Safari
+    // Wobble: MorphSVG on non-Safari; scale wobble on Safari
     if (gsap.plugins?.MorphSVGPlugin && !isSafari) {
       const alt1 = makeSoftBlobPath(
         size * 1.02,
@@ -510,7 +632,7 @@ export function animateGooeyBlobs() {
     }
   }
 
-  // opacity with scroll
+  // Opacity with scroll (CSS-vars driven)
   const css = getComputedStyle(document.documentElement);
   const OPACITY_START = parseFloat(css.getPropertyValue('--blob-opacity-start')) || 0.55;
   const OPACITY_END = parseFloat(css.getPropertyValue('--blob-opacity-end')) || 0.25;
@@ -537,6 +659,7 @@ export function animateGooeyBlobs() {
       }
     );
   } else {
+    // Minimal manual fallback
     const lerp = (a, b, t) => a + (b - a) * t;
     const onScroll = () => {
       const doc = document.documentElement;
@@ -549,7 +672,7 @@ export function animateGooeyBlobs() {
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  // sync viewBox on resize
+  // Sync viewBox on resize
   const onResize = () => {
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -559,8 +682,9 @@ export function animateGooeyBlobs() {
 }
 
 /**
- * Interactive jelly drag (closest blob follows pointer while pressed).
- * (Original interaction behavior used with the first Safari fallback.)
+ * Enable “jelly” drag: while pointer is down, closest blob follows with
+ * a squish/stretch; on release it returns to origin.
+ * @returns {void}
  */
 export function enableInteractiveJellyBlob() {
   const svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
@@ -576,11 +700,31 @@ export function enableInteractiveJellyBlob() {
   let lastSwitchTime = 0;
   let lastUpdate = 0;
 
+  /**
+   * Compute stretch scale based on velocity.
+   * @param {number} dx
+   * @param {number} dy
+   * @returns {number}
+   */
   const getScale = (dx, dy) => Math.min(Math.hypot(dx, dy) / 500, isSafari ? 0.16 : 0.22);
+
+  /**
+   * Compute angle degrees from velocity vector.
+   * @param {number} dx
+   * @param {number} dy
+   * @returns {number}
+   */
   const getAngle = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
 
+  /**
+   * Find the closest blob-group to the given screen coords.
+   * @param {number} x
+   * @param {number} y
+   * @returns {SVGGElement|null}
+   */
   function getClosestBlob(x, y) {
     const blobs = document.querySelectorAll('.blob-group');
+    /** @type {SVGGElement|null} */
     let closest = null;
     let minDist = Infinity;
     blobs.forEach((blob) => {
@@ -591,12 +735,17 @@ export function enableInteractiveJellyBlob() {
       const d = Math.hypot(cx - x, cy - y);
       if (d < minDist) {
         minDist = d;
-        closest = blob;
+        closest = /** @type {SVGGElement} */ (blob);
       }
     });
-    return /** @type {SVGGElement|null} */ (closest);
+    return closest;
   }
 
+  /**
+   * Tween a blob back to its original transform.
+   * @param {Element} blob
+   * @returns {void}
+   */
   function returnBlobToOriginal(blob) {
     const original = originalTransforms.get(blob);
     if (!original) return;
@@ -611,6 +760,11 @@ export function enableInteractiveJellyBlob() {
     });
   }
 
+  /**
+   * Track pointer while dragging and switch active blob (debounced).
+   * @param {MouseEvent|TouchEvent} e
+   * @returns {void}
+   */
   function updatePointer(e) {
     if (!isDragging) return;
     const clientX = /** @type {TouchEvent} */ (e).touches
@@ -648,6 +802,10 @@ export function enableInteractiveJellyBlob() {
     }
   }
 
+  /**
+   * RAF loop to ease toward target and apply squish based on velocity.
+   * @returns {void}
+   */
   function loop() {
     requestAnimationFrame(loop);
     const now = Date.now();
@@ -691,6 +849,7 @@ export function enableInteractiveJellyBlob() {
   );
 
   window.addEventListener('mousemove', updatePointer, { passive: true });
+  // touchmove must remain non-passive because we may choose to preventDefault later.
   window.addEventListener('touchmove', updatePointer, { passive: false });
 
   const endDrag = () => {
@@ -704,10 +863,19 @@ export function enableInteractiveJellyBlob() {
   loop();
 }
 
+/* #endregion Gooey blobs --------------------------------------------------- */
+
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Defer helper                                                               */
+/* #region Defer helper                                                       */
 /* ────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Defer heavy work until browser is idle (or next tick fallback).
+ * @template T
+ * @param {() => T|void} cb The callback to run when idle (or timeout).
+ * @param {number} [timeout=2000] requestIdleCallback timeout fallback.
+ * @returns {() => void} A cancel function; call it to prevent running.
+ */
 export function deferHeavy(cb, timeout = 2000) {
   let cancelled = false;
   let started = false;
@@ -720,7 +888,7 @@ export function deferHeavy(cb, timeout = 2000) {
   };
 
   if ('requestIdleCallback' in window) {
-    // @ts-ignore
+    // @ts-ignore - available on modern browsers
     const id = window.requestIdleCallback(start, { timeout });
     return () => {
       cancelled = true;
@@ -735,3 +903,5 @@ export function deferHeavy(cb, timeout = 2000) {
     };
   }
 }
+
+/* #endregion Defer helper -------------------------------------------------- */

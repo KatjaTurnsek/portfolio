@@ -4,10 +4,20 @@ import { projects, featuredProjects } from '../../data/projects.js';
 import { BASE } from '../paths.js';
 
 /**
+ * @file workGrid.js
+ * @description Renders project cards into category/featured grids.
+ * Uses <img.thumb data-src> so responsiveImages.js can hydrate to <picture>.
+ */
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* URL + attribute helpers                                                    */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
  * Resolve hrefs against the app BASE.
- * - External URLs are returned as-is.
- * - Hash anchors are rooted at the site base (works on static hosts).
- * - Relative/absolute internal paths are normalized under BASE.
+ * - External URLs: returned as-is.
+ * - Hash anchors: rooted at the BASE (static-host friendly).
+ * - Internal paths: normalized under BASE without doubling it.
  * @param {string} [href]
  * @returns {string}
  */
@@ -17,18 +27,29 @@ function resolveHref(href = '') {
   // External or special schemes → passthrough
   if (/^(https?:|mailto:|tel:|data:|blob:)/i.test(href)) return href;
 
-  // In-page section anchors (prefer rooting them at BASE for static hosts)
-  if (href.startsWith('#')) return `${BASE}${href.replace(/^#/, '#')}`;
+  // Already BASE-prefixed → keep
+  if (href.startsWith(BASE)) return href;
 
-  // Already absolute within this origin but missing BASE → normalize
-  if (href.startsWith('/')) {
-    const clean = href.replace(/^\//, '');
-    return `${BASE}${clean}`;
-  }
+  // Hash anchors → root at BASE (e.g. "/portfolio/#case-portfolio")
+  if (href.startsWith('#')) return `${BASE}${href}`;
 
-  // Relative path → join to BASE
-  return `${BASE}${href.replace(/^\.?\//, '')}`;
+  // Normalize leading "./" or "/" under BASE
+  const clean = href.replace(/^\.?\//, '');
+  return `${BASE}${clean}`;
 }
+
+/**
+ * Escape a string for safe use in HTML attribute contexts.
+ * @param {string} [s]
+ * @returns {string}
+ */
+function escAttr(s = '') {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Tile + captions                                                            */
+/* ────────────────────────────────────────────────────────────────────────── */
 
 /**
  * Build one Work tile matching your existing .work-item markup.
@@ -44,16 +65,19 @@ function resolveHref(href = '') {
  */
 function WorkTile(p = {}) {
   const { href, imgSrc, imgAlt = '', title = '', caption = '', aria } = p;
+
+  const label = aria || (title ? `View ${title} case study` : 'Open project');
+
   return `
     <div class="work-item-wrapper">
       <div class="work-item">
-        <a href="${resolveHref(href)}" class="work-link" aria-label="${aria || `View ${title} case study`}">
+        <a href="${resolveHref(href)}" class="work-link" aria-label="${escAttr(label)}">
           <!-- NOTE: data-src is used; responsiveImages.js replaces with <picture> -->
-          <img class="thumb" data-src="${imgSrc}" alt="${imgAlt}" loading="lazy" />
-          <div class="work-overlay"><h4>${title}</h4></div>
+          <img class="thumb" data-src="${escAttr(imgSrc)}" alt="${escAttr(imgAlt)}" loading="lazy" decoding="async" />
+          <div class="work-overlay"><h4>${escAttr(title)}</h4></div>
         </a>
       </div>
-      <span class="mobile-title">${title}</span>
+      <span class="mobile-title">${escAttr(title)}</span>
       <p class="work-caption">${caption}</p>
     </div>
   `;
@@ -70,11 +94,16 @@ function captionOf(p) {
   return `${tech}<br />${desc}`;
 }
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Public renderers                                                           */
+/* ────────────────────────────────────────────────────────────────────────── */
+
 /**
  * Render a category list into a mount.
  * Safe to call multiple times; it overwrites the mount.
  * @param {string} mountSelector
  * @param {"website"|"design"|"logotype"} category
+ * @returns {void}
  */
 export function renderCategory(mountSelector, category) {
   const htmlList = projects
@@ -98,9 +127,11 @@ export function renderCategory(mountSelector, category) {
 /**
  * Render a simple “featured” grid into a mount (fallback for single mount).
  * @param {string} mountSelector
+ * @returns {void}
  */
 export function renderFeatured(mountSelector) {
   const htmlList = featuredProjects
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((p) =>
       WorkTile({
         href: p.caseUrl || p.routeUrl || '#',
