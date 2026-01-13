@@ -27,62 +27,69 @@
 
       <div class='contact-form-wrapper'>
         <form
-          class='contact-form'
-          action='https://formsubmit.co/8acfe5c87a66089dd0edfb50f8573706'
+          action='https://api.web3forms.com/submit'
           method='POST'
+          class='contact-form'
+          aria-label='Contact form'
         >
-          <input type='hidden' name='_captcha' value='false' />
-          <input type='hidden' name='_template' value='table' />
-          <input type='hidden' name='_subject' value='New message from your portfolio' />
-          <!-- absolute URL so redirect always returns to YOUR page -->
+          <!-- Required: Web3Forms access key -->
+          <input type='hidden' name='access_key' value='4b70fb1f-a7f2-4100-8a21-d9e9d5dfd983' />
+
+          <!-- Subject, branding & redirect -->
+          <input type='hidden' name='subject' value='Portfolio — New message' />
+          <input type='hidden' name='from_name' value='Portfolio Contact' />
           <input
             type='hidden'
-            name='_next'
+            name='redirect'
             value='https://katjaturnsek.github.io/portfolio/#thank-you'
           />
-
-          <!-- a simple honeypot -->
           <input
-            type='text'
-            name='_honey'
-            tabindex='-1'
-            autocomplete='off'
-            style='position:absolute;left:-9999px;opacity:0;'
+            type='hidden'
+            name='page_url'
+            value='https://katjaturnsek.github.io/portfolio/#contact'
           />
 
+          <!-- Honeypot (must remain empty) -->
+          <input
+            type='checkbox'
+            name='botcheck'
+            tabindex='-1'
+            autocomplete='off'
+            style='position: absolute; left: -9999px; opacity: 0'
+            aria-hidden='true'
+          />
+
+          <!-- Name + Email -->
           <div class='name-row'>
             <div class='form-group'>
-              <label for='first-name'>First Name</label>
-              <input id='first-name' name='name' type='text' autocomplete='given-name' required />
+              <label for='name'>Your Name *</label>
+              <input id='name' name='name' type='text' required autocomplete='name' />
             </div>
+
             <div class='form-group'>
-              <label for='last-name'>Last Name</label>
-              <input
-                id='last-name'
-                name='last-name'
-                type='text'
-                autocomplete='family-name'
-                required
-              />
+              <label for='email'>Email *</label>
+              <input id='email' name='email' type='email' required autocomplete='email' />
             </div>
           </div>
 
+          <!-- Message -->
           <div class='form-group full-width'>
-            <label for='email'>Email</label>
-            <input id='email' name='email' type='email' autocomplete='email' required />
-          </div>
-
-          <div class='form-group full-width'>
-            <label for='message'>Message</label>
-            <textarea id='message' name='message' rows='4' required></textarea>
+            <label for='message'>Your Message *</label>
+            <textarea
+              id='message'
+              name='message'
+              rows='4'
+              required
+              placeholder='Tell me what you need help with, timeline, and any links or details.'
+            ></textarea>
           </div>
 
           <div class='button-wrapper'>
             <button type='submit' class='submit-button'>
               Send
-              <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use
-                  href='#i-arrow-right'
-                ></use></svg>
+              <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+                <use href='#i-arrow-right'></use>
+              </svg>
             </button>
           </div>
         </form>
