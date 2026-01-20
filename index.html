@@ -29,6 +29,8 @@
     <!-- Make all relative URLs resolve under '/' or '/portfolio/' -->
     <base href='/portfolio/' />
     <script>window.__BASE_URL__ = '/portfolio/';</script>
+    <style
+    >:root{--waves-vector-light:url(/portfolio/assets/images/vector-waves-light.svg);--waves-vector-dark:url(/portfolio/assets/images/vector-waves-dark.svg);--waves-raster-light:url(/portfolio/assets/images/waves-light.webp);--waves-raster-dark:url(/portfolio/assets/images/waves-dark.webp)}</style>
     
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
@@ -79,11 +81,11 @@
     />
     
     <!-- Favicon / icons -->
-    <link rel='icon' href='/portfolio/assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
+    <link rel='icon' href='/portfolio/favicon.ico?v=1' sizes='any' />
     
     <!-- Canonical points to the site base; router will update at runtime -->
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-C-J9Kf_c.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-Cqs1INLn.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-CN4ks0Jh.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-Bbtm3oVK.css">
   </head>
 
   <body class="light-theme">
@@ -695,6 +697,177 @@
 
   </div>
 </section> <section
+  id='case-studiobid'
+  class='fullscreen-section'
+  data-title='Case Study: StudioBid — Web Development | Katja Turnsek'
+  data-description='Auction house app built with JavaScript, Bootstrap + Sass, and the Noroff API—listings, bids, profiles and credits.'
+  data-case='studiobid'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web Development</h1>
+      <h2>StudioBid - Auction House App - Semester Project 2</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong>
+          JavaScript | Bootstrap | Sass | Noroff API</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='studiobid'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='StudioBid sections'
+        data-auto='switcher'
+        data-case='studiobid'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To build a fully responsive
+        <strong>auction platform</strong>
+        using the
+        <strong>Noroff API</strong>—covering the full flow from browsing listings to placing bids,
+        managing a profile, and handling credits. The goal was to practice building a larger
+        application with reusable components, clear structure, and stable UI states across multiple
+        features.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Development Focus</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built a multi-page app with
+                <strong>vanilla JavaScript</strong>
+                plus
+                <strong>Bootstrap + Sass</strong>
+                for a consistent UI system and responsive layout
+              </li>
+              <li>
+                Integrated the
+                <strong>Noroff Auction API</strong>
+                for listings, bids, profiles, media, and credits—handling real, changing data
+              </li>
+              <li>
+                Implemented complete
+                <strong>auth flows</strong>
+                (register/login/logout) with persisted sessions and guarded experiences
+              </li>
+              <li>
+                Designed and implemented key UI flows:
+                <strong>create listing</strong>,
+                <strong>browse + filter</strong>,
+                <strong>view listing details</strong>, and
+                <strong>place bids</strong>
+              </li>
+              <li>
+                Focused on
+                <strong>reliable UI state</strong>
+                with loading, empty, and error states across pages and forms
+              </li>
+              <li>
+                Added usability and accessibility details like clear hierarchy, form feedback, and
+                keyboard-friendly interactions
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/site-studiobid-600.webp'
+              data-src='site-studiobid-600.webp'
+              alt='Screenshot of the StudioBid auction app showing the hero headline “Turn your studio into credit,” a search bar with sort dropdown, and a grid of auction listing cards with highest bid and time remaining.'
+            />
+            <figcaption class='work-caption'>StudioBid — landing page with search + sort, and
+              filtered auction listings grid</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/site-studiobid-code-600.webp'
+              data-src='site-studiobid-code-600.webp'
+              alt='Code editor screenshot showing the setFieldState(form, fieldName, state, message) function that finds an input and its feedback element, clears previous validation classes, and applies valid/invalid styling with updated feedback text.'
+            />
+            <figcaption class='work-caption'>StudioBid — reusable form field validation helper
+              (valid/invalid state + feedback messaging)</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                <strong>Browse listings</strong>
+                with responsive cards and clear auction details (end date, bids, status)
+              </li>
+              <li>
+                <strong>Listing details</strong>
+                with bid history, current bid, and bidding interactions
+              </li>
+              <li>
+                <strong>Create + manage listings</strong>
+                including title, description, tags, and media
+              </li>
+              <li>
+                <strong>User profiles</strong>
+                with avatar/banner, credit visibility, and listing/bid overview
+              </li>
+              <li>
+                Strong focus on
+                <strong>API-driven flows</strong>
+                and maintainable structure for continued iteration
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <h3>Reflection</h3>
+      <p>
+        StudioBid pushed me to think more like a product builder—structuring a larger front-end app,
+        keeping UI states predictable, and making sure multiple features work together cleanly. I
+        gained confidence integrating an API across many screens, building reusable patterns, and
+        using Bootstrap + Sass in a way that still feels custom and consistent.
+      </p>
+      <p>
+        It’s also a project I can continue improving over time: refining filters and search, adding
+        more UX polish, and expanding functionality without needing to rewrite the foundation.
+      </p>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
+        data-back
+        data-back-fallback='/portfolio/#work'
+        aria-label='Go back'
+      >
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
   id='case-agilitybandits'
   class='fullscreen-section'
   data-title='Case Study: Agility Bandits Blog — Web Development | Katja Turnsek'
@@ -835,8 +1008,161 @@
     </div>
 
   </div>
-</section>
-      <section
+</section> <section
+  id='case-rainydays'
+  class='fullscreen-section'
+  data-title='Case Study: Rainy Days — Web Development | Katja Turnsek'
+  data-description='Responsive e-commerce UI built with semantic HTML, custom CSS, and vanilla JavaScript.'
+  data-case='rainydays'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web Development</h1>
+      <h2>Rainy Days - E-commerce UI - Course Assignment</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> HTML | CSS | JavaScript</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='rainydays'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Rainy Days sections'
+        data-auto='switcher'
+        data-case='rainydays'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To build a clean, responsive
+        <strong>e-commerce experience</strong>
+        for an outdoor jacket brand—focusing on solid structure, clear UI hierarchy, and a simple
+        flow from browsing products to checkout.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Development Focus</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built with
+                <strong>semantic HTML</strong>
+                and reusable layout patterns
+              </li>
+              <li>
+                Implemented
+                <strong>responsive UI</strong>
+                across key screens (home, product listing, product details, checkout)
+              </li>
+              <li>
+                Used
+                <strong>vanilla JavaScript</strong>
+                for interactive elements and UI state
+              </li>
+              <li>
+                Prioritized
+                <strong>clear typography, spacing, and visual hierarchy</strong>
+                for an easy shopping experience
+              </li>
+              <li>
+                Focused on
+                <strong>accessibility</strong>
+                with readable contrast, structured headings, and keyboard-friendly patterns
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/site-rainydays-products-600.webp'
+              data-src='site-rainydays-products-600.webp'
+              alt='Rainy Days product listing page showing jacket cards and filtering layout'
+            />
+            <figcaption class='work-caption'>Desktop version - Product listing</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/site-rainydays-checkout-600.webp'
+              data-src='site-rainydays-checkout-600.webp'
+              alt='Rainy Days mobile UI showing key e-commerce screens'
+            />
+            <figcaption class='work-caption'>Mobile version - Shopping flow</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                <strong>Product browsing</strong>
+                with consistent card layout and clear calls-to-action
+              </li>
+              <li>
+                <strong>Product detail structure</strong>
+                designed for readability and conversion
+              </li>
+              <li>
+                <strong>Checkout flow UI</strong>
+                with an emphasis on clarity and reduced friction
+              </li>
+              <li>
+                Responsive layout tuned for
+                <strong>mobile-first</strong>
+                viewing
+              </li>
+              <li>
+                Clean visual system with
+                <strong>repeatable spacing + components</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <h3>Reflection</h3>
+      <p>
+        Rainy Days was a strong exercise in building a complete, user-focused interface with
+        <strong>vanilla front-end fundamentals</strong>. I practiced translating design decisions
+        into consistent UI patterns, improving responsive behavior, and keeping the shopping flow
+        clear and structured—skills I now apply to larger, API-driven projects.
+      </p>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
+        data-back
+        data-back-fallback='/portfolio/#work'
+        aria-label='Go back'
+      >
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+
+  </div>
+</section> <section
   id='case-semester-project-1'
   class='fullscreen-section'
   data-title='Semester Project 1 — Gemenskapet Science Museum | Katja Turnsek'
@@ -846,7 +1172,7 @@
   <div class='rows'>
     <div class='row'>
       <h1>Web Development</h1>
-      <h2>Semester Project 1 - Gemenskapet Science Museum</h2>
+      <h2>Gemenskapet Science Museum - Semester Project 1</h2>
       <div class='tech-demo-wrapper'>
         <div class='tech-stack'><strong>Tools:</strong> HTML | CSS</div>
 
@@ -968,6 +1294,180 @@
       </a>
     </div>
 
+  </div>
+</section> <section
+  id='case-social-sparks'
+  class='fullscreen-section'
+  data-title='Case Study: Social Sparks — Web Development | Katja Turnsek'
+  data-description='Social platform built with vanilla JavaScript and the Noroff API—profiles, follow system, search and posts.'
+  data-case='social-sparks'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web Development</h1>
+      <h2>Social Sparks - Social Platform — Course Assignment</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong>
+          JavaScript | HTML | CSS | Noroff API | Auth</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='social-sparks'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Social Sparks sections'
+        data-auto='switcher'
+        data-case='social-sparks'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To build a functional
+        <strong>social platform</strong>
+        on the
+        <strong>Noroff API</strong>—with a focus on clean JavaScript architecture, authentication,
+        and core features like posts, profiles, search, and follow. This was primarily a
+        <strong>development exercise</strong>, so I didn’t produce a separate Figma system—the goal
+        was reliable flows, stable UI states, and maintainable code.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Development Focus</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built a small social platform with
+                <strong>vanilla JavaScript</strong>
+                and a clear feature-based structure (auth, profiles, posts, UI utilities)
+              </li>
+              <li>
+                Integrated the
+                <strong>Noroff API</strong>
+                for user profiles, post feed, and follow relationships—handling real, changing data
+              </li>
+              <li>
+                Implemented a reusable
+                <strong>HTTP client / request wrapper</strong>
+                to centralize fetch logic, attach tokens, parse JSON safely, and surface meaningful
+                errors
+              </li>
+              <li>
+                Built the full
+                <strong>authentication flow</strong>
+                (register/login/logout), including persisted sessions and guarded UI states
+                (logged-in vs logged-out)
+              </li>
+              <li>
+                Added practical UI features like
+                <strong>profile editing</strong>
+                (avatar + banner),
+                <strong>search</strong>, and feed rendering with graceful fallbacks
+              </li>
+              <li>
+                Kept the UI predictable with
+                <strong>loading/empty/error states</strong>, resilient rendering for missing
+                content, and clear
+                <strong>form validation + feedback</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/site-socialsparks-600.webp'
+              data-src='site-socialsparks-600.webp'
+              alt='Social Sparks UI showing the create account form and a profile page with navigation, search, stats, and a post card.'
+            />
+            <figcaption class='work-caption'>Social Sparks — account creation + profile feed UI
+              (Noroff API)</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/site-socialsparks-code-600.webp'
+              data-src='site-socialsparks-code-600.webp'
+              alt='Social Sparks code showing setFieldState() for form input validation state and feedback messaging.'
+            />
+            <figcaption class='work-caption'>Social Sparks — reusable form validation helper (field
+              state + feedback)</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                <strong>User authentication</strong>
+                (register, login, session handling)
+              </li>
+              <li>
+                <strong>Profiles</strong>
+                with avatar/banner and editable profile details
+              </li>
+              <li>
+                <strong>Posts feed</strong>
+                with create, view, and discovery patterns
+              </li>
+              <li>
+                <strong>Follow system</strong>
+                and user search to explore new profiles
+              </li>
+              <li>
+                Reusable API helper focused on
+                <strong>reliability and maintainability</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <h3>Reflection</h3>
+      <p>
+        Social Sparks strengthened my real-world front-end skills around
+        <strong>API-driven UI</strong>
+        and
+        <strong>authentication flows</strong>. This project was primarily code-focused (no dedicated
+        UI design phase), so my main goal was to build a clean, predictable experience through solid
+        structure, form validation/feedback, and consistent state handling.
+      </p>
+      <p>
+        The biggest win was creating a reusable request layer and learning how to keep the UI stable
+        even when the data varies. It’s also a project I can iterate on visually later—without
+        sacrificing clean architecture and readable code.
+      </p>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
+        data-back
+        data-back-fallback='/portfolio/#work'
+        aria-label='Go back'
+      >
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
   </div>
 </section> <section
   id='case-petart-design'
@@ -1682,6 +2182,404 @@
           <strong>youthful, accessible, and trustworthy</strong>. From research and user flows to
           prototypes, the design invites curiosity while staying practical and easy to use.
         </p>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
+        data-back
+        data-back-fallback='/portfolio/#work'
+        aria-label='Go back'
+      >
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-rainydays-design'
+  class='fullscreen-section'
+  data-title='Case Study: Rainy Days — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='High-fidelity responsive UI design for an e-commerce flow—from browsing to checkout success.'
+  data-case='rainydays'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web &amp; Interaction Design</h1>
+      <h2>Rainy Days - UI Design - Course Assignment</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Figma</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='rainydays-design'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Rainy Days sections'
+        data-auto='switcher'
+        data-case='rainydays'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Design Objective</h3>
+      <p>
+        To create a clear, conversion-friendly
+        <strong>e-commerce shopping experience</strong>
+        for an outdoor jacket brand—focusing on strong hierarchy, confident calls-to-action, and a
+        smooth path from
+        <strong>product discovery</strong>
+        to
+        <strong>checkout success</strong>. The goal was a design that feels reliable and easy to use
+        across devices.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Visual Direction</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built a clean, outdoorsy tone with a focus on
+                <strong>trust</strong>
+                and
+                <strong>clarity</strong>
+                (simple layout, readable typography, calm spacing)
+              </li>
+              <li>
+                Designed a product presentation system that supports quick scanning:
+                <strong>consistent cards</strong>, clear pricing, and strong CTAs
+              </li>
+              <li>
+                Kept the interface intentionally minimal so the jackets remain the main visual focus
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/web-rainydays-600.webp'
+              data-src='web-rainydays-600.webp'
+              alt='Desktop UI mockups for Rainy Days showing all pages for mobile screens'
+            />
+            <figcaption class='work-caption'>
+              Rainy Days mobile designs - showing all pages
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/web-rainydays-desktop-600.webp'
+              data-src='web-rainydays-desktop-600.webp'
+              alt='Rainy Days Figma desktop design showing product listing layout with jacket cards and clear call-to-action buttons'
+            />
+            <figcaption class='work-caption'>
+              Desktop UI design — product listing layout with consistent cards and clear hierarchy
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Figma Design &amp; Prototyping</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                Created
+                <strong>high-fidelity</strong>
+                responsive mockups for desktop and mobile
+              </li>
+              <li>
+                Designed repeatable components (product cards, buttons, form fields) for a cohesive
+                interface
+              </li>
+              <li>
+                Planned the key user flow:
+                <strong>browse → choose → checkout → success</strong>
+              </li>
+              <li>
+                Prioritized usability details: readable spacing, aligned grids, and reduced visual
+                noise in forms
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-left'>
+            <h3>Interaction &amp; UX Notes</h3>
+            <ul class='bullet-list'>
+              <li>
+                Designed navigation and CTAs to keep the next step obvious without overwhelming the
+                user
+              </li>
+              <li>
+                Considered states like empty cart / validation feedback to keep the experience
+                predictable
+              </li>
+              <li>
+                Ensured layouts adapt well on smaller screens—thumb-friendly spacing and readable
+                content density
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-right'>
+            <h3>Design Highlights</h3>
+            <ul class='bullet-list-right'>
+              <li>Responsive, high-fidelity UI for a complete e-commerce flow</li>
+              <li>Clear hierarchy and reusable component thinking</li>
+              <li>Conversion-friendly product layouts and checkout clarity</li>
+              <li>Minimal, product-first presentation for better focus</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Reflection</h3>
+            <p>
+              This design helped me practice turning a simple brief into a coherent shopping
+              experience. By focusing on hierarchy, spacing, and predictable flow, I built a UI that
+              supports fast browsing and a low-friction checkout. The project also gave me a solid
+              base to translate design decisions into code in the web development version of Rainy
+              Days.
+            </p>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/web-rainydays-flow-600.webp'
+              data-src='web-rainydays-flow-600.webp'
+              alt='Figma high-fidelity screens for “Rainy Days” showing the e-commerce flow across key pages: product details, cart/checkout, and confirmation, presented in multiple responsive layouts.'
+            />
+            <figcaption class='work-caption'>
+              Rainy Days UI design - high-fidelity e-commerce flow from browsing jackets to checkout
+              and confirmation.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
+        data-back
+        data-back-fallback='/portfolio/#work'
+        aria-label='Go back'
+      >
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-studiobid-design'
+  class='fullscreen-section'
+  data-title='Case Study: StudioBid — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='Component-driven UI/UX design for an auction platform—listings, bidding flow, profile/credits, and responsive layouts.'
+  data-case='studiobid'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web &amp; Interaction Design</h1>
+      <h2>StudioBid - UI/UX Design - Semester Project 2</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Figma</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='studiobid-design'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='StudioBid sections'
+        data-auto='switcher'
+        data-case='studiobid'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Design Objective</h3>
+      <p>
+        To design a modern, trustworthy
+        <strong>auction house experience</strong>
+        where users can quickly browse listings, understand value, and place bids with confidence.
+        The goal was to make core actions feel simple and predictable:
+        <strong>discover → evaluate → bid → win</strong>, while also supporting profile management
+        and a clear
+        <strong>credits</strong>
+        system.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Visual Direction</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built a clean, structured UI focused on
+                <strong>trust</strong>
+                and
+                <strong>readability</strong>
+                (clear hierarchy, consistent spacing, strong contrast)
+              </li>
+              <li>
+                Designed a listing presentation system for quick scanning:
+                <strong>image-led cards</strong>, price/bid prominence, and visible time/status cues
+              </li>
+              <li>
+                Balanced a professional auction tone with a modern app feel—simple surfaces,
+                repeatable components, and minimal visual noise
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/web-studiobid-600.webp'
+              data-src='web-studiobid-600.webp'
+              alt='StudioBid style guide showing the color palette and Poppins typography scale.'
+            />
+            <figcaption class='work-caption'>
+              StudioBid UI style guide - color palette and typography scale (Poppins) for headings,
+              body text, and links.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/web-studiobid-ui-600.webp'
+              data-src='web-studiobid-ui-600.webp'
+              alt='StudioBid UI mockups showing key screens: auction listing details, mobile listing view, and the sign up / create account flow.'
+            />
+            <figcaption class='work-caption'>
+              StudioBid — high-fidelity UI screens for core user flows (listing details + account
+              creation), shown in desktop and mobile layouts.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Figma Design &amp; Prototyping</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                Created
+                <strong>high-fidelity</strong>
+                responsive layouts for core pages: listings, listing details, login/register, and
+                profile
+              </li>
+              <li>
+                Defined repeatable components (cards, buttons, badges, form fields) to keep screens
+                consistent and implementation-ready
+              </li>
+              <li>
+                Mapped critical flows:
+                <strong>browse → details → bid</strong>
+                and
+                <strong>register/login → profile → credits</strong>
+              </li>
+              <li>
+                Designed UI states for reliability: loading/empty states, validation feedback, and
+                “not logged in” guard messaging
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-left'>
+            <h3>Interaction &amp; UX Notes</h3>
+            <ul class='bullet-list'>
+              <li>
+                Prioritized “auction clarity” by making the
+                <strong>current bid</strong>, time remaining, and status visible at a glance
+              </li>
+              <li>
+                Kept the bid action obvious and low-friction, with a strong CTA and supportive
+                microcopy
+              </li>
+              <li>
+                Considered mobile ergonomics: thumb-friendly spacing, simplified layouts, and clear
+                tap targets for bidding and navigation
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text item-right'>
+            <h3>Design Highlights</h3>
+            <ul class='bullet-list-right'>
+              <li>Component-driven UI designed for implementation and reuse</li>
+              <li>Clear hierarchy for bids, timing, and listing value</li>
+              <li>Responsive layouts with strong usability on mobile</li>
+              <li>Planned UI states for reliable API-driven behavior</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Reflection</h3>
+            <p>
+              StudioBid let me design a more “system-like” interface where consistency matters:
+              cards, states, and predictable layouts across many screens. The strongest takeaway was
+              designing for real usage—making bids feel confident, keeping time/status readable, and
+              ensuring the app still feels stable when data varies. The component thinking here also
+              translated directly into the Bootstrap + Sass build of the project.
+            </p>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/web-studiobid-wireframe-600.webp'
+              data-src='web-studiobid-wireframe-600.webp'
+              alt='Low-fidelity wireframe for StudioBid showing the profile dashboard layout with tabs (Active listings, My bids, My wins) and listing cards with actions like view, edit, and delete.'
+            />
+            <figcaption class='work-caption'>
+              StudioBid — wireframe exploration of the profile dashboard (tabs + listing cards for
+              active listings, bids, and wins).
+            </figcaption>
+          </figure>
+        </div>
       </div>
     </div>
 
