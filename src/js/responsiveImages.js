@@ -76,17 +76,27 @@ function buildFullPath(filename, dataPath) {
 
 /**
  * Parse file naming like:
- *   "foo-600.webp" or "foo-mobile-600.webp"
- * Fallback to "name.ext".
+ *   "anything-goes-600.webp"
+ *   "web-rainydays-desktop-600.webp"
+ *   "my-custom-name-v2-final-900.jpg"
+ *
+ * Rule: the ONLY thing we care about is the LAST "-<number>" before the extension.
+ * If there is no "-<number>", we return null (so no srcset will be generated).
+ *
  * @param {string} filename
  * @returns {{base:string, ext:string} | null}
  */
 function parseFilePattern(filename) {
-  const m = filename.match(/^(.*?)(?:-mobile|-desktop)?-(\d+)\.(webp|jpe?g|png|avif)$/i);
-  if (m) return { base: m[1], ext: m[3].toLowerCase() };
+  if (!filename) return null;
 
-  const m2 = filename.match(/^(.*)\.(webp|jpe?g|png|avif)$/i);
-  return m2 ? { base: m2[1], ext: m2[2].toLowerCase() } : null;
+  // Support data-src="assets/images/foo-600.webp" too → match only the basename.
+  const baseName = String(filename).split('/').pop() || '';
+
+  // Match: (everything) + "-" + (digits) + "." + (ext)
+  const m = baseName.match(/^(.*)-(\d+)\.(webp|avif|png|jpe?g)$/i);
+  if (!m) return null;
+
+  return { base: m[1], ext: m[3].toLowerCase() };
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */

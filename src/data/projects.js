@@ -1,6 +1,3 @@
-// projects.js
-// -----------------------------------------------------------------------------
-
 import { img, pdf, ICONS, DEMO_LINKS } from '../js/paths.js';
 
 /**
@@ -47,6 +44,32 @@ export const projects = [
     demoLinks: [{ href: 'https://pet-art.net', label: 'Visit Live Site', icon: ICONS.globe }],
     order: 10,
   },
+
+  // StudioBid (Web Development)
+  {
+    group: 'studiobid',
+    caseId: 'studiobid',
+    title: 'StudioBid - Auction House App',
+    stack: 'JavaScript | Bootstrap | Sass | Noroff API',
+    desc: 'Auction platform with listings, bids, profiles and credits—responsive UI and API-driven flows.',
+    imgSrc: img('site-studiobid-600.webp'),
+    imgAlt: 'StudioBid website thumbnail showing profile and bids',
+    category: 'website',
+    routeUrl: 'work/studiobid',
+    caseUrl: '#case-studiobid',
+    liveUrl: 'https://katjaturnsek.github.io/semester-project-2',
+    repoUrl: 'https://github.com/KatjaTurnsek/semester-project-2',
+    demoLinks: [
+      {
+        href: 'https://katjaturnsek.github.io/semester-project-2',
+        label: 'Visit Live Site',
+        icon: ICONS.globe,
+      },
+      { href: 'https://github.com/KatjaTurnsek/semester-project-2', label: 'GitHub' },
+    ],
+    order: 25,
+  },
+
   {
     group: 'portfolio',
     caseId: 'portfolio',
@@ -59,11 +82,10 @@ export const projects = [
     routeUrl: 'work/portfolio',
     caseUrl: '#case-portfolio',
     liveUrl: 'https://github.com/KatjaTurnsek/portfolio',
-    demoLinks: [
-      { href: 'https://github.com/KatjaTurnsek/portfolio', label: 'View on GitHub' }, // auto-picks GitHub icon
-    ],
+    demoLinks: [{ href: 'https://github.com/KatjaTurnsek/portfolio', label: 'View on GitHub' }],
     order: 20,
   },
+
   {
     group: 'agilitybandits',
     caseId: 'agilitybandits',
@@ -85,10 +107,39 @@ export const projects = [
     ],
     order: 30,
   },
+
+  // Rainy Days (Web Development)
+  {
+    group: 'rainydays',
+    caseId: 'rainydays',
+    title: 'Rainy Days - E-commerce UI',
+    stack: 'HTML | CSS | JavaScript',
+    desc: 'Outdoor jackets shop—responsive layouts, product browsing and checkout flow.',
+    imgSrc: img('site-rainydays-products-600.webp'),
+    imgAlt: 'Rainy Days website thumbnail showing shop and product UI',
+    category: 'website',
+    routeUrl: 'work/rainydays',
+    caseUrl: '#case-rainydays',
+    liveUrl: 'https://norofffeu.github.io/html-css-course-assignment-KatjaTurnsek/',
+    repoUrl: 'https://github.com/NoroffFEU/html-css-course-assignment-KatjaTurnsek',
+    demoLinks: [
+      {
+        href: 'https://norofffeu.github.io/html-css-course-assignment-KatjaTurnsek/',
+        label: 'Visit Live Site',
+        icon: ICONS.globe,
+      },
+      {
+        href: 'https://github.com/NoroffFEU/html-css-course-assignment-KatjaTurnsek',
+        label: 'GitHub',
+      },
+    ],
+    order: 35,
+  },
+
   {
     group: 'semester',
     caseId: 'semester-project-1',
-    title: 'Semester Project 1 — Science Museum',
+    title: 'Semester Project 1 - Science Museum',
     stack: 'HTML | CSS',
     desc: 'Museum page, semantic HTML + modern CSS; fast and responsive.',
     imgSrc: img('site-gemenskapet-science-museum-600.webp'),
@@ -104,9 +155,34 @@ export const projects = [
         label: 'Visit Live Site',
         icon: ICONS.globe,
       },
-      { href: 'https://github.com/KatjaTurnsek/Semester-project-1', label: 'GitHub' }, // auto
+      { href: 'https://github.com/KatjaTurnsek/Semester-project-1', label: 'GitHub' },
     ],
     order: 40,
+  },
+
+  // Social Sparks (Web Development)
+  {
+    group: 'socialsparks',
+    caseId: 'social-sparks',
+    title: 'Social Sparks - Social Platform',
+    stack: 'JavaScript | Noroff API | Auth',
+    desc: 'Social app with profiles, follow system, search and posts—clean UI and reusable request wrapper.',
+    imgSrc: img('site-socialsparks-600.webp'),
+    imgAlt: 'Social Sparks thumbnail showing registration and profile UI',
+    category: 'website',
+    routeUrl: 'work/social-sparks',
+    caseUrl: '#case-social-sparks',
+    liveUrl: 'https://katjaturnsek.github.io/social-sparks',
+    repoUrl: 'https://github.com/KatjaTurnsek/social-sparks',
+    demoLinks: [
+      {
+        href: 'https://katjaturnsek.github.io/social-sparks',
+        label: 'Visit Live Site',
+        icon: ICONS.globe,
+      },
+      { href: 'https://github.com/KatjaTurnsek/social-sparks', label: 'GitHub' },
+    ],
+    order: 45,
   },
 
   // DESIGN
@@ -122,11 +198,12 @@ export const projects = [
     routeUrl: 'work/petart/design',
     caseUrl: '#case-petart-design',
     demoLinks: [
-      { href: 'http://bit.ly/4nB11O4', label: 'Open In Figma (Desktop)' }, // auto-picks Figma via domain
-      { href: 'https://bit.ly/4kmoXlq', label: 'Open In Figma (Mobile)' }, // auto-picks Figma
+      { href: 'http://bit.ly/4nB11O4', label: 'Open In Figma (Desktop)' },
+      { href: 'https://bit.ly/4kmoXlq', label: 'Open In Figma (Mobile)' },
     ],
     order: 110,
   },
+
   {
     group: 'portfolio',
     caseId: 'portfolio-design',
@@ -139,11 +216,12 @@ export const projects = [
     routeUrl: 'work/portfolio/design',
     caseUrl: '#case-portfolio-design',
     demoLinks: [
-      { href: 'https://bit.ly/459Qlxv', label: 'Open In Figma (Desktop)' }, // auto
-      { href: 'https://bit.ly/45qWxCv', label: 'Open In Figma (Mobile)' }, // auto
+      { href: 'https://bit.ly/459Qlxv', label: 'Open In Figma (Desktop)' },
+      { href: 'https://bit.ly/45qWxCv', label: 'Open In Figma (Mobile)' },
     ],
     order: 120,
   },
+
   {
     group: 'agilitybandits',
     caseId: 'agilitybandits-design',
@@ -156,11 +234,12 @@ export const projects = [
     routeUrl: 'work/agilitybandits/design',
     caseUrl: '#case-agilitybandits-design',
     demoLinks: [
-      { href: 'https://bit.ly/3UWMUp0', label: 'Open In Figma (Desktop)' }, // auto
-      { href: 'https://bit.ly/41FuoFo', label: 'Open In Figma (Mobile)' }, // auto
+      { href: 'https://bit.ly/3UWMUp0', label: 'Open In Figma (Desktop)' },
+      { href: 'https://bit.ly/41FuoFo', label: 'Open In Figma (Mobile)' },
     ],
     order: 130,
   },
+
   {
     group: 'semester',
     caseId: 'semester-project-1-design',
@@ -173,10 +252,48 @@ export const projects = [
     routeUrl: 'work/semester-project-1/design',
     caseUrl: '#case-semester-project-1-design',
     demoLinks: [
-      { href: 'https://bit.ly/3KtBYNM', label: 'Open In Figma (Desktop)' }, // auto
-      { href: 'https://bit.ly/3Kxpsg9', label: 'Open In Figma (Mobile)' }, // auto
+      { href: 'https://bit.ly/3KtBYNM', label: 'Open In Figma (Desktop)' },
+      { href: 'https://bit.ly/3Kxpsg9', label: 'Open In Figma (Mobile)' },
     ],
     order: 140,
+  },
+
+  // Rainy Days (Web & Interaction Design)
+  {
+    group: 'rainydays',
+    caseId: 'rainydays-design',
+    title: 'Rainy Days - UI Design',
+    stack: 'Figma',
+    desc: 'High-fidelity responsive designs—e-commerce flow from browsing to checkout success.',
+    imgSrc: img('web-rainydays-600.webp'),
+    imgAlt: 'Rainy Days Figma design thumbnail showing mobile screens',
+    category: 'design',
+    routeUrl: 'work/rainydays/design',
+    caseUrl: '#case-rainydays-design',
+    demoLinks: [
+      { href: 'http://bit.ly/4b5wyEa', label: 'Open In Figma (Desktop)' },
+      { href: 'https://bit.ly/4b0dg2Q', label: 'Open In Figma (Mobile)' },
+    ],
+    order: 150,
+  },
+
+  // StudioBid (Web & Interaction Design)
+  {
+    group: 'studiobid',
+    caseId: 'studiobid-design',
+    title: 'StudioBid - UI/UX Design',
+    stack: 'Figma',
+    desc: 'Component-driven UI and user flows—browse listings, bid, manage profile and credits.',
+    imgSrc: img('web-studiobid-600.webp'),
+    imgAlt: 'StudioBid design thumbnail showing key screens and responsive layout',
+    category: 'design',
+    routeUrl: 'work/studiobid/design',
+    caseUrl: '#case-studiobid-design',
+    demoLinks: [
+      { href: '#', label: 'Open In Figma (Desktop)' },
+      { href: '#', label: 'Open In Figma (Mobile)' },
+    ],
+    order: 160,
   },
 
   // LOGOTYPES
@@ -196,6 +313,7 @@ export const projects = [
     ],
     order: 210,
   },
+
   {
     group: 'portfolio',
     caseId: 'portfolio-logotype',
@@ -216,6 +334,7 @@ export const projects = [
     ],
     order: 220,
   },
+
   {
     group: 'agilitybandits',
     caseId: 'agilitybandits-logotype',
@@ -236,6 +355,7 @@ export const projects = [
     ],
     order: 230,
   },
+
   {
     group: 'semester',
     caseId: 'semester-project-1-logotype',
@@ -255,6 +375,22 @@ export const projects = [
       },
     ],
     order: 240,
+  },
+
+  // StudioBid (Graphic Design / Brand)
+  {
+    group: 'studiobid',
+    caseId: 'studiobid-logotype',
+    title: 'StudioBid - Brand & Logotype',
+    stack: 'Illustrator | Figma',
+    desc: 'Brand identity for StudioBid—logotype, palette and UI-ready assets.',
+    imgSrc: img('design-studiobid-600.webp'),
+    imgAlt: 'StudioBid logotype and style guide elements thumbnail',
+    category: 'logotype',
+    routeUrl: 'work/studiobid/logotype',
+    caseUrl: '#case-studiobid-logotype',
+    demoLinks: [{ href: '#', label: 'Get Design Files (PDF)', icon: ICONS.external }],
+    order: 250,
   },
 ];
 
@@ -276,7 +412,6 @@ export const allProjectsSorted = [...projects].sort((a, b) => a.order - b.order)
 /* Register demo links for the reusable component                             */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-// Replace the whole loop with this:
 for (const p of projects) {
   if (Array.isArray(p.demoLinks) && p.demoLinks.length) {
     // Use a single, unambiguous key only.

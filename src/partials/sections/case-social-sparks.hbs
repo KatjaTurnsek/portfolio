@@ -1,0 +1,175 @@
+<section
+  id='case-social-sparks'
+  class='fullscreen-section'
+  data-title='Case Study: Social Sparks — Web Development | Katja Turnsek'
+  data-description='Social platform built with vanilla JavaScript and the Noroff API—profiles, follow system, search and posts.'
+  data-case='social-sparks'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Web Development</h1>
+      <h2>Social Sparks - Social Platform — Course Assignment</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong>
+          JavaScript | HTML | CSS | Noroff API | Auth</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='social-sparks'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Social Sparks sections'
+        data-auto='switcher'
+        data-case='social-sparks'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To build a functional
+        <strong>social platform</strong>
+        on the
+        <strong>Noroff API</strong>—with a focus on clean JavaScript architecture, authentication,
+        and core features like posts, profiles, search, and follow. This was primarily a
+        <strong>development exercise</strong>, so I didn’t produce a separate Figma system—the goal
+        was reliable flows, stable UI states, and maintainable code.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Development Focus</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built a small social platform with
+                <strong>vanilla JavaScript</strong>
+                and a clear feature-based structure (auth, profiles, posts, UI utilities)
+              </li>
+              <li>
+                Integrated the
+                <strong>Noroff API</strong>
+                for user profiles, post feed, and follow relationships—handling real, changing data
+              </li>
+              <li>
+                Implemented a reusable
+                <strong>HTTP client / request wrapper</strong>
+                to centralize fetch logic, attach tokens, parse JSON safely, and surface meaningful
+                errors
+              </li>
+              <li>
+                Built the full
+                <strong>authentication flow</strong>
+                (register/login/logout), including persisted sessions and guarded UI states
+                (logged-in vs logged-out)
+              </li>
+              <li>
+                Added practical UI features like
+                <strong>profile editing</strong>
+                (avatar + banner),
+                <strong>search</strong>, and feed rendering with graceful fallbacks
+              </li>
+              <li>
+                Kept the UI predictable with
+                <strong>loading/empty/error states</strong>, resilient rendering for missing
+                content, and clear
+                <strong>form validation + feedback</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='{{base}}assets/images/site-socialsparks-600.webp'
+              data-src='site-socialsparks-600.webp'
+              alt='Social Sparks UI showing the create account form and a profile page with navigation, search, stats, and a post card.'
+            />
+            <figcaption class='work-caption'>Social Sparks — account creation + profile feed UI
+              (Noroff API)</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='{{base}}assets/images/site-socialsparks-code-600.webp'
+              data-src='site-socialsparks-code-600.webp'
+              alt='Social Sparks code showing setFieldState() for form input validation state and feedback messaging.'
+            />
+            <figcaption class='work-caption'>Social Sparks — reusable form validation helper (field
+              state + feedback)</figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Key Features</h3>
+            <ul class='bullet-list-right'>
+              <li>
+                <strong>User authentication</strong>
+                (register, login, session handling)
+              </li>
+              <li>
+                <strong>Profiles</strong>
+                with avatar/banner and editable profile details
+              </li>
+              <li>
+                <strong>Posts feed</strong>
+                with create, view, and discovery patterns
+              </li>
+              <li>
+                <strong>Follow system</strong>
+                and user search to explore new profiles
+              </li>
+              <li>
+                Reusable API helper focused on
+                <strong>reliability and maintainability</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <h3>Reflection</h3>
+      <p>
+        Social Sparks strengthened my real-world front-end skills around
+        <strong>API-driven UI</strong>
+        and
+        <strong>authentication flows</strong>. This project was primarily code-focused (no dedicated
+        UI design phase), so my main goal was to build a clean, predictable experience through solid
+        structure, form validation/feedback, and consistent state handling.
+      </p>
+      <p>
+        The biggest win was creating a reusable request layer and learning how to keep the UI stable
+        even when the data varies. It’s also a project I can iterate on visually later—without
+        sacrificing clean architecture and readable code.
+      </p>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='{{base}}#work'
+        class='label-link back-to-work-label'
+        data-back
+        data-back-fallback='{{base}}#work'
+        aria-label='Go back'
+      >
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section>

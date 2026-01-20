@@ -26,6 +26,15 @@
 <!-- Make all relative URLs resolve under '/' or '/portfolio/' -->
 <base href='{{base}}' />
 <script>window.__BASE_URL__ = '{{base}}';</script>
+<style
+>
+  :root{
+    --waves-vector-light: url('{{base}}assets/images/vector-waves-light.svg');
+    --waves-vector-dark: url('{{base}}assets/images/vector-waves-dark.svg');
+    --waves-raster-light: url('{{base}}assets/images/waves-light.webp');
+    --waves-raster-dark: url('{{base}}assets/images/waves-dark.webp');
+  }
+</style>
 
 {{! =========================
      Fonts
@@ -57,32 +66,32 @@
 <link
   rel='preload'
   as='image'
-  href='{{baseHref}}assets/images/waves-light.webp'
+  href='{{base}}assets/images/waves-light.webp'
   media='(prefers-color-scheme: light)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{baseHref}}assets/images/waves-dark.webp'
+  href='{{base}}assets/images/waves-dark.webp'
   media='(prefers-color-scheme: dark)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{baseHref}}assets/images/vector-waves-light.svg'
+  href='{{base}}assets/images/vector-waves-light.svg'
   type='image/svg+xml'
   media='(prefers-color-scheme: light)'
 />
 <link
   rel='preload'
   as='image'
-  href='{{baseHref}}assets/images/vector-waves-dark.svg'
+  href='{{base}}assets/images/vector-waves-dark.svg'
   type='image/svg+xml'
   media='(prefers-color-scheme: dark)'
 />
 
 <!-- Favicon / icons -->
-<link rel='icon' href='{{baseHref}}assets/images/logo-katjadev-dark.svg' type='image/svg+xml' />
+<link rel='icon' href='{{base}}favicon.ico?v=1' sizes='any' />
 
 <!-- Canonical points to the site base; router will update at runtime -->
 <link rel='canonical' href='{{base}}' />

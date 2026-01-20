@@ -106,12 +106,12 @@ header::before {
   background-size:
     100% auto,
     cover;
-  background-image: url('images/vector-waves-light.svg'), url('images/waves-light.webp');
+  background-image: var(--waves-vector-light), var(--waves-raster-light);
   transform: translateZ(0);
 }
 .dark-theme header::before,
 [data-theme='dark'] header::before {
-  background-image: url('images/vector-waves-dark.svg'), url('images/waves-dark.webp');
+  background-image: var(--waves-vector-dark), var(--waves-raster-dark);
 }
 
 /* keep header content above its background */
@@ -357,11 +357,11 @@ footer {
   background-size:
     100% auto,
     cover;
-  background-image: url('images/vector-waves-light.svg'), url('images/waves-light.webp');
+  background-image: var(--waves-vector-light), var(--waves-raster-light);
 }
 .dark-theme .fullscreen-menu::before,
 [data-theme='dark'] .fullscreen-menu::before {
-  background-image: url('images/vector-waves-dark.svg'), url('images/waves-dark.webp');
+  background-image: var(--waves-vector-dark), var(--waves-raster-dark);
 }
 .fullscreen-menu > * {
   position: relative;
