@@ -5,7 +5,6 @@
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <meta name='color-scheme' content='light dark' />
     
-    <!-- Content Security Policy (meta version; header-only directives omitted) -->
     <meta
       http-equiv='Content-Security-Policy'
       content="
@@ -26,15 +25,16 @@
     <title>Katja Turnsek - Front-End Developer &amp; Designer | Portfolio Website</title>
     <meta name='description' content='Creative front-end developer with a background in art and design. Explore a fluid, modern portfolio featuring interactive animations, custom code, and thoughtful UX — built with HTML, CSS, JavaScript, GSAP, and Vite.' />
     
-    <!-- Make all relative URLs resolve under '/' or '/portfolio/' -->
     <base href='/portfolio/' />
-    <script>window.__BASE_URL__ = '/portfolio/';</script>
+    <script>
+      window.__BASE_URL__ = '/portfolio/';
+    </script>
+    
     <style
     >:root{--waves-vector-light:url(/portfolio/assets/images/vector-waves-light.svg);--waves-vector-dark:url(/portfolio/assets/images/vector-waves-dark.svg);--waves-raster-light:url(/portfolio/assets/images/waves-light.webp);--waves-raster-dark:url(/portfolio/assets/images/waves-dark.webp)}</style>
     
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
-    
     <link
       rel='preload'
       as='style'
@@ -53,39 +53,24 @@
       />
     </noscript>
     
+    <link rel='prefetch' as='image' href='/portfolio/assets/images/waves-light.webp' />
+    <link rel='prefetch' as='image' href='/portfolio/assets/images/waves-dark.webp' />
     <link
-      rel='preload'
-      as='image'
-      href='/portfolio/assets/images/waves-light.webp'
-      media='(prefers-color-scheme: light)'
-    />
-    <link
-      rel='preload'
-      as='image'
-      href='/portfolio/assets/images/waves-dark.webp'
-      media='(prefers-color-scheme: dark)'
-    />
-    <link
-      rel='preload'
+      rel='prefetch'
       as='image'
       href='/portfolio/assets/images/vector-waves-light.svg'
       type='image/svg+xml'
-      media='(prefers-color-scheme: light)'
     />
     <link
-      rel='preload'
+      rel='prefetch'
       as='image'
       href='/portfolio/assets/images/vector-waves-dark.svg'
       type='image/svg+xml'
-      media='(prefers-color-scheme: dark)'
     />
     
-    <!-- Favicon / icons -->
     <link rel='icon' href='/portfolio/favicon.ico?v=1' sizes='any' />
-    
-    <!-- Canonical points to the site base; router will update at runtime -->
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-CN4ks0Jh.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-Bbtm3oVK.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-C0rJUk_f.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-CrBRBzwp.css">
   </head>
 
   <body class="light-theme">
@@ -257,9 +242,7 @@
           />
         </symbol>
       </defs>
-    </svg>    <!-- Top wave host -->
-    <div class="top-waves"></div>
-
+    </svg>
     <!-- Gooey blobs background (only one copy across the whole site) -->
     <div class="morphing-blob-wrapper" aria-hidden="true">
       <svg
@@ -289,9 +272,12 @@
     <a href='/portfolio/' aria-label='Go to home'>
       <img
         src='/portfolio/assets/images/logo-katjadev-dark.svg'
+        data-light-src='/portfolio/assets/images/logo-katjadev-dark.svg'
+        data-dark-src='/portfolio/assets/images/logo-katjadev-light.svg'
         alt='Katja Dev Logo'
         class='site-logo logo'
         loading='eager'
+        decoding='async'
       />
     </a>
   </div>
@@ -321,6 +307,7 @@
 >
   <div
     class='menu-waves'
+    aria-hidden='true'
     data-light-src='/portfolio/assets/images/waves-light.webp'
     data-dark-src='/portfolio/assets/images/waves-dark.webp'
   ></div>
@@ -328,9 +315,12 @@
   <a href='/portfolio/' aria-label='Go to home'>
     <img
       src='/portfolio/assets/images/logo-katjadev-dark.svg'
+      data-logo-light='/portfolio/assets/images/logo-katjadev-light.svg'
+      data-logo-dark='/portfolio/assets/images/logo-katjadev-dark.svg'
       alt='Katja Dev Logo'
       class='site-logo site-logo-menu'
       loading='eager'
+      decoding='async'
     />
   </a>
 
@@ -338,7 +328,9 @@
     <svg class='icon' aria-hidden='true'><use href='#i-close' /></svg>
   </button>
 
-  <h2 id='menu-title' class='visually-hidden'>Main menu</h2>
+  <div role='dialog' aria-labelledby='menu-title'>
+    <span id='menu-title' class='visually-hidden'>Main menu</span>
+  </div>
 
   <nav aria-label='Primary'>
     <a href='/portfolio/#work'>Work</a>
@@ -487,6 +479,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-petart-600.webp'
               data-src='site-petart-600.webp'
+              data-path='assets/images'
               alt='Pet Art with Heart - homepage desktop view'
             />
             <figcaption class='work-caption'>Desktop version - Homepage</figcaption>
@@ -499,6 +492,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-petartmobile-600.webp'
               data-src='site-petartmobile-600.webp'
+              data-path='assets/images'
               alt='Pet Art with Heart - homepage mobile view'
             />
             <figcaption class='work-caption'>Mobile version - Homepage and Menu</figcaption>
@@ -624,6 +618,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-portfolio-600.webp'
               data-src='site-portfolio-600.webp'
+              data-path='assets/images'
               alt='Katja Turnsek Portfolio - homepage desktop view'
             />
             <figcaption class='work-caption'>Desktop version - Homepage</figcaption>
@@ -636,6 +631,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-portfoliomobile-600.webp'
               data-src='site-portfoliomobile-600.webp'
+              data-path='assets/images'
               alt='Katja Turnsek Portfolio - homepage mobile view'
             />
             <figcaption class='work-caption'>Mobile version - Homepage and Menu</figcaption>
@@ -946,7 +942,7 @@
               data-src='site-agilitybandits-600.webp'
               alt='Agility Bandits Centre Blog - homepage desktop view'
             />
-            <figcaption class='work-caption'>Desktop version - Blog Post</figcaption>
+            <figcaption class='work-caption'>Desktop version - Homepage</figcaption>
           </figure>
         </div>
 
@@ -1006,7 +1002,6 @@
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
-
   </div>
 </section> <section
   id='case-rainydays'
@@ -1089,6 +1084,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-rainydays-products-600.webp'
               data-src='site-rainydays-products-600.webp'
+              data-path='assets/images'
               alt='Rainy Days product listing page showing jacket cards and filtering layout'
             />
             <figcaption class='work-caption'>Desktop version - Product listing</figcaption>
@@ -1101,6 +1097,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-rainydays-checkout-600.webp'
               data-src='site-rainydays-checkout-600.webp'
+              data-path='assets/images'
               alt='Rainy Days mobile UI showing key e-commerce screens'
             />
             <figcaption class='work-caption'>Mobile version - Shopping flow</figcaption>
@@ -1160,7 +1157,6 @@
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
-
   </div>
 </section> <section
   id='case-semester-project-1'
@@ -1233,6 +1229,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-gemenskapet-science-museum-600.webp'
               data-src='site-gemenskapet-science-museum-600.webp'
+              data-path='assets/images'
               alt='Gemenskapet Science Museum — homepage desktop view'
             />
             <figcaption class='work-caption'>Desktop — Homepage</figcaption>
@@ -1245,6 +1242,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-gemenskapet-science-museummobile-600.webp'
               data-src='site-gemenskapet-science-museummobile-600.webp'
+              data-path='assets/images'
               alt='Gemenskapet Science Museum — mobile homepage and menu'
             />
             <figcaption class='work-caption'>Mobile — Homepage &amp; Menu</figcaption>
@@ -1389,6 +1387,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-socialsparks-600.webp'
               data-src='site-socialsparks-600.webp'
+              data-path='assets/images'
               alt='Social Sparks UI showing the create account form and a profile page with navigation, search, stats, and a post card.'
             />
             <figcaption class='work-caption'>Social Sparks — account creation + profile feed UI
@@ -1402,6 +1401,7 @@
               class='thumb'
               src='/portfolio/assets/images/site-socialsparks-code-600.webp'
               data-src='site-socialsparks-code-600.webp'
+              data-path='assets/images'
               alt='Social Sparks code showing setFieldState() for form input validation state and feedback messaging.'
             />
             <figcaption class='work-caption'>Social Sparks — reusable form validation helper (field
@@ -1550,7 +1550,7 @@
               class='thumb'
               src='/portfolio/assets/images/design-petartprototype-600.webp'
               data-src='design-petartprototype-600.webp'
-              alt='Figma prototype showing the desktop layout of the pet art with heart website'
+              alt='Figma prototype showing the desktop layout of the Pet Art with Heart website'
             />
             <figcaption class='work-caption'>
               Desktop version - Figma prototype of the Pet Art with Heart site layout
@@ -1622,25 +1622,25 @@
               class='thumb'
               src='/portfolio/assets/images/design-petartwireframes-900.webp'
               data-src='design-petartwireframes-900.webp'
-              alt='Figma wire frames showing the desktop layout of the pet art with heart website'
+              alt='Figma wireframes showing the desktop layout of the Pet Art with Heart website'
             />
             <figcaption class='work-caption'>
-              Desktop version - Figma wire frames of Pet Art with Heart website
+              Desktop version - Figma wireframes of Pet Art with Heart website
             </figcaption>
           </figure>
         </div>
       </div>
+    </div>
 
-      <div class='row'>
-        <h3>Reflection</h3>
-        <p>
-          This project emphasized designing with intention—considering
-          <strong>user behavior</strong>,
-          <strong>visual hierarchy</strong>, and branding. It helped me structure a portfolio that's
-          not only visually appealing but also
-          <strong>user-focused</strong>, with interaction kept subtle to support the work.
-        </p>
-      </div>
+    <div class='row'>
+      <h3>Reflection</h3>
+      <p>
+        This project emphasized designing with intention—considering
+        <strong>user behavior</strong>,
+        <strong>visual hierarchy</strong>, and branding. It helped me structure a portfolio that's
+        not only visually appealing but also
+        <strong>user-focused</strong>, with interaction kept subtle to support the work.
+      </p>
     </div>
 
     <div class='back-to-work-container'>
@@ -1655,7 +1655,6 @@
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
-
   </div>
 </section> <section
   id='case-portfolio-design'
@@ -1730,6 +1729,7 @@
               class='thumb'
               src='/portfolio/assets/images/design-portfoliomoodboard-600.webp'
               data-src='design-portfoliomoodboard-600.webp'
+              data-path='assets/images'
               alt='Figma mood board for KT Portfolio showing colors, typography, and inspiration images'
             />
             <figcaption class='work-caption'>
@@ -1745,6 +1745,7 @@
               class='thumb'
               src='/portfolio/assets/images/design-ktportfolio-600.webp'
               data-src='design-ktportfolio-600.webp'
+              data-path='assets/images'
               alt='Figma prototype showing Wire framing layout of the Portfolio website'
             />
             <figcaption class='work-caption'>
@@ -1831,6 +1832,7 @@
               class='thumb'
               src='/portfolio/assets/images/design-portfoliogsap-600.webp'
               data-src='design-portfoliogsap-600.webp'
+              data-path='assets/images'
               alt='Image of GSAP animation JavaScript code'
             />
             <figcaption class='work-caption'>GSAP animation JavaScript code</figcaption>
@@ -1900,10 +1902,14 @@
           <div class='case-study-text'>
             <h3>Concept &amp; Visual Language</h3>
             <ul class='bullet-list'>
-              <li>Clean, approachable layout with a focus on
-                <strong>readability and usability</strong>.</li>
-              <li><strong>Agility-inspired branding</strong>
-                using speed lines, obstacle icons, and motion cues.</li>
+              <li>
+                Clean, approachable layout with a focus on
+                <strong>readability and usability</strong>.
+              </li>
+              <li>
+                <strong>Agility-inspired branding</strong>
+                using speed lines, obstacle icons, and motion cues.
+              </li>
               <li>Bold, energetic color palette to reflect the sport's fast-paced nature.</li>
             </ul>
           </div>
@@ -1915,7 +1921,6 @@
               class='thumb'
               src='/portfolio/assets/images/design-agilitybanditsmoodboard-600.webp'
               data-src='design-agilitybanditsmoodboard-600.webp'
-              data-path='assets/images'
               alt='Figma mood board for Agility Bandits Centre Blog'
             />
             <figcaption class='work-caption'>
@@ -1930,7 +1935,6 @@
               class='thumb'
               src='/portfolio/assets/images/design-agilitybandits-600.webp'
               data-src='design-agilitybandits-600.webp'
-              data-path='assets/images'
               alt='Figma prototype of Agility Bandits Centre Blog layout'
             />
             <figcaption class='work-caption'>
@@ -1943,8 +1947,10 @@
           <div class='case-study-text'>
             <h3>Figma Design &amp; Prototyping</h3>
             <ul class='bullet-list-right'>
-              <li>Wireframes for homepage, article pages, and
-                <strong>admin login/register</strong>.</li>
+              <li>
+                Wireframes for homepage, article pages, and
+                <strong>admin login/register</strong>.
+              </li>
               <li><strong>Flexible content blocks</strong> designed to adapt to API content.</li>
               <li><strong>Responsive layouts</strong> tested across multiple breakpoints.</li>
             </ul>
@@ -1955,13 +1961,17 @@
           <div class='case-study-text item-left'>
             <h3>Interaction Design</h3>
             <ul class='bullet-list'>
-              <li>Designed
+              <li>
+                Designed
                 <strong>intuitive user flows</strong>
-                from browsing to reading to admin tasks.</li>
+                from browsing to reading to admin tasks.
+              </li>
               <li>Interactive hover/focus states and smooth menu transitions.</li>
-              <li>Fully
+              <li>
+                Fully
                 <strong>accessible interface</strong>
-                for keyboard and screen reader users.</li>
+                for keyboard and screen reader users.
+              </li>
             </ul>
           </div>
         </div>
@@ -2000,7 +2010,6 @@
               class='thumb'
               src='/portfolio/assets/images/design-agilitybanditsapi-600.webp'
               data-src='design-agilitybanditsapi-600.webp'
-              data-path='assets/images'
               alt='JavaScript API integration code for Agility Bandits Blog'
             />
             <figcaption class='work-caption'>JavaScript code integrating the Noroff API</figcaption>
@@ -2021,7 +2030,6 @@
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
-
   </div>
 </section> <section
   id='case-semester-project-1-design'
@@ -2069,17 +2077,25 @@
           <div class='case-study-text'>
             <h3>Design Process</h3>
             <ul class='bullet-list'>
-              <li><strong>Research:</strong>
-                studied youth-focused museum/education sites and age-appropriate color/type.</li>
-              <li><strong>Direction:</strong>
+              <li>
+                <strong>Research:</strong>
+                studied youth-focused museum/education sites and age-appropriate color/type.
+              </li>
+              <li>
+                <strong>Direction:</strong>
                 defined style keywords - fun, youthful, inspiring, curiosity, explore, discovery,
-                serious, colorful.</li>
-              <li><strong>System:</strong>
-                three-color palette (bright yellow, green, multi-hue blues) + rounded components.</li>
-              <li><strong>Typography:</strong>
+                serious, colorful.
+              </li>
+              <li>
+                <strong>System:</strong>
+                three-color palette (bright yellow, green, multi-hue blues) + rounded components.
+              </li>
+              <li>
+                <strong>Typography:</strong>
                 standardized on
                 <em>Avenir</em>
-                for cohesive, readable UI (logo uses complementary display fonts).</li>
+                for cohesive, readable UI (logo uses complementary display fonts).
+              </li>
             </ul>
           </div>
         </div>
@@ -2090,6 +2106,7 @@
               class='thumb'
               src='/portfolio/assets/images/design-gemenskapet-science-museumboard-600.webp'
               data-src='design-gemenskapet-science-museumboard-600.webp'
+              data-path='assets/images'
               alt='Figma mood board for Gemenskapet Science Museum'
             />
             <figcaption class='work-caption'>
@@ -2104,6 +2121,7 @@
               class='thumb'
               src='/portfolio/assets/images/design-gemenskapet-science-museum-600.webp'
               data-src='design-gemenskapet-science-museum-600.webp'
+              data-path='assets/images'
               alt='Figma UI frames and responsive prototypes for Gemenskapet Science Museum'
             />
             <figcaption class='work-caption'>
@@ -2128,8 +2146,10 @@
           <div class='case-study-text item-left'>
             <h3>Wireframing &amp; Mockups</h3>
             <ul class='bullet-list'>
-              <li>User flows, wireframes, style guide, and responsive mockups in
-                <strong>Figma</strong>.</li>
+              <li>
+                User flows, wireframes, style guide, and responsive mockups in
+                <strong>Figma</strong>.
+              </li>
               <li>Mobile-first layouts validated across multiple breakpoints.</li>
               <li>Components documented for consistency and reuse.</li>
             </ul>
@@ -2163,7 +2183,8 @@
             <img
               class='thumb'
               src='/portfolio/assets/images/design-science-museum-wireframes-600.webp'
-              data-src='design-science-museum-wireframes-300.webp'
+              data-src='design-science-museum-wireframes-600.webp'
+              data-path='assets/images'
               alt='Gemenskapet Science Museum wireframes in Figma'
             />
             <figcaption class='work-caption'>Science Museum Wireframes</figcaption>
@@ -2272,6 +2293,7 @@
               class='thumb'
               src='/portfolio/assets/images/web-rainydays-600.webp'
               data-src='web-rainydays-600.webp'
+              data-path='assets/images'
               alt='Desktop UI mockups for Rainy Days showing all pages for mobile screens'
             />
             <figcaption class='work-caption'>
@@ -2286,6 +2308,7 @@
               class='thumb'
               src='/portfolio/assets/images/web-rainydays-desktop-600.webp'
               data-src='web-rainydays-desktop-600.webp'
+              data-path='assets/images'
               alt='Rainy Days Figma desktop design showing product listing layout with jacket cards and clear call-to-action buttons'
             />
             <figcaption class='work-caption'>
@@ -2370,6 +2393,7 @@
               class='thumb'
               src='/portfolio/assets/images/web-rainydays-flow-600.webp'
               data-src='web-rainydays-flow-600.webp'
+              data-path='assets/images'
               alt='Figma high-fidelity screens for “Rainy Days” showing the e-commerce flow across key pages: product details, cart/checkout, and confirmation, presented in multiple responsive layouts.'
             />
             <figcaption class='work-caption'>
@@ -2469,6 +2493,7 @@
               class='thumb'
               src='/portfolio/assets/images/web-studiobid-600.webp'
               data-src='web-studiobid-600.webp'
+              data-path='assets/images'
               alt='StudioBid style guide showing the color palette and Poppins typography scale.'
             />
             <figcaption class='work-caption'>
@@ -2484,6 +2509,7 @@
               class='thumb'
               src='/portfolio/assets/images/web-studiobid-ui-600.webp'
               data-src='web-studiobid-ui-600.webp'
+              data-path='assets/images'
               alt='StudioBid UI mockups showing key screens: auction listing details, mobile listing view, and the sign up / create account flow.'
             />
             <figcaption class='work-caption'>
@@ -2572,6 +2598,7 @@
               class='thumb'
               src='/portfolio/assets/images/web-studiobid-wireframe-600.webp'
               data-src='web-studiobid-wireframe-600.webp'
+              data-path='assets/images'
               alt='Low-fidelity wireframe for StudioBid showing the profile dashboard layout with tabs (Active listings, My bids, My wins) and listing cards with actions like view, edit, and delete.'
             />
             <figcaption class='work-caption'>
@@ -2665,11 +2692,10 @@
               class='thumb'
               src='/portfolio/assets/images/design-petartlogosuite-600.webp'
               data-src='design-petartlogosuite-600.webp'
+              data-path='assets/images'
               alt='Pet Art with Heart Logo Suite Variations'
             />
-            <figcaption class='work-caption'>
-              Logo Suite Variations - Pet Art with Heart
-            </figcaption>
+            <figcaption class='work-caption'>Logo Suite Variations - Pet Art with Heart</figcaption>
           </figure>
         </div>
 
@@ -2679,6 +2705,7 @@
               class='thumb'
               src='/portfolio/assets/images/logo-sketch-petart-900.webp'
               data-src='logo-sketch-petart-900.webp'
+              data-path='assets/images'
               alt='Pet Art with Heart - Logo Design'
             />
             <figcaption class='work-caption'>Sketch and Logotype design - Pet Art with Heart</figcaption>
@@ -2702,17 +2729,17 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class='row'>
-        <h3>Takeaway</h3>
-        <p>
-          This logo project allowed me to bridge my fine art skills with graphic design principles.
-          From sketching by hand to refining the final logo digitally, I focused on visual
-          storytelling and emotional connection. The end result is a logo that feels both
-          <strong>artistically expressive and professionally crafted</strong>, embodying the heart
-          and soul of my pet portrait brand.
-        </p>
-      </div>
+    <div class='row'>
+      <h3>Takeaway</h3>
+      <p>
+        This logo project allowed me to bridge my fine art skills with graphic design principles.
+        From sketching by hand to refining the final logo digitally, I focused on visual
+        storytelling and emotional connection. The end result is a logo that feels both
+        <strong>artistically expressive and professionally crafted</strong>, embodying the heart and
+        soul of my pet portrait brand.
+      </p>
     </div>
 
     <div class='back-to-work-container'>
@@ -2727,7 +2754,6 @@
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
-
   </div>
 </section> <section
   id='case-portfolio-logotype'
@@ -2779,17 +2805,25 @@
           <div class='case-study-text'>
             <h3>Concept &amp; Creation</h3>
             <ul class='bullet-list'>
-              <li>Sketched
+              <li>
+                Sketched
                 <strong>hand-drawn iterations</strong>
-                to explore fluid shapes and initials</li>
-              <li>Chose the
+                to explore fluid shapes and initials
+              </li>
+              <li>
+                Chose the
                 <strong>splash motif</strong>
-                to represent adaptability, creativity, and movement</li>
-              <li>Used my initials
+                to represent adaptability, creativity, and movement
+              </li>
+              <li>
+                Used my initials
                 <strong>“KT”</strong>
-                as the foundation for a bold, personal mark</li>
-              <li>Finalized the logotype in
-                <strong>Illustrator</strong>, simplifying shapes while retaining organic energy</li>
+                as the foundation for a bold, personal mark
+              </li>
+              <li>
+                Finalized the logotype in
+                <strong>Illustrator</strong>, simplifying shapes while retaining organic energy
+              </li>
             </ul>
           </div>
         </div>
@@ -2800,6 +2834,7 @@
               class='thumb'
               src='/portfolio/assets/images/logo-ktportfolio-600.webp'
               data-src='logo-ktportfolio-600.webp'
+              data-path='assets/images'
               alt='KT Dev sketch to Vector based Logotype'
             />
             <figcaption class='work-caption'>Logotype Design - Katja Dev Portfolio</figcaption>
@@ -2812,6 +2847,7 @@
               class='thumb'
               src='/portfolio/assets/images/design-portfoliologosuite-600.webp'
               data-src='design-portfoliologosuite-600.webp'
+              data-path='assets/images'
               alt='KT Dev - Logo Design'
             />
             <figcaption class='work-caption'>Logo Suite Variations - KT DEV</figcaption>
@@ -2836,16 +2872,16 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class='row'>
-        <h3>Takeaway</h3>
-        <p>
-          This project blends
-          <strong>analog techniques with vector precision</strong>. The logo is more than a
-          signature—it reflects how I work:
-          <strong>flexible, fluid</strong>, and creatively hands-on.
-        </p>
-      </div>
+    <div class='row'>
+      <h3>Takeaway</h3>
+      <p>
+        This project blends
+        <strong>analog techniques with vector precision</strong>. The logo is more than a
+        signature—it reflects how I work:
+        <strong>flexible, fluid</strong>, and creatively hands-on.
+      </p>
     </div>
 
     <div class='back-to-work-container'>
@@ -2860,7 +2896,6 @@
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
-
   </div>
 </section> <section
   id='case-agilitybandits-logotype'
@@ -2940,7 +2975,6 @@
               class='thumb'
               src='/portfolio/assets/images/logo-agilitybandits-600.webp'
               data-src='logo-agilitybandits-600.webp'
-              data-path='assets/images'
               alt='Agility Bandits logotype: red & white Border Collie with bandit eye mask above a Western-style wordmark'
             />
             <figcaption class='work-caption'>
@@ -2955,7 +2989,6 @@
               class='thumb'
               src='/portfolio/assets/images/design-agilitybandits-elements-600.webp'
               data-src='design-agilitybandits-elements-600.webp'
-              data-path='assets/images'
               alt='Agility Bandits speed lines and falling agility obstacle vector graphics'
             />
             <figcaption class='work-caption'>
@@ -3010,7 +3043,6 @@
               class='thumb'
               src='/portfolio/assets/images/graphics-agilitybandits-elements-600.webp'
               data-src='graphics-agilitybandits-elements-600.webp'
-              data-path='assets/images'
               alt='Agility Bandits logotype and graphics applied on website'
             />
             <figcaption class='work-caption'>Applications — Website header and footer</figcaption>
@@ -3045,7 +3077,6 @@
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
-
   </div>
 </section> <section
   id='case-semester-project-1-logotype'
@@ -3132,7 +3163,8 @@
             <img
               class='thumb'
               src='/portfolio/assets/images/logosuite-gemenskapet-science-museum-900.webp'
-              data-src='assets/images/logosuite-gemenskapet-science-museum-900.webp'
+              data-src='logosuite-gemenskapet-science-museum-900.webp'
+              data-path='assets/images'
               alt='Gemenskapet Science Museum logotype with magnifying glass and wordmark'
             />
             <figcaption class='work-caption'>Primary logotype — full lockup</figcaption>
@@ -3144,7 +3176,8 @@
             <img
               class='thumb'
               src='/portfolio/assets/images/icon-gemenskapet-science-museum-600.webp'
-              data-src='assets/images/icon-gemenskapet-science-museum-600.webp'
+              data-src='icon-gemenskapet-science-museum-600.webp'
+              data-path='assets/images'
               alt='Gemenskapet Science Museum standalone magnifying-glass icon'
             />
             <figcaption class='work-caption'>Icon — standalone symbol</figcaption>
@@ -3170,16 +3203,308 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class='row'>
-        <h3>Takeaway</h3>
-        <p>
-          The result is a
-          <strong>science-led, curiosity-driven</strong>
-          identity that feels youthful without losing museum credibility. It scales cleanly from
-          favicon/icon to full lockup and maintains a consistent voice across web and print.
-        </p>
+    <div class='row'>
+      <h3>Takeaway</h3>
+      <p>
+        The result is a
+        <strong>science-led, curiosity-driven</strong>
+        identity that feels youthful without losing museum credibility. It scales cleanly from
+        favicon/icon to full lockup and maintains a consistent voice across web and print.
+      </p>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
+        data-back
+        data-back-fallback='/portfolio/#work'
+        aria-label='Go back'
+      >
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-studiobid-logotype'
+  class='fullscreen-section'
+  data-title='Case Study: StudioBid — Brand &amp; Logotype | Katja Turnsek'
+  data-description='Brand identity and logo system for an auction platform—clear, modern mark with UI-ready assets.'
+  data-case='studiobid'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Graphic Design</h1>
+      <h2>StudioBid - Brand &amp; Logotype</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Illustrator | Figma</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='studiobid-logotype'></div>
       </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='StudioBid sections'
+        data-auto='switcher'
+        data-case='studiobid'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To create a brand identity for StudioBid that feels
+        <strong>trustworthy, modern, and product-ready</strong>—a logotype built to work inside a UI
+        (header, buttons, small navigation space) while still being strong enough for presentations,
+        PDFs, and marketing. The mark needed to stay
+        <strong>clear at small sizes</strong>
+        and scale down to icons and favicons without losing recognition.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Creation</h3>
+            <ul class='bullet-list'>
+              <li>
+                Built the identity around a simple, recognizable
+                <strong>gavel symbol</strong>
+                to communicate “auction” instantly—kept bold and clean for UI use.
+              </li>
+              <li>
+                Designed a clear wordmark where
+                <strong>“Bid” is highlighted</strong>
+                to emphasize action and create a memorable visual rhythm in the name.
+              </li>
+              <li>
+                Produced a practical logo system:
+                <strong>primary/secondary lockups</strong>, icon-only versions, and badge-style
+                marks for tight spaces (navigation, profile areas, favicons).
+              </li>
+              <li>
+                Prepared
+                <strong>light/dark-friendly</strong>
+                options and simple brand rules so the logo stays readable across different
+                backgrounds and layouts.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/design-studiobid-logosuite-600.webp'
+              data-src='design-studiobid-logosuite-600.webp'
+              data-path='assets/images'
+              alt='StudioBid logo suite overview showing the logotype variations and icon'
+            />
+            <figcaption class='work-caption'>
+              StudioBid brand overview — logotype suite and icon
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/design-studiobid-600.webp'
+              data-src='design-studiobid-600.webp'
+              data-path='assets/images'
+              alt='StudioBid homepage header showing the StudioBid logotype (gavel icon + wordmark) above the hero message'
+            />
+            <figcaption class='work-caption'>
+              StudioBid logotype in context — the gavel icon and wordmark used in the website header
+              on the homepage.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Thinking</h3>
+            <p>
+              I treated the logo like a UI component: it had to be
+              <strong>quick to read</strong>, work in small spaces, and stay consistent across the
+              product.
+            </p>
+            <p>
+              The process was intentionally practical—define the symbol and typography, create
+              multiple lockups, then test the mark directly in real layouts (header/navigation and
+              compact placements). That approach ensured the final result supports both
+              <strong>visual clarity</strong>
+              and
+              <strong>fast implementation</strong>
+              in the StudioBid app.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <h3>Takeaway</h3>
+      <p>
+        This brand task connected graphic design decisions to real product needs: building a
+        logotype that’s readable, flexible, and ready for an interface-driven platform. The identity
+        stays clean on purpose—so it can scale from a simple icon to full layouts while keeping
+        StudioBid consistent and credible.
+      </p>
+    </div>
+
+    <div class='back-to-work-container'>
+      <a
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
+        data-back
+        data-back-fallback='/portfolio/#work'
+        aria-label='Go back'
+      >
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
+      </a>
+    </div>
+  </div>
+</section> <section
+  id='case-heartasylum-logotype'
+  class='fullscreen-section'
+  data-title='Case Study: Heart Asylum — Logo Suite &amp; Cover Art | Katja Turnsek'
+  data-description='Logo system and single cover art for the European alternative rock duo Heart Asylum—dark-first branding, scalable lockups, and atmospheric artwork.'
+  data-case='heartasylum'
+>
+  <div class='rows'>
+    <div class='row'>
+      <h1>Graphic Design</h1>
+      <h2>Heart Asylum - Logo Suite &amp; Cover Art</h2>
+
+      <div class='tech-demo-wrapper'>
+        <div class='tech-stack'><strong>Tools:</strong> Illustrator | Photoshop</div>
+
+        <!-- Reusable component: Demo Links -->
+        <div class='demo-links' data-auto='demo' data-case='heartasylum'></div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <!-- Reusable component: Project Switcher -->
+      <nav
+        class='project-switcher'
+        aria-label='Heart Asylum sections'
+        data-auto='switcher'
+        data-case='heartasylum'
+      ></nav>
+    </div>
+
+    <div class='row'>
+      <h3>Objective</h3>
+      <p>
+        To create a bold, dark-first identity for Heart Asylum, a European alternative rock duo
+        built for real world use across
+        <strong>cover art, streaming platforms and social media</strong>. The logo needed a strong
+        silhouette that stays recognizable at small sizes while also working as a complete lockup
+        for posters and artwork.
+      </p><p>Alongside the logo suite, I designed a single cover with an intentionally
+        <strong>atmospheric hierarchy</strong>
+        where the simple line-art illustration leads and the typography supports the mood.
+      </p>
+    </div>
+
+    <div class='row'>
+      <div class='case-study-columns'>
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Concept &amp; Creation</h3>
+            <ul class='bullet-list'>
+              <li>
+                Designed an emblem style mark centered on a
+                <strong>heart motif</strong>
+                with sharp, architectural details aimed to feel iconic, dramatic, and
+                genre-appropriate.
+              </li>
+              <li>
+                Built a usable logo system with
+                <strong>primary/secondary lockups</strong>, icon, and text-only variations, ready
+                for both small UI placements and large format artwork.
+              </li>
+              <li>
+                Created a consistent visual language for the single cover high contrast linework
+                over a dark portrait, keeping the identity cohesive across branding and artwork.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-right'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/logo-heartasylum-logosuite-600.webp'
+              data-src='logo-heartasylum-logosuite-600.webp'
+              data-path='assets/images'
+              alt='Heart Asylum logo suite overview showing primary lockup, icon, text-only version, secondary lockup and reversed variant'
+            />
+            <figcaption class='work-caption'>
+              Heart Asylum logo suite - primary/secondary lockups, icon, and reversed versions
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <figure class='case-study-item item-left'>
+            <img
+              class='thumb'
+              src='/portfolio/assets/images/cover-heartasylum-used-to-believe-600.webp'
+              data-src='cover-heartasylum-used-to-believe-600.webp'
+              data-path='assets/images'
+              alt='Heart Asylum single cover art for Used to Believe in Angels with white wing linework over a dark portrait and low-contrast title typography'
+            />
+            <figcaption class='work-caption'>
+              Single cover - “Used to Believe in Angels.” Low contrast typography was intentional to
+              keep focus on the wing illustration and atmosphere.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class='case-study-wrapper'>
+          <div class='case-study-text'>
+            <h3>Design Thinking</h3>
+            <p>
+              I approached the identity like a system: the emblem needed to be recognizable as an
+              <strong>icon</strong>, but also strong enough to carry a full lockup on posters and
+              artwork.
+            </p>
+            <p>
+              For the cover, I intentionally pushed a
+              <strong>moody hierarchy</strong>, the wings are the visual hook, the portrait supports
+              the tone, and the typography sits back to preserve the cinematic feel.
+            </p><p>The result balances clarity with atmosphere, while keeping the band’s visual
+              identity consistent across branding and release graphics.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <h3>Takeaway</h3>
+      <p>
+        This project connected branding and artwork into one cohesive release package: a logo suite
+        that’s flexible across formats, and cover art that uses contrast and restraint to build
+        mood. The identity is designed to work where bands actually live - avatars, streaming,
+        posters, and social without losing recognizability or tone.
+      </p>
     </div>
 
     <div class='back-to-work-container'>
@@ -3381,11 +3706,9 @@
     <div class='row'>
       <p class='info-text'>
         Email
-        <a
-          id='contact-email'
-          href='mailto:katja@pet-art.net'
-          rel='nofollow noopener'
-        >katja@pet-art.net</a>
+        <a id='contact-email' href='mailto:katja@pet-art.net' rel='nofollow noopener'>
+          katja@pet-art.net
+        </a>
         or use the form
       </p>
 
@@ -3414,14 +3737,17 @@
           />
 
           <!-- Honeypot (must remain empty) -->
-          <input
-            type='checkbox'
-            name='botcheck'
-            tabindex='-1'
-            autocomplete='off'
-            style='position: absolute; left: -9999px; opacity: 0'
-            aria-hidden='true'
-          />
+          <div style='position:absolute; left:-9999px; opacity:0; pointer-events:none;'>
+            <label for='botcheck' class='sr-only'>Leave this field empty</label>
+            <input
+              id='botcheck'
+              type='checkbox'
+              name='botcheck'
+              tabindex='-1'
+              autocomplete='off'
+              aria-label='Leave this field empty'
+            />
+          </div>
 
           <!-- Name + Email -->
           <div class='name-row'>
