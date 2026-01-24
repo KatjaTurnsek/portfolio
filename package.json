@@ -31,6 +31,7 @@
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "autoprefixer": "^10.4.21",
+    "baseline-browser-mapping": "^2.9.17",
     "cross-env": "^7.0.3",
     "cssnano": "^7.1.1",
     "gh-pages": "^6.3.0",

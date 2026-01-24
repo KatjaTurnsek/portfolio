@@ -2,7 +2,6 @@
 <meta name='viewport' content='width=device-width, initial-scale=1' />
 <meta name='color-scheme' content='light dark' />
 
-<!-- Content Security Policy (meta version; header-only directives omitted) -->
 <meta
   http-equiv='Content-Security-Policy'
   content="
@@ -23,12 +22,14 @@
 <title>{{site.title}}</title>
 <meta name='description' content='{{site.description}}' />
 
-<!-- Make all relative URLs resolve under '/' or '/portfolio/' -->
 <base href='{{base}}' />
-<script>window.__BASE_URL__ = '{{base}}';</script>
+<script>
+  window.__BASE_URL__ = '{{base}}';
+</script>
+
 <style
 >
-  :root{
+  :root {
     --waves-vector-light: url('{{base}}assets/images/vector-waves-light.svg');
     --waves-vector-dark: url('{{base}}assets/images/vector-waves-dark.svg');
     --waves-raster-light: url('{{base}}assets/images/waves-light.webp');
@@ -36,12 +37,9 @@
   }
 </style>
 
-{{! =========================
-     Fonts
-     ========================= }}
+{{! Fonts }}
 <link rel='preconnect' href='https://fonts.googleapis.com' />
 <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
-
 <link
   rel='preload'
   as='style'
@@ -60,38 +58,21 @@
   />
 </noscript>
 
-{{! =========================
-     Preload header/menu wave layers (base-aware)
-     ========================= }}
+{{! Waves: use prefetch instead of preload to avoid Chrome warnings }}
+<link rel='prefetch' as='image' href='{{base}}assets/images/waves-light.webp' />
+<link rel='prefetch' as='image' href='{{base}}assets/images/waves-dark.webp' />
 <link
-  rel='preload'
-  as='image'
-  href='{{base}}assets/images/waves-light.webp'
-  media='(prefers-color-scheme: light)'
-/>
-<link
-  rel='preload'
-  as='image'
-  href='{{base}}assets/images/waves-dark.webp'
-  media='(prefers-color-scheme: dark)'
-/>
-<link
-  rel='preload'
+  rel='prefetch'
   as='image'
   href='{{base}}assets/images/vector-waves-light.svg'
   type='image/svg+xml'
-  media='(prefers-color-scheme: light)'
 />
 <link
-  rel='preload'
+  rel='prefetch'
   as='image'
   href='{{base}}assets/images/vector-waves-dark.svg'
   type='image/svg+xml'
-  media='(prefers-color-scheme: dark)'
 />
 
-<!-- Favicon / icons -->
 <link rel='icon' href='{{base}}favicon.ico?v=1' sizes='any' />
-
-<!-- Canonical points to the site base; router will update at runtime -->
 <link rel='canonical' href='{{base}}' />

@@ -202,7 +202,7 @@ main {
   min-height: 100vh;
 }
 main > .fullscreen-section:first-child {
-  padding-top: var(--first-section-pad);
+  padding-top: 0;
 }
 
 .no-js #home {
@@ -772,13 +772,20 @@ section.fullscreen-section > h1 {
     text-align: center;
   }
 
+  /* Work thumbnails: same height on mobile */
   .work-item {
     aspect-ratio: auto;
-    min-height: 0;
+    height: clamp(220px, 55vw, 320px); /* adjust if you want */
   }
+
+  .work-item > a {
+    height: 100%;
+  }
+
   .work-item img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
   }
 
   .work-columns {

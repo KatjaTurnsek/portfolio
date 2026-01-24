@@ -68,9 +68,9 @@
   --p-font-weight: 400;
   --p-line-height: 32px;
 
-  /* Links */
-  --link-color: var(--teal);
-  --link-hover-color: var(--teal-light);
+  /* Links (LIGHT) */
+  --link-color: var(--dark);
+  --link-hover-color: var(--teal);
 
   /* Graphics (waves/blobs/loader) */
   --wave-color-light: var(--dark);
@@ -197,16 +197,33 @@ i {
   font-style: italic;
 }
 
+/* Links (default) */
 a {
   color: var(--link-color);
   text-decoration: none;
   transition: color 0.4s ease-in;
 }
 a:hover,
-a:focus {
+a:focus-visible {
   color: var(--link-hover-color);
   text-decoration: underline;
   transition: color 0.4s ease-out;
+}
+
+/* Accessibility: body-text links are always identifiable (not color-only) */
+p a,
+li a,
+.info-text a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+p a:hover,
+p a:focus-visible,
+li a:hover,
+li a:focus-visible,
+.info-text a:hover,
+.info-text a:focus-visible {
+  text-decoration-thickness: 2px;
 }
 
 /* SplitType helpers */

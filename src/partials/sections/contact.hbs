@@ -17,11 +17,9 @@
     <div class='row'>
       <p class='info-text'>
         Email
-        <a
-          id='contact-email'
-          href='mailto:katja@pet-art.net'
-          rel='nofollow noopener'
-        >katja@pet-art.net</a>
+        <a id='contact-email' href='mailto:katja@pet-art.net' rel='nofollow noopener'>
+          katja@pet-art.net
+        </a>
         or use the form
       </p>
 
@@ -50,14 +48,17 @@
           />
 
           <!-- Honeypot (must remain empty) -->
-          <input
-            type='checkbox'
-            name='botcheck'
-            tabindex='-1'
-            autocomplete='off'
-            style='position: absolute; left: -9999px; opacity: 0'
-            aria-hidden='true'
-          />
+          <div style='position:absolute; left:-9999px; opacity:0; pointer-events:none;'>
+            <label for='botcheck' class='sr-only'>Leave this field empty</label>
+            <input
+              id='botcheck'
+              type='checkbox'
+              name='botcheck'
+              tabindex='-1'
+              autocomplete='off'
+              aria-label='Leave this field empty'
+            />
+          </div>
 
           <!-- Name + Email -->
           <div class='name-row'>

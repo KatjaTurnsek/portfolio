@@ -9,16 +9,20 @@
 >
   <div
     class='menu-waves'
-    data-light-src='{{baseHref}}assets/images/waves-light.webp'
-    data-dark-src='{{baseHref}}assets/images/waves-dark.webp'
+    aria-hidden='true'
+    data-light-src='{{base}}assets/images/waves-light.webp'
+    data-dark-src='{{base}}assets/images/waves-dark.webp'
   ></div>
 
   <a href='{{base}}' aria-label='Go to home'>
     <img
-      src='{{baseHref}}assets/images/logo-katjadev-dark.svg'
+      src='{{base}}assets/images/logo-katjadev-dark.svg'
+      data-logo-light='{{base}}assets/images/logo-katjadev-light.svg'
+      data-logo-dark='{{base}}assets/images/logo-katjadev-dark.svg'
       alt='Katja Dev Logo'
       class='site-logo site-logo-menu'
       loading='eager'
+      decoding='async'
     />
   </a>
 
@@ -26,7 +30,9 @@
     <svg class='icon' aria-hidden='true'><use href='#i-close' /></svg>
   </button>
 
-  <h2 id='menu-title' class='visually-hidden'>Main menu</h2>
+  <div role='dialog' aria-labelledby='menu-title'>
+    <span id='menu-title' class='visually-hidden'>Main menu</span>
+  </div>
 
   <nav aria-label='Primary'>
     <a href='{{base}}#work'>Work</a>

@@ -569,6 +569,7 @@ textarea:valid:focus {
 }
 .hire-button:hover {
   background-color: var(--yellow);
+  color: var(--dark);
   text-decoration: none;
 }
 .hire-button:hover::before {

@@ -35,6 +35,10 @@ body.dark-theme {
   --menu-color: var(--dark);
   --menu-border-color: var(--dark);
 
+  /* Links */
+  --link-color: var(--grey);
+  --link-hover-color: var(--yellow);
+
   /* Graphics (waves/blobs) for dark */
   --blob-color: var(--teal);
   --wave-color-1: rgba(241, 233, 165, 0.6);
