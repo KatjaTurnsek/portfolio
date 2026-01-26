@@ -5,6 +5,8 @@
  * Vite's import.meta.env.BASE_URL, so they work on GH Pages (/portfolio/).
  */
 
+import { createMiniLoader } from './loader/miniLoader.js';
+
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Base resolution                                                            */
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -190,16 +192,11 @@ export function setupResponsiveImages(section = document) {
         img.closest('.case-study-wrapper') ||
         img.parentElement;
 
-      let loader;
-      if (container) {
-        loader = document.createElement('div');
-        loader.className = 'simple-mini-loader';
-        container.appendChild(loader);
-      }
+      const mini = container ? createMiniLoader(/** @type {HTMLElement} */ (container)) : null;
+
+      /** @returns {void} */
       const removeLoader = () => {
-        if (!loader) return;
-        loader.classList.add('fade-out');
-        setTimeout(() => loader.remove(), 400);
+        mini?.remove();
       };
 
       fallback.onload = () => {
@@ -207,6 +204,7 @@ export function setupResponsiveImages(section = document) {
         fallback.style.filter = 'blur(0)';
         removeLoader();
       };
+
       fallback.onerror = () => {
         if (!fallback.getAttribute('alt')) fallback.alt = 'Image failed to load';
         removeLoader();
@@ -216,6 +214,7 @@ export function setupResponsiveImages(section = document) {
       img.replaceWith(picture);
 
       // If the image is already cached, reveal immediately
+      /** @returns {void} */
       const revealIfCached = () => {
         if (fallback.complete && fallback.naturalWidth) {
           fallback.style.opacity = '1';
@@ -232,8 +231,9 @@ export function setupResponsiveImages(section = document) {
       });
 
       insertedImages.push(fallback);
-    } catch {
-      // ignore per-image failures
+    } catch (error) {
+      // No silent catches (debug-friendly, but won’t break UX)
+      console.error('[responsiveImages] Failed to process an image.', error);
     }
   });
 

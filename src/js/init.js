@@ -6,30 +6,8 @@
  */
 
 import gsap from 'gsap';
-
-/* ────────────────────────────────────────────────────────────────────────── */
-/* Utilities                                                                  */
-/* ────────────────────────────────────────────────────────────────────────── */
-
-/**
- * Ensure the visible section is tall enough to keep the footer at the bottom.
- * Uses viewport height minus header & footer heights.
- * @param {HTMLElement} section
- * @returns {void}
- */
-export function sizeSectionMinHeight(section) {
-  const header = document.querySelector('header');
-  const footer = document.querySelector('footer');
-  const vh = window.innerHeight;
-  const hH = header?.offsetHeight || 0;
-  const fH = footer?.offsetHeight || 0;
-  const min = Math.max(0, vh - hH - fH);
-  section.style.minHeight = `${min}px`;
-}
-
-/* ────────────────────────────────────────────────────────────────────────── */
-/* Reveal logic                                                               */
-/* ────────────────────────────────────────────────────────────────────────── */
+import { sizeSectionMinHeight } from './utils/sizeSectionMinHeight.js';
+export { sizeSectionMinHeight } from './utils/sizeSectionMinHeight.js';
 
 /**
  * Reveal a section by id:
@@ -37,29 +15,25 @@ export function sizeSectionMinHeight(section) {
  * - Shows the target and animates only its inner content ('.rows' or first child)
  * - Dispatches a `sectionVisible` CustomEvent with `{ detail: targetId }`
  *
- * Idempotent and router-safe.
- *
  * @param {string} targetId
  * @returns {void}
  */
 export function revealSection(targetId) {
-  /** @type {HTMLElement|null} */
-  const section = document.getElementById(targetId);
+  const section = /** @type {HTMLElement|null} */ (document.getElementById(targetId));
   if (!section) return;
 
-  // Hide others
   document.querySelectorAll('.fullscreen-section').forEach((s) => {
     if (s === section) return;
-    /** @type {HTMLElement} */ (s).classList.remove('visible');
-    /** @type {HTMLElement} */ (s).style.display = 'none';
-    /** @type {HTMLElement} */ (s).style.visibility = 'hidden';
-    /** @type {HTMLElement} */ (s).style.pointerEvents = 'none';
-    /** @type {HTMLElement} */ (s).style.transform = 'none'; // never keep transforms on containers (Safari-safe)
-    /** @type {HTMLElement} */ (s).style.opacity = '0';
-    /** @type {HTMLElement} */ (s).style.minHeight = ''; // clear any previous sizing
+    const el = /** @type {HTMLElement} */ (s);
+    el.classList.remove('visible');
+    el.style.display = 'none';
+    el.style.visibility = 'hidden';
+    el.style.pointerEvents = 'none';
+    el.style.transform = 'none';
+    el.style.opacity = '0';
+    el.style.minHeight = '';
   });
 
-  // Show target container in normal flow (no transform on container)
   section.style.display = 'block';
   section.style.visibility = 'visible';
   section.style.pointerEvents = 'auto';
@@ -67,12 +41,9 @@ export function revealSection(targetId) {
   section.style.opacity = '1';
   section.classList.add('visible');
 
-  // Ensure min-height fits viewport minus header/footer
   sizeSectionMinHeight(section);
 
-  // Animate only inner content (safe for Safari layout)
-  /** @type {HTMLElement} */
-  let content =
+  const content =
     /** @type {HTMLElement|null} */ (section.querySelector('.rows')) ||
     /** @type {HTMLElement|null} */ (section.firstElementChild) ||
     section;
@@ -97,23 +68,12 @@ export function revealSection(targetId) {
   );
 }
 
-/**
- * For router usage: expose `revealSection` on window in browser environments.
- */
 if (typeof window !== 'undefined') {
   window.revealSection = revealSection;
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/* Non-router initialization                                                  */
-/* ────────────────────────────────────────────────────────────────────────── */
-
 /**
- * Initialize sections when no router is active:
- * - Hides all `.fullscreen-section`
- * - Reveals `#home` by default (if present)
- * No-op when `window.__routerActive` is truthy (router handles reveal).
- *
+ * Initialize sections when no router is active.
  * @returns {void}
  */
 export function initSections() {
@@ -134,14 +94,8 @@ export function initSections() {
   if (home) revealSection('home');
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/* Header scroll effect                                                       */
-/* ────────────────────────────────────────────────────────────────────────── */
-
 /**
  * Toggle a `.scrolled` class on <header> when the page is scrolled.
- * Uses a passive scroll listener and runs once on init.
- *
  * @returns {void}
  */
 export function setupHeaderScrollEffect() {

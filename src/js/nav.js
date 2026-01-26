@@ -3,6 +3,8 @@
  * @description Fullscreen menu controls (open/close). Navigation is handled by the router.
  */
 
+import { releaseScrollLock } from './components/scrollLock.js';
+
 /**
  * Initialize fullscreen menu toggle behavior.
  * - Adds dialog semantics to the menu container if not present
@@ -63,13 +65,19 @@ export function setupMenuToggle() {
   /** @type {(e:KeyboardEvent)=>void | null} */
   let keyHandler = null;
 
-  /** Open the menu, trap focus, and set ARIA state. */
+  /**
+   * Open the menu, trap focus, and set ARIA state.
+   * @returns {void}
+   */
   function openMenu() {
     lastFocused = document.activeElement;
 
     menu.classList.add('open');
     menu.removeAttribute('inert'); // inert polyfill friendly
+
+    // Scroll lock (consistent with the rest of the app)
     document.body.classList.add('menu-open');
+    document.documentElement.classList.add('no-scroll');
 
     menuToggle.classList.add('opened');
     menuToggle.style.display = 'none';
@@ -101,11 +109,16 @@ export function setupMenuToggle() {
     document.addEventListener('keydown', keyHandler);
   }
 
-  /** Close the menu, release focus trap, restore focus and ARIA state. */
+  /**
+   * Close the menu, release focus trap, restore focus and ARIA state.
+   * @returns {void}
+   */
   function closeMenu() {
     menu.classList.remove('open');
     menu.setAttribute('inert', '');
-    document.body.classList.remove('menu-open', 'no-scroll', 'overflow-hidden');
+
+    // Single source of truth for unlocking scroll/classes/styles
+    releaseScrollLock();
 
     menuToggle.style.display = 'inline-block';
     menuToggle.classList.remove('opened');
@@ -144,11 +157,14 @@ export function setupMenuToggle() {
   const mo = new MutationObserver(() => {
     const isOpen = menu.classList.contains('open');
     if (!isOpen && keyHandler) {
-      // If closed externally, clean up listeners and state
       document.removeEventListener('keydown', keyHandler);
       keyHandler = null;
+
       menuToggle.setAttribute('aria-expanded', 'false');
       if (menuToggle.style.display === 'none') menuToggle.style.display = 'inline-block';
+
+      // Ensure scroll lock is released if closed externally
+      releaseScrollLock();
     }
   });
   mo.observe(menu, { attributes: true, attributeFilter: ['class'] });
