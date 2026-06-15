@@ -492,8 +492,8 @@ textarea:valid:focus {
 
 .bar-label {
   color: var(--dark);
-  font-size: 20px;
-  line-height: 30px;
+  font-size: 18px;
+  line-height: 28px;
   text-transform: uppercase;
   font-family: var(--h1-font);
   opacity: 0;

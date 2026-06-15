@@ -15,31 +15,29 @@ export function animateTealBars() {
   if (!stack) return;
   if (stack.dataset.animated === '1') return;
 
-  gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { transformOrigin: 'left center' });
-
   const ready = () => stack.getBoundingClientRect().width > 2;
 
   const run = () => {
-    gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { width: '100%' });
+    gsap.set('.bar-bg', { width: '100%' });
 
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      gsap.set('.bar-bg', { scaleX: 1 });
-      gsap.set('.bar-1', { scaleX: 0.9 });
-      gsap.set('.bar-2', { scaleX: 0.7 });
-      gsap.set('.bar-3', { scaleX: 0.8 });
+      gsap.set('.bar-1', { width: '95%' });
+      gsap.set('.bar-2', { width: '90%' });
+      gsap.set('.bar-3', { width: '75%' });
       gsap.set('.bar-label', { opacity: 1 });
       stack.dataset.animated = '1';
       return;
     }
 
-    gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { scaleX: 0 });
+    gsap.set(['.bar-bg', '.bar-1', '.bar-2', '.bar-3'], { width: '0%' });
     gsap.set('.bar-label', { opacity: 0 });
 
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-    tl.to('.bar-bg', { scaleX: 1, duration: 1.2, stagger: 0.2 })
-      .to('.bar-1', { scaleX: 0.9, duration: 0.9 }, '<+0.2')
-      .to('.bar-2', { scaleX: 0.7, duration: 0.9 }, '-=0.5')
-      .to('.bar-3', { scaleX: 0.8, duration: 0.9 }, '-=0.5')
+
+    tl.to('.bar-bg', { width: '100%', duration: 1.2, stagger: 0.2 })
+      .to('.bar-1', { width: '95%', duration: 0.9 }, '<+0.2')
+      .to('.bar-2', { width: '90%', duration: 0.9 }, '-=0.5')
+      .to('.bar-3', { width: '75%', duration: 0.9 }, '-=0.5')
       .to('.bar-label', { opacity: 1, duration: 0.8, stagger: 0.15 }, '-=0.3');
 
     stack.dataset.animated = '1';
