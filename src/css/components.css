@@ -9,8 +9,8 @@
    ========================================================================== */
 
 :root {
-  --blob-opacity-start: 0.55;
-  --blob-opacity-end: 0.25;
+  --blob-opacity-start: 0.85;
+  --blob-opacity-end: 0.55;
 }
 
 /* 0) Utilities */
@@ -20,6 +20,7 @@
   -webkit-user-select: none !important;
   -ms-user-select: none !important;
 }
+
 .full-width {
   width: 100%;
 }
@@ -29,14 +30,17 @@ h1 {
   font-size: var(--h1-font-size);
   line-height: var(--h1-line-height);
 }
+
 h2 {
   font-size: var(--h2-font-size);
   line-height: var(--h2-line-height);
 }
+
 h3 {
   font-size: var(--h3-font-size);
   line-height: var(--h3-line-height);
 }
+
 h4 {
   font-size: var(--h4-font-size);
   line-height: var(--h4-line-height);
@@ -51,14 +55,17 @@ h4 {
   font-size: var(--h1-font-size);
   line-height: var(--h1-line-height);
 }
+
 :where(article, aside, nav, section) h2 {
   font-size: var(--h2-font-size);
   line-height: var(--h2-line-height);
 }
+
 :where(article, aside, nav, section) h3 {
   font-size: var(--h3-font-size);
   line-height: var(--h3-line-height);
 }
+
 :where(article, aside, nav, section) h4 {
   font-size: var(--h4-font-size);
   line-height: var(--h4-line-height);
@@ -72,6 +79,7 @@ h4 {
   --label-weight: 300;
   --label-transform: uppercase;
   --icon-scale: 0.9em;
+
   background: none;
   border: none;
   color: var(--text-color);
@@ -89,6 +97,7 @@ h4 {
   text-decoration: none;
   transition: color 0.4s ease-out;
 }
+
 .label-link:hover,
 .label-link:focus,
 .label-link:focus-visible,
@@ -99,10 +108,12 @@ h4 {
   text-decoration: none;
   outline: none;
 }
+
 .label-link .label-text {
   color: currentColor;
   transition: color 0.4s ease-out;
 }
+
 .arrow-icon {
   font-size: var(--icon-scale);
   color: currentColor;
@@ -122,21 +133,23 @@ h4 {
   align-items: flex-start;
   width: 100%;
 }
+
 .tech-stack {
   font-family: var(--body-font);
   font-weight: 400;
   font-size: 25px;
   line-height: 35px;
   color: var(--text-color);
-  user-select: none;
   white-space: nowrap;
 }
+
 .demo-links {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
   padding-left: 30px;
 }
+
 .demo-links .label-link {
   --label-size: 25px;
   --label-line: 35px;
@@ -150,6 +163,7 @@ h4 {
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
+
 .project-switcher .pill {
   display: inline-flex;
   align-items: center;
@@ -170,6 +184,7 @@ h4 {
     border-color 0.2s ease,
     outline-color 0.2s ease;
 }
+
 .project-switcher .pill:hover,
 .project-switcher .pill:focus-visible {
   border-color: var(--link-hover-color);
@@ -177,6 +192,7 @@ h4 {
   outline: 2px solid rgba(123, 184, 171, 0.4);
   outline-offset: 2px;
 }
+
 .project-switcher .pill[aria-current='page'] {
   background-color: var(--pill-active-bg);
   border-color: var(--pill-active-border);
@@ -191,16 +207,19 @@ h4 {
   justify-content: flex-end;
   padding-top: 28px;
 }
+
 .related-links .related-label {
   font: 600 12px/1 var(--body-font);
   opacity: 0.7;
   margin-right: 0.25rem;
 }
+
 .related-links .label-link {
   --label-size: 16px;
   --label-line: 22px;
   --label-transform: none;
   --icon-scale: 0.9em;
+
   gap: 0.35rem;
 }
 
@@ -214,12 +233,15 @@ h4 {
   line-height: var(--p-line-height);
   color: var(--text-color);
 }
+
 .bullet-list {
   padding: 0 40px;
 }
+
 .bullet-list-right {
   padding: 0 0 0 40px;
 }
+
 .bullet-list li,
 .bullet-list-right li {
   padding-left: 30px;
@@ -234,21 +256,25 @@ h4 {
   padding-top: 2rem;
   box-sizing: border-box;
 }
+
 .contact-form {
   width: 70%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
+
 .name-row {
   display: flex;
   gap: 1rem;
 }
+
 .form-group {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
+
 label {
   margin-bottom: 0.5rem;
   color: var(--text-color);
@@ -256,6 +282,7 @@ label {
   font-size: 14px;
   letter-spacing: 0.5px;
 }
+
 input,
 textarea {
   background-color: var(--teal-transparent);
@@ -269,10 +296,12 @@ textarea {
   border: 2px solid transparent;
   color: var(--text-color);
 }
+
 textarea {
   padding-top: 0.75rem;
   height: auto;
 }
+
 input:-webkit-autofill,
 textarea:-webkit-autofill {
   box-shadow: 0 0 0px 1000px rgba(0, 128, 128, 0.15) inset !important;
@@ -281,22 +310,27 @@ textarea:-webkit-autofill {
   font-size: 16px;
   transition: background-color 9999s ease-in-out 0s;
 }
+
 input:invalid,
 textarea:invalid {
   border: 2px solid var(--error-color);
 }
+
 input:valid,
 textarea:valid {
   border: 2px solid var(--success-color);
 }
+
 input:invalid:focus,
 textarea:invalid:focus {
   outline: 2px solid var(--error-color);
 }
+
 input:valid:focus,
 textarea:valid:focus {
   outline: 2px solid var(--success-color);
 }
+
 .button-wrapper {
   display: flex;
   justify-content: flex-end;
@@ -314,6 +348,7 @@ textarea:valid:focus {
 .testimonial-section {
   padding-bottom: 100px;
 }
+
 .testimonial {
   background-color: var(--teal-light);
   width: 100%;
@@ -325,6 +360,7 @@ textarea:valid:focus {
   padding-right: 2rem;
   box-sizing: border-box;
 }
+
 .testimonial-label {
   display: flex;
   align-items: center;
@@ -336,7 +372,7 @@ textarea:valid:focus {
   color: var(--dark);
   display: inline-block;
   vertical-align: middle;
-  transform: translateY(-1px); /* tiny optical nudge */
+  transform: translateY(-1px);
 }
 
 /* Tighten label leading so icon centers perfectly with text */
@@ -344,7 +380,7 @@ textarea:valid:focus {
   font-family: var(--h1-font);
   font-weight: 300;
   font-size: 30px;
-  line-height: 1; /* CHANGED from 40px */
+  line-height: 1;
   text-transform: uppercase;
   color: var(--dark);
 }
@@ -362,6 +398,7 @@ textarea:valid:focus {
   align-items: center;
   justify-content: center;
 }
+
 .circle-button .icon {
   font-size: 58px;
   color: var(--dark);
@@ -372,15 +409,17 @@ textarea:valid:focus {
   padding: 20px 22px;
   border-radius: 10px;
   border: 1px solid var(--text-color);
-  background: color-mix(in srgb, var(--bg-color) 50%, transparent);
+  background: var(--bg-color);
   color: var(--text-color);
 }
+
 .testimonial-card blockquote {
   margin: 0 0 30px;
   font-family: var(--body-font);
   font-size: var(--p-font-size);
   line-height: var(--p-line-height);
 }
+
 .testimonial-card figcaption {
   display: flex;
   flex-wrap: wrap;
@@ -390,12 +429,15 @@ textarea:valid:focus {
   font-size: 16px;
   line-height: 20px;
 }
+
 .testimonial-card .author {
   font-weight: 600;
 }
+
 .testimonial-card .role {
   opacity: 0.75;
 }
+
 .testimonial-card + .testimonial-card {
   margin-top: 30px;
 }
@@ -408,11 +450,13 @@ textarea:valid:focus {
   gap: 15px;
   padding-bottom: 60px;
 }
+
 .bar-stack {
   position: relative;
   width: 100%;
   height: 50px;
 }
+
 .bar {
   position: absolute;
   left: 0;
@@ -425,6 +469,7 @@ textarea:valid:focus {
   align-items: center;
   padding-left: 20px;
 }
+
 .bar-bg {
   background-color: var(--teal);
   z-index: 1;
@@ -444,6 +489,7 @@ textarea:valid:focus {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
+
 .bar-label {
   color: var(--dark);
   font-size: 20px;
@@ -464,10 +510,12 @@ textarea:valid:focus {
     opacity 0.6s ease,
     transform 0.6s ease;
 }
+
 .section-line-wrapper.visible {
   opacity: 1;
   transform: translateY(0);
 }
+
 .section-line {
   width: 100%;
   height: 20px;
@@ -475,22 +523,26 @@ textarea:valid:focus {
   overflow: visible;
   cursor: grab;
 }
+
 .section-line .wave {
   stroke-width: 1;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
 .wavy-line {
   display: block;
   width: 100%;
   height: 30px;
   margin: 0 auto 2rem;
 }
+
 .wavy-line .wavy-polyline {
   stroke: currentColor;
   stroke-width: 1;
   fill: none;
 }
+
 #wavy-line.wavy-line-hero {
   width: 100%;
   height: 30px;
@@ -498,6 +550,7 @@ textarea:valid:focus {
   pointer-events: none;
   color: var(--wave-hero-stroke, currentColor);
 }
+
 #wavy-line.wavy-line-hero path {
   stroke: currentColor;
   stroke-width: 2;
@@ -516,6 +569,7 @@ textarea:valid:focus {
   will-change: transform;
   transform: translateZ(0);
 }
+
 #blob-svg {
   width: 100%;
   height: 100%;
@@ -524,12 +578,14 @@ textarea:valid:focus {
   opacity: 1;
   filter: blur(8px);
 }
+
 #blob-svg .blob {
   fill: var(--blob-color);
   transform-box: fill-box;
   transform-origin: center;
   stroke: none;
 }
+
 #blob-svg #blobs-g {
   transform: none;
   transform-origin: 50% 50%;
@@ -556,6 +612,7 @@ textarea:valid:focus {
   overflow: hidden;
   transition: background-color 0.4s ease;
 }
+
 .hire-button::before {
   content: '';
   position: absolute;
@@ -567,19 +624,23 @@ textarea:valid:focus {
     transform 0.4s ease;
   z-index: -1;
 }
+
 .hire-button:hover {
   background-color: var(--yellow);
   color: var(--dark);
   text-decoration: none;
 }
+
 .hire-button:hover::before {
   border-color: var(--yellow-light);
   transform: scale(1.05);
 }
+
 .hire-button a,
 .hire-button a:hover {
   color: var(--dark);
 }
+
 .hire-section {
   position: absolute;
   bottom: -30px;
@@ -596,20 +657,25 @@ textarea:valid:focus {
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
 }
+
 .menu-toggle:focus {
   outline: none;
 }
+
 .menu-toggle:focus-visible {
   box-shadow: 0 0 0 3px var(--menu-hover-color);
   border-color: var(--menu-hover-color);
 }
+
 #menuClose:focus {
   outline: none;
 }
+
 #menuClose:focus-visible {
   box-shadow: 0 0 0 3px var(--menu-hover-color);
   border-color: var(--menu-hover-color);
 }
+
 .menu-toggle::-moz-focus-inner,
 #menuClose::-moz-focus-inner {
   border: 0;
@@ -634,6 +700,7 @@ textarea:valid:focus {
   position: relative;
   overflow: hidden;
 }
+
 .word,
 .char {
   display: inline-block;
@@ -647,25 +714,30 @@ textarea:valid:focus {
   vertical-align: -0.125em;
   line-height: 1;
   flex: 0 0 auto;
-  fill: currentColor; /* NEW: ensure SVGs inherit text color */
+  fill: currentColor;
 }
 
 /* Sizes */
 .icon-14 {
   font-size: 14px;
 }
+
 .icon-16 {
   font-size: 16px;
 }
+
 .icon-18 {
   font-size: 18px;
 }
+
 .icon-20 {
   font-size: 20px;
 }
+
 .icon-22 {
   font-size: 22px;
 }
+
 .icon-24 {
   font-size: 24px;
 }
@@ -678,6 +750,7 @@ textarea:valid:focus {
 .icon--thin polygon {
   stroke-width: 1.5;
 }
+
 .icon--thick path,
 .icon--thick circle,
 .icon--thick line,
@@ -703,12 +776,15 @@ textarea:valid:focus {
 .menu-toggle .icon {
   font-size: var(--menu-toggle-size);
 }
+
 .menu-toggle.opened {
   font-size: 24px;
 }
+
 .menu-toggle.opened .icon {
   font-size: inherit;
 }
+
 #menuClose .icon {
   font-size: inherit;
 }
@@ -725,6 +801,7 @@ textarea:valid:focus {
     width: 100%;
     margin-top: 20px;
   }
+
   .tech-stack {
     font-size: 20px;
     line-height: 30px;
@@ -737,12 +814,14 @@ textarea:valid:focus {
     --label-size: 22px;
     --label-line: 30px;
     --icon-scale: 0.9em;
+
     gap: 8px;
     justify-content: center;
     width: 100%;
     white-space: normal;
     flex-wrap: wrap;
   }
+
   .demo-links {
     padding-left: 0;
     gap: 0.2rem;
@@ -753,6 +832,7 @@ textarea:valid:focus {
     gap: 0.4rem;
     margin-top: 0.25rem;
   }
+
   .project-switcher .pill {
     padding: 0.55rem 0.9rem;
     font-size: 13px;
@@ -763,6 +843,7 @@ textarea:valid:focus {
     gap: 0.5rem 0.75rem;
     padding-top: 18px;
   }
+
   .related-links .label-link {
     --label-size: 15px;
     --label-line: 20px;
@@ -776,12 +857,14 @@ textarea:valid:focus {
     padding-inline: 16px;
     margin-inline-start: 18px;
   }
+
   .bullet-list li,
   .bullet-list-right li {
     position: relative;
     padding-inline-start: 1.1rem;
     margin-bottom: 8px;
   }
+
   .bullet-list li::before,
   .bullet-list-right li::before {
     content: '';
@@ -798,17 +881,21 @@ textarea:valid:focus {
     justify-content: center;
     padding: 2rem 1rem;
   }
+
   .contact-form {
     width: 100%;
   }
+
   .name-row {
     flex-direction: column;
     gap: 1rem;
   }
+
   input,
   textarea {
     height: 46px;
   }
+
   .info-text {
     font-size: 26px;
     line-height: 36px;
@@ -819,25 +906,31 @@ textarea:valid:focus {
   .testimonial-section {
     padding-bottom: 60px;
   }
+
   .testimonial {
     height: 80px;
     padding-right: 1rem;
   }
+
   .testimonial-label .label-text {
     font-size: 24px;
     line-height: 1.15;
   }
+
   .circle-button {
     left: 25%;
     width: 92px;
     height: 92px;
   }
+
   .circle-button .icon {
     font-size: 36px;
   }
+
   .testimonial-card {
     padding: 16px 18px;
   }
+
   .testimonial-card blockquote {
     margin: 0 0 20px;
   }
@@ -855,6 +948,7 @@ textarea:valid:focus {
     height: auto;
     padding-top: 30px;
   }
+
   .hire-button {
     width: 180px;
     height: 180px;
