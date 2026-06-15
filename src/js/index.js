@@ -5,6 +5,7 @@
  *  - Safe section reveal + runtime min-height sizing
  *  - Menu open/close + cleanup
  *  - Loader show/hide + visuals (animations respect reduced-motion)
+ *  - Footer copyright year update
  *
  * Assumptions:
  *  - Browser-only module (DOM APIs available)
@@ -43,6 +44,21 @@ bootGhPages();
 import('./router.js').then(() => {
   window.__routerActive = true;
 });
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Footer copyright                                                           */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Update the footer copyright year to the current year.
+ * @returns {void}
+ */
+function updateCopyrightYear() {
+  const yearEl = document.getElementById('copyright-year');
+  if (!yearEl) return;
+
+  yearEl.textContent = String(new Date().getFullYear());
+}
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* App handlers                                                               */
@@ -114,4 +130,9 @@ window.revealSection = function revealSection(id) {
 /* DOM ready                                                                  */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-document.addEventListener('DOMContentLoaded', bootOnDomReady);
+function bootAppOnDomReady() {
+  updateCopyrightYear();
+  bootOnDomReady();
+}
+
+document.addEventListener('DOMContentLoaded', bootAppOnDomReady);

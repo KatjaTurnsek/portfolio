@@ -3,7 +3,7 @@ import { projects } from '../../data/projects.js';
 /**
  * @typedef {Object} Project
  * @property {string} caseId                 // e.g. "portfolio", "portfolio-design"
- * @property {'website'|'design'|'logotype'} category
+ * @property {'website'|'design'|'logotype'|'archive'} category
  * @property {string} title
  * @property {string} [routeUrl]             // e.g. "/work/portfolio"
  * @property {string} [caseUrl]              // e.g. "#case-portfolio"
@@ -42,10 +42,8 @@ function resolveHref(href = '') {
   if (!href) return '#';
   if (isExternal(href)) return href;
 
-  // Hash anchors should be root-anchored (static-host friendly)
   if (href.startsWith('#')) return `${BASE}${href}`;
 
-  // Normalize leading slash once
   const clean = href.replace(/^\//, '');
   return BASE + clean;
 }
@@ -64,12 +62,14 @@ function pickSpriteFor(href = '') {
   try {
     const u = new URL(href, location.href);
     const host = u.hostname.toLowerCase();
+
     if (host.includes('github.')) return '#i-github';
     if (host.includes('figma.')) return '#i-figma';
     if (u.protocol === 'http:' || u.protocol === 'https:') return '#i-globe';
   } catch {
     // hashes/mailto/tel or invalid → fallback arrow
   }
+
   return '#i-arrow-right';
 }
 
@@ -84,13 +84,45 @@ function svgIcon(spriteHref, className = 'icon icon-18 arrow-icon') {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
+/* Case id helpers                                                            */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Get the real case id from the section id.
+ * Example:
+ *   case-lumastays          → lumastays
+ *   case-lumastays-design   → lumastays-design
+ * @param {HTMLElement} section
+ * @returns {string}
+ */
+function getCaseIdFromSection(section) {
+  const id = section?.id || '';
+  if (!id.startsWith('case-')) return '';
+
+  return id.replace(/^case-/, '');
+}
+
+/**
+ * Get the base project group from a case id.
+ * Example:
+ *   lumastays-design → lumastays
+ *   studiobid-logotype → studiobid
+ * @param {string} caseId
+ * @returns {string}
+ */
+function getBaseCaseId(caseId = '') {
+  return caseId.replace(/-(design|logotype)$/, '');
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
 /* Sibling variant logic                                                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 function siblingVariants(p /** @type {Project} */) {
-  const base = p.caseId.replace(/-(design|logotype)$/, '');
+  const base = getBaseCaseId(p.caseId);
   const ids = [base, `${base}-design`, `${base}-logotype`];
   const order = { website: 1, design: 2, logotype: 3 };
+
   return projects
     .filter(
       (q) =>
@@ -121,7 +153,6 @@ function renderDemoLinksAuto(el, p /** @type {Project} */) {
     const resolved = resolveHref(href);
     a.href = resolved;
 
-    // Open externals or file-like URLs in a new tab; internal routes stay same-tab
     const blank = isExternal(href) || FILE_RE.test(href);
     if (blank) {
       a.target = '_blank';
@@ -129,10 +160,12 @@ function renderDemoLinksAuto(el, p /** @type {Project} */) {
     }
 
     const icon = svgIcon(pickSpriteFor(href), 'icon icon-18 arrow-icon');
+
     a.innerHTML = `
       <span class="label-text">${label}</span>
       ${icon}
     `;
+
     frag.appendChild(a);
   }
 
@@ -140,8 +173,29 @@ function renderDemoLinksAuto(el, p /** @type {Project} */) {
   el.dataset.wired = '1';
 }
 
-function renderProjectSwitcherAuto(el, p /** @type {Project} */) {
-  if (!el || el.dataset.wired === '1' || el.querySelector('.pill')) return;
+function updateSwitcherCurrentState(el, currentCaseId = '') {
+  if (!el) return;
+
+  const pills = el.querySelectorAll('.pill');
+
+  pills.forEach((pill) => {
+    const pillCaseId = pill.dataset.caseId;
+
+    if (pillCaseId === currentCaseId) {
+      pill.setAttribute('aria-current', 'page');
+    } else {
+      pill.removeAttribute('aria-current');
+    }
+  });
+}
+
+function renderProjectSwitcherAuto(el, p /** @type {Project} */, currentCaseId = '') {
+  if (!el) return;
+
+  if (el.dataset.wired === '1' || el.querySelector('.pill')) {
+    updateSwitcherCurrentState(el, currentCaseId);
+    return;
+  }
 
   const sibs = siblingVariants(p);
   const frag = document.createDocumentFragment();
@@ -149,13 +203,16 @@ function renderProjectSwitcherAuto(el, p /** @type {Project} */) {
   for (const s of sibs) {
     const a = document.createElement('a');
 
-    // Prefer hash anchors; they work on static hosting
     const href = s.caseUrl || s.routeUrl || '#';
     a.href = resolveHref(href);
 
     a.className = 'pill';
+    a.dataset.caseId = s.caseId;
     a.textContent = SWITCHER_LABELS[s.category] || s.title || s.caseId;
-    if (s.caseId === p.caseId) a.setAttribute('aria-current', 'page');
+
+    if (s.caseId === currentCaseId) {
+      a.setAttribute('aria-current', 'page');
+    }
 
     frag.appendChild(a);
   }
@@ -168,20 +225,24 @@ function renderProjectSwitcherAuto(el, p /** @type {Project} */) {
 /* Derive project from section                                                */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** Resolve the project for a given case section. */
-function deriveProjectForSection(section /** @type {HTMLElement} */) {
-  const id = section?.id || '';
-  if (!id.startsWith('case-')) return undefined;
+/**
+ * Resolve the project for a given case section.
+ * Uses the section id first, because that gives the exact case:
+ *   case-lumastays-design → lumastays-design
+ *
+ * Falls back to data-case only if needed.
+ * @param {HTMLElement} section
+ * @returns {Project|undefined}
+ */
+function deriveProjectForSection(section) {
+  const exactCaseId = getCaseIdFromSection(section);
+  if (!exactCaseId) return undefined;
 
-  let category = 'website';
-  if (/-design$/.test(id)) category = 'design';
-  else if (/-logotype$/.test(id)) category = 'logotype';
+  const exactMatch = projects.find((p) => p.caseId === exactCaseId);
+  if (exactMatch) return /** @type {Project} */ (exactMatch);
 
-  const baseFromId = id.replace(/^case-/, '').replace(/-(design|logotype)$/, '');
-  const base = section.dataset.case || baseFromId;
-  const wantedCaseId = category === 'website' ? base : `${base}-${category}`;
-
-  return /** @type {Project|undefined} */ (projects.find((p) => p.caseId === wantedCaseId));
+  const fallbackCase = section.dataset.case || exactCaseId;
+  return /** @type {Project|undefined} */ (projects.find((p) => p.caseId === fallbackCase));
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -190,7 +251,7 @@ function deriveProjectForSection(section /** @type {HTMLElement} */) {
 
 /**
  * Hydrate one case section (id starts with "case-"):
- * - Renders demo links (sprite SVG icons picked by URL)
+ * - Renders demo links
  * - Renders the cross-category project switcher pills
  * Idempotent (uses data-wired).
  * @param {HTMLElement} section
@@ -198,12 +259,15 @@ function deriveProjectForSection(section /** @type {HTMLElement} */) {
  */
 export function hydrateCaseSection(section) {
   if (!section) return;
+
   const proj = deriveProjectForSection(section);
   if (!proj) return;
+
+  const currentCaseId = getCaseIdFromSection(section);
 
   const demoEl = section.querySelector('.demo-links[data-auto="demo"]');
   const switcherEl = section.querySelector('.project-switcher[data-auto="switcher"]');
 
   renderDemoLinksAuto(demoEl, proj);
-  renderProjectSwitcherAuto(switcherEl, proj);
+  renderProjectSwitcherAuto(switcherEl, proj, currentCaseId);
 }
