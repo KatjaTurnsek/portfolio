@@ -9,8 +9,8 @@
    ========================================================================== */
 
 :root {
-  --blob-opacity-start: 0.85;
-  --blob-opacity-end: 0.55;
+  --blob-opacity-start: 1;
+  --blob-opacity-end: 1;
 }
 
 /* 0) Utilities */
@@ -568,6 +568,7 @@ textarea:valid:focus {
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0);
+  isolation: isolate;
 }
 
 #blob-svg {
@@ -575,21 +576,34 @@ textarea:valid:focus {
   height: 100%;
   display: block;
   pointer-events: none;
-  opacity: 1;
-  filter: blur(8px);
+  opacity: 1 !important;
+  filter: blur(8px) !important;
 }
 
-#blob-svg .blob {
-  fill: var(--blob-color);
-  transform-box: fill-box;
-  transform-origin: center;
-  stroke: none;
-}
-
+/* Prevent GSAP or inherited styles from fading the blob collection. */
 #blob-svg #blobs-g {
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
   transform: none;
   transform-origin: 50% 50%;
   transform-box: view-box;
+}
+
+/* Keep every blob group opaque, including the dragged group. */
+#blob-svg .blob-group {
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+
+/* Keep each individual blob solid. */
+#blob-svg .blob {
+  fill: var(--blob-color);
+  fill-opacity: 1 !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  transform-box: fill-box;
+  transform-origin: center;
+  stroke: none;
 }
 
 /* 11) Hire Button */
