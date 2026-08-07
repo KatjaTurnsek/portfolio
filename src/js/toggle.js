@@ -1,8 +1,7 @@
 /**
- * toggle.js
- * Theme switcher that toggles body theme classes + persists preference.
- * NOTE: Header logo is intentionally NOT swapped (dark logo is used in both themes).
- * EXCEPTION: Menu logo swaps so it stays readable (light logo in dark theme).
+ * @file toggle.js
+ * @description Theme switcher that updates the page theme, swaps site logos,
+ * and persists the user's preference.
  */
 
 const THEME_KEY = 'theme';
@@ -16,9 +15,10 @@ const safeStorage = {
       return null;
     }
   },
-  set(key, val) {
+
+  set(key, value) {
     try {
-      window.localStorage.setItem(key, val);
+      window.localStorage.setItem(key, value);
     } catch {
       /* no-op */
     }
@@ -28,38 +28,43 @@ const safeStorage = {
 /**
  * Reflect the current theme on the toggle button.
  * @param {boolean} isDark
+ * @returns {void}
  */
 function updateSwitcherPosition(isDark) {
-  const btn = document.getElementById('theme-toggle');
-  if (!btn) return;
-  btn.classList.toggle('dark-mode', !!isDark);
-  btn.setAttribute('aria-pressed', String(!!isDark));
-  btn.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+  const button = document.getElementById('theme-toggle');
+  if (!button) return;
+
+  button.classList.toggle('dark-mode', isDark);
+  button.setAttribute('aria-pressed', String(isDark));
+  button.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
 }
 
 /**
- * Swap ONLY the menu logo based on theme (keeps header logo unchanged).
+ * Update all site logos for the current theme.
  * Uses:
- *  - data-logo-light="..."
- *  - data-logo-dark="..."
+ *  - data-logo-light for the light-coloured logo
+ *  - data-logo-dark for the dark-coloured logo
  * @param {boolean} isDark
+ * @returns {void}
  */
-function updateMenuLogo(isDark) {
-  const menuLogo = document.querySelector('.site-logo-menu');
-  if (!menuLogo) return;
+function updateLogos(isDark) {
+  const logos = document.querySelectorAll('.site-logo');
 
-  const lightSrc = menuLogo.getAttribute('data-logo-light');
-  const darkSrc = menuLogo.getAttribute('data-logo-dark');
-  if (!lightSrc || !darkSrc) return;
+  logos.forEach((logo) => {
+    const lightLogo = logo.getAttribute('data-logo-light');
+    const darkLogo = logo.getAttribute('data-logo-dark');
 
-  // In dark theme we want the LIGHT logo in the menu for contrast.
-  menuLogo.src = isDark ? lightSrc : darkSrc;
+    if (!lightLogo || !darkLogo) return;
+
+    logo.setAttribute('src', isDark ? lightLogo : darkLogo);
+  });
 }
 
 /**
- * Apply theme classes/attributes and related UI.
+ * Apply theme classes, attributes, and related UI.
  * Dispatches "theme:change" with { detail: 'light' | 'dark' }.
  * @param {'light'|'dark'} theme
+ * @returns {void}
  */
 function applyTheme(theme) {
   const body = document.body;
@@ -72,48 +77,70 @@ function applyTheme(theme) {
   body.setAttribute('data-theme', theme);
 
   updateSwitcherPosition(isDark);
-  updateMenuLogo(isDark);
+  updateLogos(isDark);
 
-  // Notify anything that cares (waves, etc.)
-  document.dispatchEvent(new CustomEvent('theme:change', { detail: theme }));
+  document.dispatchEvent(
+    new CustomEvent('theme:change', {
+      detail: theme,
+    })
+  );
 }
 
 /**
- * Determine initial theme from saved pref or OS.
+ * Determine the initial theme from the saved preference or operating system.
  * @returns {'light'|'dark'}
  */
 function getInitialTheme() {
-  const saved = safeStorage.get(THEME_KEY);
-  if (saved === 'light' || saved === 'dark') return saved;
+  const savedTheme = safeStorage.get(THEME_KEY);
+
+  if (savedTheme === 'light' || savedTheme === 'dark') {
+    return savedTheme;
+  }
+
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
+/**
+ * Initialise theme behaviour.
+ * @returns {void}
+ */
 function boot() {
   applyTheme(getInitialTheme());
 
-  const btn = document.getElementById('theme-toggle');
-  if (btn && !btn.__themeBound) {
-    btn.__themeBound = true;
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const next = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
-      safeStorage.set(THEME_KEY, next);
-      applyTheme(next);
+  const button = document.getElementById('theme-toggle');
+
+  if (button && !button.__themeBound) {
+    button.__themeBound = true;
+
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      const nextTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
+
+      safeStorage.set(THEME_KEY, nextTheme);
+      applyTheme(nextTheme);
     });
   }
 
-  // OS preference watcher (only if user hasn't explicitly chosen)
-  const mq = window.matchMedia('(prefers-color-scheme: dark)');
-  const mqHandler = (evt) => {
-    if (!safeStorage.get(THEME_KEY)) applyTheme(evt.matches ? 'dark' : 'light');
-  };
-  if (typeof mq.addEventListener === 'function') mq.addEventListener('change', mqHandler);
-  else if (typeof mq.addListener === 'function') mq.addListener(mqHandler);
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-  // Cross-tab sync
-  window.addEventListener('storage', (evt) => {
-    if (evt.key === THEME_KEY && (evt.newValue === 'light' || evt.newValue === 'dark')) {
-      applyTheme(evt.newValue);
+  const handleSystemThemeChange = (event) => {
+    if (!safeStorage.get(THEME_KEY)) {
+      applyTheme(event.matches ? 'dark' : 'light');
+    }
+  };
+
+  if (typeof mediaQuery.addEventListener === 'function') {
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+  } else if (typeof mediaQuery.addListener === 'function') {
+    mediaQuery.addListener(handleSystemThemeChange);
+  }
+
+  window.addEventListener('storage', (event) => {
+    const isValidTheme = event.newValue === 'light' || event.newValue === 'dark';
+
+    if (event.key === THEME_KEY && isValidTheme) {
+      applyTheme(event.newValue);
     }
   });
 }

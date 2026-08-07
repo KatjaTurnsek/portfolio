@@ -3,8 +3,8 @@
     <a href='{{base}}' aria-label='Go to home'>
       <img
         src='{{base}}assets/images/logo-katjadev-dark.svg'
-        data-light-src='{{base}}assets/images/logo-katjadev-dark.svg'
-        data-dark-src='{{base}}assets/images/logo-katjadev-light.svg'
+        data-logo-light='{{base}}assets/images/logo-katjadev-light.svg'
+        data-logo-dark='{{base}}assets/images/logo-katjadev-dark.svg'
         alt='Katja Dev Logo'
         class='site-logo logo'
         loading='eager'
@@ -24,7 +24,9 @@
       aria-expanded='false'
     >
       <span class='visually-hidden'>Open menu</span>
-      <svg class='icon' aria-hidden='true'><use href='#i-menu' /></svg>
+      <svg class='icon' aria-hidden='true'>
+        <use href='#i-menu' />
+      </svg>
     </button>
   </div>
 </header>
