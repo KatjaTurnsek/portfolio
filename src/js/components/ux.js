@@ -30,7 +30,6 @@ export function addSafariWillChange() {
     '.wavy-line',
     '.wavy-polyline',
     '.top-waves .waves-fallback',
-    '.menu-waves .waves-fallback',
   ];
   selectors.forEach((selector) => {
     document.querySelectorAll(selector).forEach((el) => {

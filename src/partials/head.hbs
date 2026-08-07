@@ -23,6 +23,7 @@
 <meta name='description' content='{{site.description}}' />
 
 <base href='{{base}}' />
+
 <script>
   window.__BASE_URL__ = '{{base}}';
 </script>
@@ -32,8 +33,6 @@
   :root {
     --waves-vector-light: url('{{base}}assets/images/vector-waves-light.svg');
     --waves-vector-dark: url('{{base}}assets/images/vector-waves-dark.svg');
-    --waves-raster-light: url('{{base}}assets/images/waves-light.webp');
-    --waves-raster-dark: url('{{base}}assets/images/waves-dark.webp');
   }
 </style>
 
@@ -51,6 +50,7 @@
   media='print'
   onload="this.media='all'"
 />
+
 <noscript>
   <link
     rel='stylesheet'
@@ -58,9 +58,7 @@
   />
 </noscript>
 
-{{! Waves: use prefetch instead of preload to avoid Chrome warnings }}
-<link rel='prefetch' as='image' href='{{base}}assets/images/waves-light.webp' />
-<link rel='prefetch' as='image' href='{{base}}assets/images/waves-dark.webp' />
+{{! Theme-specific header illustrations }}
 <link
   rel='prefetch'
   as='image'

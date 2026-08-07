@@ -32,7 +32,6 @@ const purge = purgecss({
       // Waves (static fallbacks)
       'waves-fallback',
       'top-waves',
-      'menu-waves',
       // Text animation
       'wavy-line',
       'wavy-polyline',

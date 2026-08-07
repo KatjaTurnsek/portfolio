@@ -94,7 +94,7 @@ header {
   transition: background-color var(--transition-fast);
 }
 
-/* Header background — SVG over WebP, both pinned to TOP */
+/* Header background — theme-specific SVG pinned to the top */
 header::before {
   content: '';
   position: absolute;
@@ -104,20 +104,16 @@ header::before {
   height: var(--waves-h);
   pointer-events: none;
   z-index: 0;
-  background-repeat: no-repeat, no-repeat;
-  background-position:
-    top center,
-    top center;
-  background-size:
-    100% auto,
-    cover;
-  background-image: var(--waves-vector-light), var(--waves-raster-light);
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100% auto;
+  background-image: var(--waves-vector-light);
   transform: translateZ(0);
 }
 
 .dark-theme header::before,
 [data-theme='dark'] header::before {
-  background-image: var(--waves-vector-dark), var(--waves-raster-dark);
+  background-image: var(--waves-vector-dark);
 }
 
 /* keep header content above its background */
@@ -373,19 +369,15 @@ footer {
   height: var(--waves-h);
   pointer-events: none;
   z-index: 0;
-  background-repeat: no-repeat, no-repeat;
-  background-position:
-    top center,
-    top center;
-  background-size:
-    100% auto,
-    cover;
-  background-image: var(--waves-vector-light), var(--waves-raster-light);
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100% auto;
+  background-image: var(--waves-vector-light);
 }
 
 .dark-theme .fullscreen-menu::before,
 [data-theme='dark'] .fullscreen-menu::before {
-  background-image: var(--waves-vector-dark), var(--waves-raster-dark);
+  background-image: var(--waves-vector-dark);
 }
 
 .fullscreen-menu > * {

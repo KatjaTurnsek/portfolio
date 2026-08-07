@@ -393,7 +393,7 @@ textarea:valid:focus {
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  background-color: var(--yellow-light);
+  background-color: var(--circle-button-bg, var(--teal-light));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -401,6 +401,16 @@ textarea:valid:focus {
 
 .circle-button .icon {
   font-size: 58px;
+  color: var(--circle-button-icon, var(--dark));
+}
+
+body.light-theme .hire-button {
+  background-color: var(--teal-light);
+  color: var(--dark);
+}
+
+body.dark-theme .hire-button {
+  background-color: var(--yellow-light);
   color: var(--dark);
 }
 
@@ -631,8 +641,8 @@ textarea:valid:focus {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 50%;
   border: 20px solid var(--yellow);
+  border-radius: 50%;
   transition:
     border-color 0.4s ease,
     transform 0.4s ease;
@@ -650,9 +660,41 @@ textarea:valid:focus {
   transform: scale(1.05);
 }
 
-.hire-button a,
-.hire-button a:hover {
+/* Light-theme colours */
+body.light-theme .hire-button {
+  background-color: var(--teal-light);
+}
+
+body.light-theme .hire-button::before {
+  border-color: var(--teal);
+}
+
+body.light-theme .hire-button:hover {
+  background-color: var(--teal);
+}
+
+body.light-theme .hire-button:hover::before {
+  border-color: var(--teal-light);
+}
+
+/* Dark theme */
+body.dark-theme .hire-button {
+  background-color: var(--yellow-light);
   color: var(--dark);
+}
+
+body.dark-theme .hire-button::before {
+  border-color: var(--yellow);
+}
+
+body.dark-theme .hire-button:hover {
+  background-color: var(--yellow);
+  color: var(--dark);
+}
+
+body.dark-theme .hire-button:hover::before {
+  border-color: var(--yellow-light);
+  transform: scale(1.05);
 }
 
 .hire-section {
