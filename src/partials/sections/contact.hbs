@@ -1,26 +1,29 @@
 <section
   class='fullscreen-section'
   id='contact'
-  data-title='Contact — Work with Katja Turnsek'
-  data-description='Get in touch about freelance projects or front-end roles. Email me or use the form.'
+  data-title='Contact — Katja Turnsek | UX/UI Designer & Front-End Developer'
+  data-description='Get in touch with Katja Turnsek about UX/UI design, front-end development, freelance projects, or opportunities to join your team.'
 >
   <div class='rows'>
     <div class='row'>
       <h1>Contact</h1>
-      <h2>Let's create something great together!</h2>
+      <h2>Let’s turn a good idea into something real.</h2>
+
       <p class='align-right-60'>
-        Whether you're looking for a creative mind to join your team or need a freelancer for your
-        next project, I'd love to hear from you.
+        Whether you’re looking for a
+        <strong>UX/UI designer and front-end developer</strong>
+        to join your team, or need freelance support taking a project from concept to a polished
+        interface, I’d love to hear from you.
       </p>
     </div>
 
     <div class='row'>
       <p class='info-text'>
-        Email
+        Email me at
         <a id='contact-email' href='mailto:katja@pet-art.net' rel='nofollow noopener'>
           katja@pet-art.net
         </a>
-        or use the form
+        or send a message using the form.
       </p>
 
       <div class='contact-form-wrapper'>
@@ -36,19 +39,21 @@
           <!-- Subject, branding & redirect -->
           <input type='hidden' name='subject' value='Portfolio — New message' />
           <input type='hidden' name='from_name' value='Portfolio Contact' />
+
           <input
             type='hidden'
             name='redirect'
             value='https://katjaturnsek.github.io/portfolio/#thank-you'
           />
+
           <input
             type='hidden'
             name='page_url'
             value='https://katjaturnsek.github.io/portfolio/#contact'
           />
 
-          <!-- Honeypot (must remain empty) -->
-          <div style='position:absolute; left:-9999px; opacity:0; pointer-events:none;'>
+          <!-- Honeypot: must remain empty -->
+          <div style='position: absolute; left: -9999px; opacity: 0; pointer-events: none;'>
             <label for='botcheck' class='sr-only'>Leave this field empty</label>
             <input
               id='botcheck'
@@ -60,34 +65,26 @@
             />
           </div>
 
-          <!-- Name + Email -->
           <div class='name-row'>
             <div class='form-group'>
-              <label for='name'>Your Name *</label>
+              <label for='name'>Your name *</label>
               <input id='name' name='name' type='text' required autocomplete='name' />
             </div>
 
             <div class='form-group'>
-              <label for='email'>Email *</label>
+              <label for='email'>Email address *</label>
               <input id='email' name='email' type='email' required autocomplete='email' />
             </div>
           </div>
 
-          <!-- Message -->
           <div class='form-group full-width'>
-            <label for='message'>Your Message *</label>
-            <textarea
-              id='message'
-              name='message'
-              rows='4'
-              required
-              placeholder='Tell me what you need help with, timeline, and any links or details.'
-            ></textarea>
+            <label for='message'>Your message *</label>
+            <textarea id='message' name='message' rows='4' required></textarea>
           </div>
 
           <div class='button-wrapper'>
             <button type='submit' class='submit-button'>
-              Send
+              Send message
               <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
                 <use href='#i-arrow-right'></use>
               </svg>
