@@ -268,8 +268,7 @@ footer {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  scroll-margin-top: 160px;
-  scroll-margin-top: var(--header-h);
+  scroll-margin-top: var(--header-h, 160px);
 }
 
 .fullscreen-section h1:first-child {
@@ -810,8 +809,7 @@ section.fullscreen-section > h1 {
   }
 
   .fullscreen-section.visible {
-    scroll-margin-top: 140px;
-    scroll-margin-top: var(--header-h);
+    scroll-margin-top: var(--header-h, 140px);
   }
 
   .fullscreen-section h1:first-child {
