@@ -1,6 +1,6 @@
 /**
  * @file blobs.js
- * @description Ambient morphing background blobs with scroll fading and
+ * @description Ambient morphing background blobs with shared-layer scroll fading and
  * smooth, isolated jelly dragging.
  */
 
@@ -13,9 +13,6 @@ const scrollOpacity = { value: 1 };
 
 /** @type {SVGGElement|null} */
 let opacityContainer = null;
-
-/** @type {gsap.core.Tween|null} */
-let scrollOpacityTween = null;
 
 /** @type {null|(() => void)} */
 let removeFallbackScroll = null;
@@ -96,10 +93,11 @@ function makeSoftBlobPath(size, waveA, waveB, frequencyA, frequencyB, phaseA, ph
 }
 
 /**
- * Ensure that the blob wrapper, SVG, and main group exist.
+ * Ensure that the blob wrapper, SVG, ambient group, and drag overlay exist.
  * @returns {{
  *   svg: SVGSVGElement,
  *   container: SVGGElement,
+ *   dragOverlay: SVGGElement,
  *   width: number,
  *   height: number
  * }}
@@ -140,11 +138,20 @@ function ensureBlobDOM() {
     svg.appendChild(container);
   }
 
+  let dragOverlay = /** @type {SVGGElement|null} */ (svg.querySelector('#blob-drag-overlay'));
+
+  if (!dragOverlay) {
+    dragOverlay = /** @type {SVGGElement} */ (document.createElementNS(SVG_NS, 'g'));
+
+    dragOverlay.id = 'blob-drag-overlay';
+    svg.appendChild(dragOverlay);
+  }
+
   const viewBox = svg.viewBox.baseVal;
   const width = viewBox.width || 1200;
   const height = viewBox.height || 800;
 
-  return { svg, container, width, height };
+  return { svg, container, dragOverlay, width, height };
 }
 
 /**
@@ -158,40 +165,40 @@ function setOpacity(element, opacity) {
 }
 
 /**
- * Apply scroll opacity to normal blobs and full opacity to the dragged blob.
+ * Apply the current scroll opacity equally to the ambient blobs
+ * and the drag overlay.
  * @returns {void}
  */
 function applyBlobOpacities() {
   if (!opacityContainer) return;
 
-  opacityContainer.querySelectorAll('.blob-group').forEach((group) => {
-    const isBeingDragged = group.hasAttribute('data-dragging');
+  setOpacity(opacityContainer, scrollOpacity.value);
 
-    setOpacity(group, isBeingDragged ? 1 : scrollOpacity.value);
-  });
+  const dragOverlay = document.querySelector('#blob-drag-overlay');
+
+  if (dragOverlay) {
+    setOpacity(dragOverlay, scrollOpacity.value);
+  }
 }
 
 /**
- * Fade a released blob back to the current scroll opacity.
+ * Return the released blob to the ambient container without changing
+ * its visible opacity.
  * @param {SVGGElement} group
+ * @param {SVGGElement} container
  * @returns {void}
  */
-function restoreScrollOpacity(group) {
-  const opacity = { value: 1 };
-
-  gsap.to(opacity, {
-    value: scrollOpacity.value,
-    duration: 0.35,
-    ease: 'power2.out',
-    overwrite: true,
-    onUpdate: () => setOpacity(group, opacity.value),
-    onComplete: () => setOpacity(group, scrollOpacity.value),
-  });
+function restoreScrollOpacity(group, container) {
+  setOpacity(group, 1);
+  group.removeAttribute('data-dragging');
+  container.appendChild(group);
+  applyBlobOpacities();
 }
 
 /**
- * Fade normal blobs while the page scrolls.
- * The shared parent stays opaque so the dragged blob can remain solid.
+ * Fade normal blobs near the beginning of the page scroll.
+ * The opacity reaches its final value after roughly 65% of one viewport.
+ *
  * @param {SVGGElement} container
  * @returns {void}
  */
@@ -201,67 +208,59 @@ function setupScrollOpacity(container) {
   const styles = getComputedStyle(document.documentElement);
 
   const opacityStart = clamp(readCssNumber(styles, '--blob-opacity-start', 1), 0, 1);
+  const opacityEnd = clamp(readCssNumber(styles, '--blob-opacity-end', 0.55), 0, 1);
 
-  const opacityEnd = clamp(readCssNumber(styles, '--blob-opacity-end', 0.25), 0, 1);
+  const getFadeDistance = () => Math.max(1, window.innerHeight * 0.65);
 
   scrollOpacity.value = opacityStart;
 
-  setOpacity(container, 1);
   applyBlobOpacities();
-
-  if (scrollOpacityTween) {
-    scrollOpacityTween.scrollTrigger?.kill();
-    scrollOpacityTween.kill();
-    scrollOpacityTween = null;
-  }
 
   if (removeFallbackScroll) {
     removeFallbackScroll();
     removeFallbackScroll = null;
   }
 
-  if (gsap.plugins?.ScrollTrigger) {
-    scrollOpacityTween = gsap.to(scrollOpacity, {
-      value: opacityEnd,
-      ease: 'none',
-      onUpdate: applyBlobOpacities,
-
-      scrollTrigger: {
-        trigger: document.documentElement,
-        start: 'top top',
-
-        end: () => `+=${Math.max(1, document.documentElement.scrollHeight - window.innerHeight)}`,
-
-        scrub: true,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    return;
-  }
-
   let updateRequested = false;
+  let lastScrollTarget = null;
+
+  const getScrollTop = () => {
+    const documentScrollTop = Math.max(
+      window.scrollY || 0,
+      document.scrollingElement?.scrollTop || 0,
+      document.documentElement.scrollTop || 0,
+      document.body.scrollTop || 0
+    );
+
+    const elementScrollTop =
+      lastScrollTarget instanceof Element ? lastScrollTarget.scrollTop || 0 : 0;
+
+    return Math.max(documentScrollTop, elementScrollTop);
+  };
 
   const updateFromScroll = () => {
     updateRequested = false;
 
-    const maximumScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-
-    const progress = clamp(window.scrollY / maximumScroll, 0, 1);
+    const progress = clamp(getScrollTop() / getFadeDistance(), 0, 1);
 
     scrollOpacity.value = opacityStart + (opacityEnd - opacityStart) * progress;
 
     applyBlobOpacities();
   };
 
-  const requestUpdate = () => {
+  const requestUpdate = (event = null) => {
+    if (event?.target instanceof Element) {
+      lastScrollTarget = event.target;
+    }
+
     if (updateRequested) return;
 
     updateRequested = true;
     requestAnimationFrame(updateFromScroll);
   };
 
-  window.addEventListener('scroll', requestUpdate, {
+  document.addEventListener('scroll', requestUpdate, {
+    capture: true,
     passive: true,
   });
 
@@ -270,7 +269,7 @@ function setupScrollOpacity(container) {
   });
 
   removeFallbackScroll = () => {
-    window.removeEventListener('scroll', requestUpdate);
+    document.removeEventListener('scroll', requestUpdate, true);
     window.removeEventListener('resize', requestUpdate);
   };
 
@@ -300,7 +299,6 @@ function animateBlob(group, path, centreX, centreY, size, index) {
   if (reducedMotion) return;
 
   const driftX = gsap.utils.random(size * 0.08, size * 0.2);
-
   const driftY = gsap.utils.random(size * 0.08, size * 0.2);
 
   gsap.to(group, {
@@ -408,7 +406,7 @@ export function animateGooeyBlobs() {
     group.appendChild(dragLayer);
     container.appendChild(group);
 
-    setOpacity(group, scrollOpacity.value);
+    setOpacity(group, 1);
     setOpacity(dragLayer, 1);
     setOpacity(path, 1);
 
@@ -427,7 +425,7 @@ export function animateGooeyBlobs() {
  * @returns {void}
  */
 export function enableInteractiveJellyBlob() {
-  const { svg } = ensureBlobDOM();
+  const { svg, container } = ensureBlobDOM();
 
   if (!svg.querySelector('.blob-group')) {
     animateGooeyBlobs();
@@ -503,6 +501,8 @@ export function enableInteractiveJellyBlob() {
     let closestDistance = Infinity;
 
     groups.forEach((group) => {
+      if (group.hasAttribute('data-dragging')) return;
+
       const path = group.querySelector('.blob');
       if (!path) return;
 
@@ -511,7 +511,6 @@ export function enableInteractiveJellyBlob() {
       if (!bounds.width || !bounds.height) return;
 
       const centreX = bounds.left + bounds.width / 2;
-
       const centreY = bounds.top + bounds.height / 2;
 
       const distance = Math.hypot(centreX - clientX, centreY - clientY);
@@ -578,7 +577,6 @@ export function enableInteractiveJellyBlob() {
     startPointer.y = localPointer.y;
 
     dragOrigin.x = Number(gsap.getProperty(activeDragLayer, 'x')) || 0;
-
     dragOrigin.y = Number(gsap.getProperty(activeDragLayer, 'y')) || 0;
 
     target.x = dragOrigin.x;
@@ -594,10 +592,11 @@ export function enableInteractiveJellyBlob() {
     velocity.y = 0;
 
     currentAngle = Number(gsap.getProperty(activeDragLayer, 'rotation')) || 0;
-
     currentStretch = 0;
 
     activeBlob.setAttribute('data-dragging', 'true');
+
+    container.appendChild(activeBlob);
 
     setOpacity(activeBlob, 1);
     setOpacity(activeDragLayer, 1);
@@ -628,7 +627,6 @@ export function enableInteractiveJellyBlob() {
     const localPointer = getStableLocalPointer(event.clientX, event.clientY);
 
     target.x = dragOrigin.x + localPointer.x - startPointer.x;
-
     target.y = dragOrigin.y + localPointer.y - startPointer.y;
   }
 
@@ -651,7 +649,6 @@ export function enableInteractiveJellyBlob() {
       const localPointer = getStableLocalPointer(event.clientX, event.clientY);
 
       target.x = dragOrigin.x + localPointer.x - startPointer.x;
-
       target.y = dragOrigin.y + localPointer.y - startPointer.y;
     }
 
@@ -687,9 +684,7 @@ export function enableInteractiveJellyBlob() {
       },
 
       onComplete: () => {
-        releasedBlob.removeAttribute('data-dragging');
-
-        restoreScrollOpacity(releasedBlob);
+        restoreScrollOpacity(releasedBlob, container);
       },
     });
   }
@@ -717,21 +712,16 @@ export function enableInteractiveJellyBlob() {
     const smoothing = 1 - Math.pow(1 - 0.16, frameRatio);
 
     current.x += (target.x - current.x) * smoothing;
-
     current.y += (target.y - current.y) * smoothing;
 
     const movementX = current.x - previous.x;
-
     const movementY = current.y - previous.y;
 
     velocity.x += (movementX - velocity.x) * 0.3;
-
     velocity.y += (movementY - velocity.y) * 0.3;
 
     const speed = Math.hypot(velocity.x, velocity.y);
-
     const maximumStretch = isSafari ? 0.12 : 0.18;
-
     const desiredStretch = Math.min(speed / 45, maximumStretch);
 
     currentStretch += (desiredStretch - currentStretch) * 0.24;

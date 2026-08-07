@@ -10,7 +10,7 @@
 
 :root {
   --blob-opacity-start: 1;
-  --blob-opacity-end: 1;
+  --blob-opacity-end: 0.55;
 }
 
 /* 0) Utilities */
@@ -590,8 +590,9 @@ body.dark-theme .hire-button {
   filter: blur(8px) !important;
 }
 
-/* Prevent GSAP or inherited styles from fading the blob collection. */
-#blob-svg #blobs-g {
+/* Keep the ambient and drag layers aligned. JavaScript fades #blobs-g. */
+#blob-svg #blobs-g,
+#blob-svg #blob-drag-overlay {
   opacity: 1 !important;
   mix-blend-mode: normal !important;
   transform: none;
@@ -1011,7 +1012,8 @@ body.dark-theme .hire-button:hover::before {
     font-size: 22px;
   }
 
-  #blob-svg #blobs-g {
+  #blob-svg #blobs-g,
+  #blob-svg #blob-drag-overlay {
     transform-box: view-box;
     transform-origin: 50% 50%;
     transform: scale(var(--blob-scale-mobile));
