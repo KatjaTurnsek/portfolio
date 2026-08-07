@@ -26,12 +26,13 @@
     <meta name='description' content='Creative front-end developer with a background in art and design. Explore a fluid, modern portfolio featuring interactive animations, custom code, and thoughtful UX — built with HTML, CSS, JavaScript, GSAP, and Vite.' />
     
     <base href='/portfolio/' />
+    
     <script>
       window.__BASE_URL__ = '/portfolio/';
     </script>
     
     <style
-    >:root{--waves-vector-light:url(/portfolio/assets/images/vector-waves-light.svg);--waves-vector-dark:url(/portfolio/assets/images/vector-waves-dark.svg);--waves-raster-light:url(/portfolio/assets/images/waves-light.webp);--waves-raster-dark:url(/portfolio/assets/images/waves-dark.webp)}</style>
+    >:root{--waves-vector-light:url(/portfolio/assets/images/vector-waves-light.svg);--waves-vector-dark:url(/portfolio/assets/images/vector-waves-dark.svg)}</style>
     
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
@@ -46,6 +47,7 @@
       media='print'
       onload="this.media='all'"
     />
+    
     <noscript>
       <link
         rel='stylesheet'
@@ -53,8 +55,6 @@
       />
     </noscript>
     
-    <link rel='prefetch' as='image' href='/portfolio/assets/images/waves-light.webp' />
-    <link rel='prefetch' as='image' href='/portfolio/assets/images/waves-dark.webp' />
     <link
       rel='prefetch'
       as='image'
@@ -69,8 +69,8 @@
     />
     
     <link rel='icon' href='/portfolio/favicon.ico?v=1' sizes='any' />
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-BF_KDIs0.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-C6lK6uG8.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-BR4Z8jjD.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DAj-mvje.css">
   </head>
 
   <body class="light-theme">
@@ -272,8 +272,8 @@
     <a href='/portfolio/' aria-label='Go to home'>
       <img
         src='/portfolio/assets/images/logo-katjadev-dark.svg'
-        data-light-src='/portfolio/assets/images/logo-katjadev-dark.svg'
-        data-dark-src='/portfolio/assets/images/logo-katjadev-light.svg'
+        data-logo-light='/portfolio/assets/images/logo-katjadev-light.svg'
+        data-logo-dark='/portfolio/assets/images/logo-katjadev-dark.svg'
         alt='Katja Dev Logo'
         class='site-logo logo'
         loading='eager'
@@ -293,7 +293,9 @@
       aria-expanded='false'
     >
       <span class='visually-hidden'>Open menu</span>
-      <svg class='icon' aria-hidden='true'><use href='#i-menu' /></svg>
+      <svg class='icon' aria-hidden='true'>
+        <use href='#i-menu' />
+      </svg>
     </button>
   </div>
 </header> <div
@@ -305,12 +307,7 @@
   tabindex='-1'
   inert
 >
-  <div
-    class='menu-waves'
-    aria-hidden='true'
-    data-light-src='/portfolio/assets/images/waves-light.webp'
-    data-dark-src='/portfolio/assets/images/waves-dark.webp'
-  ></div>
+  <span id='menu-title' class='visually-hidden'>Main menu</span>
 
   <a href='/portfolio/' aria-label='Go to home'>
     <img
@@ -318,19 +315,17 @@
       data-logo-light='/portfolio/assets/images/logo-katjadev-light.svg'
       data-logo-dark='/portfolio/assets/images/logo-katjadev-dark.svg'
       alt='Katja Dev Logo'
-      class='site-logo site-logo-menu'
+      class='site-logo logo'
       loading='eager'
       decoding='async'
     />
   </a>
 
   <button class='menu-toggle opened' id='menuClose' aria-label='Close menu'>
-    <svg class='icon' aria-hidden='true'><use href='#i-close' /></svg>
+    <svg class='icon' aria-hidden='true'>
+      <use href='#i-close' />
+    </svg>
   </button>
-
-  <div role='dialog' aria-labelledby='menu-title'>
-    <span id='menu-title' class='visually-hidden'>Main menu</span>
-  </div>
 
   <nav aria-label='Primary'>
     <a href='/portfolio/#work'>Work</a>
