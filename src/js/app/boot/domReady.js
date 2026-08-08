@@ -26,8 +26,54 @@ import {
 } from '../../components/ux.js';
 import { setupHeaderScrollEffect } from '../../init.js';
 
+const LOADER_MAX_WAIT_MS = 800;
+
+/**
+ * Wait for the router to select the initial page, then allow one browser
+ * frame before hiding the loader. The timeout is only a fallback.
+ *
+ * @param {number} [maxWait=LOADER_MAX_WAIT_MS]
+ * @returns {Promise<void>}
+ */
+function waitForInitialRoute(maxWait = LOADER_MAX_WAIT_MS) {
+  return new Promise((resolve) => {
+    let finished = false;
+    let frameId = 0;
+    let timeoutId = 0;
+
+    const finish = () => {
+      if (finished) return;
+
+      finished = true;
+      window.clearTimeout(timeoutId);
+
+      if (frameId) {
+        window.cancelAnimationFrame(frameId);
+      }
+
+      resolve();
+    };
+
+    const checkRouter = () => {
+      if (finished) return;
+
+      if (window.__routerActive) {
+        frameId = window.requestAnimationFrame(finish);
+        return;
+      }
+
+      frameId = window.requestAnimationFrame(checkRouter);
+    };
+
+    timeoutId = window.setTimeout(finish, maxWait);
+
+    checkRouter();
+  });
+}
+
 /**
  * Boot everything that should run on DOMContentLoaded.
+ *
  * @returns {void}
  */
 export function bootOnDomReady() {
@@ -38,7 +84,7 @@ export function bootOnDomReady() {
 
   buildWorkGridsIfNeeded();
 
-  setTimeout(() => {
+  waitForInitialRoute().then(() => {
     hideLoader();
     releaseScrollLock();
 
@@ -47,11 +93,17 @@ export function bootOnDomReady() {
     animateCustomWaveLines();
 
     const blobWrapper = document.querySelector('.morphing-blob-wrapper');
+
     if (blobWrapper) {
       gsap.fromTo(
         blobWrapper,
         { opacity: 0 },
-        { opacity: 1, duration: 1.2, delay: 0.6, ease: 'power2.out' }
+        {
+          opacity: 1,
+          duration: 1.2,
+          delay: 0.6,
+          ease: 'power2.out',
+        }
       );
 
       deferHeavy(() => {
@@ -62,11 +114,12 @@ export function bootOnDomReady() {
 
     const currentId = window.__currentSectionId || 'home';
     const currentEl = document.getElementById(currentId);
+
     if (currentEl) {
       window.revealSection?.(currentId);
       sizeSectionMinHeight(currentEl);
     }
-  }, 1500);
+  });
 
   bindHireButton();
 
