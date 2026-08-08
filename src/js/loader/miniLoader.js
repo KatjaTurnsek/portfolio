@@ -1,3 +1,5 @@
+import { prefersReducedMotion } from "../motion.js";
+
 /**
  * @file miniLoader.js
  * @description Tiny 3-dot inline loader used for images (and other small UI cases).
@@ -11,13 +13,13 @@
  * @returns {{ el: HTMLDivElement, remove: () => void }}
  */
 export function createMiniLoader(container) {
-  const el = document.createElement('div');
-  el.className = 'simple-mini-loader';
+  const el = document.createElement("div");
+  el.className = "simple-mini-loader";
 
   // Match your existing markup (3 spans)
-  el.appendChild(document.createElement('span'));
-  el.appendChild(document.createElement('span'));
-  el.appendChild(document.createElement('span'));
+  el.appendChild(document.createElement("span"));
+  el.appendChild(document.createElement("span"));
+  el.appendChild(document.createElement("span"));
 
   container.appendChild(el);
 
@@ -28,7 +30,12 @@ export function createMiniLoader(container) {
     if (removed) return;
     removed = true;
 
-    el.classList.add('fade-out');
+    if (prefersReducedMotion()) {
+      el.remove();
+      return;
+    }
+
+    el.classList.add("fade-out");
     window.setTimeout(() => el.remove(), 400);
   };
 

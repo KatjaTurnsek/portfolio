@@ -6,7 +6,8 @@
  * - Hides with a fade, unlocks scroll, and dispatches `loader:done`
  */
 
-import gsap from 'gsap';
+import gsap from "gsap";
+import { prefersReducedMotion } from "../motion.js";
 
 /** @type {gsap.core.Tween[]} */
 let waveTweens = [];
@@ -27,31 +28,31 @@ let waveStarted = false;
  * @returns {void}
  */
 function createLoader() {
-  if (document.querySelector('.loader')) return;
+  if (document.querySelector(".loader")) return;
 
-  const loader = document.createElement('div');
-  loader.className = 'loader';
-  loader.setAttribute('role', 'status');
-  loader.setAttribute('aria-live', 'polite');
-  loader.setAttribute('aria-busy', 'true');
+  const loader = document.createElement("div");
+  loader.className = "loader";
+  loader.setAttribute("role", "status");
+  loader.setAttribute("aria-live", "polite");
+  loader.setAttribute("aria-busy", "true");
 
-  const spinner = document.createElement('div');
-  spinner.className = 'spinner';
-  spinner.setAttribute('aria-hidden', 'true');
+  const spinner = document.createElement("div");
+  spinner.className = "spinner";
+  spinner.setAttribute("aria-hidden", "true");
 
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('viewBox', '0 0 500 20');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '20');
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", "0 0 500 20");
+  svg.setAttribute("width", "100%");
+  svg.setAttribute("height", "20");
 
-  const poly = document.createElementNS(svgNS, 'polyline');
-  poly.setAttribute('points', '');
-  poly.setAttribute('class', 'wave-global');
-  poly.setAttribute('fill', 'none');
-  poly.setAttribute('stroke', 'currentColor');
-  poly.setAttribute('stroke-width', '1');
-  poly.setAttribute('vector-effect', 'non-scaling-stroke');
+  const poly = document.createElementNS(svgNS, "polyline");
+  poly.setAttribute("points", "");
+  poly.setAttribute("class", "wave-global");
+  poly.setAttribute("fill", "none");
+  poly.setAttribute("stroke", "currentColor");
+  poly.setAttribute("stroke-width", "1");
+  poly.setAttribute("vector-effect", "non-scaling-stroke");
 
   svg.appendChild(poly);
   spinner.appendChild(svg);
@@ -65,9 +66,10 @@ function createLoader() {
  */
 function animateWave() {
   if (waveStarted) return;
+  if (prefersReducedMotion()) return;
 
   /** @type {SVGPolylineElement|null} */
-  const path = document.querySelector('.wave-global');
+  const path = document.querySelector(".wave-global");
   if (!path || !path.points) return;
 
   const svg = path.ownerSVGElement;
@@ -96,7 +98,7 @@ function animateWave() {
         duration: 2,
         repeat: -1,
         yoyo: true,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
       })
       .progress(norm * frequency);
 
@@ -110,18 +112,20 @@ function animateWave() {
  */
 export function showLoader() {
   /** @type {HTMLElement|null} */
-  let loader = document.querySelector('.loader');
+  let loader = document.querySelector(".loader");
   if (!loader) {
     createLoader();
-    loader = /** @type {HTMLElement|null} */ (document.querySelector('.loader'));
+    loader = /** @type {HTMLElement|null} */ (
+      document.querySelector(".loader")
+    );
   }
   if (!loader) return;
 
-  loader.style.opacity = '1';
-  loader.style.display = 'block';
-  loader.classList.remove('hidden');
+  loader.style.opacity = "1";
+  loader.style.display = "block";
+  loader.classList.remove("hidden");
 
-  document.documentElement.classList.add('no-scroll');
+  document.documentElement.classList.add("no-scroll");
 
   animateWave();
 }
@@ -133,25 +137,36 @@ export function showLoader() {
  */
 export function hideLoader() {
   /** @type {HTMLElement|null} */
-  const loader = document.querySelector('.loader');
+  const loader = document.querySelector(".loader");
   if (!loader) {
-    document.dispatchEvent(new CustomEvent('loader:done'));
+    document.dispatchEvent(new CustomEvent("loader:done"));
+    return;
+  }
+
+  if (prefersReducedMotion()) {
+    waveTweens.forEach((t) => t.kill());
+    waveTweens = [];
+    waveStarted = false;
+
+    loader.remove();
+    document.documentElement.classList.remove("no-scroll");
+    document.dispatchEvent(new CustomEvent("loader:done"));
     return;
   }
 
   gsap.to(loader, {
     opacity: 0,
     duration: 0.45,
-    ease: 'power2.out',
+    ease: "power2.out",
     onComplete: () => {
       waveTweens.forEach((t) => t.kill());
       waveTweens = [];
       waveStarted = false;
 
       loader.remove();
-      document.documentElement.classList.remove('no-scroll');
+      document.documentElement.classList.remove("no-scroll");
 
-      document.dispatchEvent(new CustomEvent('loader:done'));
+      document.dispatchEvent(new CustomEvent("loader:done"));
     },
   });
 }

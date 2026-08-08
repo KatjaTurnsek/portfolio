@@ -5,7 +5,8 @@
  * Vite's import.meta.env.BASE_URL, so they work on GH Pages (/portfolio/).
  */
 
-import { createMiniLoader } from './loader/miniLoader.js';
+import { createMiniLoader } from "./loader/miniLoader.js";
+import { prefersReducedMotion } from "./motion.js";
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Base resolution                                                            */
@@ -16,10 +17,11 @@ import { createMiniLoader } from './loader/miniLoader.js';
  * @returns {string} base path with trailing slash (e.g., "/portfolio/")
  */
 function getSiteBase() {
-  const fromTag = document.querySelector('base')?.getAttribute('href');
+  const fromTag = document.querySelector("base")?.getAttribute("href");
   if (fromTag) return ensureTrail(fromTag);
 
-  const fromVite = (typeof import.meta !== 'undefined' && import.meta?.env?.BASE_URL) || '/';
+  const fromVite =
+    (typeof import.meta !== "undefined" && import.meta?.env?.BASE_URL) || "/";
   return ensureTrail(fromVite);
 }
 
@@ -28,8 +30,8 @@ function getSiteBase() {
  * @param {string} [s="/"]
  * @returns {string}
  */
-function ensureTrail(s = '/') {
-  return s.endsWith('/') ? s : s + '/';
+function ensureTrail(s = "/") {
+  return s.endsWith("/") ? s : s + "/";
 }
 
 /**
@@ -45,7 +47,7 @@ function withBase(p) {
   const BASE = getSiteBase(); // e.g. "/portfolio/"
   if (p.startsWith(BASE)) return p;
 
-  const clean = p.replace(/^\/+/, ''); // "assets/images/foo.webp"
+  const clean = p.replace(/^\/+/, ""); // "assets/images/foo.webp"
   return BASE + clean;
 }
 
@@ -68,11 +70,11 @@ function buildFullPath(filename, dataPath) {
   if (/^(https?:|data:|blob:)/i.test(filename)) return filename;
 
   // If already includes a path, honor base.
-  if (filename.includes('/')) {
+  if (filename.includes("/")) {
     return withBase(filename);
   }
 
-  const path = String(dataPath || 'assets/images').replace(/\/+$/, '');
+  const path = String(dataPath || "assets/images").replace(/\/+$/, "");
   return withBase(`${path}/${filename}`);
 }
 
@@ -92,7 +94,7 @@ function parseFilePattern(filename) {
   if (!filename) return null;
 
   // Support data-src="assets/images/foo-600.webp" too → match only the basename.
-  const baseName = String(filename).split('/').pop() || '';
+  const baseName = String(filename).split("/").pop() || "";
 
   // Match: (everything) + "-" + (digits) + "." + (ext)
   const m = baseName.match(/^(.*)-(\d+)\.(webp|avif|png|jpe?g)$/i);
@@ -116,61 +118,64 @@ function parseFilePattern(filename) {
  * @returns {HTMLImageElement[]} processed <img> elements
  */
 export function setupResponsiveImages(section = document) {
-  const thumbs = section.querySelectorAll('img.thumb[data-src]');
+  const thumbs = section.querySelectorAll("img.thumb[data-src]");
   /** @type {HTMLImageElement[]} */
   const insertedImages = [];
 
   thumbs.forEach((img) => {
     try {
-      const filename = img.getAttribute('data-src');
-      const dataPath = img.getAttribute('data-path') || undefined;
+      const filename = img.getAttribute("data-src");
+      const dataPath = img.getAttribute("data-path") || undefined;
       if (!filename) return;
 
       const parsed = parseFilePattern(filename);
-      const picture = document.createElement('picture');
+      const picture = document.createElement("picture");
 
       // Optional <source> with srcset
       if (parsed) {
-        const widthsAttr = img.getAttribute('data-widths');
+        const widthsAttr = img.getAttribute("data-widths");
         const widths = widthsAttr
           ? widthsAttr
-              .split(',')
+              .split(",")
               .map((n) => parseInt(n.trim(), 10))
               .filter(Boolean)
           : [300, 600, 900];
 
         /** @type {Record<string,string>} */
         const mimeMap = {
-          webp: 'image/webp',
-          jpg: 'image/jpeg',
-          jpeg: 'image/jpeg',
-          png: 'image/png',
-          avif: 'image/avif',
+          webp: "image/webp",
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg",
+          png: "image/png",
+          avif: "image/avif",
         };
         const ext = parsed.ext;
         const type = mimeMap[ext] || `image/${ext}`;
 
-        const source = document.createElement('source');
+        const source = document.createElement("source");
         const srcset = widths
-          .map((w) => `${buildFullPath(`${parsed.base}-${w}.${ext}`, dataPath)} ${w}w`)
-          .join(', ');
+          .map(
+            (w) =>
+              `${buildFullPath(`${parsed.base}-${w}.${ext}`, dataPath)} ${w}w`,
+          )
+          .join(", ");
 
         const sizes =
-          img.getAttribute('data-sizes') ||
-          '(min-width: 1024px) 30vw, (min-width: 600px) 45vw, 90vw';
+          img.getAttribute("data-sizes") ||
+          "(min-width: 1024px) 30vw, (min-width: 600px) 45vw, 90vw";
 
-        source.setAttribute('type', type);
-        source.setAttribute('srcset', srcset);
-        source.setAttribute('sizes', sizes);
+        source.setAttribute("type", type);
+        source.setAttribute("srcset", srcset);
+        source.setAttribute("sizes", sizes);
         picture.appendChild(source);
       }
 
       // Fallback <img>
-      const fallback = document.createElement('img');
-      const eager = img.getAttribute('data-priority') === 'eager';
-      fallback.loading = eager ? 'eager' : 'lazy';
-      fallback.decoding = 'async';
-      if (eager) fallback.fetchPriority = 'high';
+      const fallback = document.createElement("img");
+      const eager = img.getAttribute("data-priority") === "eager";
+      fallback.loading = eager ? "eager" : "lazy";
+      fallback.decoding = "async";
+      if (eager) fallback.fetchPriority = "high";
 
       // Copy attributes except our data-* inputs
       [...img.attributes].forEach((attr) => {
@@ -180,19 +185,27 @@ export function setupResponsiveImages(section = document) {
         }
       });
 
-      // Fade-in blur
-      fallback.style.opacity = '0';
-      fallback.style.filter = 'blur(10px)';
-      fallback.style.transition = 'opacity 0.4s ease, filter 0.4s ease';
+      // Fade-in blur when motion is allowed; otherwise reveal without transition.
+      if (prefersReducedMotion()) {
+        fallback.style.opacity = "1";
+        fallback.style.filter = "none";
+        fallback.style.transition = "none";
+      } else {
+        fallback.style.opacity = "0";
+        fallback.style.filter = "blur(10px)";
+        fallback.style.transition = "opacity 0.4s ease, filter 0.4s ease";
+      }
 
       // Tiny inline loader (optional)
       const container =
-        img.closest('.work-item-wrapper') ||
-        img.closest('.work-item') ||
-        img.closest('.case-study-wrapper') ||
+        img.closest(".work-item-wrapper") ||
+        img.closest(".work-item") ||
+        img.closest(".case-study-wrapper") ||
         img.parentElement;
 
-      const mini = container ? createMiniLoader(/** @type {HTMLElement} */ (container)) : null;
+      const mini = container
+        ? createMiniLoader(/** @type {HTMLElement} */ (container))
+        : null;
 
       /** @returns {void} */
       const removeLoader = () => {
@@ -200,13 +213,14 @@ export function setupResponsiveImages(section = document) {
       };
 
       fallback.onload = () => {
-        fallback.style.opacity = '1';
-        fallback.style.filter = 'blur(0)';
+        fallback.style.opacity = "1";
+        fallback.style.filter = "blur(0)";
         removeLoader();
       };
 
       fallback.onerror = () => {
-        if (!fallback.getAttribute('alt')) fallback.alt = 'Image failed to load';
+        if (!fallback.getAttribute("alt"))
+          fallback.alt = "Image failed to load";
         removeLoader();
       };
 
@@ -217,8 +231,8 @@ export function setupResponsiveImages(section = document) {
       /** @returns {void} */
       const revealIfCached = () => {
         if (fallback.complete && fallback.naturalWidth) {
-          fallback.style.opacity = '1';
-          fallback.style.filter = 'blur(0)';
+          fallback.style.opacity = "1";
+          fallback.style.filter = "blur(0)";
           removeLoader();
         }
       };
@@ -233,7 +247,7 @@ export function setupResponsiveImages(section = document) {
       insertedImages.push(fallback);
     } catch (error) {
       // No silent catches (debug-friendly, but won’t break UX)
-      console.error('[responsiveImages] Failed to process an image.', error);
+      console.error("[responsiveImages] Failed to process an image.", error);
     }
   });
 

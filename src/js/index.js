@@ -4,7 +4,7 @@
  *  - Router setup
  *  - Safe section reveal + runtime min-height sizing
  *  - Menu open/close + cleanup
- *  - Loader show/hide + visuals (animations respect reduced-motion)
+ *  - Loader show/hide + visuals
  *  - Footer copyright year update
  *
  * Assumptions:
@@ -12,16 +12,16 @@
  *  - Vite environment (optional import.meta.env.BASE_URL)
  */
 
-import '../css/main.css';
+import "../css/main.css";
 
-import './toggle.js';
+import "./toggle.js";
 
-import { restoreGhPagesDeepLink } from './app/boot/ghPagesRestore.js';
-import { installHistoryBaseGuard } from './app/boot/historyBaseGuard.js';
-import { bindAppHandlers } from './app/boot/bindAppHandlers.js';
-import { bootOnDomReady } from './app/boot/domReady.js';
+import { restoreGhPagesDeepLink } from "./app/boot/ghPagesRestore.js";
+import { installHistoryBaseGuard } from "./app/boot/historyBaseGuard.js";
+import { bindAppHandlers } from "./app/boot/bindAppHandlers.js";
+import { bootOnDomReady } from "./app/boot/domReady.js";
 
-import { sizeSectionMinHeight } from './init.js';
+import { sizeSectionMinHeight } from "./init.js";
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* GH Pages boot (must run BEFORE router boot)                                */
@@ -38,7 +38,7 @@ bootGhPages();
  * Load the router AFTER we’ve potentially rewritten the URL so it sees the final path.
  * Marks window.__routerActive when ready.
  */
-import('./router.js');
+import("./router.js");
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Footer copyright                                                           */
@@ -49,7 +49,7 @@ import('./router.js');
  * @returns {void}
  */
 function updateCopyrightYear() {
-  const yearEl = document.getElementById('copyright-year');
+  const yearEl = document.getElementById("copyright-year");
   if (!yearEl) return;
 
   yearEl.textContent = String(new Date().getFullYear());
@@ -59,13 +59,7 @@ function updateCopyrightYear() {
 /* App handlers                                                               */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-const prefersReducedMotion =
-  typeof window !== 'undefined' &&
-  window.matchMedia &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 bindAppHandlers({
-  prefersReducedMotion,
   sizeFn: sizeSectionMinHeight,
 });
 
@@ -78,4 +72,4 @@ function bootAppOnDomReady() {
   bootOnDomReady();
 }
 
-document.addEventListener('DOMContentLoaded', bootAppOnDomReady);
+document.addEventListener("DOMContentLoaded", bootAppOnDomReady);

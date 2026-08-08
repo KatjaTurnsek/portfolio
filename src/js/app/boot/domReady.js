@@ -3,10 +3,10 @@
  * @description DOM-ready boot sequence (menu, loader, animations, initial section reveal).
  */
 
-import gsap from 'gsap';
+import gsap from "gsap";
 
-import { hideLoader, showLoader } from '../../loader.js';
-import { setupMenuToggle } from '../../nav.js';
+import { hideLoader, showLoader } from "../../loader.js";
+import { setupMenuToggle } from "../../nav.js";
 import {
   animateWaveLine,
   insertWaveLines,
@@ -14,15 +14,16 @@ import {
   deferHeavy,
   animateGooeyBlobs,
   enableInteractiveJellyBlob,
-} from '../../animations.js';
-import { setupHeaderScrollEffect } from '../../init.js';
-import { buildWorkGridsIfNeeded } from '../../components/workGridMounts.js';
-import { releaseScrollLock } from '../../components/scrollLock.js';
+} from "../../animations.js";
+import { setupHeaderScrollEffect } from "../../init.js";
+import { buildWorkGridsIfNeeded } from "../../components/workGridMounts.js";
+import { releaseScrollLock } from "../../components/scrollLock.js";
 import {
   isSafari,
   addSafariWillChange,
   enableNoSelectDuringInteraction,
-} from '../../components/ux.js';
+} from "../../components/ux.js";
+import { prefersReducedMotion } from "../../motion.js";
 
 const LOADER_MAX_WAIT_MS = 800;
 
@@ -90,19 +91,23 @@ export function bootOnDomReady() {
     animateWaveLine();
     animateCustomWaveLines();
 
-    const blobWrapper = document.querySelector('.morphing-blob-wrapper');
+    const blobWrapper = document.querySelector(".morphing-blob-wrapper");
 
     if (blobWrapper) {
-      gsap.fromTo(
-        blobWrapper,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1.2,
-          delay: 0.6,
-          ease: 'power2.out',
-        }
-      );
+      if (prefersReducedMotion()) {
+        gsap.set(blobWrapper, { opacity: 1 });
+      } else {
+        gsap.fromTo(
+          blobWrapper,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 1.2,
+            delay: 0.6,
+            ease: "power2.out",
+          },
+        );
+      }
 
       deferHeavy(() => {
         animateGooeyBlobs();

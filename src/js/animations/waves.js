@@ -3,7 +3,8 @@
  * @description Heading wave line animations (MorphSVG + polyline tick waves).
  */
 
-import { gsap, isSafari } from './env.js';
+import { gsap, isSafari } from "./env.js";
+import { prefersReducedMotion } from "../motion.js";
 
 /**
  * Animate a single path inside #wavy-line using MorphSVG when available.
@@ -12,22 +13,35 @@ import { gsap, isSafari } from './env.js';
  * @returns {void}
  */
 export function animateWaveLine() {
-  const path = /** @type {SVGPathElement|null} */ (document.querySelector('#wavy-line path'));
+  const path = /** @type {SVGPathElement|null} */ (
+    document.querySelector("#wavy-line path")
+  );
   if (!path) return;
 
-  const ALT_D = 'M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15';
+  const ALT_D = "M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15";
   gsap.killTweensOf(path);
+
+  if (prefersReducedMotion()) {
+    gsap.set(path, { clearProps: "transform" });
+    return;
+  }
 
   if (gsap.plugins?.MorphSVGPlugin && !isSafari) {
     gsap.to(path, {
       duration: 3,
       repeat: -1,
       yoyo: true,
-      ease: 'power1.inOut',
+      ease: "power1.inOut",
       morphSVG: { shape: ALT_D },
     });
   } else {
-    gsap.to(path, { duration: 2.5, repeat: -1, yoyo: true, ease: 'sine.inOut', y: 2 });
+    gsap.to(path, {
+      duration: 2.5,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+      y: 2,
+    });
   }
 }
 
@@ -43,19 +57,18 @@ export function insertWaveLines() {
     </svg>
   `;
 
-  const waveHeadings = document.querySelectorAll(
-    '#about h2, #work h2, #contact h2, .case-study-header h1'
-  );
+  document
+    .querySelectorAll("#about h2, #work h2, #contact h2")
+    .forEach((heading) => {
+      const next = heading.nextElementSibling;
+      if (next && next.classList && next.classList.contains("wavy-line"))
+        return;
 
-  waveHeadings.forEach((heading) => {
-    const next = heading.nextElementSibling;
-    if (next && next.classList && next.classList.contains('wavy-line')) return;
-
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = waveSVG;
-    const svg = wrapper.firstElementChild;
-    if (svg) heading.insertAdjacentElement('afterend', svg);
-  });
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = waveSVG;
+      const svg = wrapper.firstElementChild;
+      if (svg) heading.insertAdjacentElement("afterend", svg);
+    });
 }
 
 /**
@@ -77,14 +90,14 @@ let _polylineTickerAdded = false;
  * @returns {void}
  */
 export function animateCustomWaveLines() {
-  const polylines = document.querySelectorAll('.wavy-polyline');
+  const polylines = document.querySelectorAll(".wavy-polyline");
 
   polylines.forEach((polyline) => {
     if (!(polyline instanceof SVGPolylineElement)) return;
-    if (polyline.dataset.waveInit === '1') return;
-    polyline.dataset.waveInit = '1';
+    if (polyline.dataset.waveInit === "1") return;
+    polyline.dataset.waveInit = "1";
 
-    const svg = polyline.closest('svg');
+    const svg = polyline.closest("svg");
     if (!svg) return;
 
     const width = 500;
@@ -110,6 +123,16 @@ export function animateCustomWaveLines() {
     _polylineItems.push({ polyline, points, segments, amplitude, frequency });
   });
 
+  if (prefersReducedMotion()) {
+    if (_polylineTickerAdded) {
+      gsap.ticker.remove(_updateAllPolylines);
+      _polylineTickerAdded = false;
+    }
+
+    _drawAllPolylines(0);
+    return;
+  }
+
   if (!_polylineTickerAdded && _polylineItems.length > 0) {
     _polylineTickerAdded = true;
     gsap.ticker.add(_updateAllPolylines);
@@ -121,16 +144,25 @@ export function animateCustomWaveLines() {
  * @returns {void}
  */
 function _updateAllPolylines() {
-  const time = performance.now() * 0.002;
+  _drawAllPolylines(performance.now() * 0.002);
+}
 
+/**
+ * Draw every registered polyline at one point in the wave cycle.
+ * @param {number} time
+ * @returns {void}
+ */
+function _drawAllPolylines(time) {
   _polylineItems = _polylineItems.filter((item) => item.polyline.isConnected);
 
   for (const item of _polylineItems) {
     const { polyline, points, segments, amplitude, frequency } = item;
-    if (!polyline.points || polyline.points.numberOfItems < segments + 1) continue;
+    if (!polyline.points || polyline.points.numberOfItems < segments + 1)
+      continue;
 
     for (let i = 0; i <= segments; i++) {
-      const y = 15 + Math.sin((i / segments) * Math.PI * frequency + time) * -amplitude;
+      const y =
+        15 + Math.sin((i / segments) * Math.PI * frequency + time) * -amplitude;
       points[i].y = y;
       polyline.points.getItem(i).y = y;
     }

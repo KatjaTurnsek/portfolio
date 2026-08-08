@@ -5,9 +5,10 @@
  * Safari-safe: never transform section containers—animate only inner content.
  */
 
-import gsap from 'gsap';
-import { sizeSectionMinHeight } from './utils/sizeSectionMinHeight.js';
-export { sizeSectionMinHeight } from './utils/sizeSectionMinHeight.js';
+import gsap from "gsap";
+import { sizeSectionMinHeight } from "./utils/sizeSectionMinHeight.js";
+import { prefersReducedMotion } from "./motion.js";
+export { sizeSectionMinHeight } from "./utils/sizeSectionMinHeight.js";
 
 /**
  * Reveal a section by id:
@@ -19,38 +20,50 @@ export { sizeSectionMinHeight } from './utils/sizeSectionMinHeight.js';
  * @returns {void}
  */
 export function revealSection(targetId) {
-  const section = /** @type {HTMLElement|null} */ (document.getElementById(targetId));
+  const section = /** @type {HTMLElement|null} */ (
+    document.getElementById(targetId)
+  );
   if (!section) return;
 
-  document.querySelectorAll('.fullscreen-section').forEach((s) => {
+  document.querySelectorAll(".fullscreen-section").forEach((s) => {
     if (s === section) return;
     const el = /** @type {HTMLElement} */ (s);
-    el.classList.remove('visible');
-    el.style.display = 'none';
-    el.style.visibility = 'hidden';
-    el.style.pointerEvents = 'none';
-    el.style.transform = 'none';
-    el.style.opacity = '0';
-    el.style.minHeight = '';
+    el.classList.remove("visible");
+    el.style.display = "none";
+    el.style.visibility = "hidden";
+    el.style.pointerEvents = "none";
+    el.style.transform = "none";
+    el.style.opacity = "0";
+    el.style.minHeight = "";
   });
 
-  section.style.display = 'block';
-  section.style.visibility = 'visible';
-  section.style.pointerEvents = 'auto';
-  section.style.transform = 'none';
-  section.style.opacity = '1';
-  section.classList.add('visible');
+  section.style.display = "block";
+  section.style.visibility = "visible";
+  section.style.pointerEvents = "auto";
+  section.style.transform = "none";
+  section.style.opacity = "1";
+  section.classList.add("visible");
 
   sizeSectionMinHeight(section);
 
   const content =
-    /** @type {HTMLElement|null} */ (section.querySelector('.rows')) ||
+    /** @type {HTMLElement|null} */ (section.querySelector(".rows")) ||
     /** @type {HTMLElement|null} */ (section.firstElementChild) ||
     section;
 
   if (content !== section) {
-    content.style.transform = '';
-    content.style.opacity = '';
+    content.style.transform = "";
+    content.style.opacity = "";
+  }
+
+  gsap.killTweensOf(content);
+
+  if (prefersReducedMotion()) {
+    gsap.set(content, { opacity: 1, y: 0, clearProps: "transform,opacity" });
+    document.dispatchEvent(
+      new CustomEvent("sectionVisible", { detail: targetId }),
+    );
+    return;
   }
 
   gsap.fromTo(
@@ -60,11 +73,13 @@ export function revealSection(targetId) {
       duration: 0.5,
       opacity: 1,
       y: 0,
-      ease: 'power2.out',
+      ease: "power2.out",
       onStart: () => {
-        document.dispatchEvent(new CustomEvent('sectionVisible', { detail: targetId }));
+        document.dispatchEvent(
+          new CustomEvent("sectionVisible", { detail: targetId }),
+        );
       },
-    }
+    },
   );
 }
 
@@ -73,9 +88,10 @@ export function revealSection(targetId) {
  * @returns {void}
  */
 export function setupHeaderScrollEffect() {
-  const header = document.querySelector('header');
+  const header = document.querySelector("header");
   if (!header) return;
-  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
-  window.addEventListener('scroll', onScroll, { passive: true });
+  const onScroll = () =>
+    header.classList.toggle("scrolled", window.scrollY > 10);
+  window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 }
