@@ -1,7 +1,7 @@
 /**
  * @file init.js
  * @description Router-friendly section initialization and reveal utilities.
- * Exposes `revealSection` (also assigned to `window.revealSection` for router use).
+ * Exposes section sizing and reveal utilities for the router.
  * Safari-safe: never transform section containers—animate only inner content.
  */
 
@@ -66,32 +66,6 @@ export function revealSection(targetId) {
       },
     }
   );
-}
-
-if (typeof window !== 'undefined') {
-  window.revealSection = revealSection;
-}
-
-/**
- * Initialize sections when no router is active.
- * @returns {void}
- */
-export function initSections() {
-  if (window.__routerActive) return;
-
-  document.querySelectorAll('.fullscreen-section').forEach((node) => {
-    const el = /** @type {HTMLElement} */ (node);
-    el.style.display = 'none';
-    el.style.opacity = '0';
-    el.style.transform = 'none';
-    el.style.visibility = 'hidden';
-    el.style.pointerEvents = 'none';
-    el.classList.remove('visible');
-    el.style.minHeight = '';
-  });
-
-  const home = /** @type {HTMLElement|null} */ (document.getElementById('home'));
-  if (home) revealSection('home');
 }
 
 /**

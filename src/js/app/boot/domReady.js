@@ -15,16 +15,14 @@ import {
   animateGooeyBlobs,
   enableInteractiveJellyBlob,
 } from '../../animations.js';
-import { initSections, sizeSectionMinHeight } from '../../init.js';
+import { setupHeaderScrollEffect } from '../../init.js';
 import { buildWorkGridsIfNeeded } from '../../components/workGridMounts.js';
 import { releaseScrollLock } from '../../components/scrollLock.js';
-import { bindHireButton } from '../../components/hireButton.js';
 import {
   isSafari,
   addSafariWillChange,
   enableNoSelectDuringInteraction,
 } from '../../components/ux.js';
-import { setupHeaderScrollEffect } from '../../init.js';
 
 const LOADER_MAX_WAIT_MS = 800;
 
@@ -111,19 +109,7 @@ export function bootOnDomReady() {
         enableInteractiveJellyBlob();
       }, 800);
     }
-
-    const currentId = window.__currentSectionId || 'home';
-    const currentEl = document.getElementById(currentId);
-
-    if (currentEl) {
-      window.revealSection?.(currentId);
-      sizeSectionMinHeight(currentEl);
-    }
   });
-
-  bindHireButton();
-
-  initSections();
   setupHeaderScrollEffect();
   enableNoSelectDuringInteraction();
   addSafariWillChange();

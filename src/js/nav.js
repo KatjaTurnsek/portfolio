@@ -5,12 +5,81 @@
 
 import { releaseScrollLock } from './components/scrollLock.js';
 
+/** @type {HTMLButtonElement|null} */
+let menuToggle = null;
+/** @type {HTMLButtonElement|null} */
+let menuClose = null;
+/** @type {HTMLElement|null} */
+let menu = null;
+/** @type {Element|null} */
+let lastFocused = null;
+/** @type {((e: KeyboardEvent) => void)|null} */
+let keyHandler = null;
+
+const focusSelectors =
+  'a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), ' +
+  'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Get visible, focusable elements inside a container.
+ * @param {HTMLElement} container
+ * @returns {HTMLElement[]}
+ */
+function getFocusable(container) {
+  return /** @type {HTMLElement[]} */ (
+    Array.from(container.querySelectorAll(focusSelectors)).filter((el) => {
+      const style = window.getComputedStyle(el);
+      const rects = el.getClientRects();
+
+      return (
+        style.visibility !== 'hidden' &&
+        style.display !== 'none' &&
+        !!(el.offsetWidth || el.offsetHeight || rects.length)
+      );
+    })
+  );
+}
+
+/**
+ * Close the menu and release its focus trap and scroll lock.
+ * Router navigation disables focus restoration because it moves focus to the new section.
+ *
+ * @param {{ restoreFocus?: boolean }} [options]
+ * @returns {void}
+ */
+export function closeMenu({ restoreFocus = true } = {}) {
+  if (!menu || !menuToggle) return;
+
+  const wasOpen = menu.classList.contains('open');
+  if (!wasOpen && !keyHandler) return;
+
+  menu.classList.remove('open');
+  menu.setAttribute('inert', '');
+  releaseScrollLock();
+
+  menuToggle.style.display = 'inline-block';
+  menuToggle.classList.remove('opened');
+  menuToggle.setAttribute('aria-expanded', 'false');
+
+  if (keyHandler) {
+    document.removeEventListener('keydown', keyHandler);
+    keyHandler = null;
+  }
+
+  if (restoreFocus && wasOpen) {
+    if (lastFocused instanceof HTMLElement) lastFocused.focus();
+    else menuToggle.focus();
+  }
+
+  lastFocused = null;
+}
+
 /**
  * Initialize fullscreen menu toggle behavior.
  * - Adds dialog semantics to the menu container if not present
  * - Locks focus inside the menu while open
  * - Restores focus to the opener on close
- * - Closes on Escape, backdrop click, or internal link click
+ * - Closes on Escape or backdrop click; routed links close it through `navigate()`
  *
  * Requirements in markup:
  * - <button id="menuToggle"> open button
@@ -20,14 +89,13 @@ import { releaseScrollLock } from './components/scrollLock.js';
  * @returns {void}
  */
 export function setupMenuToggle() {
-  /** @type {HTMLButtonElement|null} */
-  const menuToggle = document.getElementById('menuToggle');
-  /** @type {HTMLButtonElement|null} */
-  const menuClose = document.getElementById('menuClose');
-  /** @type {HTMLElement|null} */
-  const menu = document.getElementById('menu');
+  menuToggle = /** @type {HTMLButtonElement|null} */ (document.getElementById('menuToggle'));
+  menuClose = /** @type {HTMLButtonElement|null} */ (document.getElementById('menuClose'));
+  menu = document.getElementById('menu');
 
   if (!menuToggle || !menuClose || !menu) return;
+  if (menu.dataset.menuBound === 'true') return;
+  menu.dataset.menuBound = 'true';
 
   // Ensure dialog semantics on the menu element
   if (!menu.hasAttribute('role')) menu.setAttribute('role', 'dialog');
@@ -37,33 +105,6 @@ export function setupMenuToggle() {
   menuToggle.setAttribute('aria-haspopup', 'dialog');
   menuToggle.setAttribute('aria-controls', 'menu');
   menuToggle.setAttribute('aria-expanded', 'false');
-
-  // Focusable selector and helpers
-  const focusSelectors =
-    'a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), ' +
-    'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-  /**
-   * Get visible, focusable elements inside a container.
-   * @param {HTMLElement} container
-   * @returns {HTMLElement[]}
-   */
-  const getFocusable = (container) =>
-    Array.from(container.querySelectorAll(focusSelectors)).filter((el) => {
-      const style = window.getComputedStyle(el);
-      const rects = el.getClientRects();
-      return (
-        style.visibility !== 'hidden' &&
-        style.display !== 'none' &&
-        !!(el.offsetWidth || el.offsetHeight || rects.length)
-      );
-    });
-
-  /** @type {Element|null} */
-  let lastFocused = null;
-
-  /** @type {(e:KeyboardEvent)=>void | null} */
-  let keyHandler = null;
 
   /**
    * Open the menu, trap focus, and set ARIA state.
@@ -109,44 +150,9 @@ export function setupMenuToggle() {
     document.addEventListener('keydown', keyHandler);
   }
 
-  /**
-   * Close the menu, release focus trap, restore focus and ARIA state.
-   * @returns {void}
-   */
-  function closeMenu() {
-    menu.classList.remove('open');
-    menu.setAttribute('inert', '');
-
-    // Single source of truth for unlocking scroll/classes/styles
-    releaseScrollLock();
-
-    menuToggle.style.display = 'inline-block';
-    menuToggle.classList.remove('opened');
-    menuToggle.setAttribute('aria-expanded', 'false');
-
-    if (lastFocused && lastFocused instanceof HTMLElement) {
-      lastFocused.focus();
-    } else {
-      menuToggle.focus();
-    }
-    lastFocused = null;
-
-    if (keyHandler) {
-      document.removeEventListener('keydown', keyHandler);
-      keyHandler = null;
-    }
-  }
-
   // Wire up open/close buttons
   menuToggle.addEventListener('click', openMenu);
   menuClose.addEventListener('click', closeMenu);
-
-  // Close after internal link clicks; router handles navigation
-  menu.addEventListener('click', (e) => {
-    const a = e.target instanceof Element ? e.target.closest('a') : null;
-    if (!a) return;
-    setTimeout(closeMenu, 50);
-  });
 
   // Click on empty backdrop closes (when the menu container is the backdrop)
   menu.addEventListener('mousedown', (e) => {
@@ -157,14 +163,7 @@ export function setupMenuToggle() {
   const mo = new MutationObserver(() => {
     const isOpen = menu.classList.contains('open');
     if (!isOpen && keyHandler) {
-      document.removeEventListener('keydown', keyHandler);
-      keyHandler = null;
-
-      menuToggle.setAttribute('aria-expanded', 'false');
-      if (menuToggle.style.display === 'none') menuToggle.style.display = 'inline-block';
-
-      // Ensure scroll lock is released if closed externally
-      releaseScrollLock();
+      closeMenu({ restoreFocus: false });
     }
   });
   mo.observe(menu, { attributes: true, attributeFilter: ['class'] });

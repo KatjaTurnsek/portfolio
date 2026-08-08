@@ -4,8 +4,7 @@
  */
 
 import { BASE_SLASH, FILE_EXT_RE } from './config.js';
-import { normalizePathname, pathToId, idToPath } from './paths.js';
-import { render, smartBack } from './navigation.js';
+import { navigate, smartBack } from './navigation.js';
 
 /**
  * Global click handler to route internal links and bypass files.
@@ -19,7 +18,11 @@ export function onClick(e) {
   // Back buttons
   if (el.hasAttribute('data-back')) {
     e.preventDefault();
-    smartBack(el instanceof HTMLAnchorElement ? el.href : '/');
+    const fallback =
+      el.getAttribute('data-back-fallback') ||
+      (el instanceof HTMLAnchorElement ? el.getAttribute('href') : '') ||
+      '/';
+    smartBack(fallback);
     return;
   }
 
@@ -47,24 +50,12 @@ export function onClick(e) {
   if (url.origin !== location.origin) return;
 
   const pathname = url.pathname;
-  const path = normalizePathname(pathname);
-  const hash = url.hash ? url.hash.slice(1) : null;
 
   const isUnderAssets = pathname.startsWith(BASE_SLASH + 'assets/');
   const looksLikeFileByPath = FILE_EXT_RE.test(pathname);
   if (isUnderAssets || looksLikeFileByPath) return;
 
-  if (hash && document.getElementById(hash)) {
-    e.preventDefault();
-    render(idToPath(hash), { replace: false });
-    return;
-  }
-
-  const id = pathToId(path);
-  if (!id) return;
-
-  e.preventDefault();
-  render(path);
+  if (navigate(url.href)) e.preventDefault();
 }
 
 /**
@@ -72,8 +63,9 @@ export function onClick(e) {
  * @returns {void}
  */
 export function onPopState() {
-  const path = normalizePathname(location.pathname);
-  render(path, { replace: true });
+  if (!navigate(location.href, { replace: true })) {
+    navigate('/', { replace: true });
+  }
 }
 
 /**
@@ -90,7 +82,10 @@ export function ensureSectionSync() {
     current.style.opacity === '0';
 
   if (hidden) {
-    const path = normalizePathname(location.pathname);
-    requestAnimationFrame(() => render(path, { replace: true }));
+    requestAnimationFrame(() => {
+      if (!navigate(location.href, { replace: true })) {
+        navigate('/', { replace: true });
+      }
+    });
   }
 }
