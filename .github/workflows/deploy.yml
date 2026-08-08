@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   contents: write
@@ -23,7 +23,7 @@ jobs:
         run: npm ci || npm install
 
       - name: Build with GH base
-        run: GH_PAGES=1 npm run build
+        run: npm run build:gh
 
       - name: Deploy to gh-pages branch
         uses: JamesIves/github-pages-deploy-action@v4
