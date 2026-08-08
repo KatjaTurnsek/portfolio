@@ -43,7 +43,11 @@ export function insertWaveLines() {
     </svg>
   `;
 
-  document.querySelectorAll('h2').forEach((heading) => {
+  const waveHeadings = document.querySelectorAll(
+    '#about h2, #work h2, #contact h2, .case-study-header h1'
+  );
+
+  waveHeadings.forEach((heading) => {
     const next = heading.nextElementSibling;
     if (next && next.classList && next.classList.contains('wavy-line')) return;
 

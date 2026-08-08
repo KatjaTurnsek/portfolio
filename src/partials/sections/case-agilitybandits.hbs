@@ -1,146 +1,142 @@
 <section
   id='case-agilitybandits'
-  class='fullscreen-section'
-  data-title='Case Study: Agility Bandits Blog — Web Development | Katja Turnsek'
-  data-description='Responsive API-driven blog with dynamic posts, admin authentication, editable content, and accessible UI patterns.'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Agility Bandits — Web Development | Katja Turnsek'
+  data-description='API-driven blog case study focused on dynamic posts, authentication, admin publishing tools, responsive content, and branded interface design.'
   data-case='agilitybandits'
+  aria-labelledby='case-agilitybandits-title'
 >
   <div class='rows'>
     <div class='row'>
-      <h1>Web Development</h1>
-      <h2>Agility Bandits - API-Driven Blog</h2>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web Development</p>
+        <h1 id='case-agilitybandits-title'>Agility Bandits</h1>
+        <p class='case-subtitle'>A branded, API-driven blog with public reading and authenticated
+          publishing tools.</p>
 
-      <div class='tech-demo-wrapper'>
-        <div class='tech-stack'><strong>Tools:</strong> HTML | CSS | JavaScript | API</div>
+        <dl class='case-summary' aria-label='Project summary'>
+          <div>
+            <dt>Role</dt>
+            <dd>Brand, UX/UI, and front-end development</dd>
+          </div>
+          <div>
+            <dt>Scope</dt>
+            <dd>Individual Project Exam 1</dd>
+          </div>
+          <div>
+            <dt>Year</dt>
+            <dd>2024</dd>
+          </div>
+          <div>
+            <dt>Tools</dt>
+            <dd>HTML, CSS, JavaScript, Noroff API</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Complete publishing workflow</dd>
+          </div>
+        </dl>
 
-        <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='agilitybandits'></div>
+        </div>
+
+        <nav
+          class='project-switcher'
+          aria-label='Agility Bandits sections'
+          data-auto='switcher'
+          data-case='agilitybandits'
+        ></nav>
       </div>
     </div>
 
     <div class='row'>
-      <!-- Reusable component: Project Switcher -->
-      <nav
-        class='project-switcher'
-        aria-label='Agility Bandits sections'
-        data-auto='switcher'
-        data-case='agilitybandits'
-      ></nav>
-    </div>
-
-    <div class='row'>
-      <h3>Objective</h3>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        To build a responsive
-        <strong>blog platform</strong>
-        for a dog agility brand, using the
-        <strong>Noroff API</strong>
-        to load dynamic posts and support admin-controlled content. The focus was to combine
-        structured front-end fundamentals with API data, authentication, and a clear editorial
-        experience.
+        The task was to create a responsive blog for a dog-agility brand using API-managed content.
+        Visitors needed a clear way to discover and read posts, while an authenticated administrator
+        needed practical tools for creating, editing, and managing that content.
       </p>
     </div>
 
     <div class='row'>
-      <div class='case-study-columns'>
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Development Focus</h3>
-            <ul class='bullet-list'>
-              <li>
-                Built with
-                <strong>semantic HTML</strong>, structured CSS, and vanilla JavaScript
-              </li>
-              <li>
-                Fetched and displayed blog posts dynamically from the
-                <strong>Noroff API</strong>
-              </li>
-              <li>
-                Implemented
-                <strong>login and registration</strong>
-                for admin content control
-              </li>
-              <li>
-                Created a
-                <strong>responsive layout</strong>
-                that works across desktop and mobile views
-              </li>
-              <li>
-                Applied
-                <strong>accessibility</strong>
-                details for navigation, headings, readability, and keyboard use
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
+          <h2>Challenge</h2>
+          <p>
+            Public editorial content and private admin actions had to coexist in the same site.
+            Because post titles, images, excerpts, and body copy come from an API, the layout also
+            had to remain stable when the real content differed from the original design examples.
+          </p>
+          <ul>
+            <li>Separate public reading from authenticated publishing actions</li>
+            <li>Design flexible cards and pages for variable API content</li>
+            <li>Keep a playful brand personality without reducing readability</li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-right'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/site-agilitybandits-600.webp'
-              data-src='site-agilitybandits-600.webp'
-              alt='Agility Bandits blog homepage showing dog agility branding, navigation, and blog content'
-            />
-            <figcaption class='work-caption'>Desktop version - Homepage</figcaption>
-          </figure>
-        </div>
+        <figure class='case-study-item case-study-media--homepage'>
+          <img
+            class='thumb'
+            src='{{base}}assets/images/site-agilitybandits-600.webp'
+            data-src='site-agilitybandits-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='400'
+            loading='lazy'
+            decoding='async'
+            alt='Agility Bandits desktop blog homepage showing branded navigation and dynamically loaded posts'
+          />
+          <figcaption class='case-caption'>Branded homepage with dynamic blog content</figcaption>
+        </figure>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-left'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/site-agilitybanditsmobile-600.webp'
-              data-src='site-agilitybanditsmobile-600.webp'
-              alt='Agility Bandits mobile views showing the homepage and edit blog post interface'
-            />
-            <figcaption class='work-caption'>
-              Mobile version - Homepage and edit post view
-            </figcaption>
-          </figure>
-        </div>
+        <article class='case-study-block case-study-block--decisions'>
+          <h2>Key decisions</h2>
+          <ul>
+            <li>
+              Used semantic HTML, structured CSS, and focused JavaScript modules to keep the content
+              hierarchy clear across listing, detail, and admin views
+            </li>
+            <li>
+              Kept posts publicly readable while showing create and edit actions only when the
+              administrator has an authenticated session
+            </li>
+            <li>
+              Built responsive content patterns that can accommodate changing image proportions,
+              title lengths, and article content from the API
+            </li>
+            <li>
+              Carried the dog-agility identity through color, typography, and custom graphics while
+              keeping navigation and controls familiar
+            </li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Key Features</h3>
-            <ul class='bullet-list-right'>
-              <li>
-                <strong>Dynamic blog post loading</strong>
-                with API-based content
-              </li>
-              <li>
-                <strong>Admin authentication</strong>
-                for creating and editing posts
-              </li>
-              <li>
-                <strong>Responsive blog layout</strong>
-                for desktop, tablet, and mobile screens
-              </li>
-              <li>
-                <strong>Accessible navigation</strong>
-                and structured headings for better usability
-              </li>
-              <li>
-                <strong>Custom visual identity</strong>
-                with agility-inspired graphics and a branded interface
-              </li>
-            </ul>
-          </div>
-        </div>
+        <figure class='case-study-item case-study-media--admin'>
+          <img
+            class='thumb'
+            src='{{base}}assets/images/site-agilitybanditsmobile-600.webp'
+            data-src='site-agilitybanditsmobile-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='488'
+            loading='lazy'
+            decoding='async'
+            alt='Agility Bandits mobile homepage and authenticated edit-post interface'
+          />
+          <figcaption class='case-caption'>Mobile reading and edit-post views</figcaption>
+        </figure>
       </div>
     </div>
 
-    <div class='row'>
-      <h3>Reflection</h3>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        Agility Bandits strengthened my foundation in
-        <strong>semantic HTML, responsive CSS, vanilla JavaScript, API integration, and
-          authentication</strong>. It gave me practical experience building a content-driven site
-        where the interface depends on dynamic data, user roles, and admin actions.
-      </p>
-      <p>
-        The project also helped me connect development with branding: the layout, graphics, and UI
-        choices support the agility theme while keeping the blog structure clear and usable.
+        The finished project combines a public responsive blog with an authenticated
+        content-management journey. It strengthened my foundation in vanilla JavaScript, API
+        integration, authentication, and rendering unpredictable content. It also gave me practical
+        experience carrying a visual identity through a functional product rather than treating
+        branding and development as separate tasks.
       </p>
     </div>
 
@@ -150,7 +146,7 @@
         class='label-link back-to-work-label'
         data-back
         data-back-fallback='{{base}}#work'
-        aria-label='Go back'
+        aria-label='Back to Work'
       >
         <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>

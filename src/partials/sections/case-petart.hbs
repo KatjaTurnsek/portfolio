@@ -1,127 +1,143 @@
 <section
   id='case-petart'
-  class='fullscreen-section'
+  class='fullscreen-section case-study-section'
   data-title='Case Study: Pet Art With Heart — Web Development | Katja Turnsek'
-  data-description='Fast, accessible artist portfolio built with semantic HTML and custom CSS. Focus on performance, a11y, and SEO.'
+  data-description='Real-world artist website case study focused on responsive front-end development, artwork-led presentation, performance, accessibility, and search visibility.'
   data-case='petart'
+  aria-labelledby='case-petart-title'
 >
   <div class='rows'>
     <div class='row'>
-      <h1>Web Development</h1>
-      <h2>Pet Art with Heart - Artist Portfolio Website</h2>
-      <div class='tech-demo-wrapper'>
-        <div class='tech-stack'><strong>Tools:</strong> HTML | CSS</div>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web Development</p>
+        <h1 id='case-petart-title'>Pet Art With Heart</h1>
+        <p class='case-subtitle'>A lightweight business website that presents commissioned pet
+          portraits with clarity and warmth.</p>
 
-        <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='petart'></div>
+        <dl class='case-summary' aria-label='Project summary'>
+          <div>
+            <dt>Role</dt>
+            <dd>Brand, UX/UI, content, and front-end development</dd>
+          </div>
+          <div>
+            <dt>Scope</dt>
+            <dd>Independent real-world business site</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>Ongoing</dd>
+          </div>
+          <div>
+            <dt>Tools</dt>
+            <dd>HTML, CSS, responsive images</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Live commission portfolio</dd>
+          </div>
+        </dl>
+
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='petart'></div>
+        </div>
+
+        <nav
+          class='project-switcher'
+          aria-label='Pet Art With Heart sections'
+          data-auto='switcher'
+          data-case='petart'
+        ></nav>
       </div>
     </div>
 
     <div class='row'>
-      <!-- Reusable component: Project Switcher -->
-      <nav
-        class='project-switcher'
-        aria-label='Pet Art With Heart sections'
-        data-auto='switcher'
-        data-case='petart'
-      ></nav>
-    </div>
-
-    <div class='row'>
-      <h3>Objective</h3>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        To develop a
-        <strong>fast-loading</strong>,
-        <strong>SEO-friendly</strong>, and
-        <strong>fully responsive</strong>
-        portfolio website that supports a visual identity without overshadowing the artwork.
+        Pet Art With Heart needed a website that could work as both an art portfolio and a
+        trustworthy introduction to commissioned work. The portraits had to remain the visual focus
+        while visitors could quickly understand the artistic style, the personal nature of the
+        service, and how to take the next step.
       </p>
     </div>
 
     <div class='row'>
-      <div class='case-study-columns'>
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Development Focus</h3>
-            <ul class='bullet-list'>
-              <li>
-                Implemented a
-                <strong>responsive layout</strong>
-                using
-                <strong>semantic HTML</strong>
-                and custom CSS
-              </li>
-              <li>
-                Optimized for
-                <strong>performance</strong>
-                and
-                <strong>accessibility</strong>
-                across all screen sizes
-              </li>
-              <li>
-                Applied
-                <strong>SEO best practices</strong>, including structured content and
-                keyword-optimized copy
-              </li>
-              <li>
-                Integrated lightweight CSS-based animation in hero sections without using JavaScript
-                to keep load times fast
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
+          <h2>Challenge</h2>
+          <p>
+            Detailed artwork benefits from large imagery, but heavy pages would work against
+            discoverability and mobile browsing. The challenge was to create an expressive,
+            image-led presentation that still loads efficiently, reads clearly, and supports the
+            practical purpose of a commission website.
+          </p>
+          <ul>
+            <li>Let the portraits lead without hiding essential information</li>
+            <li>Balance image quality with responsive performance</li>
+            <li>Build a clear path from discovering the work to making contact</li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-right'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/site-petart-600.webp'
-              data-src='site-petart-600.webp'
-              data-path='assets/images'
-              alt='Pet Art with Heart - homepage desktop view'
-            />
-            <figcaption class='work-caption'>Desktop version - Homepage</figcaption>
-          </figure>
-        </div>
+        <figure class='case-study-item case-study-media--desktop'>
+          <img
+            class='thumb'
+            src='{{base}}assets/images/site-petart-600.webp'
+            data-src='site-petart-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='400'
+            loading='lazy'
+            decoding='async'
+            alt='Pet Art With Heart desktop homepage presenting commissioned pet portraits and introductory content'
+          />
+          <figcaption class='case-caption'>Artwork-led desktop homepage</figcaption>
+        </figure>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-left'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/site-petartmobile-600.webp'
-              data-src='site-petartmobile-600.webp'
-              data-path='assets/images'
-              alt='Pet Art with Heart - homepage mobile view'
-            />
-            <figcaption class='work-caption'>Mobile version - Homepage and Menu</figcaption>
-          </figure>
-        </div>
+        <article class='case-study-block case-study-block--decisions'>
+          <h2>Key decisions</h2>
+          <ul>
+            <li>
+              Used semantic HTML and a clear content hierarchy so the artwork, service information,
+              and calls to action remain understandable without scripting
+            </li>
+            <li>
+              Built the layout with custom responsive CSS to retain precise control over image
+              presentation, typography, and whitespace
+            </li>
+            <li>
+              Kept decorative movement lightweight and CSS-based so it adds warmth without competing
+              with the portraits or delaying the page
+            </li>
+            <li>
+              Structured page content and metadata around the actual commission service to support
+              relevant search visibility as well as human readers
+            </li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Key Features</h3>
-            <ul class='bullet-list-right'>
-              <li><strong>Fully responsive</strong> across devices</li>
-              <li>Fast performance and optimized load times</li>
-              <li><strong>Clean, semantic HTML</strong> structure</li>
-              <li><strong>SEO-optimized</strong> content and metadata</li>
-              <li>Minimal animation to maintain focus on artwork</li>
-            </ul>
-          </div>
-        </div>
+        <figure class='case-study-item case-study-media--mobile'>
+          <img
+            class='thumb'
+            src='{{base}}assets/images/site-petartmobile-600.webp'
+            data-src='site-petartmobile-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='515'
+            loading='lazy'
+            decoding='async'
+            alt='Pet Art With Heart mobile homepage and navigation presenting pet portrait artwork'
+          />
+          <figcaption class='case-caption'>Mobile homepage and navigation</figcaption>
+        </figure>
       </div>
     </div>
 
-    <div class='row'>
-      <h3>Reflection</h3>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        This project strengthened my
-        <strong>front-end development skills</strong>, especially in building
-        <strong>fast and accessible websites from scratch</strong>. I focused on
-        <strong>technical performance</strong>
-        while ensuring the design remained
-        <strong>clean and user-friendly</strong>. It gave me hands-on experience balancing
-        creativity with coding best practices.
+        The result is a live business site that connects my artwork, visual identity, service
+        information, and contact journey in one responsive experience. Unlike a fictional brief,
+        this project required me to make practical decisions for my own audience and balance
+        artistic expression with performance, discoverability, and trust.
       </p>
     </div>
 
@@ -131,12 +147,11 @@
         class='label-link back-to-work-label'
         data-back
         data-back-fallback='{{base}}#work'
-        aria-label='Go back'
+        aria-label='Back to Work'
       >
         <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
-
   </div>
 </section>

@@ -1,156 +1,146 @@
 <section
   id='case-studiobid'
-  class='fullscreen-section'
+  class='fullscreen-section case-study-section'
   data-title='Case Study: StudioBid — Web Development | Katja Turnsek'
-  data-description='Auction platform case study focused on JavaScript, Bootstrap, Sass, API integration, listings, bids, profiles, credits, authentication, and reusable UI states.'
+  data-description='Vanilla JavaScript auction platform case study focused on API integration, authentication, bidding, credits, listings, profiles, and reusable UI states.'
   data-case='studiobid'
+  aria-labelledby='case-studiobid-title'
 >
   <div class='rows'>
     <div class='row'>
-      <h1>Web Development</h1>
-      <h2>StudioBid - Auction House App</h2>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web Development</p>
+        <h1 id='case-studiobid-title'>StudioBid</h1>
+        <p class='case-subtitle'>An API-driven auction platform for browsing, selling, and bidding
+          on creative work.</p>
 
-      <div class='tech-demo-wrapper'>
-        <div class='tech-stack'><strong>Tools:</strong>
-          JavaScript | Bootstrap | Sass | Noroff API</div>
+        <dl class='case-summary' aria-label='Project summary'>
+          <div>
+            <dt>Role</dt>
+            <dd>UX/UI design and front-end development</dd>
+          </div>
+          <div>
+            <dt>Scope</dt>
+            <dd>Individual Semester Project 2</dd>
+          </div>
+          <div>
+            <dt>Year</dt>
+            <dd>2025</dd>
+          </div>
+          <div>
+            <dt>Tools</dt>
+            <dd>JavaScript, Bootstrap, Sass, Noroff API</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Complete auction journey</dd>
+          </div>
+        </dl>
 
-        <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='studiobid'></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='studiobid'></div>
+        </div>
+
+        <nav
+          class='project-switcher'
+          aria-label='StudioBid sections'
+          data-auto='switcher'
+          data-case='studiobid'
+        ></nav>
       </div>
     </div>
 
     <div class='row'>
-      <!-- Reusable component: Project Switcher -->
-      <nav
-        class='project-switcher'
-        aria-label='StudioBid sections'
-        data-auto='switcher'
-        data-case='studiobid'
-      ></nav>
-    </div>
-
-    <div class='row'>
-      <h3>Objective</h3>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        To build a responsive
-        <strong>auction platform</strong>
-        where users can browse listings, place bids, manage profiles, and track credits through the
-        <strong>Noroff Auction API</strong>. The focus was to create a larger JavaScript application
-        with reusable structure, clear user flows, and stable UI states across multiple features.
+        The goal was to turn the Noroff Auction API into a coherent product where users could
+        discover listings, place bids, create auctions, manage their profiles, and understand their
+        available credits. The project needed to connect these actions across several views while
+        keeping the experience predictable for both visitors and authenticated users.
       </p>
     </div>
 
     <div class='row'>
-      <div class='case-study-columns'>
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Development Focus</h3>
-            <ul class='bullet-list'>
-              <li>
-                Built a multi-page front-end app with
-                <strong>vanilla JavaScript</strong>
-                plus
-                <strong>Bootstrap + Sass</strong>
-                for a consistent UI system and responsive layout
-              </li>
-              <li>
-                Integrated the
-                <strong>Noroff Auction API</strong>
-                for listings, bids, profiles, media, and credits, handling real, changing data
-              </li>
-              <li>
-                Implemented complete
-                <strong>authentication flows</strong>
-                for registration, login, logout, persisted sessions, and protected user actions
-              </li>
-              <li>
-                Designed and implemented key flows:
-                <strong>create listing</strong>,
-                <strong>browse and filter</strong>,
-                <strong>view listing details</strong>, and
-                <strong>place bids</strong>
-              </li>
-              <li>
-                Focused on
-                <strong>reliable UI state</strong>
-                with loading, empty, and error states across pages and forms
-              </li>
-              <li>
-                Added usability and accessibility details like clear hierarchy, form feedback, and
-                keyboard-friendly interactions
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
+          <h2>Challenge</h2>
+          <p>
+            Auction data changes constantly. Bid values, credit balances, listing status, and time
+            remaining all affect which actions should be available. The main challenge was keeping
+            those connected states understandable across browsing, listing details, forms, and user
+            profiles.
+          </p>
+          <ul>
+            <li>Protect account actions while keeping public listings easy to explore</li>
+            <li>Reflect bids and credit changes clearly after an API action</li>
+            <li>Handle loading, validation, empty results, and API errors without breaking the
+              journey</li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-right'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/site-studiobid-600.webp'
-              data-src='site-studiobid-600.webp'
-              alt='Screenshot of the StudioBid auction app showing the hero headline “Turn your studio into credit,” a search bar with sort dropdown, and a grid of auction listing cards with highest bid and time remaining.'
-            />
-            <figcaption class='work-caption'>StudioBid - Landing page with search, sorting, and
-              auction listing cards</figcaption>
-          </figure>
-        </div>
+        <figure class='case-study-item case-study-media--browse'>
+          <img
+            class='thumb'
+            src='{{base}}assets/images/site-studiobid-600.webp'
+            data-src='site-studiobid-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='400'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid homepage showing search, sorting, auction cards, current bids, and time remaining'
+          />
+          <figcaption class='case-caption'>Searchable auction listings with bid status and time
+            remaining</figcaption>
+        </figure>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-left'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/site-studiobid-code-600.webp'
-              data-src='site-studiobid-code-600.webp'
-              alt='Code editor screenshot showing the setFieldState form validation helper that finds an input and feedback element, clears validation classes, and applies valid or invalid styling with feedback text.'
-            />
-            <figcaption class='work-caption'>StudioBid - Reusable form validation helper with
-              feedback messaging</figcaption>
-          </figure>
-        </div>
+        <article class='case-study-block case-study-block--decisions'>
+          <h2>Key decisions</h2>
+          <ul>
+            <li>
+              Separated API, authentication, rendering, and form behavior into reusable JavaScript
+              modules so related features could share the same logic
+            </li>
+            <li>
+              Used persistent authentication and protected actions to keep browsing public while
+              reserving bidding and listing management for signed-in users
+            </li>
+            <li>
+              Designed listing cards and detail views around the information needed for a bidding
+              decision: price, time remaining, seller, media, and bid history
+            </li>
+            <li>
+              Created reusable validation and feedback helpers so forms respond consistently to
+              success, invalid input, and API errors
+            </li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Key Features</h3>
-            <ul class='bullet-list-right'>
-              <li>
-                <strong>Browse listings</strong>
-                with responsive cards, search, sorting, bid status, and time remaining
-              </li>
-              <li>
-                <strong>Listing detail pages</strong>
-                with media, bid history, current bid, and bidding interaction
-              </li>
-              <li>
-                <strong>Create and manage listings</strong>
-                with title, description, tags, media, and end date
-              </li>
-              <li>
-                <strong>User profiles</strong>
-                with avatar, banner, credit visibility, and listing/bid overview
-              </li>
-              <li>
-                <strong>Reusable UI helpers</strong>
-                for form validation, feedback messaging, and API-driven states
-              </li>
-            </ul>
-          </div>
-        </div>
+        <figure class='case-study-item case-study-media--validation'>
+          <img
+            class='thumb'
+            src='{{base}}assets/images/site-studiobid-code-600.webp'
+            data-src='site-studiobid-code-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='402'
+            loading='lazy'
+            decoding='async'
+            alt='Code editor showing a reusable StudioBid form validation helper for valid and invalid field states'
+          />
+          <figcaption class='case-caption'>Reusable form validation and feedback logic</figcaption>
+        </figure>
       </div>
     </div>
 
-    <div class='row'>
-      <h3>Reflection</h3>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        StudioBid strengthened my ability to structure a larger front-end application with
-        <strong>API-driven data, authentication, reusable UI patterns, and predictable state
-          handling</strong>. It pushed me to think beyond individual pages and focus on how
-        listings, bids, profiles, credits, and form feedback work together as one product.
-      </p>
-      <p>
-        The project also gave me more confidence working with
-        <strong>vanilla JavaScript, Bootstrap, Sass, and real API responses</strong>
-        in a way that still feels custom, structured, and ready for continued improvement.
+        The completed app connects listing discovery, authentication, bidding, credit visibility,
+        profile management, and listing creation in one responsive experience. StudioBid
+        strengthened how I structure larger vanilla JavaScript projects and showed me how much clear
+        feedback and predictable state handling matter when several parts of a product depend on the
+        same changing API data.
       </p>
     </div>
 
@@ -160,7 +150,7 @@
         class='label-link back-to-work-label'
         data-back
         data-back-fallback='{{base}}#work'
-        aria-label='Go back'
+        aria-label='Back to Work'
       >
         <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>

@@ -1,143 +1,145 @@
 <section
   id='case-lumastays'
-  class='fullscreen-section'
+  class='fullscreen-section case-study-section'
   data-title='Case Study: Luma Stays — Web Development | Katja Turnsek'
   data-description='React accommodation booking case study focused on API integration, authentication, routing, booking flows, profile management, and role-based functionality.'
   data-case='lumastays'
+  aria-labelledby='case-lumastays-title'
 >
   <div class='rows'>
     <div class='row'>
-      <h1>Web Development</h1>
-      <h2>Luma Stays - Accommodation Booking App</h2>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web Development</p>
+        <h1 id='case-lumastays-title'>Luma Stays</h1>
+        <p class='case-subtitle'>A complete accommodation booking app for customers and venue
+          managers.</p>
 
-      <div class='tech-demo-wrapper'>
-        <div class='tech-stack'><strong>Tools:</strong>
-          React | JavaScript | Bootstrap | Noroff API</div>
+        <dl class='case-summary' aria-label='Project summary'>
+          <div>
+            <dt>Role</dt>
+            <dd>UX/UI design and front-end development</dd>
+          </div>
+          <div>
+            <dt>Scope</dt>
+            <dd>Individual Project Exam 2</dd>
+          </div>
+          <div>
+            <dt>Year</dt>
+            <dd>2026</dd>
+          </div>
+          <div>
+            <dt>Tools</dt>
+            <dd>React, JavaScript, Bootstrap, Noroff API</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Grade A</dd>
+          </div>
+        </dl>
 
-        <div class='demo-links' data-auto='demo' data-case='lumastays'></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='lumastays'></div>
+        </div>
+
+        <nav
+          class='project-switcher'
+          aria-label='Luma Stays sections'
+          data-auto='switcher'
+          data-case='lumastays'
+        ></nav>
       </div>
     </div>
 
     <div class='row'>
-      <nav
-        class='project-switcher'
-        aria-label='Luma Stays sections'
-        data-auto='switcher'
-        data-case='lumastays'
-      ></nav>
-    </div>
-
-    <div class='row'>
-      <h3>Objective</h3>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        To build a complete
-        <strong>accommodation booking application</strong>
-        with venue browsing, search, detailed venue pages, booking functionality, profile
-        management, and manager tools. The focus was to create a structured front-end app that
-        handles real API data while keeping the user journey clear from browsing to booking.
+        The goal was to turn the Holidaze API into a clear end-to-end booking experience. Customers
+        needed to discover venues, understand availability, and manage bookings, while venue
+        managers needed a separate set of tools for creating and maintaining listings. The interface
+        had to keep these connected journeys understandable without exposing the complexity of the
+        underlying API.
       </p>
     </div>
 
     <div class='row'>
-      <div class='case-study-columns'>
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Development Focus</h3>
-            <ul class='bullet-list'>
-              <li>
-                Built as a
-                <strong>React single-page application</strong>
-                with routed views, reusable components, and clear page structure
-              </li>
-              <li>
-                Integrated the
-                <strong>Noroff Holidaze API</strong>
-                for venues, profiles, bookings, authentication, and manager-specific data
-              </li>
-              <li>
-                Developed
-                <strong>customer and venue manager flows</strong>
-                with different available actions depending on the user role
-              </li>
-              <li>
-                Used
-                <strong>Bootstrap with custom CSS</strong>
-                to create a responsive interface that still feels branded and polished
-              </li>
-              <li>
-                Focused on
-                <strong>stable UI states</strong>
-                for loading, errors, forms, image handling, bookings, and profile updates
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
+          <h2>Challenge</h2>
+          <p>
+            The same application had to support two account types, authenticated and public states,
+            changing venue data, and booking rules. The main challenge was making the correct action
+            obvious at every step while keeping loading, empty, error, and success states stable.
+          </p>
+          <ul>
+            <li>Separate customer and venue-manager journeys without duplicating the whole interface</li>
+            <li>Keep venue, profile, and booking data consistent after create and update actions</li>
+            <li>Make search and guest filtering useful across real, inconsistent API content</li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-right'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/site-lumastays-600.webp'
-              data-src='site-lumastays-600.webp'
-              data-path='assets/images'
-              alt='Luma Stays explore page showing accommodation cards, search, and filter interface'
-            />
-            <figcaption class='work-caption'>Desktop version - Explore stays</figcaption>
-          </figure>
-        </div>
+        <figure class='case-study-item case-study-media--explore'>
+          <img
+            class='thumb'
+            src='{{base}}assets/images/site-lumastays-600.webp'
+            data-src='site-lumastays-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='484'
+            loading='lazy'
+            decoding='async'
+            alt='Luma Stays explore page showing accommodation cards, search, and filter interface'
+          />
+          <figcaption class='case-caption'>Explore stays with search and filtering</figcaption>
+        </figure>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-left'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/web-lumastays-booking-600.webp'
-              data-src='web-lumastays-booking-600.webp'
-              data-path='assets/images'
-              alt='Luma Stays venue detail page showing booking options and guest selection'
-            />
-            <figcaption class='work-caption'>Desktop version - Venue details and booking</figcaption>
-          </figure>
-        </div>
+        <article class='case-study-block case-study-block--decisions'>
+          <h2>Key decisions</h2>
+          <ul>
+            <li>
+              Structured the app as routed React views with reusable components for shared patterns
+              such as venue cards, forms, feedback, and protected actions
+            </li>
+            <li>
+              Used role-aware UI states so customers and managers see only the actions relevant to
+              their account and the venue they are viewing
+            </li>
+            <li>
+              Added clear validation and feedback around authentication, bookings, profile updates,
+              image handling, and venue management
+            </li>
+            <li>
+              Combined Bootstrap structure with custom CSS so the interface stays responsive without
+              losing its calm, branded visual style
+            </li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Key Features</h3>
-            <ul class='bullet-list-right'>
-              <li>
-                <strong>Venue browsing</strong>
-                with responsive cards, search, filtering, pricing, and clear venue information
-              </li>
-              <li>
-                <strong>Venue detail pages</strong>
-                with images, facilities, descriptions, pricing, and booking actions
-              </li>
-              <li>
-                <strong>Booking flow</strong>
-                for logged-in customers, including guest selection and booking feedback
-              </li>
-              <li>
-                <strong>Profile area</strong>
-                where users can view bookings, update their avatar, and manage account details
-              </li>
-              <li>
-                <strong>Manager functionality</strong>
-                for creating, editing, and managing accommodation listings
-              </li>
-            </ul>
-          </div>
-        </div>
+        <figure class='case-study-item case-study-media--booking'>
+          <img
+            class='thumb'
+            src='{{base}}assets/images/web-lumastays-booking-600.webp'
+            data-src='web-lumastays-booking-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='484'
+            loading='lazy'
+            decoding='async'
+            alt='Luma Stays venue detail page showing booking options and guest selection'
+          />
+          <figcaption class='case-caption'>Venue details and booking flow</figcaption>
+        </figure>
       </div>
     </div>
 
-    <div class='row'>
-      <h3>Reflection</h3>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        Luma Stays is one of my strongest front-end projects because it brings together
-        <strong>React, API integration, authentication, routing, forms, booking logic, and
-          role-based user flows</strong>
-        in one complete application. It strengthened how I structure larger apps, work with changing
-        API data, and design functionality that supports different user needs without making the
-        interface feel complicated.
+        The completed project received a
+        <strong>Grade A</strong>
+        and delivered complete customer and manager journeys in one responsive application. It
+        strengthened how I structure larger React projects, recover gracefully from changing API
+        data, and turn complex role-based functionality into an interface that still feels calm and
+        straightforward.
       </p>
     </div>
 
@@ -147,7 +149,7 @@
         class='label-link back-to-work-label'
         data-back
         data-back-fallback='{{base}}#work'
-        aria-label='Go back'
+        aria-label='Back to Work'
       >
         <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
         <span class='label-text'>Back to Work</span>

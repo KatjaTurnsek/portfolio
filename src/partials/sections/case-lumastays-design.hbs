@@ -1,187 +1,204 @@
 <section
-  id='case-lumastays-design'
-  class='fullscreen-section'
-  data-title='Case Study: Luma Stays — Web & Interaction Design | Katja Turnsek'
-  data-description='Web and interaction design case study focused on accommodation browsing, booking decisions, role-based flows, responsive layouts, and a clear manager experience.'
-  data-case='lumastays'
+  id="case-lumastays-design"
+  class="fullscreen-section case-study-section"
+  data-title="Case Study: Luma Stays — Web &amp; Interaction Design | Katja Turnsek"
+  data-description="UX/UI case study for an accommodation platform, focused on search, booking decisions, responsive layouts, and distinct customer and venue-manager flows."
+  data-case="lumastays"
+  aria-labelledby="case-lumastays-design-title"
 >
-  <div class='rows'>
-    <div class='row'>
-      <h1>Web & Interaction Design</h1>
-      <h2>Luma Stays - Booking Interface & User Flows</h2>
+  <div class="rows">
+    <div class="row">
+      <div class="case-study-header">
+        <p class="case-eyebrow">Web &amp; Interaction Design</p>
+        <h1 id="case-lumastays-design-title">Luma Stays</h1>
+        <p class="case-subtitle">A calm booking experience that helps customers
+          choose confidently and venue managers stay in control.</p>
 
-      <div class='tech-demo-wrapper'>
-        <div class='tech-stack'><strong>Tools:</strong> Figma | React | Bootstrap | UX Flow</div>
+        <dl class="case-summary" aria-label="Project summary">
+          <div>
+            <dt>Role</dt>
+            <dd>UX/UI design and prototyping</dd>
+          </div>
+          <div>
+            <dt>Scope</dt>
+            <dd>Individual Project Exam 2</dd>
+          </div>
+          <div>
+            <dt>Year</dt>
+            <dd>2026</dd>
+          </div>
+          <div>
+            <dt>Tools</dt>
+            <dd>Figma, responsive UI, prototyping, design system</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Grade A project</dd>
+          </div>
+        </dl>
 
-        <!-- Reusable component: Demo Links -->
-        <div class='demo-links' data-auto='demo' data-case='lumastays-design'></div>
+        <div class="tech-demo-wrapper case-demo-wrapper">
+          <div
+            class="demo-links"
+            data-auto="demo"
+            data-case="lumastays-design"
+          ></div>
+        </div>
+
+        <nav
+          class="project-switcher"
+          aria-label="Luma Stays sections"
+          data-auto="switcher"
+          data-case="lumastays"
+        ></nav>
       </div>
     </div>
 
-    <div class='row'>
-      <!-- Reusable component: Project Switcher -->
-      <nav
-        class='project-switcher'
-        aria-label='Luma Stays sections'
-        data-auto='switcher'
-        data-case='lumastays'
-      ></nav>
-    </div>
-
-    <div class='row'>
-      <h3>Objective</h3>
+    <div class="row">
+      <h2 class="case-section-heading">The brief</h2>
       <p>
-        To shape a clear
-        <strong>accommodation booking experience</strong>
-        where users can browse stays, compare options, understand venue details, and move toward a
-        booking with confidence. The interface also needed to support venue managers, so the design
-        had to separate customer actions from listing management without making the product feel
-        fragmented.
+        Luma Stays needed to make a large accommodation catalogue feel easy to
+        explore while supporting two distinct user journeys. Customers needed to
+        compare venues and book with confidence; venue managers needed practical
+        tools for creating, reviewing, and maintaining listings. Both
+        experiences had to feel like parts of the same product.
       </p>
     </div>
 
-    <div class='row'>
-      <div class='case-study-columns'>
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Design Focus</h3>
-            <ul class='bullet-list'>
-              <li>
-                Designed a structured
-                <strong>booking interface</strong>
-                with clear hierarchy, readable content, and visible calls-to-action
-              </li>
-              <li>
-                Created browsing patterns for
-                <strong>search, filtering, venue cards, and venue detail pages</strong>
-                so users can compare accommodation options quickly
-              </li>
-              <li>
-                Shaped the booking flow around
-                <strong>decision-making moments</strong>
-                such as location, price, facilities, guest count, and availability
-              </li>
-              <li>
-                Planned separate flows for
-                <strong>customers and venue managers</strong>
-                while keeping the visual language consistent across the app
-              </li>
-              <li>
-                Balanced a polished travel-style interface with
-                <strong>usable forms, responsive layouts, and accessible content structure</strong>
-              </li>
-            </ul>
-          </div>
-        </div>
+    <div class="row">
+      <div class="case-study-grid">
+        <article class="case-study-block case-study-block--challenge">
+          <h2>Challenge</h2>
+          <p>
+            Accommodation decisions involve many competing details: location,
+            price, facilities, guest capacity, availability, and trust. The
+            interface had to surface the right information at each step without
+            crowding cards or making the booking page feel intimidating.
+          </p>
+          <ul>
+            <li>Support quick browsing without hiding meaningful venue details</li>
+            <li>Keep search and filters close to the results they affect</li>
+            <li>Make booking actions visible while preserving space for
+              decision-making content</li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-right'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/design-lumastays-explore-600.webp'
-              data-src='design-lumastays-explore-600.webp'
-              data-path='assets/images'
-              alt='Luma Stays explore page showing search, filters, and accommodation cards'
-            />
-            <figcaption class='work-caption'>Explore stays - Search and filtering UI</figcaption>
-          </figure>
-        </div>
+        <figure class="case-study-item case-study-media--explore">
+          <img
+            class="thumb"
+            src="{{base}}assets/images/design-lumastays-explore-600.webp"
+            data-src="design-lumastays-explore-600.webp"
+            data-path="assets/images"
+            width="600"
+            height="411"
+            loading="lazy"
+            decoding="async"
+            alt="Luma Stays explore design showing search, filters, and accommodation cards"
+          />
+          <figcaption class="case-caption">Search and filtering remain connected
+            to the venue grid</figcaption>
+        </figure>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-left'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/design-lumastays-booking-flow-600.webp'
-              data-src='design-lumastays-booking-flow-600.webp'
-              data-path='assets/images'
-              alt='Luma Stays venue detail page showing booking flow and guest selection'
-            />
-            <figcaption class='work-caption'>Booking flow - Venue details and guest selection</figcaption>
-          </figure>
-        </div>
+        <article class="case-study-block case-study-block--decisions">
+          <h2>Key decisions</h2>
+          <ul>
+            <li>
+              Designed venue cards around the details users need for an initial
+              comparison: image, title, location, capacity, rating, and price
+            </li>
+            <li>
+              Grouped description, facilities, practical details, and booking
+              controls into clear areas so the venue page supports both
+              evaluation and action
+            </li>
+            <li>
+              Used a restrained travel-inspired palette, generous spacing, and
+              consistent card and form patterns to keep a content-heavy
+              interface calm
+            </li>
+            <li>
+              Planned responsive layouts around task priority, allowing
+              secondary content to move without separating users from the next
+              important action
+            </li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Interaction Decisions</h3>
-            <ul class='bullet-list-right'>
-              <li>
-                <strong>Search and filters</strong>
-                are placed close to the venue grid so users can refine results without losing
-                context
-              </li>
-              <li>
-                <strong>Venue cards</strong>
-                surface key information early, including image, title, location, price, and rating
-              </li>
-              <li>
-                The
-                <strong>venue detail page</strong>
-                separates description, facilities, price, and booking actions into clear content
-                areas
-              </li>
-              <li>
-                Booking controls were kept
-                <strong>direct and visible</strong>
-                so users do not need to search for the next action
-              </li>
-              <li>
-                Manager views support
-                <strong>ownership, editing, and listing overview</strong>
-                without interfering with the customer browsing experience
-              </li>
-            </ul>
-          </div>
-        </div>
+        <figure class="case-study-item case-study-media--booking">
+          <img
+            class="thumb"
+            src="{{base}}assets/images/design-lumastays-booking-flow-600.webp"
+            data-src="design-lumastays-booking-flow-600.webp"
+            data-path="assets/images"
+            width="600"
+            height="411"
+            loading="lazy"
+            decoding="async"
+            alt="Luma Stays venue detail design showing information, guest selection, and booking controls"
+          />
+          <figcaption class="case-caption">Venue information and booking
+            controls share one clear decision flow</figcaption>
+        </figure>
 
-        <div class='case-study-wrapper'>
-          <div class='case-study-text'>
-            <h3>Role-Based Flow</h3>
-            <p>
-              Luma Stays needed to work for two different user types: customers booking
-              accommodation and managers handling their own listings. I separated these flows so
-              users can focus on the task they came for, while shared components, spacing, and
-              navigation patterns keep the experience consistent across the product.
-            </p>
-          </div>
-        </div>
+        <article class="case-study-block">
+          <h2>Role-based flow</h2>
+          <p>
+            Customers and venue managers share authentication, navigation, and
+            profile patterns, but their goals are different. I kept public
+            browsing and booking focused on discovery, while manager actions are
+            introduced only when ownership makes them relevant.
+          </p>
+          <ul>
+            <li>Customer profiles prioritise upcoming and previous bookings</li>
+            <li>Manager profiles surface owned venues and listing-management
+              actions</li>
+            <li>Shared components preserve consistency across both account
+              experiences</li>
+          </ul>
+        </article>
 
-        <div class='case-study-wrapper'>
-          <figure class='case-study-item item-right'>
-            <img
-              class='thumb'
-              src='{{base}}assets/images/design-lumastays-manager-dashboard-600.webp'
-              data-src='design-lumastays-manager-dashboard-600.webp'
-              data-path='assets/images'
-              alt='Luma Stays manager dashboard showing managed venues and booking information'
-            />
-            <figcaption class='work-caption'>Manager dashboard - Profile and managed venues</figcaption>
-          </figure>
-        </div>
+        <figure class="case-study-item">
+          <img
+            class="thumb"
+            src="{{base}}assets/images/design-lumastays-manager-dashboard-600.webp"
+            data-src="design-lumastays-manager-dashboard-600.webp"
+            data-path="assets/images"
+            width="600"
+            height="401"
+            loading="lazy"
+            decoding="async"
+            alt="Luma Stays manager dashboard design showing profile information and managed venues"
+          />
+          <figcaption class="case-caption">Manager dashboard with owned venues
+            and account context</figcaption>
+        </figure>
       </div>
     </div>
 
-    <div class='row'>
-      <h3>Reflection</h3>
+    <div class="row case-outcome">
+      <h2 class="case-section-heading">Outcome and reflection</h2>
       <p>
-        The main design challenge was making Luma Stays feel complete without overwhelming the user.
-        I focused on
-        <strong>clear user flows, reusable interface patterns, responsive layouts, and role-based
-          navigation</strong>. This case shows how I connect visual design with front-end structure:
-        the interface is not only styled, but shaped around how users search, compare, book, and
-        manage accommodation.
+        The final design supports discovery, venue evaluation, booking, profile
+        management, and listing ownership without making the product feel
+        fragmented. The completed application received a
+        <strong>Grade A</strong>. This project strengthened how I translate
+        complex requirements into reusable interaction patterns and how I design
+        related journeys for users with different goals.
       </p>
     </div>
 
-    <div class='back-to-work-container'>
+    <div class="back-to-work-container">
       <a
-        href='{{base}}#work'
-        class='label-link back-to-work-label'
+        href="{{base}}#work"
+        class="label-link back-to-work-label"
         data-back
-        data-back-fallback='{{base}}#work'
-        aria-label='Go back'
+        data-back-fallback="{{base}}#work"
+        aria-label="Back to Work"
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
-        <span class='label-text'>Back to Work</span>
+        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
+            href="#i-arrow-left"
+          /></svg>
+        <span class="label-text">Back to Work</span>
       </a>
     </div>
   </div>

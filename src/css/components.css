@@ -129,22 +129,27 @@ h4 {
 /* 2) Tech Info Bar */
 .tech-demo-wrapper {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 1rem 2rem;
   width: 100%;
 }
 
 .tech-stack {
+  flex: 1 1 460px;
+  min-width: 0;
   font-family: var(--body-font);
   font-weight: 400;
   font-size: 25px;
   line-height: 35px;
   color: var(--text-color);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .demo-links {
   display: flex;
+  flex: 0 1 auto;
   flex-direction: column;
   gap: 0.3rem;
   padding-left: 30px;
@@ -167,7 +172,9 @@ h4 {
 .project-switcher .pill {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  min-height: 44px;
   padding: 0.5rem 0.8rem;
   border-radius: 999px;
   border: 1px solid var(--pill-border);
@@ -891,8 +898,9 @@ body.dark-theme .hire-button:hover::before {
   }
 
   .project-switcher .pill {
+    min-height: 44px;
     padding: 0.55rem 0.9rem;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .related-links {

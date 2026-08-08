@@ -303,7 +303,7 @@ export const projects = [
         label: 'Open In Figma (Mobile)',
       },
     ],
-    order: 110,
+    order: 120,
   },
 
   {
@@ -327,7 +327,7 @@ export const projects = [
         label: 'Open In Figma (Mobile)',
       },
     ],
-    order: 120,
+    order: 130,
   },
 
   {
@@ -351,7 +351,7 @@ export const projects = [
         label: 'Open In Figma (Mobile)',
       },
     ],
-    order: 130,
+    order: 140,
   },
 
   {
@@ -423,7 +423,7 @@ export const projects = [
         label: 'Open In Figma (Mobile)',
       },
     ],
-    order: 160,
+    order: 110,
   },
 
   // LOGOTYPES
@@ -445,7 +445,7 @@ export const projects = [
         icon: ICONS.external,
       },
     ],
-    order: 210,
+    order: 220,
   },
 
   {
@@ -466,7 +466,7 @@ export const projects = [
         icon: ICONS.external,
       },
     ],
-    order: 220,
+    order: 250,
   },
 
   {
@@ -493,7 +493,7 @@ export const projects = [
   {
     group: 'semester',
     caseId: 'semester-project-1-logotype',
-    title: 'Semester Project 1 - Logotype',
+    title: 'Gemenskapet Science Museum - Logotype',
     stack: 'Adobe Illustrator',
     desc: 'Magnifying-glass logo for a museum.',
     imgSrc: img('card-sciencemuseum-logotype-600.webp'),
@@ -508,7 +508,7 @@ export const projects = [
         icon: ICONS.external,
       },
     ],
-    order: 240,
+    order: 260,
   },
 
   {
@@ -529,7 +529,7 @@ export const projects = [
         icon: ICONS.external,
       },
     ],
-    order: 250,
+    order: 240,
   },
 
   {
@@ -550,7 +550,7 @@ export const projects = [
         icon: ICONS.external,
       },
     ],
-    order: 260,
+    order: 210,
   },
 ];
 
