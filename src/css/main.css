@@ -1,6 +1,16 @@
-@import url('./reset.css'); /* baseline normalization */
-@import url('./variables.css'); /* variables, fonts, global typography */
-@import url('./layout.css'); /* sections like header, footer, nav, main */
-@import url('./components.css'); /* buttons, forms, cards, toggle switch, etc. */
-@import url('./styles.css'); /* light/dark theme variables */
-@import url('./loader.css'); /* well, loader */
+@import url('./reset.css');
+@import url('./variables.css');
+@import url('./base.css');
+
+@import url('./site-layout.css');
+@import url('./navigation.css');
+
+@import url('./work-grid.css');
+@import url('./case-studies.css');
+@import url('./components.css');
+@import url('./about.css');
+@import url('./contact.css');
+@import url('./effects.css');
+
+@import url('./styles.css');
+@import url('./loader.css');

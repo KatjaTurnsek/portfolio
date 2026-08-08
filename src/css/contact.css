@@ -1,0 +1,126 @@
+/* ==========================================================================
+   contact.css — Contact form, validation and supporting information
+   ========================================================================== */
+
+.contact-form-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: 2rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 70%;
+}
+
+.name-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+input,
+textarea {
+  box-sizing: border-box;
+  height: 50px;
+  padding: 0 1rem;
+  background-color: var(--teal-transparent);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 16px;
+  resize: none;
+}
+
+textarea {
+  height: auto;
+  padding-top: 0.75rem;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+  box-shadow: 0 0 0 1000px rgba(0, 128, 128, 0.15) inset !important;
+  font-family: inherit;
+  font-size: 16px;
+  transition: background-color 9999s ease-in-out 0s;
+  -webkit-text-fill-color: var(--text-color) !important;
+}
+
+input:invalid,
+textarea:invalid {
+  border: 2px solid var(--error-color);
+}
+
+input:valid,
+textarea:valid {
+  border: 2px solid var(--success-color);
+}
+
+input:invalid:focus,
+textarea:invalid:focus {
+  outline: 2px solid var(--error-color);
+}
+
+input:valid:focus,
+textarea:valid:focus {
+  outline: 2px solid var(--success-color);
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.info-text {
+  padding-top: 60px;
+  color: var(--text-color);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 40px;
+}
+
+@media (max-width: 850px) {
+  .contact-form-wrapper {
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .contact-form {
+    width: 100%;
+  }
+
+  .name-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  input,
+  textarea {
+    height: 46px;
+  }
+
+  .info-text {
+    padding-top: 40px;
+    font-size: 26px;
+    line-height: 36px;
+    text-align: center;
+  }
+}
