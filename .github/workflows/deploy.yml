@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
-      - name: Build with GH base
-        run: GH_PAGES=1 npm run build
+      - name: Build with GH Pages fallback
+        run: npm run build:gh
 
       - name: Deploy to gh-pages branch
         uses: JamesIves/github-pages-deploy-action@v4
