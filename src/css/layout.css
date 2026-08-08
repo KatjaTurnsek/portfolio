@@ -416,18 +416,21 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 10px;
-  padding-top: 60px;
+  gap: clamp(4px, 1vh, 12px);
+  padding-top: clamp(20px, 6vh, 60px);
 }
 
 .fullscreen-menu nav a {
   font-family: var(--nav-font);
   font-weight: var(--nav-font-weight);
-  font-size: var(--nav-font-size);
+  font-size: clamp(36px, min(6vw, 10vh), 90px);
+  line-height: 1.05;
   color: var(--text-color);
   text-decoration: none;
   text-align: right;
-  transition: color var(--transition-med);
+  transition:
+    color var(--transition-med),
+    font-size var(--transition-fast);
 }
 
 .fullscreen-menu nav a:hover {
@@ -857,14 +860,6 @@ section.fullscreen-section > h1 {
   .menu-toggle.opened {
     right: 30px;
     top: 30px;
-  }
-
-  .fullscreen-menu nav {
-    gap: 0;
-  }
-
-  .fullscreen-menu nav a {
-    font-size: 55px;
   }
 
   footer {
