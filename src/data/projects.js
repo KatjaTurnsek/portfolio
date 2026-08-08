@@ -48,7 +48,10 @@ export const projects = [
         label: 'Visit Live Site',
         icon: ICONS.globe,
       },
-      { href: 'https://github.com/KatjaTurnsek/luma-stays', label: 'GitHub' },
+      {
+        href: 'https://github.com/KatjaTurnsek/luma-stays',
+        label: 'GitHub',
+      },
     ],
     order: 10,
   },
@@ -72,7 +75,10 @@ export const projects = [
         label: 'Visit Live Site',
         icon: ICONS.globe,
       },
-      { href: 'https://github.com/KatjaTurnsek/semester-project-2', label: 'GitHub' },
+      {
+        href: 'https://github.com/KatjaTurnsek/semester-project-2',
+        label: 'GitHub',
+      },
     ],
     order: 20,
   },
@@ -116,7 +122,12 @@ export const projects = [
     routeUrl: 'work/portfolio',
     caseUrl: '#case-portfolio',
     liveUrl: 'https://github.com/KatjaTurnsek/portfolio',
-    demoLinks: [{ href: 'https://github.com/KatjaTurnsek/portfolio', label: 'View on GitHub' }],
+    demoLinks: [
+      {
+        href: 'https://github.com/KatjaTurnsek/portfolio',
+        label: 'View on GitHub',
+      },
+    ],
     order: 40,
   },
 
@@ -132,7 +143,13 @@ export const projects = [
     routeUrl: 'work/petart',
     caseUrl: '#case-petart',
     liveUrl: 'https://pet-art.net',
-    demoLinks: [{ href: 'https://pet-art.net', label: 'Visit Live Site', icon: ICONS.globe }],
+    demoLinks: [
+      {
+        href: 'https://pet-art.net',
+        label: 'Visit Live Site',
+        icon: ICONS.globe,
+      },
+    ],
     order: 50,
   },
 
@@ -166,7 +183,7 @@ export const projects = [
     desc: 'Responsive museum site with playful UI.',
     imgSrc: img('site-gemenskapet-science-museum-600.webp'),
     imgAlt: 'Gemenskapet Science Museum homepage with interactive exhibits and visitor info',
-    category: 'website',
+    category: 'archive',
     routeUrl: 'work/semester-project-1',
     caseUrl: '#case-semester-project-1',
     liveUrl: 'https://katjaturnsek.github.io/Semester-project-1',
@@ -177,7 +194,10 @@ export const projects = [
         label: 'Visit Live Site',
         icon: ICONS.globe,
       },
-      { href: 'https://github.com/KatjaTurnsek/Semester-project-1', label: 'GitHub' },
+      {
+        href: 'https://github.com/KatjaTurnsek/Semester-project-1',
+        label: 'GitHub',
+      },
     ],
     order: 70,
   },
@@ -190,7 +210,7 @@ export const projects = [
     desc: 'Shop UI with product and checkout flow.',
     imgSrc: img('site-rainydays-products-600.webp'),
     imgAlt: 'Rainy Days website thumbnail showing shop and product UI',
-    category: 'website',
+    category: 'archive',
     routeUrl: 'work/rainydays',
     caseUrl: '#case-rainydays',
     liveUrl: 'https://norofffeu.github.io/html-css-course-assignment-KatjaTurnsek/',
@@ -228,7 +248,10 @@ export const projects = [
         label: 'Visit Live Site',
         icon: ICONS.globe,
       },
-      { href: 'https://github.com/KatjaTurnsek/social-sparks', label: 'GitHub' },
+      {
+        href: 'https://github.com/KatjaTurnsek/social-sparks',
+        label: 'GitHub',
+      },
     ],
     order: 90,
   },
@@ -251,7 +274,10 @@ export const projects = [
         label: 'Visit Live Site',
         icon: ICONS.globe,
       },
-      { href: 'https://github.com/KatjaTurnsek/luma-stays', label: 'GitHub' },
+      {
+        href: 'https://github.com/KatjaTurnsek/luma-stays',
+        label: 'GitHub',
+      },
     ],
     order: 105,
   },
@@ -268,8 +294,14 @@ export const projects = [
     routeUrl: 'work/petart/design',
     caseUrl: '#case-petart-design',
     demoLinks: [
-      { href: 'http://bit.ly/4nB11O4', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/4kmoXlq', label: 'Open In Figma (Mobile)' },
+      {
+        href: 'http://bit.ly/4nB11O4',
+        label: 'Open In Figma (Desktop)',
+      },
+      {
+        href: 'https://bit.ly/4kmoXlq',
+        label: 'Open In Figma (Mobile)',
+      },
     ],
     order: 110,
   },
@@ -286,8 +318,14 @@ export const projects = [
     routeUrl: 'work/portfolio/design',
     caseUrl: '#case-portfolio-design',
     demoLinks: [
-      { href: 'https://bit.ly/459Qlxv', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/45qWxCv', label: 'Open In Figma (Mobile)' },
+      {
+        href: 'https://bit.ly/459Qlxv',
+        label: 'Open In Figma (Desktop)',
+      },
+      {
+        href: 'https://bit.ly/45qWxCv',
+        label: 'Open In Figma (Mobile)',
+      },
     ],
     order: 120,
   },
@@ -304,8 +342,14 @@ export const projects = [
     routeUrl: 'work/agilitybandits/design',
     caseUrl: '#case-agilitybandits-design',
     demoLinks: [
-      { href: 'https://bit.ly/3UWMUp0', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/41FuoFo', label: 'Open In Figma (Mobile)' },
+      {
+        href: 'https://bit.ly/3UWMUp0',
+        label: 'Open In Figma (Desktop)',
+      },
+      {
+        href: 'https://bit.ly/41FuoFo',
+        label: 'Open In Figma (Mobile)',
+      },
     ],
     order: 130,
   },
@@ -318,12 +362,18 @@ export const projects = [
     desc: 'Playful museum UI system.',
     imgSrc: img('card-sciencemuseum-design-600.webp'),
     imgAlt: 'Gemenskapet Science Museum Figma design thumbnail',
-    category: 'design',
+    category: 'archive',
     routeUrl: 'work/semester-project-1/design',
     caseUrl: '#case-semester-project-1-design',
     demoLinks: [
-      { href: 'https://bit.ly/3KtBYNM', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/3Kxpsg9', label: 'Open In Figma (Mobile)' },
+      {
+        href: 'https://bit.ly/3KtBYNM',
+        label: 'Open In Figma (Desktop)',
+      },
+      {
+        href: 'https://bit.ly/3Kxpsg9',
+        label: 'Open In Figma (Mobile)',
+      },
     ],
     order: 140,
   },
@@ -340,8 +390,14 @@ export const projects = [
     routeUrl: 'work/rainydays/design',
     caseUrl: '#case-rainydays-design',
     demoLinks: [
-      { href: 'http://bit.ly/4b5wyEa', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/4b0dg2Q', label: 'Open In Figma (Mobile)' },
+      {
+        href: 'http://bit.ly/4b5wyEa',
+        label: 'Open In Figma (Desktop)',
+      },
+      {
+        href: 'https://bit.ly/4b0dg2Q',
+        label: 'Open In Figma (Mobile)',
+      },
     ],
     order: 150,
   },
@@ -358,8 +414,14 @@ export const projects = [
     routeUrl: 'work/studiobid/design',
     caseUrl: '#case-studiobid-design',
     demoLinks: [
-      { href: 'https://bit.ly/4sRhxfv', label: 'Open In Figma (Desktop)' },
-      { href: 'https://bit.ly/4bKGKlA', label: 'Open In Figma (Mobile)' },
+      {
+        href: 'https://bit.ly/4sRhxfv',
+        label: 'Open In Figma (Desktop)',
+      },
+      {
+        href: 'https://bit.ly/4bKGKlA',
+        label: 'Open In Figma (Mobile)',
+      },
     ],
     order: 160,
   },
@@ -377,7 +439,11 @@ export const projects = [
     routeUrl: 'work/petart/logotype',
     caseUrl: '#case-petart-logotype',
     demoLinks: [
-      { href: pdf('petart-logosuite.pdf'), label: 'Get Design Files (PDF)', icon: ICONS.external },
+      {
+        href: pdf('petart-logosuite.pdf'),
+        label: 'Get Design Files (PDF)',
+        icon: ICONS.external,
+      },
     ],
     order: 210,
   },

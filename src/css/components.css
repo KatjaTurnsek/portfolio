@@ -417,7 +417,7 @@ body.dark-theme .hire-button {
 .testimonial-card {
   margin: 22px 0 0;
   padding: 20px 22px;
-  border-radius: 10px;
+  border-radius: 0;
   border: 1px solid var(--text-color);
   background: var(--bg-color);
   color: var(--text-color);
@@ -472,7 +472,7 @@ body.dark-theme .hire-button {
   left: 0;
   top: 0;
   height: 50px;
-  border-radius: 10px;
+  border-radius: 0;
   width: 0%;
   overflow: hidden;
   display: flex;
