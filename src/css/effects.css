@@ -140,3 +140,9 @@ h1 span.word {
     transform-origin: 50% 50%;
   }
 }
+
+@media (max-width: 767px) {
+  #blob-svg {
+    filter: blur(4px) !important;
+  }
+}

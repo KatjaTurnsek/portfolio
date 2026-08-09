@@ -4,10 +4,10 @@
  * smooth, isolated jelly dragging.
  */
 
-import { gsap, isSafari } from "./env.js";
-import { prefersReducedMotion } from "../motion.js";
+import { gsap, isSafari } from './env.js';
+import { prefersReducedMotion } from '../motion.js';
 
-const SVG_NS = "http://www.w3.org/2000/svg";
+const SVG_NS = 'http://www.w3.org/2000/svg';
 const MOBILE_BREAKPOINT = 768;
 
 const scrollOpacity = { value: 1 };
@@ -52,15 +52,7 @@ function readCssNumber(styles, property, fallback) {
  * @param {number} phaseB
  * @returns {string}
  */
-function makeSoftBlobPath(
-  size,
-  waveA,
-  waveB,
-  frequencyA,
-  frequencyB,
-  phaseA,
-  phaseB,
-) {
+function makeSoftBlobPath(size, waveA, waveB, frequencyA, frequencyB, phaseA, phaseB) {
   const pointCount = 48;
   const radius = size / 2;
   const points = [];
@@ -112,59 +104,47 @@ function makeSoftBlobPath(
  * }}
  */
 function ensureBlobDOM() {
-  let wrapper = document.querySelector(".morphing-blob-wrapper");
+  let wrapper = document.querySelector('.morphing-blob-wrapper');
 
   if (!wrapper) {
-    wrapper = document.createElement("div");
-    wrapper.className = "morphing-blob-wrapper";
+    wrapper = document.createElement('div');
+    wrapper.className = 'morphing-blob-wrapper';
     document.body.prepend(wrapper);
   }
 
-  let svg = /** @type {SVGSVGElement|null} */ (
-    document.getElementById("blob-svg")
-  );
+  let svg = /** @type {SVGSVGElement|null} */ (document.getElementById('blob-svg'));
 
   if (!svg) {
-    svg = /** @type {SVGSVGElement} */ (
-      document.createElementNS(SVG_NS, "svg")
-    );
+    svg = /** @type {SVGSVGElement} */ (document.createElementNS(SVG_NS, 'svg'));
 
-    svg.id = "blob-svg";
-    svg.setAttribute("viewBox", "0 0 1200 800");
-    svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
+    svg.id = 'blob-svg';
+    svg.setAttribute('viewBox', '0 0 1200 800');
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
 
     wrapper.appendChild(svg);
   }
 
-  if (!svg.hasAttribute("viewBox")) {
-    svg.setAttribute("viewBox", "0 0 1200 800");
+  if (!svg.hasAttribute('viewBox')) {
+    svg.setAttribute('viewBox', '0 0 1200 800');
   }
 
-  let container = /** @type {SVGGElement|null} */ (
-    svg.querySelector("#blobs-g")
-  );
+  let container = /** @type {SVGGElement|null} */ (svg.querySelector('#blobs-g'));
 
   if (!container) {
-    container = /** @type {SVGGElement} */ (
-      document.createElementNS(SVG_NS, "g")
-    );
+    container = /** @type {SVGGElement} */ (document.createElementNS(SVG_NS, 'g'));
 
-    container.id = "blobs-g";
+    container.id = 'blobs-g';
     svg.appendChild(container);
   }
 
-  let dragOverlay = /** @type {SVGGElement|null} */ (
-    svg.querySelector("#blob-drag-overlay")
-  );
+  let dragOverlay = /** @type {SVGGElement|null} */ (svg.querySelector('#blob-drag-overlay'));
 
   if (!dragOverlay) {
-    dragOverlay = /** @type {SVGGElement} */ (
-      document.createElementNS(SVG_NS, "g")
-    );
+    dragOverlay = /** @type {SVGGElement} */ (document.createElementNS(SVG_NS, 'g'));
 
-    dragOverlay.id = "blob-drag-overlay";
+    dragOverlay.id = 'blob-drag-overlay';
     svg.appendChild(dragOverlay);
   }
 
@@ -182,11 +162,7 @@ function ensureBlobDOM() {
  * @returns {void}
  */
 function setOpacity(element, opacity) {
-  element.style.setProperty(
-    "opacity",
-    String(clamp(opacity, 0, 1)),
-    "important",
-  );
+  element.style.setProperty('opacity', String(clamp(opacity, 0, 1)), 'important');
 }
 
 /**
@@ -199,7 +175,7 @@ function applyBlobOpacities() {
 
   setOpacity(opacityContainer, scrollOpacity.value);
 
-  const dragOverlay = document.querySelector("#blob-drag-overlay");
+  const dragOverlay = document.querySelector('#blob-drag-overlay');
 
   if (dragOverlay) {
     setOpacity(dragOverlay, scrollOpacity.value);
@@ -215,7 +191,7 @@ function applyBlobOpacities() {
  */
 function restoreScrollOpacity(group, container) {
   setOpacity(group, 1);
-  group.removeAttribute("data-dragging");
+  group.removeAttribute('data-dragging');
   container.appendChild(group);
   applyBlobOpacities();
 }
@@ -232,16 +208,8 @@ function setupScrollOpacity(container) {
 
   const styles = getComputedStyle(document.documentElement);
 
-  const opacityStart = clamp(
-    readCssNumber(styles, "--blob-opacity-start", 1),
-    0,
-    1,
-  );
-  const opacityEnd = clamp(
-    readCssNumber(styles, "--blob-opacity-end", 0.55),
-    0,
-    1,
-  );
+  const opacityStart = clamp(readCssNumber(styles, '--blob-opacity-start', 1), 0, 1);
+  const opacityEnd = clamp(readCssNumber(styles, '--blob-opacity-end', 0.55), 0, 1);
 
   const getFadeDistance = () => Math.max(1, window.innerHeight * 0.65);
 
@@ -270,7 +238,7 @@ function setupScrollOpacity(container) {
       window.scrollY || 0,
       document.scrollingElement?.scrollTop || 0,
       document.documentElement.scrollTop || 0,
-      document.body.scrollTop || 0,
+      document.body.scrollTop || 0
     );
 
     const elementScrollTop =
@@ -300,18 +268,18 @@ function setupScrollOpacity(container) {
     requestAnimationFrame(updateFromScroll);
   };
 
-  document.addEventListener("scroll", requestUpdate, {
+  document.addEventListener('scroll', requestUpdate, {
     capture: true,
     passive: true,
   });
 
-  window.addEventListener("resize", requestUpdate, {
+  window.addEventListener('resize', requestUpdate, {
     passive: true,
   });
 
   removeFallbackScroll = () => {
-    document.removeEventListener("scroll", requestUpdate, true);
-    window.removeEventListener("resize", requestUpdate);
+    document.removeEventListener('scroll', requestUpdate, true);
+    window.removeEventListener('resize', requestUpdate);
   };
 
   updateFromScroll();
@@ -325,14 +293,15 @@ function setupScrollOpacity(container) {
  * @param {number} centreY
  * @param {number} size
  * @param {number} index
+ * @param {boolean} isMobile
  * @returns {void}
  */
-function animateBlob(group, path, centreX, centreY, size, index) {
+function animateBlob(group, path, centreX, centreY, size, index, isMobile) {
   gsap.set(group, {
     x: centreX,
     y: centreY,
     rotation: gsap.utils.random(-8, 8),
-    transformOrigin: "center",
+    transformOrigin: 'center',
   });
 
   if (prefersReducedMotion()) return;
@@ -346,7 +315,7 @@ function animateBlob(group, path, centreX, centreY, size, index) {
     rotation: gsap.utils.random(-14, 14),
     duration: gsap.utils.random(9, 16),
     delay: index * -0.17,
-    ease: "sine.inOut",
+    ease: 'sine.inOut',
     repeat: -1,
     yoyo: true,
   });
@@ -358,15 +327,15 @@ function animateBlob(group, path, centreX, centreY, size, index) {
     3,
     5,
     Math.random() * Math.PI * 2,
-    Math.random() * Math.PI * 2,
+    Math.random() * Math.PI * 2
   );
 
-  if (gsap.plugins?.MorphSVGPlugin) {
+  if (gsap.plugins?.MorphSVGPlugin && !isMobile) {
     gsap.to(path, {
       morphSVG: nextShape,
       duration: gsap.utils.random(7, 13),
       delay: index * -0.11,
-      ease: "sine.inOut",
+      ease: 'sine.inOut',
       repeat: -1,
       yoyo: true,
     });
@@ -375,10 +344,10 @@ function animateBlob(group, path, centreX, centreY, size, index) {
       scaleX: gsap.utils.random(0.94, 1.07),
       scaleY: gsap.utils.random(0.94, 1.07),
       rotation: gsap.utils.random(-7, 7),
-      transformOrigin: "center",
+      transformOrigin: 'center',
       duration: gsap.utils.random(6, 11),
       delay: index * -0.13,
-      ease: "sine.inOut",
+      ease: 'sine.inOut',
       repeat: -1,
       yoyo: true,
     });
@@ -392,17 +361,17 @@ function animateBlob(group, path, centreX, centreY, size, index) {
 export function animateGooeyBlobs() {
   const { svg, container, width, height } = ensureBlobDOM();
 
-  if (svg.dataset.blobsAnimated === "1") {
+  if (svg.dataset.blobsAnimated === '1') {
     setupScrollOpacity(container);
     return;
   }
 
-  svg.dataset.blobsAnimated = "1";
+  svg.dataset.blobsAnimated = '1';
   container.replaceChildren();
 
   const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
 
-  const blobCount = isSafari ? (isMobile ? 10 : 16) : isMobile ? 14 : 28;
+  const blobCount = isMobile ? 7 : isSafari ? 16 : 28;
 
   const shortestSide = Math.min(width, height);
 
@@ -413,29 +382,23 @@ export function animateGooeyBlobs() {
 
     const centreY = gsap.utils.random(-size * 0.1, height + size * 0.1);
 
-    const group = /** @type {SVGGElement} */ (
-      document.createElementNS(SVG_NS, "g")
-    );
+    const group = /** @type {SVGGElement} */ (document.createElementNS(SVG_NS, 'g'));
 
-    group.classList.add("blob-group");
+    group.classList.add('blob-group');
     group.id = `blob-group-${index}`;
 
-    const dragLayer = /** @type {SVGGElement} */ (
-      document.createElementNS(SVG_NS, "g")
-    );
+    const dragLayer = /** @type {SVGGElement} */ (document.createElementNS(SVG_NS, 'g'));
 
-    dragLayer.classList.add("blob-drag-layer");
+    dragLayer.classList.add('blob-drag-layer');
 
-    const path = /** @type {SVGPathElement} */ (
-      document.createElementNS(SVG_NS, "path")
-    );
+    const path = /** @type {SVGPathElement} */ (document.createElementNS(SVG_NS, 'path'));
 
-    path.classList.add("blob");
-    path.setAttribute("opacity", "1");
-    path.setAttribute("fill-opacity", "1");
+    path.classList.add('blob');
+    path.setAttribute('opacity', '1');
+    path.setAttribute('fill-opacity', '1');
 
     path.setAttribute(
-      "d",
+      'd',
       makeSoftBlobPath(
         size,
         0.055 + Math.random() * 0.015,
@@ -443,8 +406,8 @@ export function animateGooeyBlobs() {
         3,
         5,
         Math.random() * Math.PI * 2,
-        Math.random() * Math.PI * 2,
-      ),
+        Math.random() * Math.PI * 2
+      )
     );
 
     dragLayer.appendChild(path);
@@ -455,7 +418,7 @@ export function animateGooeyBlobs() {
     setOpacity(dragLayer, 1);
     setOpacity(path, 1);
 
-    animateBlob(group, path, centreX, centreY, size, index);
+    animateBlob(group, path, centreX, centreY, size, index, isMobile);
   }
 
   setupScrollOpacity(container);
@@ -472,15 +435,15 @@ export function animateGooeyBlobs() {
 export function enableInteractiveJellyBlob() {
   const { svg, container } = ensureBlobDOM();
 
-  if (!svg.querySelector(".blob-group")) {
+  if (!svg.querySelector('.blob-group')) {
     animateGooeyBlobs();
   }
 
   if (prefersReducedMotion()) return;
 
-  if (svg.dataset.jellyEnabled === "1") return;
+  if (svg.dataset.jellyEnabled === '1') return;
 
-  svg.dataset.jellyEnabled = "1";
+  svg.dataset.jellyEnabled = '1';
 
   const target = { x: 0, y: 0 };
   const current = { x: 0, y: 0 };
@@ -500,6 +463,7 @@ export function enableInteractiveJellyBlob() {
 
   let activePointerId = null;
   let isDragging = false;
+  let animationFrameId = 0;
   let currentAngle = 0;
   let currentStretch = 0;
   let previousFrameTime = performance.now();
@@ -542,15 +506,15 @@ export function enableInteractiveJellyBlob() {
    * @returns {SVGGElement|null}
    */
   function getClosestBlob(clientX, clientY) {
-    const groups = svg.querySelectorAll(".blob-group");
+    const groups = svg.querySelectorAll('.blob-group');
 
     let closest = null;
     let closestDistance = Infinity;
 
     groups.forEach((group) => {
-      if (group.hasAttribute("data-dragging")) return;
+      if (group.hasAttribute('data-dragging')) return;
 
-      const path = group.querySelector(".blob");
+      const path = group.querySelector('.blob');
       if (!path) return;
 
       const bounds = path.getBoundingClientRect();
@@ -562,10 +526,7 @@ export function enableInteractiveJellyBlob() {
 
       const distance = Math.hypot(centreX - clientX, centreY - clientY);
 
-      const pickupRadius = Math.max(
-        48,
-        Math.min(Math.min(bounds.width, bounds.height) * 0.5, 150),
-      );
+      const pickupRadius = Math.max(48, Math.min(Math.min(bounds.width, bounds.height) * 0.5, 150));
 
       if (distance <= pickupRadius && distance < closestDistance) {
         closestDistance = distance;
@@ -585,16 +546,14 @@ export function enableInteractiveJellyBlob() {
   function startDrag(event) {
     if (isDragging) return;
 
-    if (event.pointerType === "mouse" && event.button !== 0) {
+    if (event.pointerType === 'mouse' && event.button !== 0) {
       return;
     }
 
     const eventTarget = event.target instanceof Element ? event.target : null;
 
     if (
-      eventTarget?.closest(
-        'a, button, input, textarea, select, summary, [contenteditable="true"]',
-      )
+      eventTarget?.closest('a, button, input, textarea, select, summary, [contenteditable="true"]')
     ) {
       return;
     }
@@ -604,7 +563,7 @@ export function enableInteractiveJellyBlob() {
     if (!selectedBlob) return;
 
     const selectedLayer = /** @type {SVGGElement|null} */ (
-      selectedBlob.querySelector(".blob-drag-layer")
+      selectedBlob.querySelector('.blob-drag-layer')
     );
 
     const matrix = selectedBlob.getScreenCTM();
@@ -628,8 +587,8 @@ export function enableInteractiveJellyBlob() {
     startPointer.x = localPointer.x;
     startPointer.y = localPointer.y;
 
-    dragOrigin.x = Number(gsap.getProperty(activeDragLayer, "x")) || 0;
-    dragOrigin.y = Number(gsap.getProperty(activeDragLayer, "y")) || 0;
+    dragOrigin.x = Number(gsap.getProperty(activeDragLayer, 'x')) || 0;
+    dragOrigin.y = Number(gsap.getProperty(activeDragLayer, 'y')) || 0;
 
     target.x = dragOrigin.x;
     target.y = dragOrigin.y;
@@ -643,17 +602,22 @@ export function enableInteractiveJellyBlob() {
     velocity.x = 0;
     velocity.y = 0;
 
-    currentAngle = Number(gsap.getProperty(activeDragLayer, "rotation")) || 0;
+    currentAngle = Number(gsap.getProperty(activeDragLayer, 'rotation')) || 0;
     currentStretch = 0;
 
-    activeBlob.setAttribute("data-dragging", "true");
+    if (!animationFrameId) {
+      previousFrameTime = performance.now();
+      animationFrameId = requestAnimationFrame(animationLoop);
+    }
+
+    activeBlob.setAttribute('data-dragging', 'true');
 
     container.appendChild(activeBlob);
 
     setOpacity(activeBlob, 1);
     setOpacity(activeDragLayer, 1);
 
-    const path = activeDragLayer.querySelector(".blob");
+    const path = activeDragLayer.querySelector('.blob');
 
     if (path) {
       setOpacity(path, 1);
@@ -717,7 +681,7 @@ export function enableInteractiveJellyBlob() {
 
     if (!releasedBlob || !releasedLayer) return;
 
-    releasedBlob.setAttribute("data-dragging", "returning");
+    releasedBlob.setAttribute('data-dragging', 'returning');
 
     setOpacity(releasedBlob, 1);
 
@@ -728,7 +692,7 @@ export function enableInteractiveJellyBlob() {
       scaleX: 1,
       scaleY: 1,
       duration: 0.75,
-      ease: "elastic.out(1, 0.55)",
+      ease: 'elastic.out(1, 0.55)',
       overwrite: true,
 
       onUpdate: () => {
@@ -748,15 +712,13 @@ export function enableInteractiveJellyBlob() {
    * @returns {void}
    */
   function animationLoop(time) {
-    if (!svg.isConnected) return;
+    animationFrameId = 0;
 
-    requestAnimationFrame(animationLoop);
+    if (!svg.isConnected || !isDragging || !activeDragLayer) return;
 
     const frameRatio = clamp((time - previousFrameTime) / 16.67, 0.5, 2);
 
     previousFrameTime = time;
-
-    if (!isDragging || !activeDragLayer) return;
 
     previous.x = current.x;
     previous.y = current.y;
@@ -792,10 +754,12 @@ export function enableInteractiveJellyBlob() {
       rotation: currentAngle,
       scaleX: 1 + currentStretch,
       scaleY: 1 - currentStretch,
-      transformOrigin: "center",
+      transformOrigin: 'center',
     });
 
     setOpacity(activeDragLayer, 1);
+
+    animationFrameId = requestAnimationFrame(animationLoop);
   }
 
   /**
@@ -811,29 +775,27 @@ export function enableInteractiveJellyBlob() {
     }
   }
 
-  window.addEventListener("pointerdown", startDrag, {
+  window.addEventListener('pointerdown', startDrag, {
     passive: false,
   });
 
-  window.addEventListener("pointermove", updateDrag, {
+  window.addEventListener('pointermove', updateDrag, {
     passive: false,
   });
 
-  window.addEventListener("pointerup", endDrag, {
+  window.addEventListener('pointerup', endDrag, {
     passive: true,
   });
 
-  window.addEventListener("pointercancel", endDrag, {
+  window.addEventListener('pointercancel', endDrag, {
     passive: true,
   });
 
-  window.addEventListener("touchmove", preventTouchScroll, {
+  window.addEventListener('touchmove', preventTouchScroll, {
     passive: false,
   });
 
-  window.addEventListener("blur", () => {
+  window.addEventListener('blur', () => {
     endDrag();
   });
-
-  requestAnimationFrame(animationLoop);
 }
