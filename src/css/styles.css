@@ -6,7 +6,7 @@
    ========================================================================== */
 
 /* LIGHT THEME */
-body.light-theme {
+html.light-theme {
   /* Theme switcher */
   --switch-circle: var(--dark);
   --switch-bg: var(--yellow-light);
@@ -19,7 +19,7 @@ body.light-theme {
 }
 
 /* DARK THEME */
-body.dark-theme {
+html.dark-theme {
   /* Theme switcher */
   --switch-circle: var(--yellow-light);
   --switch-bg: var(--dark);

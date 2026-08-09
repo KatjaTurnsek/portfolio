@@ -20,7 +20,7 @@ const safeStorage = {
     try {
       window.localStorage.setItem(key, value);
     } catch {
-      /* no-op */
+      /* Storage can be unavailable in privacy-restricted contexts. */
     }
   },
 };
@@ -34,16 +34,21 @@ function updateSwitcherPosition(isDark) {
   const button = document.getElementById('theme-toggle');
   if (!button) return;
 
+  const label = isDark ? 'Switch to light theme' : 'Switch to dark theme';
+
   button.classList.toggle('dark-mode', isDark);
   button.setAttribute('aria-pressed', String(isDark));
-  button.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+  button.setAttribute('aria-label', label);
+  button.setAttribute('title', label);
 }
 
 /**
  * Update all site logos for the current theme.
+ *
  * Uses:
- *  - data-logo-light for the light-coloured logo
- *  - data-logo-dark for the dark-coloured logo
+ * - data-logo-light for the light-coloured logo
+ * - data-logo-dark for the dark-coloured logo
+ *
  * @param {boolean} isDark
  * @returns {void}
  */
@@ -63,18 +68,17 @@ function updateLogos(isDark) {
 /**
  * Apply theme classes, attributes, and related UI.
  * Dispatches "theme:change" with { detail: 'light' | 'dark' }.
+ *
  * @param {'light'|'dark'} theme
  * @returns {void}
  */
 function applyTheme(theme) {
-  const body = document.body;
-  if (!body) return;
-
+  const root = document.documentElement;
   const isDark = theme === 'dark';
 
-  body.classList.remove('light-theme', 'dark-theme');
-  body.classList.add(isDark ? 'dark-theme' : 'light-theme');
-  body.setAttribute('data-theme', theme);
+  root.classList.remove('light-theme', 'dark-theme');
+  root.classList.add(isDark ? 'dark-theme' : 'light-theme');
+  root.setAttribute('data-theme', theme);
 
   updateSwitcherPosition(isDark);
   updateLogos(isDark);
@@ -87,10 +91,18 @@ function applyTheme(theme) {
 }
 
 /**
- * Determine the initial theme from the saved preference or operating system.
+ * Determine the initial theme from the early head script,
+ * saved preference, or operating system.
+ *
  * @returns {'light'|'dark'}
  */
 function getInitialTheme() {
+  const initialTheme = document.documentElement.dataset.theme;
+
+  if (initialTheme === 'light' || initialTheme === 'dark') {
+    return initialTheme;
+  }
+
   const savedTheme = safeStorage.get(THEME_KEY);
 
   if (savedTheme === 'light' || savedTheme === 'dark') {
@@ -115,7 +127,9 @@ function boot() {
     button.addEventListener('click', (event) => {
       event.preventDefault();
 
-      const nextTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
+      const nextTheme = document.documentElement.classList.contains('dark-theme')
+        ? 'light'
+        : 'dark';
 
       safeStorage.set(THEME_KEY, nextTheme);
       applyTheme(nextTheme);

@@ -26,6 +26,11 @@ export function setActiveLinkById(id) {
     }
 
     a.classList.toggle(ACTIVE_CLASS, isActive);
-    a.setAttribute('aria-current', isActive ? 'page' : 'false');
+
+    if (isActive) {
+      a.setAttribute('aria-current', 'page');
+    } else {
+      a.removeAttribute('aria-current');
+    }
   });
 }

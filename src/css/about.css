@@ -197,38 +197,38 @@
   transform: scale(1.05);
 }
 
-body.light-theme .hire-button {
+html.light-theme .hire-button {
   background-color: var(--teal-light);
   color: var(--dark);
 }
 
-body.light-theme .hire-button::before {
+html.light-theme .hire-button::before {
   border-color: var(--teal);
 }
 
-body.light-theme .hire-button:hover {
+html.light-theme .hire-button:hover {
   background-color: var(--teal);
 }
 
-body.light-theme .hire-button:hover::before {
+html.light-theme .hire-button:hover::before {
   border-color: var(--teal-light);
 }
 
-body.dark-theme .hire-button {
+html.dark-theme .hire-button {
   background-color: var(--yellow-light);
   color: var(--dark);
 }
 
-body.dark-theme .hire-button::before {
+html.dark-theme .hire-button::before {
   border-color: var(--yellow);
 }
 
-body.dark-theme .hire-button:hover {
+html.dark-theme .hire-button:hover {
   background-color: var(--yellow);
   color: var(--dark);
 }
 
-body.dark-theme .hire-button:hover::before {
+html.dark-theme .hire-button:hover::before {
   border-color: var(--yellow-light);
   transform: scale(1.05);
 }

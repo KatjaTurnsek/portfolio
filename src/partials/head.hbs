@@ -19,6 +19,15 @@
   "
 />
 
+<script>
+  (() => { const root = document.documentElement; let theme = null; try { theme =
+  window.localStorage.getItem('theme'); } catch { /* Storage can be unavailable in
+  privacy-restricted contexts. */ } if (theme !== 'light' && theme !== 'dark') { theme =
+  window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  root.classList.remove('light-theme', 'dark-theme'); root.classList.add(`${theme}-theme`);
+  root.dataset.theme = theme; })();
+</script>
+
 <title>{{site.title}}</title>
 <meta name='description' content='{{site.description}}' />
 
