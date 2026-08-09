@@ -3,10 +3,10 @@
  * @description DOM-ready boot sequence (menu, loader, animations, initial section reveal).
  */
 
-import gsap from "gsap";
+import gsap from 'gsap';
 
-import { hideLoader, showLoader } from "../../loader.js";
-import { setupMenuToggle } from "../../nav.js";
+import { hideLoader, showLoader } from '../../loader.js';
+import { setupMenuToggle } from '../../nav.js';
 import {
   animateWaveLine,
   insertWaveLines,
@@ -14,16 +14,12 @@ import {
   deferHeavy,
   animateGooeyBlobs,
   enableInteractiveJellyBlob,
-} from "../../animations.js";
-import { setupHeaderScrollEffect } from "../../init.js";
-import { buildWorkGridsIfNeeded } from "../../components/workGridMounts.js";
-import { releaseScrollLock } from "../../components/scrollLock.js";
-import {
-  isSafari,
-  addSafariWillChange,
-  enableNoSelectDuringInteraction,
-} from "../../components/ux.js";
-import { prefersReducedMotion } from "../../motion.js";
+} from '../../animations.js';
+import { setupHeaderScrollEffect } from '../../init.js';
+import { buildWorkGridsIfNeeded } from '../../components/workGridMounts.js';
+import { releaseScrollLock } from '../../components/scrollLock.js';
+import { addSafariWillChange, enableNoSelectDuringInteraction } from '../../components/ux.js';
+import { prefersReducedMotion } from '../../motion.js';
 
 const LOADER_MAX_WAIT_MS = 800;
 
@@ -79,8 +75,6 @@ export function bootOnDomReady() {
   setupMenuToggle();
   showLoader();
 
-  if (isSafari) gsap.ticker.fps(50);
-
   buildWorkGridsIfNeeded();
 
   waitForInitialRoute().then(() => {
@@ -91,7 +85,7 @@ export function bootOnDomReady() {
     animateWaveLine();
     animateCustomWaveLines();
 
-    const blobWrapper = document.querySelector(".morphing-blob-wrapper");
+    const blobWrapper = document.querySelector('.morphing-blob-wrapper');
 
     if (blobWrapper) {
       if (prefersReducedMotion()) {
@@ -104,8 +98,8 @@ export function bootOnDomReady() {
             opacity: 1,
             duration: 1.2,
             delay: 0.6,
-            ease: "power2.out",
-          },
+            ease: 'power2.out',
+          }
         );
       }
 
@@ -115,6 +109,7 @@ export function bootOnDomReady() {
       }, 800);
     }
   });
+
   setupHeaderScrollEffect();
   enableNoSelectDuringInteraction();
   addSafariWillChange();
