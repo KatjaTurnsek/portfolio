@@ -22,6 +22,15 @@
       "
     />
     
+    <script>
+      (() => { const root = document.documentElement; let theme = null; try { theme =
+      window.localStorage.getItem('theme'); } catch { /* Storage can be unavailable in
+      privacy-restricted contexts. */ } if (theme !== 'light' && theme !== 'dark') { theme =
+      window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+      root.classList.remove('light-theme', 'dark-theme'); root.classList.add(`${theme}-theme`);
+      root.dataset.theme = theme; })();
+    </script>
+    
     <title>Katja Turnsek - Front-End Developer &amp; Designer | Portfolio Website</title>
     <meta name='description' content='Creative front-end developer with a background in art and design. Explore a fluid, modern portfolio featuring interactive animations, custom code, and thoughtful UX — built with HTML, CSS, JavaScript, GSAP, and Vite.' />
     
@@ -72,11 +81,11 @@
     />
     
     <link rel='icon' href='/portfolio/favicon.ico?v=2' sizes='any' />
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-DjfkPbe0.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-BCMGYI2t.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-BrjffN_0.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DDpoHKWq.css">
   </head>
 
-  <body class="light-theme">
+  <body>
     <svg xmlns='http://www.w3.org/2000/svg' style='position:absolute;width:0;height:0;overflow:hidden'>
       <defs>
         <!-- Menu / Close -->
