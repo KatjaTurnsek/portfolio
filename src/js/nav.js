@@ -124,8 +124,7 @@ export function setupMenuToggle() {
     menuToggle.style.display = 'none';
     menuToggle.setAttribute('aria-expanded', 'true');
 
-    const focusables = getFocusable(menu);
-    (focusables[0] || menuClose || menu).focus();
+    menuClose.focus({ preventScroll: true });
 
     keyHandler = (e) => {
       if (e.key === 'Escape') {

@@ -7,7 +7,7 @@
     "dev": "vite",
     "dev:gh": "cross-env GH_PAGES=1 vite --base=/portfolio/",
     "build": "vite build",
-    "build:gh": "cross-env GH_PAGES=1 vite build --base=/portfolio/ && shx cp -f dist/index.html dist/404.html",
+    "build:gh": "cross-env GH_PAGES=1 vite build --base=/portfolio/ && node scripts/generate-route-pages.js && shx cp -f dist/index.html dist/404.html",
     "predeploy": "npm run build:gh",
     "deploy": "gh-pages -d dist",
     "preview": "vite preview",

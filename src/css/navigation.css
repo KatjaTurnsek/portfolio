@@ -283,6 +283,16 @@ a:has(.site-logo):focus-visible {
     padding-left: var(--page-gutter);
   }
 
+  header::before {
+    background-position: top left;
+    background-size: 155% auto;
+  }
+
+  .fullscreen-menu::before {
+    background-position: top left;
+    background-size: 155% auto;
+  }
+
   #theme-toggle {
     width: 55px;
     height: 27px;
