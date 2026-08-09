@@ -17,7 +17,8 @@
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
         font-src 'self' https://fonts.gstatic.com;
         img-src 'self' data: blob:;
-        connect-src 'self';
+        connect-src 'self' https://api.web3forms.com;
+        form-action 'self' https://api.web3forms.com;
         worker-src 'self' blob:;
       "
     />
@@ -81,8 +82,8 @@
     />
     
     <link rel='icon' href='/portfolio/favicon.ico?v=2' sizes='any' />
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-BrjffN_0.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DDpoHKWq.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-BJuMmnJ3.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DCPRiAFJ.css">
   </head>
 
   <body>
@@ -4452,6 +4453,7 @@
           method='POST'
           class='contact-form'
           aria-label='Contact form'
+          data-contact-form
         >
           <!-- Required: Web3Forms access key -->
           <input type='hidden' name='access_key' value='4b70fb1f-a7f2-4100-8a21-d9e9d5dfd983' />
@@ -4504,12 +4506,20 @@
 
           <div class='button-wrapper'>
             <button type='submit' class='submit-button'>
-              Send message
+              <span class='submit-button-label'>Send message</span>
               <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
                 <use href='#i-arrow-right'></use>
               </svg>
             </button>
           </div>
+          <p
+            id='contact-form-status'
+            class='form-status'
+            role='status'
+            aria-live='polite'
+            aria-atomic='true'
+            hidden
+          ></p>
         </form>
       </div>
     </div>
