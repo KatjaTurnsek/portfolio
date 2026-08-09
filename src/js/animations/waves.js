@@ -6,6 +6,8 @@
 import { gsap, isSafari } from './env.js';
 import { getAnimationSpeed, prefersReducedMotion } from '../motion.js';
 
+const MOBILE_BREAKPOINT = 768;
+
 /** @type {gsap.core.Tween|null} */
 let _heroWaveTween = null;
 
@@ -16,6 +18,14 @@ let _heroWaveIsVisible = false;
 let _waveLifecycleBound = false;
 
 /**
+ * Check whether the viewport uses the mobile animation profile.
+ * @returns {boolean}
+ */
+function isMobileViewport() {
+  return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`).matches;
+}
+
+/**
  * Animate a single path inside #wavy-line using MorphSVG when available.
  * Graceful fallback uses a subtle Y translation.
  * (Safe no-op if #wavy-line doesn't exist.)
@@ -23,6 +33,7 @@ let _waveLifecycleBound = false;
  */
 export function animateWaveLine() {
   const path = /** @type {SVGPathElement|null} */ (document.querySelector('#wavy-line path'));
+
   if (!path) return;
 
   const ALT_D = 'M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15';
@@ -35,7 +46,7 @@ export function animateWaveLine() {
   _heroWaveObserver = null;
   _heroWaveIsVisible = false;
 
-  if (prefersReducedMotion()) {
+  if (isMobileViewport() || prefersReducedMotion()) {
     gsap.set(path, { clearProps: 'transform' });
     return;
   }
@@ -163,6 +174,7 @@ let _polylineLastTick = 0;
  */
 export function animateCustomWaveLines() {
   const polylines = document.querySelectorAll('.wavy-polyline');
+  const isMobile = isMobileViewport();
 
   _bindWaveLifecycle();
   _ensurePolylineObserver();
@@ -179,7 +191,7 @@ export function animateCustomWaveLines() {
     const width = 500;
     const amplitude = 10;
     const frequency = 2;
-    const segments = isSafari ? 50 : 100;
+    const segments = isMobile ? 50 : isSafari ? 50 : 100;
     const interval = width / segments;
 
     /** @type {SVGPoint[]} */
@@ -329,6 +341,7 @@ function _syncPolylineTicker() {
   _removeDisconnectedPolylines();
 
   const shouldRun =
+    !isMobileViewport() &&
     !prefersReducedMotion() &&
     document.visibilityState === 'visible' &&
     _polylineItems.some((item) => item.isVisible);
@@ -357,7 +370,10 @@ function _syncHeroWaveTween() {
   if (!_heroWaveTween) return;
 
   const shouldRun =
-    !prefersReducedMotion() && document.visibilityState === 'visible' && _heroWaveIsVisible;
+    !isMobileViewport() &&
+    !prefersReducedMotion() &&
+    document.visibilityState === 'visible' &&
+    _heroWaveIsVisible;
 
   if (shouldRun) {
     _heroWaveTween.resume();

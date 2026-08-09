@@ -9,6 +9,16 @@
   }
 }
 
+@keyframes mobileTextFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .section-line-wrapper {
   width: 100%;
   margin: 40px auto;
@@ -144,5 +154,16 @@ h1 span.word {
 @media (max-width: 767px) {
   #blob-svg {
     filter: blur(4px) !important;
+  }
+
+  .mobile-text-fade-in {
+    animation: mobileTextFadeIn 360ms ease-out both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-text-fade-in {
+    opacity: 1;
+    animation: none;
   }
 }

@@ -3,25 +3,25 @@
  * @description Fullscreen menu link word animation (same as original).
  */
 
-import gsap from "gsap";
-import { RICH_MOBILE, SAFARI_LITE, textEase } from "./profile.js";
-import { safeSplit, safeRevert, clearInline } from "./utils.js";
-import { prefersReducedMotion } from "../motion.js";
+import gsap from 'gsap';
+import { SIMPLE_MOBILE_TEXT, RICH_MOBILE, SAFARI_LITE, textEase } from './profile.js';
+import { safeSplit, safeRevert, clearInline } from './utils.js';
+import { prefersReducedMotion } from '../motion.js';
 
 /**
  * Animate words inside fullscreen menu links.
  * @returns {void}
  */
 export function animateMenuLinks() {
-  const links = document.querySelectorAll(".fullscreen-menu nav a");
+  const links = document.querySelectorAll('.fullscreen-menu nav a');
 
-  if (prefersReducedMotion()) {
+  if (SIMPLE_MOBILE_TEXT || prefersReducedMotion()) {
     links.forEach((link) => {
       const item = /** @type {HTMLElement} */ (link);
       safeRevert(item);
       gsap.killTweensOf(item);
-      item.classList.remove("animated");
-      clearInline(item, ["will-change", "opacity", "transform", "filter"]);
+      item.classList.remove('animated');
+      clearInline(item, ['will-change', 'opacity', 'transform', 'filter']);
     });
     return;
   }
@@ -30,24 +30,24 @@ export function animateMenuLinks() {
     const a = /** @type {HTMLElement} */ (link);
 
     safeRevert(a);
-    a.classList.remove("animated");
+    a.classList.remove('animated');
 
-    const split = safeSplit(a, { types: "words", tagName: "span" });
+    const split = safeSplit(a, { types: 'words', tagName: 'span' });
     // @ts-ignore
     const words = split?.words;
     if (!split || !words?.length) {
-      a.style.opacity = "1";
+      a.style.opacity = '1';
       return;
     }
 
-    a.classList.add("animated");
-    a.style.willChange = "transform, opacity";
+    a.classList.add('animated');
+    a.style.willChange = 'transform, opacity';
 
     gsap.set(words, {
       y: 48,
       opacity: 0,
       ...(RICH_MOBILE ? { scale: 0.94 } : {}),
-      willChange: "transform, opacity",
+      willChange: 'transform, opacity',
       force3D: false,
     });
 
@@ -56,7 +56,7 @@ export function animateMenuLinks() {
         defaults: { ease: textEase },
         onComplete: () => {
           split.revert();
-          clearInline(a, ["will-change", "opacity", "transform"]);
+          clearInline(a, ['will-change', 'opacity', 'transform']);
         },
       })
       .to(words, {
@@ -65,7 +65,7 @@ export function animateMenuLinks() {
         ...(RICH_MOBILE ? { scale: 1 } : {}),
         duration: SAFARI_LITE ? 0.7 : 1.0,
         stagger: 0.07,
-        clearProps: "transform,opacity",
+        clearProps: 'transform,opacity',
       });
   });
 }

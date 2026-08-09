@@ -304,7 +304,9 @@ function animateBlob(group, path, centreX, centreY, size, index, isMobile) {
     transformOrigin: 'center',
   });
 
-  if (prefersReducedMotion()) return;
+  // Mobile keeps its randomly generated layout static after the initial draw.
+  // Jelly dragging still animates the inner drag layer only while interacting.
+  if (isMobile || prefersReducedMotion()) return;
 
   const driftX = gsap.utils.random(size * 0.08, size * 0.2);
   const driftY = gsap.utils.random(size * 0.08, size * 0.2);
@@ -371,7 +373,7 @@ export function animateGooeyBlobs() {
 
   const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
 
-  const blobCount = isMobile ? 7 : isSafari ? 16 : 28;
+  const blobCount = isMobile ? 10 : isSafari ? 16 : 28;
 
   const shortestSide = Math.min(width, height);
 
@@ -422,6 +424,17 @@ export function animateGooeyBlobs() {
   }
 
   setupScrollOpacity(container);
+
+  if (isMobile && svg.dataset.mobileBlobRefreshBound !== '1') {
+    svg.dataset.mobileBlobRefreshBound = '1';
+
+    document.addEventListener('sectionVisible', () => {
+      if (!svg.isConnected || window.innerWidth >= MOBILE_BREAKPOINT) return;
+
+      svg.dataset.blobsAnimated = '0';
+      animateGooeyBlobs();
+    });
+  }
 }
 
 /**

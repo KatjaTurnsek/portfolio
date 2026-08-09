@@ -27,6 +27,9 @@ export const FORCE_RICH =
 /** Devices considered strong enough for richer mobile animations. */
 export const RICH_MOBILE = FORCE_RICH || (!IS_IOS && HW_THREADS >= 4 && !prefersReducedMotion());
 
+/** Use lightweight CSS-only text reveals on phone-sized viewports. */
+export const SIMPLE_MOBILE_TEXT = window.matchMedia('(max-width: 767px)').matches;
+
 /** “Lite” only when clearly constrained iOS/Safari. */
 export const SAFARI_LITE = (isSafari || IS_IOS) && !RICH_MOBILE;
 
