@@ -19,7 +19,7 @@ import { setupHeaderScrollEffect } from '../../init.js';
 import { buildWorkGridsIfNeeded } from '../../components/workGridMounts.js';
 import { releaseScrollLock } from '../../components/scrollLock.js';
 import { addSafariWillChange, enableNoSelectDuringInteraction } from '../../components/ux.js';
-import { prefersReducedMotion } from '../../motion.js';
+import { getAnimationSpeed, prefersReducedMotion } from '../../motion.js';
 
 const LOADER_MAX_WAIT_MS = 800;
 
@@ -72,6 +72,8 @@ function waitForInitialRoute(maxWait = LOADER_MAX_WAIT_MS) {
  * @returns {void}
  */
 export function bootOnDomReady() {
+  gsap.globalTimeline.timeScale(getAnimationSpeed());
+
   setupMenuToggle();
   showLoader();
 

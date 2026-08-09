@@ -4,7 +4,7 @@
  */
 
 import { gsap, isSafari } from './env.js';
-import { prefersReducedMotion } from '../motion.js';
+import { getAnimationSpeed, prefersReducedMotion } from '../motion.js';
 
 /** @type {gsap.core.Tween|null} */
 let _heroWaveTween = null;
@@ -241,7 +241,7 @@ function _updateAllPolylines() {
   for (const item of _polylineItems) {
     if (!item.isVisible) continue;
 
-    item.phase += elapsed;
+    item.phase += elapsed * getAnimationSpeed();
     _drawPolyline(item, item.phase);
   }
 
