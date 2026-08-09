@@ -13,6 +13,7 @@ import { buildWorkGridsIfNeeded } from '../../components/workGridMounts.js';
 import { releaseScrollLock } from '../../components/scrollLock.js';
 import { addSafariWillChange, enableNoSelectDuringInteraction } from '../../components/ux.js';
 import { getAnimationSpeed, prefersReducedMotion } from '../../motion.js';
+import { setupContactForm } from '../../components/contactForm.js';
 
 const LOADER_MAX_WAIT_MS = 800;
 
@@ -24,7 +25,7 @@ let cleanupBootAnimations = null;
  * frame before hiding the loader. The timeout is only a fallback.
  *
  * @param {number} [maxWait=LOADER_MAX_WAIT_MS]
- * @returns {{promise: Promise<void>, cancel: () => void}}
+ * @returns {{promise: Promise, cancel: () => void}}
  */
 function waitForInitialRoute(maxWait = LOADER_MAX_WAIT_MS) {
   let cancel = () => {};
@@ -120,6 +121,7 @@ export function bootOnDomReady() {
   gsap.globalTimeline.timeScale(getAnimationSpeed());
 
   setupMenuToggle();
+  setupContactForm();
   showLoader();
 
   buildWorkGridsIfNeeded();
