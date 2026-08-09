@@ -18,6 +18,18 @@ let opacityContainer = null;
 /** @type {null|(() => void)} */
 let removeFallbackScroll = null;
 
+/** @type {null|(() => void)} */
+let removeMobileBlobRefresh = null;
+
+/** @type {null|(() => void)} */
+let removeJellyInteraction = null;
+
+/** @type {null|(() => void)} */
+let activeBlobCleanup = null;
+
+/** @type {Set<gsap.core.Tween>} */
+const blobTweens = new Set();
+
 /**
  * Keep a number between a minimum and maximum value.
  * @param {number} value
@@ -27,6 +39,29 @@ let removeFallbackScroll = null;
  */
 function clamp(value, minimum, maximum) {
   return Math.min(Math.max(value, minimum), maximum);
+}
+
+/**
+ * Register GSAP work owned by this module so it can be stopped as a group.
+ * @param {gsap.core.Tween} tween
+ * @returns {gsap.core.Tween}
+ */
+function trackBlobTween(tween) {
+  blobTweens.add(tween);
+  return tween;
+}
+
+/**
+ * Kill every GSAP tween and ScrollTrigger owned by the blob lifecycle.
+ * @returns {void}
+ */
+function killBlobTweens() {
+  for (const tween of blobTweens) {
+    tween.scrollTrigger?.kill();
+    tween.kill();
+  }
+
+  blobTweens.clear();
 }
 
 /**
@@ -156,6 +191,69 @@ function ensureBlobDOM() {
 }
 
 /**
+ * Release every resource owned by the combined blob lifecycle.
+ * @returns {void}
+ */
+function releaseBlobResources() {
+  removeJellyInteraction?.();
+  removeMobileBlobRefresh?.();
+
+  if (removeFallbackScroll) {
+    const removeScrollListeners = removeFallbackScroll;
+    removeFallbackScroll = null;
+    removeScrollListeners();
+  }
+
+  killBlobTweens();
+
+  const svg = document.getElementById('blob-svg');
+
+  if (svg) {
+    delete svg.dataset.blobsAnimated;
+    delete svg.dataset.jellyEnabled;
+    delete svg.dataset.mobileBlobRefreshBound;
+  }
+
+  opacityContainer = null;
+}
+
+/**
+ * Initialize ambient blobs and jelly dragging as one owned lifecycle.
+ * Calling this again first releases listeners, frames, tweens, and generated state
+ * from the previous run.
+ *
+ * @returns {() => void} Cleanup function for all blob animation resources.
+ */
+export function initBlobAnimations() {
+  if (activeBlobCleanup) {
+    activeBlobCleanup();
+  } else {
+    releaseBlobResources();
+  }
+
+  animateGooeyBlobs();
+  enableInteractiveJellyBlob();
+
+  let cleaned = false;
+
+  const cleanup = () => {
+    if (cleaned) return;
+
+    cleaned = true;
+
+    releaseBlobResources();
+
+    if (activeBlobCleanup === cleanup) {
+      activeBlobCleanup = null;
+    }
+  };
+
+  activeBlobCleanup = cleanup;
+
+  return cleanup;
+}
+
+/**
  * Set opacity with inline !important so older CSS cannot override it.
  * @param {Element} element
  * @param {number} opacity
@@ -232,6 +330,7 @@ function setupScrollOpacity(container) {
 
   let updateRequested = false;
   let lastScrollTarget = null;
+  let updateFrameId = 0;
 
   const getScrollTop = () => {
     const documentScrollTop = Math.max(
@@ -249,6 +348,7 @@ function setupScrollOpacity(container) {
 
   const updateFromScroll = () => {
     updateRequested = false;
+    updateFrameId = 0;
 
     const progress = clamp(getScrollTop() / getFadeDistance(), 0, 1);
 
@@ -265,7 +365,7 @@ function setupScrollOpacity(container) {
     if (updateRequested) return;
 
     updateRequested = true;
-    requestAnimationFrame(updateFromScroll);
+    updateFrameId = requestAnimationFrame(updateFromScroll);
   };
 
   document.addEventListener('scroll', requestUpdate, {
@@ -280,6 +380,13 @@ function setupScrollOpacity(container) {
   removeFallbackScroll = () => {
     document.removeEventListener('scroll', requestUpdate, true);
     window.removeEventListener('resize', requestUpdate);
+
+    if (updateFrameId) {
+      cancelAnimationFrame(updateFrameId);
+      updateFrameId = 0;
+    }
+
+    updateRequested = false;
   };
 
   updateFromScroll();
@@ -311,16 +418,18 @@ function animateBlob(group, path, centreX, centreY, size, index, isMobile) {
   const driftX = gsap.utils.random(size * 0.08, size * 0.2);
   const driftY = gsap.utils.random(size * 0.08, size * 0.2);
 
-  gsap.to(group, {
-    x: centreX + gsap.utils.random(-driftX, driftX),
-    y: centreY + gsap.utils.random(-driftY, driftY),
-    rotation: gsap.utils.random(-14, 14),
-    duration: gsap.utils.random(9, 16),
-    delay: index * -0.17,
-    ease: 'sine.inOut',
-    repeat: -1,
-    yoyo: true,
-  });
+  trackBlobTween(
+    gsap.to(group, {
+      x: centreX + gsap.utils.random(-driftX, driftX),
+      y: centreY + gsap.utils.random(-driftY, driftY),
+      rotation: gsap.utils.random(-14, 14),
+      duration: gsap.utils.random(9, 16),
+      delay: index * -0.17,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+    })
+  );
 
   const nextShape = makeSoftBlobPath(
     size,
@@ -333,27 +442,60 @@ function animateBlob(group, path, centreX, centreY, size, index, isMobile) {
   );
 
   if (gsap.plugins?.MorphSVGPlugin && !isMobile) {
-    gsap.to(path, {
-      morphSVG: nextShape,
-      duration: gsap.utils.random(7, 13),
-      delay: index * -0.11,
-      ease: 'sine.inOut',
-      repeat: -1,
-      yoyo: true,
-    });
+    trackBlobTween(
+      gsap.to(path, {
+        morphSVG: nextShape,
+        duration: gsap.utils.random(7, 13),
+        delay: index * -0.11,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+      })
+    );
   } else {
-    gsap.to(path, {
-      scaleX: gsap.utils.random(0.94, 1.07),
-      scaleY: gsap.utils.random(0.94, 1.07),
-      rotation: gsap.utils.random(-7, 7),
-      transformOrigin: 'center',
-      duration: gsap.utils.random(6, 11),
-      delay: index * -0.13,
-      ease: 'sine.inOut',
-      repeat: -1,
-      yoyo: true,
-    });
+    trackBlobTween(
+      gsap.to(path, {
+        scaleX: gsap.utils.random(0.94, 1.07),
+        scaleY: gsap.utils.random(0.94, 1.07),
+        rotation: gsap.utils.random(-7, 7),
+        transformOrigin: 'center',
+        duration: gsap.utils.random(6, 11),
+        delay: index * -0.13,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+      })
+    );
   }
+}
+
+/**
+ * Regenerate the static mobile blob arrangement when a new section becomes visible.
+ * @param {SVGSVGElement} svg
+ * @returns {void}
+ */
+function bindMobileBlobRefresh(svg) {
+  if (removeMobileBlobRefresh) return;
+
+  const onSectionVisible = () => {
+    if (!svg.isConnected || window.innerWidth >= MOBILE_BREAKPOINT) return;
+
+    removeJellyInteraction?.();
+    killBlobTweens();
+
+    svg.dataset.blobsAnimated = '0';
+    animateGooeyBlobs();
+    enableInteractiveJellyBlob();
+  };
+
+  document.addEventListener('sectionVisible', onSectionVisible);
+  svg.dataset.mobileBlobRefreshBound = '1';
+
+  removeMobileBlobRefresh = () => {
+    document.removeEventListener('sectionVisible', onSectionVisible);
+    delete svg.dataset.mobileBlobRefreshBound;
+    removeMobileBlobRefresh = null;
+  };
 }
 
 /**
@@ -369,6 +511,7 @@ export function animateGooeyBlobs() {
   }
 
   svg.dataset.blobsAnimated = '1';
+  killBlobTweens();
   container.replaceChildren();
 
   const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
@@ -425,15 +568,8 @@ export function animateGooeyBlobs() {
 
   setupScrollOpacity(container);
 
-  if (isMobile && svg.dataset.mobileBlobRefreshBound !== '1') {
-    svg.dataset.mobileBlobRefreshBound = '1';
-
-    document.addEventListener('sectionVisible', () => {
-      if (!svg.isConnected || window.innerWidth >= MOBILE_BREAKPOINT) return;
-
-      svg.dataset.blobsAnimated = '0';
-      animateGooeyBlobs();
-    });
+  if (isMobile) {
+    bindMobileBlobRefresh(svg);
   }
 }
 
@@ -443,7 +579,7 @@ export function animateGooeyBlobs() {
  * Drag transforms are written to an inner layer, so they do not compete
  * with the ambient transform on .blob-group.
  *
- * @returns {void}
+ * @returns {() => void} Cleanup function for pointer, touch, blur, frame, and drag tween work.
  */
 export function enableInteractiveJellyBlob() {
   const { svg, container } = ensureBlobDOM();
@@ -452,9 +588,11 @@ export function enableInteractiveJellyBlob() {
     animateGooeyBlobs();
   }
 
-  if (prefersReducedMotion()) return;
+  if (prefersReducedMotion()) return () => {};
 
-  if (svg.dataset.jellyEnabled === '1') return;
+  if (svg.dataset.jellyEnabled === '1') {
+    return removeJellyInteraction || (() => {});
+  }
 
   svg.dataset.jellyEnabled = '1';
 
@@ -698,24 +836,38 @@ export function enableInteractiveJellyBlob() {
 
     setOpacity(releasedBlob, 1);
 
-    gsap.to(releasedLayer, {
-      x: releasedX,
-      y: releasedY,
-      rotation: 0,
-      scaleX: 1,
-      scaleY: 1,
-      duration: 0.75,
-      ease: 'elastic.out(1, 0.55)',
-      overwrite: true,
+    /** @type {gsap.core.Tween|null} */
+    let settleTween = null;
 
-      onUpdate: () => {
-        setOpacity(releasedLayer, 1);
-      },
+    const forgetSettleTween = () => {
+      if (settleTween) {
+        blobTweens.delete(settleTween);
+      }
+    };
 
-      onComplete: () => {
-        restoreScrollOpacity(releasedBlob, container);
-      },
-    });
+    settleTween = trackBlobTween(
+      gsap.to(releasedLayer, {
+        x: releasedX,
+        y: releasedY,
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 0.75,
+        ease: 'elastic.out(1, 0.55)',
+        overwrite: true,
+
+        onUpdate: () => {
+          setOpacity(releasedLayer, 1);
+        },
+
+        onComplete: () => {
+          forgetSettleTween();
+          restoreScrollOpacity(releasedBlob, container);
+        },
+
+        onInterrupt: forgetSettleTween,
+      })
+    );
   }
 
   /**
@@ -788,6 +940,14 @@ export function enableInteractiveJellyBlob() {
     }
   }
 
+  /**
+   * Finish an active drag when the browser window loses focus.
+   * @returns {void}
+   */
+  function handleWindowBlur() {
+    endDrag();
+  }
+
   window.addEventListener('pointerdown', startDrag, {
     passive: false,
   });
@@ -808,7 +968,66 @@ export function enableInteractiveJellyBlob() {
     passive: false,
   });
 
-  window.addEventListener('blur', () => {
-    endDrag();
+  window.addEventListener('blur', handleWindowBlur);
+
+  let cleaned = false;
+
+  const cleanup = () => {
+    if (cleaned) return;
+
+    cleaned = true;
+    isDragging = false;
+    activePointerId = null;
+    dragInverseMatrix = null;
+
+    window.removeEventListener('pointerdown', startDrag);
+    window.removeEventListener('pointermove', updateDrag);
+    window.removeEventListener('pointerup', endDrag);
+    window.removeEventListener('pointercancel', endDrag);
+    window.removeEventListener('touchmove', preventTouchScroll);
+    window.removeEventListener('blur', handleWindowBlur);
+
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = 0;
+    }
+
+    svg.querySelectorAll('.blob-drag-layer').forEach((layer) => {
+      gsap.killTweensOf(layer);
+      gsap.set(layer, {
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1,
+      });
+    });
+
+    svg.querySelectorAll('.blob-group[data-dragging]').forEach((group) => {
+      group.removeAttribute('data-dragging');
+      container.appendChild(group);
+    });
+
+    activeBlob = null;
+    activeDragLayer = null;
+    delete svg.dataset.jellyEnabled;
+
+    if (removeJellyInteraction === cleanup) {
+      removeJellyInteraction = null;
+    }
+
+    applyBlobOpacities();
+  };
+
+  removeJellyInteraction = cleanup;
+
+  return cleanup;
+}
+
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    if (activeBlobCleanup) {
+      activeBlobCleanup();
+    } else {
+      releaseBlobResources();
+    }
   });
 }

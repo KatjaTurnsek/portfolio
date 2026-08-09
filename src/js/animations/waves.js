@@ -14,8 +14,20 @@ let _heroWaveTween = null;
 /** @type {IntersectionObserver|null} */
 let _heroWaveObserver = null;
 
+/** @type {SVGPathElement|null} */
+let _heroWavePath = null;
+
+/** @type {string|null} */
+let _heroWaveOriginalPath = null;
+
 let _heroWaveIsVisible = false;
 let _waveLifecycleBound = false;
+
+/** @type {null|(() => void)} */
+let _waveVisibilityHandler = null;
+
+/** @type {null|(() => void)} */
+let _activeWaveCleanup = null;
 
 /**
  * Check whether the viewport uses the mobile animation profile.
@@ -26,25 +38,59 @@ function isMobileViewport() {
 }
 
 /**
+ * Initialize both heading-wave systems as one owned lifecycle.
+ * Calling this again first releases every resource from the previous run.
+ *
+ * @returns {() => void} Cleanup function for observers, listeners, tickers, and tweens.
+ */
+export function initWaveAnimations() {
+  if (_activeWaveCleanup) {
+    _activeWaveCleanup();
+  } else {
+    _releaseWaveResources();
+  }
+
+  insertWaveLines();
+  animateWaveLine();
+  animateCustomWaveLines();
+
+  let cleaned = false;
+
+  const cleanup = () => {
+    if (cleaned) return;
+
+    cleaned = true;
+    _releaseWaveResources();
+
+    if (_activeWaveCleanup === cleanup) {
+      _activeWaveCleanup = null;
+    }
+  };
+
+  _activeWaveCleanup = cleanup;
+
+  return cleanup;
+}
+
+/**
  * Animate a single path inside #wavy-line using MorphSVG when available.
  * Graceful fallback uses a subtle Y translation.
  * (Safe no-op if #wavy-line doesn't exist.)
  * @returns {void}
  */
 export function animateWaveLine() {
+  _releaseHeroWaveResources();
+
   const path = /** @type {SVGPathElement|null} */ (document.querySelector('#wavy-line path'));
 
   if (!path) return;
 
+  _heroWavePath = path;
+  _heroWaveOriginalPath = path.getAttribute('d');
+
   const ALT_D = 'M0,15 C50,25 100,5 150,15 S250,5 300,15 S400,25 500,15';
 
   gsap.killTweensOf(path);
-  _heroWaveTween?.kill();
-  _heroWaveObserver?.disconnect();
-
-  _heroWaveTween = null;
-  _heroWaveObserver = null;
-  _heroWaveIsVisible = false;
 
   if (isMobileViewport() || prefersReducedMotion()) {
     gsap.set(path, { clearProps: 'transform' });
@@ -391,8 +437,75 @@ function _bindWaveLifecycle() {
 
   _waveLifecycleBound = true;
 
-  document.addEventListener('visibilitychange', () => {
+  _waveVisibilityHandler = () => {
     _syncHeroWaveTween();
     _syncPolylineTicker();
+  };
+
+  document.addEventListener('visibilitychange', _waveVisibilityHandler);
+}
+
+/**
+ * Release the separate hero-wave observer and tween and restore its base path.
+ * @returns {void}
+ */
+function _releaseHeroWaveResources() {
+  _heroWaveObserver?.disconnect();
+
+  _heroWaveTween?.scrollTrigger?.kill();
+  _heroWaveTween?.kill();
+
+  if (_heroWavePath) {
+    gsap.killTweensOf(_heroWavePath);
+
+    if (_heroWaveOriginalPath !== null) {
+      _heroWavePath.setAttribute('d', _heroWaveOriginalPath);
+    }
+
+    gsap.set(_heroWavePath, { clearProps: 'transform' });
+  }
+
+  _heroWaveTween = null;
+  _heroWaveObserver = null;
+  _heroWavePath = null;
+  _heroWaveOriginalPath = null;
+  _heroWaveIsVisible = false;
+}
+
+/**
+ * Release every resource owned by the combined wave lifecycle.
+ * @returns {void}
+ */
+function _releaseWaveResources() {
+  _releaseHeroWaveResources();
+  _polylineObserver?.disconnect();
+
+  if (_polylineTickerAdded) {
+    gsap.ticker.remove(_updateAllPolylines);
+  }
+
+  for (const item of _polylineItems) {
+    delete item.polyline.dataset.waveInit;
+  }
+
+  if (_waveVisibilityHandler) {
+    document.removeEventListener('visibilitychange', _waveVisibilityHandler);
+  }
+
+  _polylineItems = [];
+  _polylineTickerAdded = false;
+  _polylineObserver = null;
+  _polylineLastTick = 0;
+  _waveLifecycleBound = false;
+  _waveVisibilityHandler = null;
+}
+
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    if (_activeWaveCleanup) {
+      _activeWaveCleanup();
+    } else {
+      _releaseWaveResources();
+    }
   });
 }

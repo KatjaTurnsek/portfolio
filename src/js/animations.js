@@ -12,7 +12,16 @@
  *   (so imports like `from './animations.js'` keep working).
  */
 
-export { animateWaveLine, insertWaveLines, animateCustomWaveLines } from './animations/waves.js';
+export {
+  initWaveAnimations,
+  animateWaveLine,
+  insertWaveLines,
+  animateCustomWaveLines,
+} from './animations/waves.js';
 export { animateTealBars } from './animations/tealBars.js';
-export { animateGooeyBlobs, enableInteractiveJellyBlob } from './animations/blobs.js';
+export {
+  initBlobAnimations,
+  animateGooeyBlobs,
+  enableInteractiveJellyBlob,
+} from './animations/blobs.js';
 export { deferHeavy } from './animations/deferHeavy.js';

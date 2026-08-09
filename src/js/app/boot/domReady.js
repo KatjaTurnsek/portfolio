@@ -7,14 +7,7 @@ import gsap from 'gsap';
 
 import { hideLoader, showLoader } from '../../loader.js';
 import { setupMenuToggle } from '../../nav.js';
-import {
-  animateWaveLine,
-  insertWaveLines,
-  animateCustomWaveLines,
-  deferHeavy,
-  animateGooeyBlobs,
-  enableInteractiveJellyBlob,
-} from '../../animations.js';
+import { initWaveAnimations, initBlobAnimations, deferHeavy } from '../../animations.js';
 import { setupHeaderScrollEffect } from '../../init.js';
 import { buildWorkGridsIfNeeded } from '../../components/workGridMounts.js';
 import { releaseScrollLock } from '../../components/scrollLock.js';
@@ -23,15 +16,20 @@ import { getAnimationSpeed, prefersReducedMotion } from '../../motion.js';
 
 const LOADER_MAX_WAIT_MS = 800;
 
+/** @type {null|(() => void)} */
+let cleanupBootAnimations = null;
+
 /**
  * Wait for the router to select the initial page, then allow one browser
  * frame before hiding the loader. The timeout is only a fallback.
  *
  * @param {number} [maxWait=LOADER_MAX_WAIT_MS]
- * @returns {Promise<void>}
+ * @returns {{promise: Promise<void>, cancel: () => void}}
  */
 function waitForInitialRoute(maxWait = LOADER_MAX_WAIT_MS) {
-  return new Promise((resolve) => {
+  let cancel = () => {};
+
+  const promise = new Promise((resolve) => {
     let finished = false;
     let frameId = 0;
     let timeoutId = 0;
@@ -49,6 +47,8 @@ function waitForInitialRoute(maxWait = LOADER_MAX_WAIT_MS) {
       resolve();
     };
 
+    cancel = finish;
+
     const checkRouter = () => {
       if (finished) return;
 
@@ -64,14 +64,59 @@ function waitForInitialRoute(maxWait = LOADER_MAX_WAIT_MS) {
 
     checkRouter();
   });
+
+  return { promise, cancel };
 }
 
 /**
  * Boot everything that should run on DOMContentLoaded.
  *
- * @returns {void}
+ * @returns {() => void} Cleanup function for deferred and active animation work.
  */
 export function bootOnDomReady() {
+  cleanupBootAnimations?.();
+
+  let disposed = false;
+
+  /** @type {null|(() => void)} */
+  let cleanupWaves = null;
+
+  /** @type {null|(() => void)} */
+  let cleanupBlobs = null;
+
+  /** @type {null|(() => void)} */
+  let cancelDeferredBlobs = null;
+
+  /** @type {gsap.core.Tween|null} */
+  let blobIntroTween = null;
+
+  const routeWait = waitForInitialRoute();
+
+  const cleanup = () => {
+    if (disposed) return;
+
+    disposed = true;
+
+    routeWait.cancel();
+    cancelDeferredBlobs?.();
+    cleanupBlobs?.();
+    cleanupWaves?.();
+
+    blobIntroTween?.scrollTrigger?.kill();
+    blobIntroTween?.kill();
+
+    cancelDeferredBlobs = null;
+    cleanupBlobs = null;
+    cleanupWaves = null;
+    blobIntroTween = null;
+
+    if (cleanupBootAnimations === cleanup) {
+      cleanupBootAnimations = null;
+    }
+  };
+
+  cleanupBootAnimations = cleanup;
+
   gsap.globalTimeline.timeScale(getAnimationSpeed());
 
   setupMenuToggle();
@@ -79,21 +124,23 @@ export function bootOnDomReady() {
 
   buildWorkGridsIfNeeded();
 
-  waitForInitialRoute().then(() => {
+  routeWait.promise.then(() => {
+    if (disposed) return;
+
     hideLoader();
     releaseScrollLock();
 
-    insertWaveLines();
-    animateWaveLine();
-    animateCustomWaveLines();
+    cleanupWaves = initWaveAnimations();
 
     const blobWrapper = document.querySelector('.morphing-blob-wrapper');
 
     if (blobWrapper) {
+      gsap.killTweensOf(blobWrapper);
+
       if (prefersReducedMotion()) {
         gsap.set(blobWrapper, { opacity: 1 });
       } else {
-        gsap.fromTo(
+        blobIntroTween = gsap.fromTo(
           blobWrapper,
           { opacity: 0 },
           {
@@ -105,9 +152,12 @@ export function bootOnDomReady() {
         );
       }
 
-      deferHeavy(() => {
-        animateGooeyBlobs();
-        enableInteractiveJellyBlob();
+      cancelDeferredBlobs = deferHeavy(() => {
+        cancelDeferredBlobs = null;
+
+        if (disposed) return;
+
+        cleanupBlobs = initBlobAnimations();
       }, 800);
     }
   });
@@ -115,4 +165,12 @@ export function bootOnDomReady() {
   setupHeaderScrollEffect();
   enableNoSelectDuringInteraction();
   addSafariWillChange();
+
+  return cleanup;
+}
+
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    cleanupBootAnimations?.();
+  });
 }

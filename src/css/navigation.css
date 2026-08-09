@@ -302,8 +302,17 @@ a:has(.site-logo):focus-visible {
     height: 45px;
   }
 
+  #menuToggle,
+  #menuClose {
+    box-sizing: border-box;
+    flex: 0 0 var(--menu-close-btn);
+    width: var(--menu-close-btn);
+    height: var(--menu-close-btn);
+    padding: 0;
+  }
+
   .menu-toggle.opened {
-    top: 30px;
-    right: 30px;
+    top: calc((var(--header-h) - var(--menu-close-btn)) / 2);
+    right: var(--page-gutter);
   }
 }
