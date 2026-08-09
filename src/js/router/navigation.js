@@ -14,6 +14,42 @@ import { closeMenu } from '../nav.js';
 let navigationSequence = 0;
 
 /**
+ * Store the current scroll position before navigating away.
+ * @returns {void}
+ */
+function saveCurrentScrollPosition() {
+  const currentState = history.state && typeof history.state === 'object' ? history.state : {};
+  const currentPath = normalizePathname(location.pathname);
+
+  history.replaceState(
+    {
+      ...currentState,
+      path: currentPath,
+      scrollY: Math.max(0, window.scrollY),
+    },
+    '',
+    location.href
+  );
+}
+
+/**
+ * Restore a saved scroll position after the section becomes visible.
+ * @param {number} scrollY
+ * @param {number} sequence
+ * @returns {void}
+ */
+function restoreScrollPosition(scrollY, sequence) {
+  window.requestAnimationFrame(() => {
+    if (sequence !== navigationSequence) return;
+
+    window.scrollTo({
+      top: Math.max(0, scrollY),
+      behavior: 'auto',
+    });
+  });
+}
+
+/**
  * Resolve a URL, route path, or hash to a section id and canonical route path.
  * @param {string} target
  * @returns {{ id: string, path: string }|null}
@@ -87,15 +123,24 @@ function focusSectionHeading(section, sequence) {
  * This is the only function that reveals routed content and updates history.
  *
  * @param {string} target
- * @param {{ replace?: boolean, focus?: boolean, scroll?: boolean }} [options]
+ * @param {{
+ *   replace?: boolean,
+ *   focus?: boolean,
+ *   scroll?: boolean,
+ *   restoreScroll?: number|null
+ * }} [options]
  * @returns {boolean} True when the target was handled by the app router.
  */
-export function navigate(target, { replace = false, focus = true, scroll = true } = {}) {
+export function navigate(
+  target,
+  { replace = false, focus = true, scroll = true, restoreScroll = null } = {}
+) {
   const resolved = resolveTarget(target);
   if (!resolved) return false;
 
   const { id, path } = resolved;
   const section = document.getElementById(id);
+
   if (!(section instanceof HTMLElement) || !section.classList.contains('fullscreen-section')) {
     return false;
   }
@@ -103,27 +148,61 @@ export function navigate(target, { replace = false, focus = true, scroll = true 
   const sequence = ++navigationSequence;
   const alreadyVisible = isVisibleSection(section) && window.__currentSectionId === id;
 
+  const currentPath = normalizePathname(location.pathname);
+  const shouldReplace = replace || (currentPath === path && !location.hash);
+
+  const savedScrollY = Number.isFinite(restoreScroll) ? Math.max(0, Number(restoreScroll)) : null;
+
+  /*
+   * Before pushing a new route, save the current page position on
+   * the history entry that visitors will return to.
+   */
+  if (!shouldReplace) {
+    saveCurrentScrollPosition();
+  }
+
   closeMenu({ restoreFocus: false });
   window.__currentSectionId = id;
 
-  if (id === 'work') buildWorkGridsIfNeeded();
-  if (scroll) window.scrollTo({ top: 0, behavior: 'auto' });
+  if (id === 'work') {
+    buildWorkGridsIfNeeded();
+  }
 
-  if (!alreadyVisible) revealSection(id);
+  if (savedScrollY === null && scroll) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto',
+    });
+  }
+
+  if (!alreadyVisible) {
+    revealSection(id);
+  }
 
   setMetaFromSection(section);
   setActiveLinkById(id);
   window.ScrollTrigger?.refresh?.();
 
-  if (focus) focusSectionHeading(section, sequence);
+  if (focus) {
+    focusSectionHeading(section, sequence);
+  }
 
-  const state = { path };
+  if (savedScrollY !== null) {
+    restoreScrollPosition(savedScrollY, sequence);
+  }
+
+  const state = {
+    path,
+    scrollY: savedScrollY ?? (scroll ? 0 : Math.max(0, window.scrollY)),
+  };
+
   const url = BASE_SLASH + path.replace(/^\//, '');
-  const currentPath = normalizePathname(location.pathname);
-  const shouldReplace = replace || (currentPath === path && !location.hash);
 
-  if (shouldReplace) history.replaceState(state, '', url);
-  else history.pushState(state, '', url);
+  if (shouldReplace) {
+    history.replaceState(state, '', url);
+  } else {
+    history.pushState(state, '', url);
+  }
 
   return true;
 }

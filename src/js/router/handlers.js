@@ -59,12 +59,27 @@ export function onClick(e) {
 }
 
 /**
- * Handle native back/forward navigations.
+ * Handle native back/forward navigations and restore the saved position.
+ * @param {PopStateEvent} event
  * @returns {void}
  */
-export function onPopState() {
-  if (!navigate(location.href, { replace: true })) {
-    navigate('/', { replace: true });
+export function onPopState(event) {
+  const restoreScroll = Number.isFinite(event.state?.scrollY)
+    ? Math.max(0, Number(event.state.scrollY))
+    : 0;
+
+  if (
+    !navigate(location.href, {
+      replace: true,
+      focus: false,
+      scroll: false,
+      restoreScroll,
+    })
+  ) {
+    navigate('/', {
+      replace: true,
+      focus: false,
+    });
   }
 }
 
