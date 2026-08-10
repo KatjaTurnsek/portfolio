@@ -11,8 +11,10 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-petart-title'>Pet Art With Heart</h1>
-        <p class='case-subtitle'>A lightweight business website that presents commissioned pet
-          portraits with clarity and warmth.</p>
+        <p class='case-subtitle'>
+          A responsive business website for discovering and commissioning hand-painted pet
+          portraits.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -53,10 +55,10 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Pet Art With Heart needed a website that could work as both an art portfolio and a
-        trustworthy introduction to commissioned work. The portraits had to remain the visual focus
-        while visitors could quickly understand the artistic style, the personal nature of the
-        service, and how to take the next step.
+        Pet Art With Heart needed to work as both an art portfolio and a practical business website.
+        Visitors should be able to understand the style of the portraits, learn what a commission
+        involves, and find a clear way to make contact. The artwork had to lead the experience, but
+        not at the expense of useful information or straightforward navigation.
       </p>
     </div>
 
@@ -65,15 +67,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Detailed artwork benefits from large imagery, but heavy pages would work against
-            discoverability and mobile browsing. The challenge was to create an expressive,
-            image-led presentation that still loads efficiently, reads clearly, and supports the
-            practical purpose of a commission website.
+            Detailed paintings need large, high-quality images to be appreciated properly. Those
+            same images can make a page slow, especially on mobile. I had to balance visual quality
+            with loading performance while building enough trust around a personal service. The site
+            could not rely on the artwork alone; visitors also needed to know who was behind it,
+            what they could order, and how to continue.
           </p>
           <ul>
-            <li>Let the portraits lead without hiding essential information</li>
-            <li>Balance image quality with responsive performance</li>
-            <li>Build a clear path from discovering the work to making contact</li>
+            <li>Give the portraits visual priority without hiding essential service information</li>
+            <li>Deliver detailed artwork efficiently across different screen sizes</li>
+            <li>Create a direct path from discovering the work to asking about a commission</li>
           </ul>
         </article>
 
@@ -96,20 +99,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used semantic HTML and a clear content hierarchy so the artwork, service information,
-              and calls to action remain understandable without scripting
+              I used semantic HTML and a clear heading structure so the content remains easy to
+              understand and navigate without depending on JavaScript. This also gives search
+              engines useful context about the artwork and commission service.
             </li>
             <li>
-              Built the layout with custom responsive CSS to retain precise control over image
-              presentation, typography, and whitespace
+              The custom responsive layout gives the portraits enough space while keeping the
+              supporting text readable. Typography, spacing, and image placement were adjusted
+              deliberately rather than fitted into a general-purpose template.
             </li>
             <li>
-              Kept decorative movement lightweight and CSS-based so it adds warmth without competing
-              with the portraits or delaying the page
+              Responsive image files reduce unnecessary downloads on smaller screens. Lazy loading
+              and asynchronous decoding keep artwork further down the page from delaying the initial
+              view.
             </li>
             <li>
-              Structured page content and metadata around the actual commission service to support
-              relevant search visibility as well as human readers
+              I kept decorative movement lightweight and CSS-based. It adds some warmth to the
+              brand, but the portraits remain the strongest visual element and the interface stays
+              usable when animation is unavailable.
             </li>
           </ul>
         </article>
@@ -134,10 +141,13 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The result is a live business site that connects my artwork, visual identity, service
-        information, and contact journey in one responsive experience. Unlike a fictional brief,
-        this project required me to make practical decisions for my own audience and balance
-        artistic expression with performance, discoverability, and trust.
+        The finished site brings the artwork, brand, service information, and contact journey
+        together in one responsive experience. Because this is my own working business rather than a
+        fictional brief, every design decision has a practical consequence. Images need to show
+        enough detail to represent the paintings honestly, while the surrounding content has to
+        answer real questions and establish trust. The project has been a useful reminder that an
+        expressive website still needs restraint: the design should give the work a setting, not
+        compete with it.
       </p>
     </div>
 
@@ -149,7 +159,9 @@
         data-back-fallback='{{base}}#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>

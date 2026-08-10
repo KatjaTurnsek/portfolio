@@ -11,8 +11,9 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-agilitybandits-title'>Agility Bandits</h1>
-        <p class='case-subtitle'>A branded, API-driven blog with public reading and authenticated
-          publishing tools.</p>
+        <p class='case-subtitle'>
+          An API-driven dog-agility blog with public articles and authenticated publishing tools.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -53,9 +54,11 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The task was to create a responsive blog for a dog-agility brand using API-managed content.
-        Visitors needed a clear way to discover and read posts, while an authenticated administrator
-        needed practical tools for creating, editing, and managing that content.
+        The assignment was to design and build a responsive blog using content managed through the
+        Noroff API. Visitors needed to browse and read posts without signing in. An authenticated
+        administrator also needed a practical way to create, edit, and delete content. I developed
+        the visual identity alongside the interface so the finished site would feel like a specific
+        dog-agility publication rather than a general blog template.
       </p>
     </div>
 
@@ -64,14 +67,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Public editorial content and private admin actions had to coexist in the same site.
-            Because post titles, images, excerpts, and body copy come from an API, the layout also
-            had to remain stable when the real content differed from the original design examples.
+            The public blog and the private publishing workflow depend on the same post data, but
+            they serve very different tasks. The interface had to expose editing controls only to an
+            authenticated administrator while keeping the reading experience straightforward for
+            everyone else. Because titles, images, excerpts, and article lengths come from the API,
+            the layout also needed to remain usable when the content changed.
           </p>
           <ul>
-            <li>Separate public reading from authenticated publishing actions</li>
-            <li>Design flexible cards and pages for variable API content</li>
-            <li>Keep a playful brand personality without reducing readability</li>
+            <li>Separate public reading from actions that require authentication</li>
+            <li>Render changing API content without making the layout fragile</li>
+            <li>Preserve the brand’s playful character while keeping articles easy to read</li>
           </ul>
         </article>
 
@@ -94,20 +99,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used semantic HTML, structured CSS, and focused JavaScript modules to keep the content
-              hierarchy clear across listing, detail, and admin views
+              I separated API requests, authentication, post rendering, and form handling into
+              focused JavaScript modules. This kept data access away from the presentation logic and
+              made shared behaviour easier to trace.
             </li>
             <li>
-              Kept posts publicly readable while showing create and edit actions only when the
-              administrator has an authenticated session
+              Posts remain publicly available, while create, edit, and delete controls depend on the
+              administrator’s authentication state. Protected actions are not presented as part of
+              the ordinary reading interface.
             </li>
             <li>
-              Built responsive content patterns that can accommodate changing image proportions,
-              title lengths, and article content from the API
+              The post cards and article layouts allow for different title lengths, image
+              proportions, and amounts of body content. The design responds to the data instead of
+              assuming every post will match the original mock-up.
             </li>
             <li>
-              Carried the dog-agility identity through color, typography, and custom graphics while
-              keeping navigation and controls familiar
+              I built the identity around bold colour, typography, and custom dog-agility graphics.
+              Navigation and form controls stay familiar, giving the expressive parts of the design
+              room without making basic actions harder to recognise.
             </li>
           </ul>
         </article>
@@ -132,11 +141,12 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The finished project combines a public responsive blog with an authenticated
-        content-management journey. It strengthened my foundation in vanilla JavaScript, API
-        integration, authentication, and rendering unpredictable content. It also gave me practical
-        experience carrying a visual identity through a functional product rather than treating
-        branding and development as separate tasks.
+        Agility Bandits combines a responsive public blog with an authenticated content-management
+        flow. Building it strengthened my understanding of API requests, persistent authentication,
+        conditional interface states, form handling, and rendering content that cannot be predicted
+        in advance. It also brought my design and development experience together in a useful way.
+        The brand creates the personality, but the structure still has to work when an administrator
+        publishes a new post with completely different content.
       </p>
     </div>
 
@@ -148,7 +158,9 @@
         data-back-fallback='{{base}}#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>

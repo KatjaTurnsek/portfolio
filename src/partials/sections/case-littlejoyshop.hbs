@@ -1,8 +1,8 @@
 <section
   id='case-littlejoyshop'
   class='fullscreen-section case-study-section'
-  data-title='Case Study: Little Joy Shop — Web Development | Katja Turnsek'
-  data-description='React and TypeScript e-commerce case study focused on product discovery, search feedback, cart state, checkout flow, and reusable components.'
+  data-title='Case Study: Little Joy Shop | Katja Turnsek'
+  data-description='A React and TypeScript shop built around product search, cart management, checkout, and clear user feedback.'
   data-case='littlejoyshop'
   aria-labelledby='case-littlejoyshop-title'
 >
@@ -11,8 +11,9 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-littlejoyshop-title'>Little Joy Shop</h1>
-        <p class='case-subtitle'>A focused React shop experience from product discovery to checkout
-          confirmation.</p>
+        <p class='case-subtitle'>
+          A responsive React shop that takes users from product discovery to a completed checkout.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -53,10 +54,10 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The task was to build a small but complete online shop using a supplied product API. Users
-        needed to browse and search products, understand individual product details, manage a cart,
-        complete a checkout form, and receive a clear confirmation without losing track of their
-        choices.
+        The assignment was to build a complete online shop using a supplied product API. Users
+        needed to browse and search the catalogue, open individual product pages, manage a cart,
+        complete checkout, and receive a clear confirmation. Each part had to work as its own view
+        while still feeling like one connected journey.
       </p>
     </div>
 
@@ -65,14 +66,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The project looks visually simple, but several UI states depend on the same product and
-            cart data. Search results, prices, quantities, totals, and confirmation all needed to
-            stay accurate while the user moved between routed views.
+            Several parts of the interface rely on the same changing data. Adding an item affects
+            the cart count, quantities, calculated totals, and checkout summary. That information
+            also has to remain correct while the user moves between routed views. The main technical
+            challenge was keeping those states consistent without making the component structure
+            difficult to follow.
           </p>
           <ul>
-            <li>Keep product data predictable with TypeScript interfaces</li>
-            <li>Maintain clear cart feedback as items and quantities change</li>
-            <li>Support empty, loading, error, and no-search-results states</li>
+            <li>Define predictable product and cart data with TypeScript interfaces</li>
+            <li>Keep quantities, prices, discounts, and totals accurate across the shop</li>
+            <li>Handle loading, API errors, empty carts, and unsuccessful searches clearly</li>
           </ul>
         </article>
 
@@ -95,20 +98,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used React components for repeated product, navigation, feedback, and page patterns
-              while TypeScript made the API and cart data easier to reason about
+              I created typed models for the API responses and cart items. This made the data
+              contract visible in the code and reduced guesswork when products were passed between
+              components.
             </li>
             <li>
-              Separated browsing, product details, cart, checkout, and confirmation into routed
-              views with a clear step-by-step journey
+              Repeated interface patterns became reusable React components, including product cards,
+              navigation, form elements, and feedback messages. Page-specific logic stayed within
+              the routed views where it was easier to understand.
             </li>
             <li>
-              Added an explicit no-results state so an unsuccessful search feels intentional rather
-              than like missing or broken content
+              Cart totals are calculated from the current cart state instead of being stored as
+              separate values. This avoids stale totals when a user changes a quantity or removes an
+              item.
             </li>
             <li>
-              Kept the cart summary visible and readable, with calculated totals and a focused path
-              into checkout
+              I treated empty and unsuccessful states as part of the interface. A no-results message
+              explains what happened, while the cart summary keeps prices and the next step easy to
+              find.
             </li>
           </ul>
         </article>
@@ -133,11 +140,11 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The result is a complete, responsive shopping journey built with React and TypeScript. This
-        project strengthened my understanding of typed API data, component reuse, routing, and
-        state-driven interfaces. It also reinforced that small feedback details—especially empty
-        search results and a transparent cart summary—make a straightforward flow feel far more
-        reliable.
+        The finished project covers the full shopping flow in a responsive React and TypeScript
+        application. It gave me practical experience with typed API responses, shared state, routed
+        views, reusable components, and values derived from changing cart data. It also sharpened my
+        view of feedback in interface design. A blank search result or an unclear total may look
+        like a small problem, but both can make a working shop feel unreliable.
       </p>
     </div>
 
@@ -149,7 +156,9 @@
         data-back-fallback='{{base}}#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>

@@ -1,20 +1,22 @@
 <section
-  id="case-studiobid-design"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: StudioBid — Web &amp; Interaction Design | Katja Turnsek"
-  data-description="UX/UI case study for an auction platform, focused on bidding clarity, credits, listing states, reusable components, and responsive user flows."
-  data-case="studiobid"
-  aria-labelledby="case-studiobid-design-title"
+  id='case-studiobid-design'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: StudioBid — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='UX/UI case study for an auction platform, focused on bidding clarity, credits, listing states, reusable components, and responsive user flows.'
+  data-case='studiobid'
+  aria-labelledby='case-studiobid-design-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Web &amp; Interaction Design</p>
-        <h1 id="case-studiobid-design-title">StudioBid</h1>
-        <p class="case-subtitle">A component-driven auction experience designed
-          to make value, timing, and bidding actions easy to understand.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web &amp; Interaction Design</p>
+        <h1 id='case-studiobid-design-title'>StudioBid</h1>
+        <p class='case-subtitle'>
+          An auction platform designed to make changing prices, deadlines, and bidding decisions
+          easier to understand.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>UX/UI design and prototyping</dd>
@@ -37,167 +39,176 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="studiobid-design"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='studiobid-design'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="StudioBid sections"
-          data-auto="switcher"
-          data-case="studiobid"
+          class='project-switcher'
+          aria-label='StudioBid sections'
+          data-auto='switcher'
+          data-case='studiobid'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        StudioBid needed to turn an auction API into a trustworthy product for
-        discovering, evaluating, selling, and bidding on creative work. The
-        interface had to explain changing values—such as the current bid, time
-        remaining, and account credits—while keeping the core journey direct for
-        both new visitors and returning users.
+        StudioBid needed to turn an auction API into a clear experience for discovering, selling,
+        and bidding on creative work. Visitors should be able to browse without an account, while
+        registered users needed access to bidding, listing creation, credits, and profile activity.
+        The design had to connect these journeys and make changing information, such as the current
+        bid and time remaining, easy to interpret.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Auction interfaces combine urgency with financial decisions. Users
-            need to know what an item is worth to them, whether it is still
-            available, what others have bid, and whether they have enough
-            credits before committing to an action.
+            Auction interfaces ask users to make decisions with incomplete and changing information.
+            A listing may receive a new bid, approach its deadline, or become unavailable while
+            someone is viewing it. Users also need to understand how a bid affects their credits
+            before they commit. The interface had to communicate these states without making every
+            screen feel urgent or crowded.
           </p>
           <ul>
-            <li>Make current bids, time remaining, and listing status easy to
-              scan</li>
-            <li>Build trust through consistent hierarchy, spacing, and feedback</li>
-            <li>Support many changing listing states without redesigning every
-              screen</li>
+            <li>
+              Make the current bid, time remaining, and listing status easy to scan
+            </li>
+            <li>
+              Show the relationship between a bid amount and the user’s available credits
+            </li>
+            <li>
+              Keep actions and feedback predictable as listing states change
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="{{base}}assets/images/web-studiobid-600.webp"
-            data-src="web-studiobid-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="465"
-            loading="lazy"
-            decoding="async"
-            alt="StudioBid style guide showing the colour palette and Poppins typography scale"
+            class='thumb'
+            src='{{base}}assets/images/web-studiobid-600.webp'
+            data-src='web-studiobid-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='465'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid style guide showing the colour palette and Poppins typography scale'
           />
-          <figcaption class="case-caption">A restrained visual system for
-            trustworthy auction interactions</figcaption>
+          <figcaption class='case-caption'>
+            A restrained visual system for trustworthy auction interactions
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Structured listing cards around image, price, timing, and status
-              so users can compare opportunities before opening a detail page
+              I structured listing cards around the information needed for an initial comparison:
+              image, title, current bid, and time remaining. Seller details, descriptions, and bid
+              history belong on the listing page, where users are making a more considered decision.
             </li>
             <li>
-              Gave the current bid and primary action clear visual priority
-              while keeping seller, description, and history available for
-              evaluation
+              The current bid and primary action receive the strongest emphasis on the detail page.
+              Credits and bidding history remain visible nearby so users can judge the consequences
+              of placing another bid.
             </li>
             <li>
-              Defined reusable cards, buttons, badges, fields, and feedback
-              patterns so the product could scale across browsing, bidding,
-              selling, and profile views
+              I defined reusable cards, buttons, badges, fields, and feedback states before applying
+              them across the product. This kept browsing, bidding, selling, and profile views
+              visually connected without forcing every task into the same layout.
             </li>
             <li>
-              Planned authenticated and unavailable states so protected actions
-              explain what the user needs to do next
+              Protected and unavailable actions were designed as meaningful states. Instead of
+              leaving a disabled control unexplained, the interface tells users when they need to
+              sign in, increase their bid, or choose a listing that is still active.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="{{base}}assets/images/web-studiobid-ui-600.webp"
-            data-src="web-studiobid-ui-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="513"
-            loading="lazy"
-            decoding="async"
-            alt="StudioBid high-fidelity screens showing listing details and account creation on desktop and mobile"
+            class='thumb'
+            src='{{base}}assets/images/web-studiobid-ui-600.webp'
+            data-src='web-studiobid-ui-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='513'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid high-fidelity screens showing listing details and account creation on desktop and mobile'
           />
-          <figcaption class="case-caption">Responsive high-fidelity screens for
-            core auction and account flows</figcaption>
+          <figcaption class='case-caption'>
+            Responsive high-fidelity screens for auction and account flows
+          </figcaption>
         </figure>
 
-        <article class="case-study-block">
+        <article class='case-study-block'>
           <h2>From flow to system</h2>
           <p>
-            Early wireframes helped separate profile activity into clear areas
-            for active listings, bids, and wins. That structure became a
-            repeatable dashboard pattern rather than a collection of unrelated
-            account pages.
+            I began by mapping the main journey from browsing to opening a listing and placing a
+            bid. Profile activity introduced another layer: users needed to distinguish between
+            auctions they created, items they had bid on, and auctions they had won. The wireframes
+            helped turn those relationships into one repeatable dashboard structure.
           </p>
           <ul>
-            <li>Mapped browse → listing details → bid as the primary customer
-              journey</li>
-            <li>Separated selling activity from bidding activity within the
-              profile</li>
-            <li>Adapted content density and controls for smaller screens</li>
+            <li>
+              Kept the browse, listing-detail, and bidding flow short and direct
+            </li>
+            <li>
+              Separated selling activity, active bids, and wins within the profile
+            </li>
+            <li>
+              Reordered content and controls on smaller screens according to task priority
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item">
+        <figure class='case-study-item'>
           <img
-            class="thumb"
-            src="{{base}}assets/images/web-studiobid-wireframe-600.webp"
-            data-src="web-studiobid-wireframe-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="481"
-            loading="lazy"
-            decoding="async"
-            alt="StudioBid profile dashboard wireframe with tabs for active listings, bids, and wins"
+            class='thumb'
+            src='{{base}}assets/images/web-studiobid-wireframe-600.webp'
+            data-src='web-studiobid-wireframe-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='481'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid profile dashboard wireframe with tabs for active listings, bids, and wins'
           />
-          <figcaption class="case-caption">Profile dashboard wireframe
-            organising selling and bidding activity</figcaption>
+          <figcaption class='case-caption'>
+            Profile dashboard wireframe organising selling and bidding activity
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        StudioBid became a reusable UI system rather than a set of isolated
-        screens. The hierarchy supports quick listing comparisons, more
-        considered bidding decisions, and predictable account management across
-        desktop and mobile. The project strengthened my ability to design for
-        changing product states before those states are implemented in code.
+        The final design supports browsing, bidding, selling, and account management through one
+        consistent interface. Working through the auction states before development helped expose
+        conditions that a static happy-path design would miss: expired listings, insufficient
+        credits, ownership, authentication, and bids that are no longer high enough. The project
+        taught me to consider the whole interaction: what users see before they do something, what
+        happens while it is being processed, and whether the result is clear afterwards.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="{{base}}#work"
-        class="label-link back-to-work-label"
+        href='{{base}}#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="{{base}}#work"
-        aria-label="Back to Work"
+        data-back-fallback='{{base}}#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>

@@ -1,8 +1,8 @@
 <section
   id='case-studiobid'
   class='fullscreen-section case-study-section'
-  data-title='Case Study: StudioBid — Web Development | Katja Turnsek'
-  data-description='Vanilla JavaScript auction platform case study focused on API integration, authentication, bidding, credits, listings, profiles, and reusable UI states.'
+  data-title='Case Study: StudioBid | Web Development | Katja Turnsek'
+  data-description='A JavaScript auction platform built with API integration, authentication, bidding, credits, listings, profiles, and reusable UI states.'
   data-case='studiobid'
   aria-labelledby='case-studiobid-title'
 >
@@ -11,8 +11,9 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-studiobid-title'>StudioBid</h1>
-        <p class='case-subtitle'>An API-driven auction platform for browsing, selling, and bidding
-          on creative work.</p>
+        <p class='case-subtitle'>
+          An API-driven auction platform for browsing, selling, and bidding on creative work.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -33,7 +34,7 @@
           </div>
           <div>
             <dt>Outcome</dt>
-            <dd>Complete auction journey</dd>
+            <dd>Complete auction platform</dd>
           </div>
         </dl>
 
@@ -53,10 +54,11 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The goal was to turn the Noroff Auction API into a coherent product where users could
-        discover listings, place bids, create auctions, manage their profiles, and understand their
-        available credits. The project needed to connect these actions across several views while
-        keeping the experience predictable for both visitors and authenticated users.
+        The task was to turn the Noroff Auction API into a working front-end application. Anyone
+        should be able to explore active listings. Registered users also needed to create auctions,
+        place bids, update their profiles, and follow their available credits. These actions depend
+        on authentication and live API data, so the interface had to make the user’s current status
+        and available actions clear.
       </p>
     </div>
 
@@ -65,16 +67,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Auction data changes constantly. Bid values, credit balances, listing status, and time
-            remaining all affect which actions should be available. The main challenge was keeping
-            those connected states understandable across browsing, listing details, forms, and user
-            profiles.
+            Auction data changes quickly. A successful bid can update the current price, the bid
+            history, and the user’s remaining credits in a single action. Listings can also expire,
+            and owners need different controls from bidders. Keeping those relationships accurate
+            across listing cards, detail pages, forms, and profiles was the central technical
+            challenge.
           </p>
           <ul>
-            <li>Protect account actions while keeping public listings easy to explore</li>
-            <li>Reflect bids and credit changes clearly after an API action</li>
-            <li>Handle loading, validation, empty results, and API errors without breaking the
-              journey</li>
+            <li>Allow public browsing while protecting actions that require an account</li>
+            <li>Keep bids, credits, ownership, and listing status in sync with the API</li>
+            <li>Make validation, loading states, and API errors clear without disrupting the task</li>
           </ul>
         </article>
 
@@ -90,28 +92,33 @@
             decoding='async'
             alt='StudioBid homepage showing search, sorting, auction cards, current bids, and time remaining'
           />
-          <figcaption class='case-caption'>Searchable auction listings with bid status and time
-            remaining</figcaption>
+          <figcaption class='case-caption'>
+            Searchable auction listings with current bids and time remaining
+          </figcaption>
         </figure>
 
         <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Separated API, authentication, rendering, and form behavior into reusable JavaScript
-              modules so related features could share the same logic
+              I separated API requests, authentication, rendering, and form handling into focused
+              JavaScript modules. Shared behaviour stays in one place, while each page controls the
+              logic that belongs to its own task.
             </li>
             <li>
-              Used persistent authentication and protected actions to keep browsing public while
-              reserving bidding and listing management for signed-in users
+              Authentication is stored between page visits and checked before protected actions.
+              Visitors can still browse freely, but bidding, profile editing, and listing management
+              only appear when the user has permission to use them.
             </li>
             <li>
-              Designed listing cards and detail views around the information needed for a bidding
-              decision: price, time remaining, seller, media, and bid history
+              Listing cards focus on the information needed for an early decision: the current bid,
+              time remaining, image, and listing title. The detail page adds the seller, full
+              description, bid history, and relevant actions.
             </li>
             <li>
-              Created reusable validation and feedback helpers so forms respond consistently to
-              success, invalid input, and API errors
+              Forms use shared validation and feedback helpers so fields behave consistently.
+              Successful requests update the visible interface, while API errors explain what went
+              wrong without clearing the user’s input.
             </li>
           </ul>
         </article>
@@ -136,11 +143,12 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The completed app connects listing discovery, authentication, bidding, credit visibility,
-        profile management, and listing creation in one responsive experience. StudioBid
-        strengthened how I structure larger vanilla JavaScript projects and showed me how much clear
-        feedback and predictable state handling matter when several parts of a product depend on the
-        same changing API data.
+        StudioBid brings public listings, authentication, bidding, credits, profiles, and auction
+        management into one responsive application. Building it in vanilla JavaScript forced me to
+        be deliberate about module boundaries and the flow of data between API requests and rendered
+        views. The project also exposed a basic truth about transactional interfaces: the user needs
+        to see the result of an action immediately. If a bid changes their credits but the page does
+        not show it clearly, the code may be correct while the experience still feels uncertain.
       </p>
     </div>
 
@@ -152,7 +160,9 @@
         data-back-fallback='{{base}}#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>

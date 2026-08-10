@@ -1,7 +1,7 @@
 <section
   id='case-lumastays'
   class='fullscreen-section case-study-section'
-  data-title='Case Study: Luma Stays — Web Development | Katja Turnsek'
+  data-title='Case Study: Luma Stays | Web Development | Katja Turnsek'
   data-description='React accommodation booking case study focused on API integration, authentication, routing, booking flows, profile management, and role-based functionality.'
   data-case='lumastays'
   aria-labelledby='case-lumastays-title'
@@ -11,8 +11,9 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-lumastays-title'>Luma Stays</h1>
-        <p class='case-subtitle'>A complete accommodation booking app for customers and venue
-          managers.</p>
+        <p class='case-subtitle'>
+          A complete accommodation booking app built for customers and venue managers.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -53,11 +54,11 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The goal was to turn the Holidaze API into a clear end-to-end booking experience. Customers
-        needed to discover venues, understand availability, and manage bookings, while venue
-        managers needed a separate set of tools for creating and maintaining listings. The interface
-        had to keep these connected journeys understandable without exposing the complexity of the
-        underlying API.
+        The task was to turn the Holidaze API into a complete accommodation booking app. Customers
+        needed to find venues, check availability, make bookings, and manage upcoming stays. Venue
+        managers needed a different set of tools for creating listings, editing venue details, and
+        reviewing bookings. Both journeys had to live within the same application without making the
+        interface feel crowded or confusing.
       </p>
     </div>
 
@@ -66,14 +67,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The same application had to support two account types, authenticated and public states,
-            changing venue data, and booking rules. The main challenge was making the correct action
-            obvious at every step while keeping loading, empty, error, and success states stable.
+            The application supports public visitors, registered customers, and venue managers. What
+            someone can see or do depends on their account type, authentication state, and
+            relationship to a venue. Booking availability also changes with dates and guest numbers.
+            The main challenge was keeping those rules accurate while giving each user a clear path
+            through the app.
           </p>
           <ul>
-            <li>Separate customer and venue-manager journeys without duplicating the whole interface</li>
-            <li>Keep venue, profile, and booking data consistent after create and update actions</li>
-            <li>Make search and guest filtering useful across real, inconsistent API content</li>
+            <li>Support customer and manager journeys without building two separate interfaces</li>
+            <li>Keep venue, profile, and booking data accurate after API mutations</li>
+            <li>Handle loading, validation, empty states, and API errors without breaking the flow</li>
           </ul>
         </article>
 
@@ -96,20 +99,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Structured the app as routed React views with reusable components for shared patterns
-              such as venue cards, forms, feedback, and protected actions
+              I organised the app into routed React views and reusable components for venue cards,
+              forms, navigation, feedback messages, and protected actions. Shared patterns stay
+              consistent, while each page keeps control of its own task.
             </li>
             <li>
-              Used role-aware UI states so customers and managers see only the actions relevant to
-              their account and the venue they are viewing
+              The interface checks authentication, account type, and venue ownership before showing
+              protected controls. Customers see booking actions, while managers get the tools needed
+              to create and maintain their venues.
             </li>
             <li>
-              Added clear validation and feedback around authentication, bookings, profile updates,
-              image handling, and venue management
+              Search matches several parts of the venue data rather than relying on the title alone.
+              Guest filtering is handled separately, which makes the results more useful even when
+              the API content is inconsistent.
             </li>
             <li>
-              Combined Bootstrap structure with custom CSS so the interface stays responsive without
-              losing its calm, branded visual style
+              Forms preserve the user’s input when a request fails and provide clear feedback for
+              validation, authentication, bookings, profile changes, and venue updates. Successful
+              actions also refresh the relevant data so the interface reflects the latest API state.
             </li>
           </ul>
         </article>
@@ -134,12 +141,14 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The completed project received a
+        Luma Stays received a
         <strong>Grade A</strong>
-        and delivered complete customer and manager journeys in one responsive application. It
-        strengthened how I structure larger React projects, recover gracefully from changing API
-        data, and turn complex role-based functionality into an interface that still feels calm and
-        straightforward.
+        and delivers complete customer and venue-manager journeys in one responsive React
+        application. Building it gave me solid experience with authentication, role-based access,
+        routed views, API mutations, and state that changes across several parts of an interface. It
+        also confirmed something I care about in my work: complex functionality does not need to
+        look complex. Good structure and clear feedback can keep a demanding booking flow calm and
+        easy to follow.
       </p>
     </div>
 
@@ -151,7 +160,9 @@
         data-back-fallback='{{base}}#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>

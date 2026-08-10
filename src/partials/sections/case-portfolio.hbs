@@ -1,8 +1,8 @@
 <section
   id='case-portfolio'
   class='fullscreen-section case-study-section'
-  data-title='Case Study: Personal Portfolio — Web Development | Katja Turnsek'
-  data-description='Creative portfolio case study focused on modular JavaScript, Handlebars, client-side routing, responsive images, theme switching, and accessible GSAP motion.'
+  data-title='Case Study: Personal Portfolio | Web Development | Katja Turnsek'
+  data-description='A custom portfolio built with Handlebars, modular JavaScript, client-side routing, responsive images, theme switching, and accessible GSAP animation.'
   data-case='portfolio'
   aria-labelledby='case-portfolio-title'
 >
@@ -11,8 +11,10 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-portfolio-title'>Katja Dev Portfolio</h1>
-        <p class='case-subtitle'>A custom portfolio where visual identity, interaction, and
-          front-end architecture work as one system.</p>
+        <p class='case-subtitle'>
+          A custom portfolio that brings my design work, front-end projects, and visual identity
+          together.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -33,7 +35,7 @@
           </div>
           <div>
             <dt>Outcome</dt>
-            <dd>Live evolving portfolio</dd>
+            <dd>Live portfolio and evolving codebase</dd>
           </div>
         </dl>
 
@@ -53,10 +55,10 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        I wanted the portfolio itself to demonstrate how I work between design and code. It needed
-        to support a growing collection of development, interaction-design, and graphic-design cases
-        while retaining a distinct visual identity, smooth navigation, responsive behavior, and
-        sensible performance across devices.
+        I wanted the portfolio to show how I work across design and code, rather than simply placing
+        finished projects inside a template. It needed room for development, interaction design, and
+        visual design case studies, each with its own content and links. The site also had to feel
+        personal without allowing the visual effects to compete with the work.
       </p>
     </div>
 
@@ -65,14 +67,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The expressive motion and fullscreen navigation had to feel playful without obscuring
-            the work or making the site fragile. At the same time, adding new project variants
-            needed to remain manageable rather than requiring duplicated navigation and link markup.
+            The site uses animated backgrounds, page transitions, theme switching, and fullscreen
+            navigation. Those features share the same interface and can easily interfere with one
+            another if their states are handled separately. I also needed a structure that could
+            support new projects without duplicating routes, navigation links, and project metadata
+            throughout the codebase.
           </p>
           <ul>
-            <li>Balance animated visual character with readability and control</li>
-            <li>Keep routes, project switchers, and demo links consistent as the portfolio grows</li>
-            <li>Serve appropriate imagery and theme assets without slowing the first view</li>
+            <li>Give the site a strong visual identity without reducing readability</li>
+            <li>Keep routes, project links, and active navigation states in sync</li>
+            <li>Control the cost of animation and large imagery on smaller devices</li>
           </ul>
         </article>
 
@@ -95,20 +99,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Split the app into Handlebars partials and focused JavaScript modules for routing,
-              navigation, work data, responsive images, themes, and animation behavior
+              I divided the interface into Handlebars partials and focused JavaScript modules.
+              Routing, navigation, themes, responsive images, and animation each have a defined
+              responsibility, which makes changes easier to trace.
             </li>
             <li>
-              Made project data the shared source for work cards, case switchers, and external links
-              to reduce repeated content and mismatched states
+              Project data acts as a shared source for work cards, case-study switchers, and demo
+              links. Adding or changing a project can update several parts of the site without
+              repeating the same information in each view.
             </li>
             <li>
-              Used GSAP for the signature waves, transitions, and liquid-inspired blobs while
-              respecting reduced-motion preferences
+              GSAP controls the waves, page transitions, and liquid-inspired background blobs. The
+              effects respond to interaction and scrolling, while reduced-motion preferences provide
+              a calmer version of the experience.
             </li>
             <li>
-              Combined responsive image loading, deferred heavy animation, and a Vite build to keep
-              the visual experience practical on smaller devices
+              Responsive image handling selects a suitable asset for the available screen size.
+              Heavier animation is deferred until the main interface is ready, which protects the
+              first view from work that does not need to happen immediately.
             </li>
           </ul>
         </article>
@@ -133,11 +141,12 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The portfolio has become both a presentation layer and an ongoing front-end project. It
-        reflects my visual background while demonstrating modular JavaScript, routing, reusable
-        data-driven components, responsive assets, theme logic, and interaction design. Continuing
-        to refine it has also taught me when motion adds personality—and when simplifying an effect
-        makes the work itself stronger.
+        The portfolio now works as both a presentation of my projects and a front-end project in its
+        own right. Its visual character comes from my design background, while the code demonstrates
+        modular JavaScript, client-side routing, reusable data, responsive assets, theme logic, and
+        accessible motion. I keep refining it as the content grows. That process has made me more
+        selective with animation. An effect earns its place when it supports the atmosphere or helps
+        the interface feel responsive. If it distracts from the project itself, I simplify it.
       </p>
     </div>
 
@@ -149,7 +158,9 @@
         data-back-fallback='{{base}}#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
