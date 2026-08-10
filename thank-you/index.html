@@ -82,8 +82,8 @@
     />
     
     <link rel='icon' href='/portfolio/favicon.ico?v=2' sizes='any' />
-    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-BJuMmnJ3.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DCPRiAFJ.css">
+    <link rel='canonical' href='/portfolio/' />    <script type="module" crossorigin src="/portfolio/assets/index-D8rPi-sP.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DXED1vtw.css">
   </head>
 
   <body>
@@ -428,7 +428,7 @@
 </section> <section
   id='case-lumastays'
   class='fullscreen-section case-study-section'
-  data-title='Case Study: Luma Stays — Web Development | Katja Turnsek'
+  data-title='Case Study: Luma Stays | Web Development | Katja Turnsek'
   data-description='React accommodation booking case study focused on API integration, authentication, routing, booking flows, profile management, and role-based functionality.'
   data-case='lumastays'
   aria-labelledby='case-lumastays-title'
@@ -438,8 +438,9 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-lumastays-title'>Luma Stays</h1>
-        <p class='case-subtitle'>A complete accommodation booking app for customers and venue
-          managers.</p>
+        <p class='case-subtitle'>
+          A complete accommodation booking app built for customers and venue managers.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -480,11 +481,11 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The goal was to turn the Holidaze API into a clear end-to-end booking experience. Customers
-        needed to discover venues, understand availability, and manage bookings, while venue
-        managers needed a separate set of tools for creating and maintaining listings. The interface
-        had to keep these connected journeys understandable without exposing the complexity of the
-        underlying API.
+        The task was to turn the Holidaze API into a complete accommodation booking app. Customers
+        needed to find venues, check availability, make bookings, and manage upcoming stays. Venue
+        managers needed a different set of tools for creating listings, editing venue details, and
+        reviewing bookings. Both journeys had to live within the same application without making the
+        interface feel crowded or confusing.
       </p>
     </div>
 
@@ -493,14 +494,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The same application had to support two account types, authenticated and public states,
-            changing venue data, and booking rules. The main challenge was making the correct action
-            obvious at every step while keeping loading, empty, error, and success states stable.
+            The application supports public visitors, registered customers, and venue managers. What
+            someone can see or do depends on their account type, authentication state, and
+            relationship to a venue. Booking availability also changes with dates and guest numbers.
+            The main challenge was keeping those rules accurate while giving each user a clear path
+            through the app.
           </p>
           <ul>
-            <li>Separate customer and venue-manager journeys without duplicating the whole interface</li>
-            <li>Keep venue, profile, and booking data consistent after create and update actions</li>
-            <li>Make search and guest filtering useful across real, inconsistent API content</li>
+            <li>Support customer and manager journeys without building two separate interfaces</li>
+            <li>Keep venue, profile, and booking data accurate after API mutations</li>
+            <li>Handle loading, validation, empty states, and API errors without breaking the flow</li>
           </ul>
         </article>
 
@@ -523,20 +526,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Structured the app as routed React views with reusable components for shared patterns
-              such as venue cards, forms, feedback, and protected actions
+              I organised the app into routed React views and reusable components for venue cards,
+              forms, navigation, feedback messages, and protected actions. Shared patterns stay
+              consistent, while each page keeps control of its own task.
             </li>
             <li>
-              Used role-aware UI states so customers and managers see only the actions relevant to
-              their account and the venue they are viewing
+              The interface checks authentication, account type, and venue ownership before showing
+              protected controls. Customers see booking actions, while managers get the tools needed
+              to create and maintain their venues.
             </li>
             <li>
-              Added clear validation and feedback around authentication, bookings, profile updates,
-              image handling, and venue management
+              Search matches several parts of the venue data rather than relying on the title alone.
+              Guest filtering is handled separately, which makes the results more useful even when
+              the API content is inconsistent.
             </li>
             <li>
-              Combined Bootstrap structure with custom CSS so the interface stays responsive without
-              losing its calm, branded visual style
+              Forms preserve the user’s input when a request fails and provide clear feedback for
+              validation, authentication, bookings, profile changes, and venue updates. Successful
+              actions also refresh the relevant data so the interface reflects the latest API state.
             </li>
           </ul>
         </article>
@@ -561,12 +568,14 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The completed project received a
+        Luma Stays received a
         <strong>Grade A</strong>
-        and delivered complete customer and manager journeys in one responsive application. It
-        strengthened how I structure larger React projects, recover gracefully from changing API
-        data, and turn complex role-based functionality into an interface that still feels calm and
-        straightforward.
+        and delivers complete customer and venue-manager journeys in one responsive React
+        application. Building it gave me solid experience with authentication, role-based access,
+        routed views, API mutations, and state that changes across several parts of an interface. It
+        also confirmed something I care about in my work: complex functionality does not need to
+        look complex. Good structure and clear feedback can keep a demanding booking flow calm and
+        easy to follow.
       </p>
     </div>
 
@@ -578,7 +587,9 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -586,8 +597,8 @@
 </section> <section
   id='case-littlejoyshop'
   class='fullscreen-section case-study-section'
-  data-title='Case Study: Little Joy Shop — Web Development | Katja Turnsek'
-  data-description='React and TypeScript e-commerce case study focused on product discovery, search feedback, cart state, checkout flow, and reusable components.'
+  data-title='Case Study: Little Joy Shop | Katja Turnsek'
+  data-description='A React and TypeScript shop built around product search, cart management, checkout, and clear user feedback.'
   data-case='littlejoyshop'
   aria-labelledby='case-littlejoyshop-title'
 >
@@ -596,8 +607,9 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-littlejoyshop-title'>Little Joy Shop</h1>
-        <p class='case-subtitle'>A focused React shop experience from product discovery to checkout
-          confirmation.</p>
+        <p class='case-subtitle'>
+          A responsive React shop that takes users from product discovery to a completed checkout.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -638,10 +650,10 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The task was to build a small but complete online shop using a supplied product API. Users
-        needed to browse and search products, understand individual product details, manage a cart,
-        complete a checkout form, and receive a clear confirmation without losing track of their
-        choices.
+        The assignment was to build a complete online shop using a supplied product API. Users
+        needed to browse and search the catalogue, open individual product pages, manage a cart,
+        complete checkout, and receive a clear confirmation. Each part had to work as its own view
+        while still feeling like one connected journey.
       </p>
     </div>
 
@@ -650,14 +662,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The project looks visually simple, but several UI states depend on the same product and
-            cart data. Search results, prices, quantities, totals, and confirmation all needed to
-            stay accurate while the user moved between routed views.
+            Several parts of the interface rely on the same changing data. Adding an item affects
+            the cart count, quantities, calculated totals, and checkout summary. That information
+            also has to remain correct while the user moves between routed views. The main technical
+            challenge was keeping those states consistent without making the component structure
+            difficult to follow.
           </p>
           <ul>
-            <li>Keep product data predictable with TypeScript interfaces</li>
-            <li>Maintain clear cart feedback as items and quantities change</li>
-            <li>Support empty, loading, error, and no-search-results states</li>
+            <li>Define predictable product and cart data with TypeScript interfaces</li>
+            <li>Keep quantities, prices, discounts, and totals accurate across the shop</li>
+            <li>Handle loading, API errors, empty carts, and unsuccessful searches clearly</li>
           </ul>
         </article>
 
@@ -680,20 +694,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used React components for repeated product, navigation, feedback, and page patterns
-              while TypeScript made the API and cart data easier to reason about
+              I created typed models for the API responses and cart items. This made the data
+              contract visible in the code and reduced guesswork when products were passed between
+              components.
             </li>
             <li>
-              Separated browsing, product details, cart, checkout, and confirmation into routed
-              views with a clear step-by-step journey
+              Repeated interface patterns became reusable React components, including product cards,
+              navigation, form elements, and feedback messages. Page-specific logic stayed within
+              the routed views where it was easier to understand.
             </li>
             <li>
-              Added an explicit no-results state so an unsuccessful search feels intentional rather
-              than like missing or broken content
+              Cart totals are calculated from the current cart state instead of being stored as
+              separate values. This avoids stale totals when a user changes a quantity or removes an
+              item.
             </li>
             <li>
-              Kept the cart summary visible and readable, with calculated totals and a focused path
-              into checkout
+              I treated empty and unsuccessful states as part of the interface. A no-results message
+              explains what happened, while the cart summary keeps prices and the next step easy to
+              find.
             </li>
           </ul>
         </article>
@@ -718,11 +736,11 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The result is a complete, responsive shopping journey built with React and TypeScript. This
-        project strengthened my understanding of typed API data, component reuse, routing, and
-        state-driven interfaces. It also reinforced that small feedback details—especially empty
-        search results and a transparent cart summary—make a straightforward flow feel far more
-        reliable.
+        The finished project covers the full shopping flow in a responsive React and TypeScript
+        application. It gave me practical experience with typed API responses, shared state, routed
+        views, reusable components, and values derived from changing cart data. It also sharpened my
+        view of feedback in interface design. A blank search result or an unclear total may look
+        like a small problem, but both can make a working shop feel unreliable.
       </p>
     </div>
 
@@ -734,7 +752,9 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -752,8 +772,10 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-petart-title'>Pet Art With Heart</h1>
-        <p class='case-subtitle'>A lightweight business website that presents commissioned pet
-          portraits with clarity and warmth.</p>
+        <p class='case-subtitle'>
+          A responsive business website for discovering and commissioning hand-painted pet
+          portraits.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -794,10 +816,10 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Pet Art With Heart needed a website that could work as both an art portfolio and a
-        trustworthy introduction to commissioned work. The portraits had to remain the visual focus
-        while visitors could quickly understand the artistic style, the personal nature of the
-        service, and how to take the next step.
+        Pet Art With Heart needed to work as both an art portfolio and a practical business website.
+        Visitors should be able to understand the style of the portraits, learn what a commission
+        involves, and find a clear way to make contact. The artwork had to lead the experience, but
+        not at the expense of useful information or straightforward navigation.
       </p>
     </div>
 
@@ -806,15 +828,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Detailed artwork benefits from large imagery, but heavy pages would work against
-            discoverability and mobile browsing. The challenge was to create an expressive,
-            image-led presentation that still loads efficiently, reads clearly, and supports the
-            practical purpose of a commission website.
+            Detailed paintings need large, high-quality images to be appreciated properly. Those
+            same images can make a page slow, especially on mobile. I had to balance visual quality
+            with loading performance while building enough trust around a personal service. The site
+            could not rely on the artwork alone; visitors also needed to know who was behind it,
+            what they could order, and how to continue.
           </p>
           <ul>
-            <li>Let the portraits lead without hiding essential information</li>
-            <li>Balance image quality with responsive performance</li>
-            <li>Build a clear path from discovering the work to making contact</li>
+            <li>Give the portraits visual priority without hiding essential service information</li>
+            <li>Deliver detailed artwork efficiently across different screen sizes</li>
+            <li>Create a direct path from discovering the work to asking about a commission</li>
           </ul>
         </article>
 
@@ -837,20 +860,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used semantic HTML and a clear content hierarchy so the artwork, service information,
-              and calls to action remain understandable without scripting
+              I used semantic HTML and a clear heading structure so the content remains easy to
+              understand and navigate without depending on JavaScript. This also gives search
+              engines useful context about the artwork and commission service.
             </li>
             <li>
-              Built the layout with custom responsive CSS to retain precise control over image
-              presentation, typography, and whitespace
+              The custom responsive layout gives the portraits enough space while keeping the
+              supporting text readable. Typography, spacing, and image placement were adjusted
+              deliberately rather than fitted into a general-purpose template.
             </li>
             <li>
-              Kept decorative movement lightweight and CSS-based so it adds warmth without competing
-              with the portraits or delaying the page
+              Responsive image files reduce unnecessary downloads on smaller screens. Lazy loading
+              and asynchronous decoding keep artwork further down the page from delaying the initial
+              view.
             </li>
             <li>
-              Structured page content and metadata around the actual commission service to support
-              relevant search visibility as well as human readers
+              I kept decorative movement lightweight and CSS-based. It adds some warmth to the
+              brand, but the portraits remain the strongest visual element and the interface stays
+              usable when animation is unavailable.
             </li>
           </ul>
         </article>
@@ -875,10 +902,13 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The result is a live business site that connects my artwork, visual identity, service
-        information, and contact journey in one responsive experience. Unlike a fictional brief,
-        this project required me to make practical decisions for my own audience and balance
-        artistic expression with performance, discoverability, and trust.
+        The finished site brings the artwork, brand, service information, and contact journey
+        together in one responsive experience. Because this is my own working business rather than a
+        fictional brief, every design decision has a practical consequence. Images need to show
+        enough detail to represent the paintings honestly, while the surrounding content has to
+        answer real questions and establish trust. The project has been a useful reminder that an
+        expressive website still needs restraint: the design should give the work a setting, not
+        compete with it.
       </p>
     </div>
 
@@ -890,7 +920,9 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -898,8 +930,8 @@
 </section> <section
   id='case-portfolio'
   class='fullscreen-section case-study-section'
-  data-title='Case Study: Personal Portfolio — Web Development | Katja Turnsek'
-  data-description='Creative portfolio case study focused on modular JavaScript, Handlebars, client-side routing, responsive images, theme switching, and accessible GSAP motion.'
+  data-title='Case Study: Personal Portfolio | Web Development | Katja Turnsek'
+  data-description='A custom portfolio built with Handlebars, modular JavaScript, client-side routing, responsive images, theme switching, and accessible GSAP animation.'
   data-case='portfolio'
   aria-labelledby='case-portfolio-title'
 >
@@ -908,8 +940,10 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-portfolio-title'>Katja Dev Portfolio</h1>
-        <p class='case-subtitle'>A custom portfolio where visual identity, interaction, and
-          front-end architecture work as one system.</p>
+        <p class='case-subtitle'>
+          A custom portfolio that brings my design work, front-end projects, and visual identity
+          together.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -930,7 +964,7 @@
           </div>
           <div>
             <dt>Outcome</dt>
-            <dd>Live evolving portfolio</dd>
+            <dd>Live portfolio and evolving codebase</dd>
           </div>
         </dl>
 
@@ -950,10 +984,10 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        I wanted the portfolio itself to demonstrate how I work between design and code. It needed
-        to support a growing collection of development, interaction-design, and graphic-design cases
-        while retaining a distinct visual identity, smooth navigation, responsive behavior, and
-        sensible performance across devices.
+        I wanted the portfolio to show how I work across design and code, rather than simply placing
+        finished projects inside a template. It needed room for development, interaction design, and
+        visual design case studies, each with its own content and links. The site also had to feel
+        personal without allowing the visual effects to compete with the work.
       </p>
     </div>
 
@@ -962,14 +996,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The expressive motion and fullscreen navigation had to feel playful without obscuring
-            the work or making the site fragile. At the same time, adding new project variants
-            needed to remain manageable rather than requiring duplicated navigation and link markup.
+            The site uses animated backgrounds, page transitions, theme switching, and fullscreen
+            navigation. Those features share the same interface and can easily interfere with one
+            another if their states are handled separately. I also needed a structure that could
+            support new projects without duplicating routes, navigation links, and project metadata
+            throughout the codebase.
           </p>
           <ul>
-            <li>Balance animated visual character with readability and control</li>
-            <li>Keep routes, project switchers, and demo links consistent as the portfolio grows</li>
-            <li>Serve appropriate imagery and theme assets without slowing the first view</li>
+            <li>Give the site a strong visual identity without reducing readability</li>
+            <li>Keep routes, project links, and active navigation states in sync</li>
+            <li>Control the cost of animation and large imagery on smaller devices</li>
           </ul>
         </article>
 
@@ -992,20 +1028,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Split the app into Handlebars partials and focused JavaScript modules for routing,
-              navigation, work data, responsive images, themes, and animation behavior
+              I divided the interface into Handlebars partials and focused JavaScript modules.
+              Routing, navigation, themes, responsive images, and animation each have a defined
+              responsibility, which makes changes easier to trace.
             </li>
             <li>
-              Made project data the shared source for work cards, case switchers, and external links
-              to reduce repeated content and mismatched states
+              Project data acts as a shared source for work cards, case-study switchers, and demo
+              links. Adding or changing a project can update several parts of the site without
+              repeating the same information in each view.
             </li>
             <li>
-              Used GSAP for the signature waves, transitions, and liquid-inspired blobs while
-              respecting reduced-motion preferences
+              GSAP controls the waves, page transitions, and liquid-inspired background blobs. The
+              effects respond to interaction and scrolling, while reduced-motion preferences provide
+              a calmer version of the experience.
             </li>
             <li>
-              Combined responsive image loading, deferred heavy animation, and a Vite build to keep
-              the visual experience practical on smaller devices
+              Responsive image handling selects a suitable asset for the available screen size.
+              Heavier animation is deferred until the main interface is ready, which protects the
+              first view from work that does not need to happen immediately.
             </li>
           </ul>
         </article>
@@ -1030,11 +1070,12 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The portfolio has become both a presentation layer and an ongoing front-end project. It
-        reflects my visual background while demonstrating modular JavaScript, routing, reusable
-        data-driven components, responsive assets, theme logic, and interaction design. Continuing
-        to refine it has also taught me when motion adds personality—and when simplifying an effect
-        makes the work itself stronger.
+        The portfolio now works as both a presentation of my projects and a front-end project in its
+        own right. Its visual character comes from my design background, while the code demonstrates
+        modular JavaScript, client-side routing, reusable data, responsive assets, theme logic, and
+        accessible motion. I keep refining it as the content grows. That process has made me more
+        selective with animation. An effect earns its place when it supports the atmosphere or helps
+        the interface feel responsive. If it distracts from the project itself, I simplify it.
       </p>
     </div>
 
@@ -1046,7 +1087,9 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1054,8 +1097,8 @@
 </section> <section
   id='case-studiobid'
   class='fullscreen-section case-study-section'
-  data-title='Case Study: StudioBid — Web Development | Katja Turnsek'
-  data-description='Vanilla JavaScript auction platform case study focused on API integration, authentication, bidding, credits, listings, profiles, and reusable UI states.'
+  data-title='Case Study: StudioBid | Web Development | Katja Turnsek'
+  data-description='A JavaScript auction platform built with API integration, authentication, bidding, credits, listings, profiles, and reusable UI states.'
   data-case='studiobid'
   aria-labelledby='case-studiobid-title'
 >
@@ -1064,8 +1107,9 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-studiobid-title'>StudioBid</h1>
-        <p class='case-subtitle'>An API-driven auction platform for browsing, selling, and bidding
-          on creative work.</p>
+        <p class='case-subtitle'>
+          An API-driven auction platform for browsing, selling, and bidding on creative work.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -1086,7 +1130,7 @@
           </div>
           <div>
             <dt>Outcome</dt>
-            <dd>Complete auction journey</dd>
+            <dd>Complete auction platform</dd>
           </div>
         </dl>
 
@@ -1106,10 +1150,11 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The goal was to turn the Noroff Auction API into a coherent product where users could
-        discover listings, place bids, create auctions, manage their profiles, and understand their
-        available credits. The project needed to connect these actions across several views while
-        keeping the experience predictable for both visitors and authenticated users.
+        The task was to turn the Noroff Auction API into a working front-end application. Anyone
+        should be able to explore active listings. Registered users also needed to create auctions,
+        place bids, update their profiles, and follow their available credits. These actions depend
+        on authentication and live API data, so the interface had to make the user’s current status
+        and available actions clear.
       </p>
     </div>
 
@@ -1118,16 +1163,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Auction data changes constantly. Bid values, credit balances, listing status, and time
-            remaining all affect which actions should be available. The main challenge was keeping
-            those connected states understandable across browsing, listing details, forms, and user
-            profiles.
+            Auction data changes quickly. A successful bid can update the current price, the bid
+            history, and the user’s remaining credits in a single action. Listings can also expire,
+            and owners need different controls from bidders. Keeping those relationships accurate
+            across listing cards, detail pages, forms, and profiles was the central technical
+            challenge.
           </p>
           <ul>
-            <li>Protect account actions while keeping public listings easy to explore</li>
-            <li>Reflect bids and credit changes clearly after an API action</li>
-            <li>Handle loading, validation, empty results, and API errors without breaking the
-              journey</li>
+            <li>Allow public browsing while protecting actions that require an account</li>
+            <li>Keep bids, credits, ownership, and listing status in sync with the API</li>
+            <li>Make validation, loading states, and API errors clear without disrupting the task</li>
           </ul>
         </article>
 
@@ -1143,28 +1188,33 @@
             decoding='async'
             alt='StudioBid homepage showing search, sorting, auction cards, current bids, and time remaining'
           />
-          <figcaption class='case-caption'>Searchable auction listings with bid status and time
-            remaining</figcaption>
+          <figcaption class='case-caption'>
+            Searchable auction listings with current bids and time remaining
+          </figcaption>
         </figure>
 
         <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Separated API, authentication, rendering, and form behavior into reusable JavaScript
-              modules so related features could share the same logic
+              I separated API requests, authentication, rendering, and form handling into focused
+              JavaScript modules. Shared behaviour stays in one place, while each page controls the
+              logic that belongs to its own task.
             </li>
             <li>
-              Used persistent authentication and protected actions to keep browsing public while
-              reserving bidding and listing management for signed-in users
+              Authentication is stored between page visits and checked before protected actions.
+              Visitors can still browse freely, but bidding, profile editing, and listing management
+              only appear when the user has permission to use them.
             </li>
             <li>
-              Designed listing cards and detail views around the information needed for a bidding
-              decision: price, time remaining, seller, media, and bid history
+              Listing cards focus on the information needed for an early decision: the current bid,
+              time remaining, image, and listing title. The detail page adds the seller, full
+              description, bid history, and relevant actions.
             </li>
             <li>
-              Created reusable validation and feedback helpers so forms respond consistently to
-              success, invalid input, and API errors
+              Forms use shared validation and feedback helpers so fields behave consistently.
+              Successful requests update the visible interface, while API errors explain what went
+              wrong without clearing the user’s input.
             </li>
           </ul>
         </article>
@@ -1189,11 +1239,12 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The completed app connects listing discovery, authentication, bidding, credit visibility,
-        profile management, and listing creation in one responsive experience. StudioBid
-        strengthened how I structure larger vanilla JavaScript projects and showed me how much clear
-        feedback and predictable state handling matter when several parts of a product depend on the
-        same changing API data.
+        StudioBid brings public listings, authentication, bidding, credits, profiles, and auction
+        management into one responsive application. Building it in vanilla JavaScript forced me to
+        be deliberate about module boundaries and the flow of data between API requests and rendered
+        views. The project also exposed a basic truth about transactional interfaces: the user needs
+        to see the result of an action immediately. If a bid changes their credits but the page does
+        not show it clearly, the code may be correct while the experience still feels uncertain.
       </p>
     </div>
 
@@ -1205,7 +1256,9 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1223,8 +1276,9 @@
       <div class='case-study-header'>
         <p class='case-eyebrow'>Web Development</p>
         <h1 id='case-agilitybandits-title'>Agility Bandits</h1>
-        <p class='case-subtitle'>A branded, API-driven blog with public reading and authenticated
-          publishing tools.</p>
+        <p class='case-subtitle'>
+          An API-driven dog-agility blog with public articles and authenticated publishing tools.
+        </p>
 
         <dl class='case-summary' aria-label='Project summary'>
           <div>
@@ -1265,9 +1319,11 @@
     <div class='row'>
       <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The task was to create a responsive blog for a dog-agility brand using API-managed content.
-        Visitors needed a clear way to discover and read posts, while an authenticated administrator
-        needed practical tools for creating, editing, and managing that content.
+        The assignment was to design and build a responsive blog using content managed through the
+        Noroff API. Visitors needed to browse and read posts without signing in. An authenticated
+        administrator also needed a practical way to create, edit, and delete content. I developed
+        the visual identity alongside the interface so the finished site would feel like a specific
+        dog-agility publication rather than a general blog template.
       </p>
     </div>
 
@@ -1276,14 +1332,16 @@
         <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Public editorial content and private admin actions had to coexist in the same site.
-            Because post titles, images, excerpts, and body copy come from an API, the layout also
-            had to remain stable when the real content differed from the original design examples.
+            The public blog and the private publishing workflow depend on the same post data, but
+            they serve very different tasks. The interface had to expose editing controls only to an
+            authenticated administrator while keeping the reading experience straightforward for
+            everyone else. Because titles, images, excerpts, and article lengths come from the API,
+            the layout also needed to remain usable when the content changed.
           </p>
           <ul>
-            <li>Separate public reading from authenticated publishing actions</li>
-            <li>Design flexible cards and pages for variable API content</li>
-            <li>Keep a playful brand personality without reducing readability</li>
+            <li>Separate public reading from actions that require authentication</li>
+            <li>Render changing API content without making the layout fragile</li>
+            <li>Preserve the brand’s playful character while keeping articles easy to read</li>
           </ul>
         </article>
 
@@ -1306,20 +1364,24 @@
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used semantic HTML, structured CSS, and focused JavaScript modules to keep the content
-              hierarchy clear across listing, detail, and admin views
+              I separated API requests, authentication, post rendering, and form handling into
+              focused JavaScript modules. This kept data access away from the presentation logic and
+              made shared behaviour easier to trace.
             </li>
             <li>
-              Kept posts publicly readable while showing create and edit actions only when the
-              administrator has an authenticated session
+              Posts remain publicly available, while create, edit, and delete controls depend on the
+              administrator’s authentication state. Protected actions are not presented as part of
+              the ordinary reading interface.
             </li>
             <li>
-              Built responsive content patterns that can accommodate changing image proportions,
-              title lengths, and article content from the API
+              The post cards and article layouts allow for different title lengths, image
+              proportions, and amounts of body content. The design responds to the data instead of
+              assuming every post will match the original mock-up.
             </li>
             <li>
-              Carried the dog-agility identity through color, typography, and custom graphics while
-              keeping navigation and controls familiar
+              I built the identity around bold colour, typography, and custom dog-agility graphics.
+              Navigation and form controls stay familiar, giving the expressive parts of the design
+              room without making basic actions harder to recognise.
             </li>
           </ul>
         </article>
@@ -1344,11 +1406,12 @@
     <div class='row case-outcome'>
       <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The finished project combines a public responsive blog with an authenticated
-        content-management journey. It strengthened my foundation in vanilla JavaScript, API
-        integration, authentication, and rendering unpredictable content. It also gave me practical
-        experience carrying a visual identity through a functional product rather than treating
-        branding and development as separate tasks.
+        Agility Bandits combines a responsive public blog with an authenticated content-management
+        flow. Building it strengthened my understanding of API requests, persistent authentication,
+        conditional interface states, form handling, and rendering content that cannot be predicted
+        in advance. It also brought my design and development experience together in a useful way.
+        The brand creates the personality, but the structure still has to work when an administrator
+        publishes a new post with completely different content.
       </p>
     </div>
 
@@ -1360,7 +1423,9 @@
         data-back-fallback='/portfolio/#work'
         aria-label='Back to Work'
       >
-        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
         <span class='label-text'>Back to Work</span>
       </a>
     </div>
@@ -1873,22 +1938,24 @@
     </div>
   </div>
 </section> <section
-  id="case-lumastays-design"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Luma Stays — Web &amp; Interaction Design | Katja Turnsek"
-  data-description="UX/UI case study for an accommodation platform, focused on search, booking decisions, responsive layouts, and distinct customer and venue-manager flows."
-  data-case="lumastays"
-  aria-labelledby="case-lumastays-design-title"
+  id='case-lumastays-design'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Luma Stays — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='UX/UI case study for an accommodation platform, focused on search, booking decisions, responsive layouts, and distinct customer and venue-manager flows.'
+  data-case='lumastays'
+  aria-labelledby='case-lumastays-design-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Web &amp; Interaction Design</p>
-        <h1 id="case-lumastays-design-title">Luma Stays</h1>
-        <p class="case-subtitle">A calm booking experience that helps customers
-          choose confidently and venue managers stay in control.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web &amp; Interaction Design</p>
+        <h1 id='case-lumastays-design-title'>Luma Stays</h1>
+        <p class='case-subtitle'>
+          A calm accommodation platform designed around confident booking and practical venue
+          management.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>UX/UI design and prototyping</dd>
@@ -1911,188 +1978,198 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="lumastays-design"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='lumastays-design'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="Luma Stays sections"
-          data-auto="switcher"
-          data-case="lumastays"
+          class='project-switcher'
+          aria-label='Luma Stays sections'
+          data-auto='switcher'
+          data-case='lumastays'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Luma Stays needed to make a large accommodation catalogue feel easy to
-        explore while supporting two distinct user journeys. Customers needed to
-        compare venues and book with confidence; venue managers needed practical
-        tools for creating, reviewing, and maintaining listings. Both
-        experiences had to feel like parts of the same product.
+        Luma Stays needed to support two connected but very different journeys. Customers had to
+        search a large catalogue, compare venues, check availability, and complete a booking. Venue
+        managers needed to create listings, maintain venue information, and review bookings. I
+        designed both sides as parts of the same product, using shared patterns where they made
+        sense without forcing different tasks into identical layouts.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Accommodation decisions involve many competing details: location,
-            price, facilities, guest capacity, availability, and trust. The
-            interface had to surface the right information at each step without
-            crowding cards or making the booking page feel intimidating.
+            Choosing accommodation involves several decisions at once. Price, location, capacity,
+            facilities, images, and availability all matter, but presenting everything with equal
+            weight would make the interface difficult to scan. The design needed to reveal enough
+            information for each decision while keeping search and booking straightforward.
           </p>
           <ul>
-            <li>Support quick browsing without hiding meaningful venue details</li>
-            <li>Keep search and filters close to the results they affect</li>
-            <li>Make booking actions visible while preserving space for
-              decision-making content</li>
+            <li>
+              Make venue cards useful for comparison without overloading them
+            </li>
+            <li>
+              Keep search and filters connected to the results they change
+            </li>
+            <li>
+              Give booking controls enough emphasis without pushing venue information aside
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-lumastays-explore-600.webp"
-            data-src="design-lumastays-explore-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="411"
-            loading="lazy"
-            decoding="async"
-            alt="Luma Stays explore design showing search, filters, and accommodation cards"
+            class='thumb'
+            src='/portfolio/assets/images/design-lumastays-explore-600.webp'
+            data-src='design-lumastays-explore-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='411'
+            loading='lazy'
+            decoding='async'
+            alt='Luma Stays explore design showing search, filters, and accommodation cards'
           />
-          <figcaption class="case-caption">Search and filtering remain connected
-            to the venue grid</figcaption>
+          <figcaption class='case-caption'>
+            Search and filtering remain connected to the venue grid
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Designed venue cards around the details users need for an initial
-              comparison: image, title, location, capacity, rating, and price
+              I limited venue cards to the details needed for an initial comparison: image, title,
+              location, guest capacity, rating, and price. The full venue page carries the
+              information needed for a final decision.
             </li>
             <li>
-              Grouped description, facilities, practical details, and booking
-              controls into clear areas so the venue page supports both
-              evaluation and action
+              Search and guest filtering sit close to the results so users can see what changed. The
+              controls remain easy to adjust instead of disappearing once the catalogue updates.
             </li>
             <li>
-              Used a restrained travel-inspired palette, generous spacing, and
-              consistent card and form patterns to keep a content-heavy
-              interface calm
+              On the venue page, I separated descriptive content, facilities, practical details, and
+              booking controls into distinct areas. This allows users to evaluate the stay without
+              losing sight of the next action.
             </li>
             <li>
-              Planned responsive layouts around task priority, allowing
-              secondary content to move without separating users from the next
-              important action
+              I used a restrained colour palette, generous spacing, and repeated card and form
+              patterns to give a content-heavy product a quieter rhythm. Responsive layouts were
+              designed around task priority rather than simply stacking every desktop element.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-lumastays-booking-flow-600.webp"
-            data-src="design-lumastays-booking-flow-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="411"
-            loading="lazy"
-            decoding="async"
-            alt="Luma Stays venue detail design showing information, guest selection, and booking controls"
+            class='thumb'
+            src='/portfolio/assets/images/design-lumastays-booking-flow-600.webp'
+            data-src='design-lumastays-booking-flow-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='411'
+            loading='lazy'
+            decoding='async'
+            alt='Luma Stays venue detail design showing information, guest selection, and booking controls'
           />
-          <figcaption class="case-caption">Venue information and booking
-            controls share one clear decision flow</figcaption>
+          <figcaption class='case-caption'>
+            Venue information and booking controls share one clear decision flow
+          </figcaption>
         </figure>
 
-        <article class="case-study-block">
+        <article class='case-study-block'>
           <h2>Role-based flow</h2>
           <p>
-            Customers and venue managers share authentication, navigation, and
-            profile patterns, but their goals are different. I kept public
-            browsing and booking focused on discovery, while manager actions are
-            introduced only when ownership makes them relevant.
+            Customers and venue managers use the same authentication, navigation, and profile
+            foundation, but their priorities are not the same. Customer profiles focus on planned
+            stays and booking history. Managers need immediate access to the venues they own and the
+            actions required to maintain them. I kept the shared structure familiar while changing
+            the content hierarchy and available controls according to the user’s role.
           </p>
           <ul>
-            <li>Customer profiles prioritise upcoming and previous bookings</li>
-            <li>Manager profiles surface owned venues and listing-management
-              actions</li>
-            <li>Shared components preserve consistency across both account
-              experiences</li>
+            <li>
+              Customer profiles place upcoming and previous bookings first
+            </li>
+            <li>
+              Manager profiles surface owned venues and listing-management actions
+            </li>
+            <li>
+              Editing controls appear when ownership makes them relevant, keeping the public
+              experience uncluttered
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item">
+        <figure class='case-study-item'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-lumastays-manager-dashboard-600.webp"
-            data-src="design-lumastays-manager-dashboard-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="401"
-            loading="lazy"
-            decoding="async"
-            alt="Luma Stays manager dashboard design showing profile information and managed venues"
+            class='thumb'
+            src='/portfolio/assets/images/design-lumastays-manager-dashboard-600.webp'
+            data-src='design-lumastays-manager-dashboard-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='401'
+            loading='lazy'
+            decoding='async'
+            alt='Luma Stays manager dashboard design showing profile information and managed venues'
           />
-          <figcaption class="case-caption">Manager dashboard with owned venues
-            and account context</figcaption>
+          <figcaption class='case-caption'>
+            Manager dashboard with owned venues and account context
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The final design supports discovery, venue evaluation, booking, profile
-        management, and listing ownership without making the product feel
-        fragmented. The completed application received a
-        <strong>Grade A</strong>. This project strengthened how I translate
-        complex requirements into reusable interaction patterns and how I design
-        related journeys for users with different goals.
+        The final design connects discovery, venue comparison, booking, profiles, and listing
+        management without treating them as isolated features. The completed application received a
+        <strong>Grade A</strong>. The most valuable part of the project was designing one system for
+        users with different permissions and goals. It pushed me to think beyond individual screens
+        and consider what information should persist, what should change with the user’s role, and
+        when an action needs to become visible.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section> <section
-  id="case-petart-design"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Pet Art With Heart — Web &amp; Interaction Design | Katja Turnsek"
-  data-description="UX/UI case study for a real-world pet portrait business, focused on artwork hierarchy, trust, commission pathways, and responsive gallery design."
-  data-case="petart"
-  aria-labelledby="case-petart-design-title"
+  id='case-petart-design'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Pet Art With Heart — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='UX/UI case study for a real-world pet portrait business, focused on artwork hierarchy, trust, commission pathways, and responsive gallery design.'
+  data-case='petart'
+  aria-labelledby='case-petart-design-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Web &amp; Interaction Design</p>
-        <h1 id="case-petart-design-title">Pet Art With Heart</h1>
-        <p class="case-subtitle">An artwork-led experience that introduces a
-          personal commission service with warmth, clarity, and trust.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web &amp; Interaction Design</p>
+        <h1 id='case-petart-design-title'>Pet Art With Heart</h1>
+        <p class='case-subtitle'>
+          An artwork-led experience that introduces a personal commission service with warmth,
+          clarity, and trust.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>Brand, UX/UI, content, and art direction</dd>
@@ -2115,189 +2192,185 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="petart-design"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='petart-design'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="Pet Art With Heart sections"
-          data-auto="switcher"
-          data-case="petart"
+          class='project-switcher'
+          aria-label='Pet Art With Heart sections'
+          data-auto='switcher'
+          data-case='petart'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Pet Art With Heart needed to work as both an artist portfolio and the
-        first step in a commission relationship. The design had to let the
-        portraits create an emotional first impression while helping visitors
-        understand the service, feel confident in the artist, and know how to
-        make contact.
+        Pet Art With Heart needed to work as both an artist portfolio and the first step in a
+        commission relationship. The design had to let the portraits create an emotional first
+        impression while helping visitors understand the service, feel confident in the artist, and
+        know how to make contact.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The artwork needed visual space, but a gallery alone would not
-            answer the practical and emotional questions behind a custom
-            portrait. The experience had to balance storytelling with
-            information and guide visitors toward a commission without feeling
-            sales-heavy.
+            The artwork needed visual space, but a gallery alone would not answer the practical and
+            emotional questions behind a custom portrait. The experience had to balance storytelling
+            with information and guide visitors toward a commission without feeling sales-heavy.
           </p>
           <ul>
             <li>Keep the portraits as the strongest visual element</li>
-            <li>Build trust through personal context, process information, and
-              clear next steps</li>
-            <li>Create a distinctive identity that does not compete with
-              different artwork styles</li>
+            <li>
+              Build trust through personal context, process information, and clear next steps
+            </li>
+            <li>
+              Create a distinctive identity that does not compete with different artwork styles
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-petartmoodboard-600.webp"
-            data-src="design-petartmoodboard-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="517"
-            loading="lazy"
-            decoding="async"
-            alt="Pet Art With Heart mood board showing colours, typography, and visual inspiration"
+            class='thumb'
+            src='/portfolio/assets/images/design-petartmoodboard-600.webp'
+            data-src='design-petartmoodboard-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='517'
+            loading='lazy'
+            decoding='async'
+            alt='Pet Art With Heart mood board showing colours, typography, and visual inspiration'
           />
-          <figcaption class="case-caption">Mood board balancing warmth, craft,
-            and a restrained gallery setting</figcaption>
+          <figcaption class='case-caption'>
+            Mood board balancing warmth, craft, and a restrained gallery setting
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used generous whitespace and quiet typography so detailed
-              portraits remain the main focus across the site
+              Used generous whitespace and quiet typography so detailed portraits remain the main
+              focus across the site
             </li>
             <li>
-              Structured the content around artwork, artist story, commission
-              context, and contact rather than presenting disconnected gallery
-              pages
+              Structured the content around artwork, artist story, commission context, and contact
+              rather than presenting disconnected gallery pages
             </li>
             <li>
-              Repeated clear but understated calls to action at natural decision
-              points instead of relying on a single contact link
+              Repeated clear but understated calls to action at natural decision points instead of
+              relying on a single contact link
             </li>
             <li>
-              Kept interaction subtle so hover and motion cues support
-              navigation without competing with the emotional character of the
-              work
+              Kept interaction subtle so hover and motion cues support navigation without competing
+              with the emotional character of the work
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-petartprototype-600.webp"
-            data-src="design-petartprototype-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="439"
-            loading="lazy"
-            decoding="async"
-            alt="Pet Art With Heart desktop prototype showing an artwork-led page layout"
+            class='thumb'
+            src='/portfolio/assets/images/design-petartprototype-600.webp'
+            data-src='design-petartprototype-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='439'
+            loading='lazy'
+            decoding='async'
+            alt='Pet Art With Heart desktop prototype showing an artwork-led page layout'
           />
-          <figcaption class="case-caption">High-fidelity prototype with
-            artwork-led hierarchy and clear content sections</figcaption>
+          <figcaption class='case-caption'>
+            High-fidelity prototype with artwork-led hierarchy and clear content sections
+          </figcaption>
         </figure>
 
-        <article class="case-study-block">
+        <article class='case-study-block'>
           <h2>From structure to presentation</h2>
           <p>
-            Wireframes were used to establish reading order and content rhythm
-            before the artwork and visual identity were applied. This made it
-            easier to test whether the site still made sense without relying on
-            decorative styling.
+            Wireframes were used to establish reading order and content rhythm before the artwork
+            and visual identity were applied. This made it easier to test whether the site still
+            made sense without relying on decorative styling.
           </p>
           <ul>
-            <li>Planned a simple route from first impression to service
-              understanding and contact</li>
+            <li>
+              Planned a simple route from first impression to service understanding and contact
+            </li>
             <li>Alternated gallery moments with concise explanatory content</li>
             <li>Adjusted image scale and content stacking for narrower screens</li>
           </ul>
         </article>
 
-        <figure class="case-study-item">
+        <figure class='case-study-item'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-petartwireframes-900.webp"
-            data-src="design-petartwireframes-900.webp"
-            data-path="assets/images"
-            width="900"
-            height="574"
-            loading="lazy"
-            decoding="async"
-            alt="Pet Art With Heart desktop wireframes showing the planned content hierarchy"
+            class='thumb'
+            src='/portfolio/assets/images/design-petartwireframes-900.webp'
+            data-src='design-petartwireframes-900.webp'
+            data-path='assets/images'
+            width='900'
+            height='574'
+            loading='lazy'
+            decoding='async'
+            alt='Pet Art With Heart desktop wireframes showing the planned content hierarchy'
           />
-          <figcaption class="case-caption">Wireframes establishing content order
-            before visual styling</figcaption>
+          <figcaption class='case-caption'>
+            Wireframes establishing content order before visual styling
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The final experience gives the artwork room to create an emotional
-        connection while the supporting content explains the real commission
-        service clearly. Because this is my own ongoing art business, the design
-        also has to remain practical to update as new portraits and information
-        are added. It strengthened how I connect brand expression with a
-        focused, trustworthy user journey.
+        The final experience gives the artwork room to create an emotional connection while the
+        supporting content explains the real commission service clearly. Because this is my own
+        ongoing art business, the design also has to remain practical to update as new portraits and
+        information are added. It strengthened how I connect brand expression with a focused,
+        trustworthy user journey.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section> <section
-  id="case-portfolio-design"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Katja Dev Portfolio — Web &amp; Interaction Design | Katja Turnsek"
-  data-description="UX/UI and interaction design case study for a creative portfolio, focused on visual identity, motion, responsive structure, and clear project discovery."
-  data-case="portfolio"
-  aria-labelledby="case-portfolio-design-title"
+  id='case-portfolio-design'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Katja Dev Portfolio — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='UX/UI and interaction design case study for a creative portfolio, focused on project discovery, motion, responsive layouts, and a flexible visual identity.'
+  data-case='portfolio'
+  aria-labelledby='case-portfolio-design-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Web &amp; Interaction Design</p>
-        <h1 id="case-portfolio-design-title">Katja Dev Portfolio</h1>
-        <p class="case-subtitle">A personal design system where fluid motion and
-          expressive details support a clear presentation of multidisciplinary
-          work.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web &amp; Interaction Design</p>
+        <h1 id='case-portfolio-design-title'>Katja Dev Portfolio</h1>
+        <p class='case-subtitle'>
+          A personal portfolio that brings my design background and front-end work together in one
+          clear, creative experience.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>UX/UI, interaction design, and art direction</dd>
@@ -2320,154 +2393,160 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="portfolio-design"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='portfolio-design'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="Katja Dev Portfolio sections"
-          data-auto="switcher"
-          data-case="portfolio"
+          class='project-switcher'
+          aria-label='Katja Dev Portfolio sections'
+          data-auto='switcher'
+          data-case='portfolio'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The portfolio needed to represent both sides of my work: a long
-        visual-design background and practical front-end development. I wanted
-        it to feel recognisably personal and creative while still making
-        projects, skills, and contact information easy for employers and clients
-        to understand.
+        The portfolio needed to represent both my visual design experience and my front-end
+        development skills. Employers should be able to understand what I do, find relevant
+        projects, and move between design and development work without feeling that they are looking
+        at two separate portfolios. At the same time, I wanted the website to feel personal and show
+        the kind of creative interfaces I enjoy making.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            A highly expressive portfolio can easily make its own interface
-            louder than the work it presents. The central challenge was deciding
-            where motion and personality add meaning, and where the design
-            should step back to support reading and comparison.
+            A creative portfolio needs enough personality to be memorable, but the interface should
+            not compete with the projects. The main challenge was finding a balance between
+            expressive visuals, animation, and practical navigation. The website also needed to
+            present several types of work without making visitors search through one large, mixed
+            collection.
           </p>
           <ul>
-            <li>Unify development, interaction design, and graphic design
-              without flattening them</li>
-            <li>Use motion as a signature without making long pages tiring</li>
-            <li>Create a visual system that works in both light and dark themes</li>
+            <li>
+              Connect development, interaction design, and graphic design within one portfolio
+            </li>
+            <li>
+              Use animation without making longer pages distracting or tiring
+            </li>
+            <li>
+              Keep project discovery clear across screen sizes and colour themes
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-portfoliomoodboard-600.webp"
-            data-src="design-portfoliomoodboard-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="515"
-            loading="lazy"
-            decoding="async"
-            alt="Katja Dev Portfolio mood board showing colours, typography, water, and movement references"
+            class='thumb'
+            src='/portfolio/assets/images/design-portfoliomoodboard-600.webp'
+            data-src='design-portfoliomoodboard-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='515'
+            loading='lazy'
+            decoding='async'
+            alt='Katja Dev Portfolio mood board showing colours, typography, water, and movement references'
           />
-          <figcaption class="case-caption">Mood board connecting water,
-            adaptability, and creative technology</figcaption>
+          <figcaption class='case-caption'>
+            Mood board exploring water, adaptability, and creative technology
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Built the visual language around water and adaptability, expressed
-              through organic shapes, wave lines, and fluid transitions rather
-              than literal illustrations
+              I divided the work into development, web and interaction design, and graphic design.
+              This lets visitors focus on the area that is most relevant to them while still seeing
+              the wider range of my experience.
             </li>
             <li>
-              Paired expressive display typography with a restrained body
-              typeface so section titles carry personality while case studies
-              remain readable
+              I used water and movement as the starting point for the visual identity. Organic
+              shapes, wave lines, and fluid transitions express the idea without relying on literal
+              water illustrations.
             </li>
             <li>
-              Used colour and motion to connect navigation states, theme
-              changes, and project categories across the site
+              Large headings and animated details give the main sections their personality.
+              Case-study pages are calmer because they contain more information and need to remain
+              comfortable to read.
             </li>
             <li>
-              Reserved the strongest animation for entry points and major
-              headings, allowing longer project content to feel calmer
+              Light and dark themes use the same structure but adjust contrast, colour, and
+              illustration details. This keeps both versions connected instead of treating the dark
+              theme as an inverted copy.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-ktportfolio-600.webp"
-            data-src="design-ktportfolio-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="503"
-            loading="lazy"
-            decoding="async"
-            alt="Katja Dev Portfolio wireframes showing the planned page structure and content flow"
+            class='thumb'
+            src='/portfolio/assets/images/design-ktportfolio-600.webp'
+            data-src='design-ktportfolio-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='503'
+            loading='lazy'
+            decoding='async'
+            alt='Katja Dev Portfolio wireframes showing the planned page structure and content flow'
           />
-          <figcaption class="case-caption">Wireframes defining content rhythm
-            before animation and visual styling</figcaption>
+          <figcaption class='case-caption'>
+            Wireframes used to plan the sections and project flow before adding visual styling
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The portfolio now works as both a project archive and an example of my
-        interaction-design approach. Its identity is distinctive, but the system
-        can continue growing as stronger work replaces older cases. The most
-        useful lesson has been learning when to simplify: motion is more
-        memorable when it has room to stand out rather than appearing beneath
-        every piece of content.
+        The portfolio now presents my design and development work as connected skills while still
+        giving each area its own space. The structure can also grow as I add stronger projects and
+        remove older work. Designing it taught me to be more selective with animation. A few
+        well-placed interactions make more of an impression than adding movement to every section,
+        especially on pages where the projects should receive most of the attention.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section> <section
-  id="case-agilitybandits-design"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Agility Bandits — Web &amp; Interaction Design | Katja Turnsek"
-  data-description="UX/UI case study for a dog-agility blog, focused on energetic branding, flexible API-driven content, public reading, and responsive admin flows."
-  data-case="agilitybandits"
-  aria-labelledby="case-agilitybandits-design-title"
+  id='case-agilitybandits-design'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Agility Bandits — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='UX/UI case study for a dog-agility blog, focused on energetic branding, flexible API-driven content, public reading, and responsive admin flows.'
+  data-case='agilitybandits'
+  aria-labelledby='case-agilitybandits-design-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Web &amp; Interaction Design</p>
-        <h1 id="case-agilitybandits-design-title">Agility Bandits</h1>
-        <p class="case-subtitle">An energetic editorial identity designed around
-          flexible blog content and a practical publishing flow.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web &amp; Interaction Design</p>
+        <h1 id='case-agilitybandits-design-title'>Agility Bandits</h1>
+        <p class='case-subtitle'>
+          A lively dog-agility blog designed to make articles easy to discover, read, and manage.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>Brand, UX/UI, and interaction design</dd>
@@ -2486,138 +2565,140 @@
           </div>
           <div>
             <dt>Outcome</dt>
-            <dd>API-ready blog system</dd>
+            <dd>API-driven blog design</dd>
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="agilitybandits-design"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='agilitybandits-design'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="Agility Bandits sections"
-          data-auto="switcher"
-          data-case="agilitybandits"
+          class='project-switcher'
+          aria-label='Agility Bandits sections'
+          data-auto='switcher'
+          data-case='agilitybandits'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Agility Bandits was created as a responsive blog for a fictional
-        dog-agility training centre. Visitors needed a lively but readable way
-        to discover articles, while an authenticated administrator needed clear
-        paths for creating, editing, and managing posts. The design also had to
-        remain stable once real API content replaced the mock content.
+        Agility Bandits was created as a responsive blog for a fictional dog-agility training
+        centre. Visitors needed to be able to browse and read articles without an account. An
+        authenticated administrator also needed access to the tools for creating, editing, and
+        deleting posts. Since the finished website would load its content from an API, the layouts
+        had to work with different images, titles, excerpts, and article lengths.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The brand needed to express the speed and playfulness of dog agility
-            without making an editorial interface noisy. Variable titles,
-            images, excerpts, and article lengths also meant the layout could
-            not depend on perfectly controlled content.
+            Dog agility is fast, energetic, and playful, and I wanted the website to reflect that.
+            At the same time, it was still a blog where people might spend time reading longer
+            articles. The main challenge was creating a strong visual identity without making the
+            content difficult to scan or tiring to read.
           </p>
           <ul>
-            <li>Create energy through brand details while protecting reading
-              comfort</li>
-            <li>Design flexible cards and page sections for unpredictable API
-              content</li>
-            <li>Separate public reading journeys from authenticated admin tasks</li>
+            <li>
+              Give the brand an energetic personality while keeping articles readable
+            </li>
+            <li>
+              Create flexible layouts that could handle content coming from an API
+            </li>
+            <li>
+              Keep the public reading experience separate from the admin tools
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-agilitybanditsmoodboard-600.webp"
-            data-src="design-agilitybanditsmoodboard-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="517"
-            loading="lazy"
-            decoding="async"
-            alt="Agility Bandits mood board showing energetic colours, typography, dogs, and sport-inspired graphics"
+            class='thumb'
+            src='/portfolio/assets/images/design-agilitybanditsmoodboard-600.webp'
+            data-src='design-agilitybanditsmoodboard-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='517'
+            loading='lazy'
+            decoding='async'
+            alt='Agility Bandits mood board showing energetic colours, typography, dogs, and sport-inspired graphics'
           />
-          <figcaption class="case-caption">Mood board translating agility,
-            movement, and approachability into a visual direction</figcaption>
+          <figcaption class='case-caption'>
+            Mood board exploring movement, energy, and a friendly visual style
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Combined strong colour, motion-inspired graphics, and playful
-              brand elements with a simple editorial grid and readable
-              typography
+              I used strong colours and playful graphic details to communicate the energy of the
+              sport. The article layouts are simpler so the text and images remain the main focus
+              while reading.
             </li>
             <li>
-              Designed content cards to tolerate different title lengths, image
-              proportions, and excerpt sizes without losing visual order
+              I designed the cards to work with different title and excerpt lengths instead of
+              relying on every article having the same amount of content.
             </li>
             <li>
-              Mapped public flows from discovery to reading separately from
-              admin login, creation, editing, and deletion tasks
+              The public journey moves from discovering an article to opening and reading it. The
+              admin flow has its own clear actions for signing in and managing posts.
             </li>
             <li>
-              Specified visible hover, focus, validation, and navigation states
-              so interaction cues remain clear across mouse and keyboard use
+              I planned hover, focus, validation, and navigation states in the design so users
+              receive clear feedback when interacting with the interface.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-agilitybandits-600.webp"
-            data-src="design-agilitybandits-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="495"
-            loading="lazy"
-            decoding="async"
-            alt="Agility Bandits desktop wireframes and high-fidelity blog layouts in Figma"
+            class='thumb'
+            src='/portfolio/assets/images/design-agilitybandits-600.webp'
+            data-src='design-agilitybandits-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='495'
+            loading='lazy'
+            decoding='async'
+            alt='Agility Bandits desktop wireframes and high-fidelity blog layouts in Figma'
           />
-          <figcaption class="case-caption">Responsive blog structure for
-            discovery, reading, and publishing tasks</figcaption>
+          <figcaption class='case-caption'>
+            Wireframes and finished layouts for browsing, reading, and managing articles
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The final design connects a distinctive sport-inspired identity with a
-        practical content system that can accommodate real API data. It
-        demonstrates an end-to-end design approach: brand direction, content
-        hierarchy, responsive layouts, interaction states, and separate public
-        and administrative journeys all support the same product rather than
-        competing with one another.
+        The final design combines a playful identity with a practical blog structure that can adapt
+        to real API content. Working on both the public pages and the admin flow helped me think
+        about the website from two different perspectives. Readers need a simple way to find and
+        enjoy the content, while the administrator needs clear controls for keeping that content up
+        to date. It also taught me to test layouts with less predictable content instead of
+        designing every card around an ideal title or image.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
@@ -2811,22 +2892,24 @@
     </div>
   </div>
 </section> <section
-  id="case-rainydays-design"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Rainy Days — Web &amp; Interaction Design | Katja Turnsek"
-  data-description="Responsive e-commerce UX/UI case study focused on product discovery, clear calls to action, checkout flow, and reusable interface patterns."
-  data-case="rainydays"
-  aria-labelledby="case-rainydays-design-title"
+  id='case-rainydays-design'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Rainy Days — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='Responsive e-commerce UX/UI case study focused on product discovery, clear calls to action, checkout flow, and reusable interface patterns.'
+  data-case='rainydays'
+  aria-labelledby='case-rainydays-design-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Web &amp; Interaction Design</p>
-        <h1 id="case-rainydays-design-title">Rainy Days</h1>
-        <p class="case-subtitle">A responsive outdoor retail experience with a
-          clear path from product discovery to checkout confirmation.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web &amp; Interaction Design</p>
+        <h1 id='case-rainydays-design-title'>Rainy Days</h1>
+        <p class='case-subtitle'>
+          A responsive online shop designed to guide customers from finding a jacket to completing
+          their purchase.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>UX/UI design and prototyping</dd>
@@ -2849,189 +2932,195 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="rainydays-design"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='rainydays-design'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="Rainy Days sections"
-          data-auto="switcher"
-          data-case="rainydays"
+          class='project-switcher'
+          aria-label='Rainy Days sections'
+          data-auto='switcher'
+          data-case='rainydays'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Rainy Days needed a straightforward e-commerce experience for an outdoor
-        jacket brand. Users had to move from browsing and comparing products to
-        product details, cart, checkout, and confirmation with a clear sense of
-        progress. The visual direction needed to feel reliable and
-        outdoors-focused while keeping the products central.
+        Rainy Days was created as an online shop for outdoor jackets. Customers needed to be able to
+        browse the collection, view product information, add a jacket to the cart, and complete the
+        checkout process. The design also needed to feel suitable for an outdoor brand while keeping
+        the products and shopping actions easy to find.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            An online shop repeats similar patterns across many screens, so
-            small inconsistencies can quickly make the experience feel
-            uncertain. The challenge was to maintain clear hierarchy and action
-            language from the first product card through forms and checkout
-            confirmation, especially on smaller screens.
+            An online shop uses many of the same elements across different screens. If cards,
+            buttons, prices, or form fields behave differently, the shopping experience can quickly
+            become confusing. The main challenge was to keep the journey consistent from the product
+            listing through to the order confirmation, including on smaller screens.
           </p>
           <ul>
-            <li>Support fast product scanning without overcrowding cards</li>
-            <li>Keep the next action obvious throughout a multi-step purchase
-              journey</li>
-            <li>Adapt navigation, grids, forms, and checkout content for mobile
-              use</li>
+            <li>
+              Help customers compare products without overcrowding the cards
+            </li>
+            <li>
+              Keep the next step clear throughout the purchase process
+            </li>
+            <li>
+              Adapt the product grid, forms, and checkout layout for mobile use
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/web-rainydays-600.webp"
-            data-src="web-rainydays-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="515"
-            loading="lazy"
-            decoding="async"
-            alt="Rainy Days mobile designs showing product discovery, details, cart, checkout, and confirmation screens"
+            class='thumb'
+            src='/portfolio/assets/images/web-rainydays-600.webp'
+            data-src='web-rainydays-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='515'
+            loading='lazy'
+            decoding='async'
+            alt='Rainy Days mobile designs showing product discovery, details, cart, checkout, and confirmation screens'
           />
-          <figcaption class="case-caption">Mobile screens across the complete
-            shopping journey</figcaption>
+          <figcaption class='case-caption'>
+            Mobile screens covering the complete shopping journey
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used consistent product cards, pricing treatment, buttons, and
-              form fields to make repeated actions predictable throughout the
-              shop
+              I kept the product cards consistent so customers could quickly compare images, names,
+              and prices while browsing.
             </li>
             <li>
-              Gave product imagery and essential purchasing details the
-              strongest visual priority, supported by restrained colour and
-              spacing
+              Product images and purchasing information receive the most attention. Colour and
+              decorative details are used more carefully so they do not compete with the jackets.
             </li>
             <li>
-              Designed calls to action with clear hierarchy so users can
-              distinguish primary purchase steps from secondary navigation
+              Primary actions such as adding a product to the cart and continuing to checkout are
+              visually stronger than secondary navigation.
             </li>
             <li>
-              Simplified layouts and increased spacing around controls on
-              smaller screens to support comfortable touch interaction
+              On smaller screens, I simplified the layouts and added more space around buttons and
+              form controls to make them easier to use by touch.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/web-rainydays-desktop-600.webp"
-            data-src="web-rainydays-desktop-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="626"
-            loading="lazy"
-            decoding="async"
-            alt="Rainy Days desktop product listing design with jacket cards, prices, and calls to action"
+            class='thumb'
+            src='/portfolio/assets/images/web-rainydays-desktop-600.webp'
+            data-src='web-rainydays-desktop-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='626'
+            loading='lazy'
+            decoding='async'
+            alt='Rainy Days desktop product listing design with jacket cards, prices, and calls to action'
           />
-          <figcaption class="case-caption">Desktop product grid with consistent
-            cards and clear visual hierarchy</figcaption>
+          <figcaption class='case-caption'>
+            Desktop product grid with consistent cards and clear purchasing information
+          </figcaption>
         </figure>
 
-        <article class="case-study-block">
+        <article class='case-study-block'>
           <h2>Purchase flow</h2>
           <p>
-            The high-fidelity prototype connected the screens as one journey
-            rather than treating checkout as a separate design task. Cart
-            visibility, form feedback, and confirmation give users context
-            before, during, and after the purchase action.
+            I connected the high-fidelity screens into one prototype so I could check the whole
+            journey rather than designing each page separately. This made it easier to see whether
+            customers always knew what had been added to the cart, what they needed to do next, and
+            whether their order had been completed.
           </p>
           <ul>
-            <li>Mapped browse → product details → cart → checkout → confirmation</li>
-            <li>Included empty-cart and validation feedback in the planned
-              experience</li>
-            <li>Kept order information visible long enough for users to verify
-              their choices</li>
+            <li>
+              Mapped the journey from browsing to product details, cart, checkout, and confirmation
+            </li>
+            <li>
+              Planned feedback for form validation and an empty cart
+            </li>
+            <li>
+              Kept the order details visible so customers could check their choices before
+              completing the purchase
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item">
+        <figure class='case-study-item'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/web-rainydays-flow-600.webp"
-            data-src="web-rainydays-flow-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="346"
-            loading="lazy"
-            decoding="async"
-            alt="Rainy Days responsive e-commerce screens showing product details, checkout, and confirmation"
+            class='thumb'
+            src='/portfolio/assets/images/web-rainydays-flow-600.webp'
+            data-src='web-rainydays-flow-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='346'
+            loading='lazy'
+            decoding='async'
+            alt='Rainy Days responsive e-commerce screens showing product details, checkout, and confirmation'
           />
-          <figcaption class="case-caption">High-fidelity flow from product
-            evaluation to checkout confirmation</figcaption>
+          <figcaption class='case-caption'>
+            High-fidelity flow from viewing a product to receiving order confirmation
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The result is a cohesive responsive design for the complete purchase
-        journey, supported by reusable interface patterns and predictable action
-        hierarchy. As an earlier course project, Rainy Days is intentionally
-        presented as a concise case: it demonstrates the foundation of my
-        e-commerce thinking while newer projects show how that approach has
-        developed further.
+        The final design covers the complete shopping journey on desktop and mobile. This was one of
+        my earlier course projects, and it helped me understand how much consistency matters in an
+        online shop. Reusing the same card, button, and form patterns made the different pages feel
+        connected and made the purchase process easier to follow. In later projects, I have
+        developed this further by paying more attention to accessibility, feedback states, and
+        content that can change after the design is finished.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section> <section
-  id="case-studiobid-design"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: StudioBid — Web &amp; Interaction Design | Katja Turnsek"
-  data-description="UX/UI case study for an auction platform, focused on bidding clarity, credits, listing states, reusable components, and responsive user flows."
-  data-case="studiobid"
-  aria-labelledby="case-studiobid-design-title"
+  id='case-studiobid-design'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: StudioBid — Web &amp; Interaction Design | Katja Turnsek'
+  data-description='UX/UI case study for an auction platform, focused on bidding clarity, credits, listing states, reusable components, and responsive user flows.'
+  data-case='studiobid'
+  aria-labelledby='case-studiobid-design-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Web &amp; Interaction Design</p>
-        <h1 id="case-studiobid-design-title">StudioBid</h1>
-        <p class="case-subtitle">A component-driven auction experience designed
-          to make value, timing, and bidding actions easy to understand.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Web &amp; Interaction Design</p>
+        <h1 id='case-studiobid-design-title'>StudioBid</h1>
+        <p class='case-subtitle'>
+          An auction platform designed to make changing prices, deadlines, and bidding decisions
+          easier to understand.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>UX/UI design and prototyping</dd>
@@ -3054,188 +3143,199 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="studiobid-design"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='studiobid-design'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="StudioBid sections"
-          data-auto="switcher"
-          data-case="studiobid"
+          class='project-switcher'
+          aria-label='StudioBid sections'
+          data-auto='switcher'
+          data-case='studiobid'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        StudioBid needed to turn an auction API into a trustworthy product for
-        discovering, evaluating, selling, and bidding on creative work. The
-        interface had to explain changing values—such as the current bid, time
-        remaining, and account credits—while keeping the core journey direct for
-        both new visitors and returning users.
+        StudioBid needed to turn an auction API into a clear experience for discovering, selling,
+        and bidding on creative work. Visitors should be able to browse without an account, while
+        registered users needed access to bidding, listing creation, credits, and profile activity.
+        The design had to connect these journeys and make changing information, such as the current
+        bid and time remaining, easy to interpret.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Auction interfaces combine urgency with financial decisions. Users
-            need to know what an item is worth to them, whether it is still
-            available, what others have bid, and whether they have enough
-            credits before committing to an action.
+            Auction interfaces ask users to make decisions with incomplete and changing information.
+            A listing may receive a new bid, approach its deadline, or become unavailable while
+            someone is viewing it. Users also need to understand how a bid affects their credits
+            before they commit. The interface had to communicate these states without making every
+            screen feel urgent or crowded.
           </p>
           <ul>
-            <li>Make current bids, time remaining, and listing status easy to
-              scan</li>
-            <li>Build trust through consistent hierarchy, spacing, and feedback</li>
-            <li>Support many changing listing states without redesigning every
-              screen</li>
+            <li>
+              Make the current bid, time remaining, and listing status easy to scan
+            </li>
+            <li>
+              Show the relationship between a bid amount and the user’s available credits
+            </li>
+            <li>
+              Keep actions and feedback predictable as listing states change
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/web-studiobid-600.webp"
-            data-src="web-studiobid-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="465"
-            loading="lazy"
-            decoding="async"
-            alt="StudioBid style guide showing the colour palette and Poppins typography scale"
+            class='thumb'
+            src='/portfolio/assets/images/web-studiobid-600.webp'
+            data-src='web-studiobid-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='465'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid style guide showing the colour palette and Poppins typography scale'
           />
-          <figcaption class="case-caption">A restrained visual system for
-            trustworthy auction interactions</figcaption>
+          <figcaption class='case-caption'>
+            A restrained visual system for trustworthy auction interactions
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Structured listing cards around image, price, timing, and status
-              so users can compare opportunities before opening a detail page
+              I structured listing cards around the information needed for an initial comparison:
+              image, title, current bid, and time remaining. Seller details, descriptions, and bid
+              history belong on the listing page, where users are making a more considered decision.
             </li>
             <li>
-              Gave the current bid and primary action clear visual priority
-              while keeping seller, description, and history available for
-              evaluation
+              The current bid and primary action receive the strongest emphasis on the detail page.
+              Credits and bidding history remain visible nearby so users can judge the consequences
+              of placing another bid.
             </li>
             <li>
-              Defined reusable cards, buttons, badges, fields, and feedback
-              patterns so the product could scale across browsing, bidding,
-              selling, and profile views
+              I defined reusable cards, buttons, badges, fields, and feedback states before applying
+              them across the product. This kept browsing, bidding, selling, and profile views
+              visually connected without forcing every task into the same layout.
             </li>
             <li>
-              Planned authenticated and unavailable states so protected actions
-              explain what the user needs to do next
+              Protected and unavailable actions were designed as meaningful states. Instead of
+              leaving a disabled control unexplained, the interface tells users when they need to
+              sign in, increase their bid, or choose a listing that is still active.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/web-studiobid-ui-600.webp"
-            data-src="web-studiobid-ui-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="513"
-            loading="lazy"
-            decoding="async"
-            alt="StudioBid high-fidelity screens showing listing details and account creation on desktop and mobile"
+            class='thumb'
+            src='/portfolio/assets/images/web-studiobid-ui-600.webp'
+            data-src='web-studiobid-ui-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='513'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid high-fidelity screens showing listing details and account creation on desktop and mobile'
           />
-          <figcaption class="case-caption">Responsive high-fidelity screens for
-            core auction and account flows</figcaption>
+          <figcaption class='case-caption'>
+            Responsive high-fidelity screens for auction and account flows
+          </figcaption>
         </figure>
 
-        <article class="case-study-block">
+        <article class='case-study-block'>
           <h2>From flow to system</h2>
           <p>
-            Early wireframes helped separate profile activity into clear areas
-            for active listings, bids, and wins. That structure became a
-            repeatable dashboard pattern rather than a collection of unrelated
-            account pages.
+            I began by mapping the main journey from browsing to opening a listing and placing a
+            bid. Profile activity introduced another layer: users needed to distinguish between
+            auctions they created, items they had bid on, and auctions they had won. The wireframes
+            helped turn those relationships into one repeatable dashboard structure.
           </p>
           <ul>
-            <li>Mapped browse → listing details → bid as the primary customer
-              journey</li>
-            <li>Separated selling activity from bidding activity within the
-              profile</li>
-            <li>Adapted content density and controls for smaller screens</li>
+            <li>
+              Kept the browse, listing-detail, and bidding flow short and direct
+            </li>
+            <li>
+              Separated selling activity, active bids, and wins within the profile
+            </li>
+            <li>
+              Reordered content and controls on smaller screens according to task priority
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item">
+        <figure class='case-study-item'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/web-studiobid-wireframe-600.webp"
-            data-src="web-studiobid-wireframe-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="481"
-            loading="lazy"
-            decoding="async"
-            alt="StudioBid profile dashboard wireframe with tabs for active listings, bids, and wins"
+            class='thumb'
+            src='/portfolio/assets/images/web-studiobid-wireframe-600.webp'
+            data-src='web-studiobid-wireframe-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='481'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid profile dashboard wireframe with tabs for active listings, bids, and wins'
           />
-          <figcaption class="case-caption">Profile dashboard wireframe
-            organising selling and bidding activity</figcaption>
+          <figcaption class='case-caption'>
+            Profile dashboard wireframe organising selling and bidding activity
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        StudioBid became a reusable UI system rather than a set of isolated
-        screens. The hierarchy supports quick listing comparisons, more
-        considered bidding decisions, and predictable account management across
-        desktop and mobile. The project strengthened my ability to design for
-        changing product states before those states are implemented in code.
+        The final design supports browsing, bidding, selling, and account management through one
+        consistent interface. Working through the auction states before development helped expose
+        conditions that a static happy-path design would miss: expired listings, insufficient
+        credits, ownership, authentication, and bids that are no longer high enough. The project
+        taught me to consider the whole interaction: what users see before they do something, what
+        happens while it is being processed, and whether the result is clear afterwards.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'><use href='#i-arrow-left' /></svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section>
       <section
-  id="case-petart-logotype"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Pet Art With Heart — Logo Design | Katja Turnsek"
-  data-description="Graphic design case study for a hand-drawn pet portrait identity, developed from pencil sketch into a warm, flexible logo suite."
-  data-case="petart"
-  aria-labelledby="case-petart-logotype-title"
+  id='case-petart-logotype'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Pet Art With Heart — Logo Design | Katja Turnsek'
+  data-description='Graphic design case study for a hand-drawn pet portrait identity, developed from an original pencil sketch into a warm and flexible logo system.'
+  data-case='petart'
+  aria-labelledby='case-petart-logotype-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Graphic Design</p>
-        <h1 id="case-petart-logotype-title">Pet Art With Heart</h1>
-        <p class="case-subtitle">A warm, hand-drawn identity combining pet
-          portraiture, fine art, and emotional connection.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Graphic Design</p>
+        <h1 id='case-petart-logotype-title'>Pet Art With Heart</h1>
+        <p class='case-subtitle'>
+          A hand-drawn identity that brings together pet portraiture, fine art, and the emotional
+          connection people have with their animals.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>Brand design and illustration</dd>
@@ -3254,155 +3354,160 @@
           </div>
           <div>
             <dt>Outcome</dt>
-            <dd>Applied brand identity</dd>
+            <dd>Flexible brand identity</dd>
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="petart-logotype"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='petart-logotype'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="Pet Art With Heart sections"
-          data-auto="switcher"
-          data-case="petart"
+          class='project-switcher'
+          aria-label='Pet Art With Heart sections'
+          data-auto='switcher'
+          data-case='petart'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        The identity needed to express the care behind commissioned pet
-        portraits while still feeling established and professional. I wanted one
-        distinctive symbol that could connect pets, painting, and the word
-        “heart,” then work consistently across the website, social profiles, and
-        supporting brand material.
+        Pet Art With Heart is my own pet portrait business, so the identity needed to feel personal
+        while still looking established and professional. I wanted one recognisable symbol that
+        could connect pets, art, and the meaning behind the word “heart.” It also needed to work
+        across the website, social media, profile images, and printed material without losing its
+        character.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Combining a dog, a cat, a heart, and an artist's palette could
-            easily become too literal or detailed. The main challenge was
-            reducing those ideas into a soft, memorable silhouette that remains
-            readable in small and monochrome applications.
+            The idea included several visual elements: a dog, a cat, a heart, and an artist's
+            palette. Combining all of them too literally would have made the logo complicated and
+            difficult to recognise at a smaller size. The main challenge was finding a simple form
+            that communicated the idea without feeling like a collection of separate symbols.
           </p>
           <ul>
-            <li>Communicate both pet companionship and artistic craft</li>
-            <li>Feel emotional without becoming overly playful</li>
-            <li>Preserve the hand-drawn character during vector refinement</li>
+            <li>
+              Connect pet companionship and artistic work within one symbol
+            </li>
+            <li>
+              Create something emotional without making it overly playful
+            </li>
+            <li>
+              Keep the character of the original drawing during vector refinement
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/logo-sketch-petart-900.webp"
-            data-src="logo-sketch-petart-900.webp"
-            data-path="assets/images"
-            width="900"
-            height="597"
-            loading="lazy"
-            decoding="async"
-            alt="Pet Art With Heart pencil sketch beside the refined vector symbol of a dog and cat forming a heart and artist palette"
+            class='thumb'
+            src='/portfolio/assets/images/logo-sketch-petart-900.webp'
+            data-src='logo-sketch-petart-900.webp'
+            data-path='assets/images'
+            width='900'
+            height='597'
+            loading='lazy'
+            decoding='async'
+            alt='Pet Art With Heart pencil sketch beside the refined vector symbol of a dog and cat forming a heart and artist palette'
           />
-          <figcaption class="case-caption">From pencil sketch to simplified
-            vector symbol</figcaption>
+          <figcaption class='case-caption'>
+            The original pencil sketch beside the simplified vector symbol
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used the animals' curved silhouettes and shared negative space to
-              form a heart rather than adding a separate heart shape
+              I used the curved silhouettes of the dog and cat to form a heart through their shared
+              negative space instead of adding a separate heart shape.
             </li>
             <li>
-              Integrated palette holes into the cat form so the art reference is
-              present without needing another standalone symbol
+              The palette holes are integrated into the cat's body. This keeps the reference to
+              painting visible without adding another standalone object.
             </li>
             <li>
-              Paired the organic icon with a classic serif wordmark to balance
-              warmth with trust and longevity
+              I paired the organic symbol with a classic serif wordmark to balance the warmth of the
+              illustration with a more established and trustworthy feeling.
             </li>
             <li>
-              Prepared horizontal, vertical, icon-only, black-and-white, and
-              reversed variations for flexible use across media
+              I created horizontal, vertical, icon-only, monochrome, and reversed versions so the
+              identity could adapt to different formats and backgrounds.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-petartlogosuite-600.webp"
-            data-src="design-petartlogosuite-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="423"
-            loading="lazy"
-            decoding="async"
-            alt="Pet Art With Heart logo suite showing primary, secondary, icon, vertical, monochrome, and reversed variations"
+            class='thumb'
+            src='/portfolio/assets/images/design-petartlogosuite-600.webp'
+            data-src='design-petartlogosuite-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='423'
+            loading='lazy'
+            decoding='async'
+            alt='Pet Art With Heart logo suite showing primary, secondary, icon, vertical, monochrome, and reversed variations'
           />
-          <figcaption class="case-caption">Logo suite prepared for web, social,
-            and monochrome use</figcaption>
+          <figcaption class='case-caption'>
+            Logo variations prepared for websites, social media, and monochrome use
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The final identity connects my fine-art background with a practical
-        brand system. Its recognisable icon gives the website and commission
-        journey a consistent first impression, while the lockups make it
-        adaptable enough for everything from a small profile image to a wider
-        page header. The project shows how an expressive hand sketch can retain
-        its personality after careful digital simplification.
+        The finished identity connects my fine-art work with a practical brand system. The icon is
+        detailed enough to feel personal but simple enough to remain recognisable as a small profile
+        image. The different lockups also give me flexibility when adding the logo to new formats.
+        This project showed me how an expressive pencil sketch can keep its original personality
+        after being simplified and prepared for real-world use.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section> <section
-  id="case-portfolio-logotype"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: KT Portfolio — Logo Design | Katja Turnsek"
-  data-description="Graphic design case study for a hand-drawn KT mark refined into a fluid, scalable identity for digital and print applications."
-  data-case="portfolio"
-  aria-labelledby="case-portfolio-logotype-title"
+  id='case-portfolio-logotype'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: KT Portfolio — Logo Design | Katja Turnsek'
+  data-description='Graphic design case study for a hand-drawn KT mark refined into a fluid, flexible identity for digital and print use.'
+  data-case='portfolio'
+  aria-labelledby='case-portfolio-logotype-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Graphic Design</p>
-        <h1 id="case-portfolio-logotype-title">KT Portfolio</h1>
-        <p class="case-subtitle">A hand-drawn initials mark shaped into a
-          distinctive personal identity for design and development work.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Graphic Design</p>
+        <h1 id='case-portfolio-logotype-title'>KT Portfolio</h1>
+        <p class='case-subtitle'>
+          A hand-drawn initials mark developed into a personal identity for my design and front-end
+          work.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>Identity and logo design</dd>
@@ -3421,153 +3526,157 @@
           </div>
           <div>
             <dt>Outcome</dt>
-            <dd>Responsive personal logo suite</dd>
+            <dd>Flexible personal logo suite</dd>
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="portfolio-logotype"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='portfolio-logotype'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="KT Portfolio sections"
-          data-auto="switcher"
-          data-case="portfolio"
+          class='project-switcher'
+          aria-label='KT Portfolio sections'
+          data-auto='switcher'
+          data-case='portfolio'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        My personal identity needed to feel recognisable and handmade while
-        fitting a portfolio built around fluid movement, animated blobs, and
-        wave lines. The mark had to contain my initials, work as a compact
-        navigation symbol, and remain useful in wider lockups and monochrome
-        applications.
+        I wanted my personal identity to bring together the two sides of my work: visual design and
+        front-end development. It needed to feel creative and handmade while fitting naturally into
+        a portfolio built around organic shapes, movement, and illustrated details. The mark also
+        had to work as a small navigation logo as well as part of wider layouts.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Organic marks can quickly lose clarity when scaled down. The central
-            challenge was preserving the irregular ink-like silhouette while
-            keeping both the K and T readable and the negative space balanced.
+            Combining K and T into one irregular shape made the mark distinctive, but it also
+            created a risk that the initials would disappear when the logo was reduced. The main
+            challenge was keeping the character of the original sketch while making the silhouette
+            and negative space clear enough for practical use.
           </p>
           <ul>
-            <li>Combine two initials without creating a conventional monogram</li>
-            <li>Suggest movement while retaining a stable silhouette</li>
-            <li>Support icon, horizontal, vertical, and reversed applications</li>
+            <li>Combine both initials without creating a formal monogram</li>
+            <li>
+              Keep the hand-drawn movement while improving clarity and balance
+            </li>
+            <li>
+              Make the identity work as an icon, wordmark, and reversed logo
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/logo-ktportfolio-600.webp"
-            data-src="logo-ktportfolio-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="461"
-            loading="lazy"
-            decoding="async"
-            alt="Pencil explorations of a fluid KT monogram beside the refined black vector logo"
+            class='thumb'
+            src='/portfolio/assets/images/logo-ktportfolio-600.webp'
+            data-src='logo-ktportfolio-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='461'
+            loading='lazy'
+            decoding='async'
+            alt='Pencil explorations of a fluid KT monogram beside the refined black vector logo'
           />
-          <figcaption class="case-caption">Hand-drawn exploration refined into
-            the final KT symbol</figcaption>
+          <figcaption class='case-caption'>
+            Early pencil ideas beside the refined KT symbol
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Started with loose pencil sketches to explore the initials as one
-              connected shape before introducing vector precision
+              I began with loose pencil sketches so I could explore how the initials might flow into
+              one shape before making the design more precise.
             </li>
             <li>
-              Used an ink-splash silhouette to connect the mark with both my art
-              background and the portfolio's movement-based visual language
+              The ink-like silhouette connects the identity to my background in traditional art and
+              to the organic visual language of the portfolio.
             </li>
             <li>
-              Simplified the outer contour and internal spacing so the K and T
-              remain distinguishable at navigation and icon sizes
+              I simplified the outer contour and adjusted the internal spaces so the K and T remain
+              visible when the mark is used at navigation and icon sizes.
             </li>
             <li>
-              Built icon-only, horizontal, vertical, text-supported, monochrome,
-              and reversed variations for different contexts
+              I created icon-only, horizontal, vertical, monochrome, outline, and reversed versions
+              for different placements and backgrounds.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-portfoliologosuite-600.webp"
-            data-src="design-portfoliologosuite-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="424"
-            loading="lazy"
-            decoding="async"
-            alt="KT Portfolio logo suite showing primary, secondary, icon, vertical, outline, monochrome, and reversed variations"
+            class='thumb'
+            src='/portfolio/assets/images/design-portfoliologosuite-600.webp'
+            data-src='design-portfoliologosuite-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='424'
+            loading='lazy'
+            decoding='async'
+            alt='KT Portfolio logo suite showing primary, secondary, icon, vertical, outline, monochrome, and reversed variations'
           />
-          <figcaption class="case-caption">Logo suite for compact navigation,
-            wide layouts, and contrasting backgrounds</figcaption>
+          <figcaption class='case-caption'>
+            Logo variations for navigation, wider layouts, and contrasting backgrounds
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The final mark gives the portfolio an ownable signature without relying
-        on a generic developer symbol. It preserves the energy of the original
-        sketches while the responsive lockups make it practical across web and
-        print. The process reinforced the value of testing expressive forms at
-        their smallest intended size before finalising the wider identity.
+        The finished mark gives the portfolio a personal signature without using a typical design or
+        coding symbol. It keeps the movement and irregular character of the original sketches while
+        the different variations make it practical across the website and other formats. Designing
+        it for my own portfolio also reminded me that an expressive logo still needs to be tested in
+        the small, everyday places where people will see it most often.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section> <section
-  id="case-agilitybandits-logotype"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Agility Bandits — Logo &amp; Graphic System | Katja Turnsek"
-  data-description="Graphic design case study for a character-led dog agility identity, combining a custom logo with motion-inspired obstacle graphics and web applications."
-  data-case="agilitybandits"
-  aria-labelledby="case-agilitybandits-logotype-title"
+  id='case-agilitybandits-logotype'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Agility Bandits — Logo &amp; Graphic System | Katja Turnsek'
+  data-description='Graphic design case study for a character-led dog agility identity, combining a custom logo with motion-inspired obstacle graphics and web applications.'
+  data-case='agilitybandits'
+  aria-labelledby='case-agilitybandits-logotype-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Graphic Design</p>
-        <h1 id="case-agilitybandits-logotype-title">Agility Bandits</h1>
-        <p class="case-subtitle">A playful, character-led logo system supported
-          by motion-inspired agility graphics.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Graphic Design</p>
+        <h1 id='case-agilitybandits-logotype-title'>Agility Bandits</h1>
+        <p class='case-subtitle'>
+          A playful identity built around a real agility dog, with supporting graphics inspired by
+          speed, movement, and the chaos of the sport.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>Brand design and vector illustration</dd>
@@ -3590,185 +3699,192 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="agilitybandits-logotype"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='agilitybandits-logotype'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="Agility Bandits sections"
-          data-auto="switcher"
-          data-case="agilitybandits"
+          class='project-switcher'
+          aria-label='Agility Bandits sections'
+          data-auto='switcher'
+          data-case='agilitybandits'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Agility Bandits began as an agility-focused social identity and later
-        expanded into a complete blog brand. The visual system needed to keep
-        the personality of Roi, my red-and-white Border Collie, while expressing
-        the speed, unpredictability, and humour of dog agility across profile
-        images, navigation, page graphics, and larger layouts.
+        Agility Bandits began as an identity for sharing dog-agility content and later developed
+        into a complete blog brand. I wanted the design to keep the personality of Roi, my
+        red-and-white Border Collie, while also expressing the speed, humour, and unpredictability
+        of the sport. The identity needed to work across profile images, navigation, page graphics,
+        and larger website layouts.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The identity had to feel playful and personal without losing
-            legibility. A detailed dog portrait, a bandit theme, and a bold
-            display wordmark all needed to remain balanced when the mark was
-            reduced for social or navigation use.
+            The logo combined several strong elements: a detailed dog portrait, a bandit theme, and
+            a bold display wordmark. The main challenge was bringing them together without making
+            the identity difficult to recognise when it appeared at a smaller size.
           </p>
           <ul>
             <li>Capture Roi's recognisable colouring and expression</li>
-            <li>Make the bandit concept immediate without overpowering the dog</li>
-            <li>Create energy that could extend beyond the primary logo</li>
+            <li>
+              Make the bandit idea clear without letting it overpower the dog
+            </li>
+            <li>
+              Create a visual style that could extend beyond the primary logo
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/logo-agilitybandits-600.webp"
-            data-src="logo-agilitybandits-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="473"
-            loading="lazy"
-            decoding="async"
-            alt="Agility Bandits logo with a red-and-white Border Collie wearing a bandit mask above a Western-style wordmark"
+            class='thumb'
+            src='/portfolio/assets/images/logo-agilitybandits-600.webp'
+            data-src='logo-agilitybandits-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='473'
+            loading='lazy'
+            decoding='async'
+            alt='Agility Bandits logo with a red-and-white Border Collie wearing a bandit mask above a Western-style wordmark'
           />
-          <figcaption class="case-caption">Character-led primary logo featuring
-            Roi and the bandit wordmark</figcaption>
+          <figcaption class='case-caption'>
+            Character-led primary logo featuring Roi and the bandit wordmark
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Vectorised Roi with simplified fur shapes and natural colours so
-              the character remains personal and readable
+              I simplified Roi's fur into clear vector shapes while keeping his natural colours and
+              the details that make him recognisable.
             </li>
             <li>
-              Added a clear eye mask and Western-style display type to connect
-              the dog portrait with the “Bandits” name
+              The eye mask and Western-inspired lettering connect the dog portrait with the
+              “Bandits” name without introducing another separate symbol.
             </li>
             <li>
-              Built full, horizontal, and icon-focused options so the identity
-              can move between social, web, and print placements
+              I created full, horizontal, and icon-focused versions so the identity could adapt to
+              social media, web layouts, and printed material.
             </li>
             <li>
-              Limited the wider brand palette to greens and dark neutrals, using
-              Roi's fur as the main contrasting colour
+              Greens and dark neutrals form the supporting palette, allowing Roi's red-and-white
+              colouring to provide the main contrast.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-agilitybandits-elements-600.webp"
-            data-src="design-agilitybandits-elements-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="441"
-            loading="lazy"
-            decoding="async"
-            alt="Agility Bandits vector graphics showing speed lines and falling dog agility obstacles"
+            class='thumb'
+            src='/portfolio/assets/images/design-agilitybandits-elements-600.webp'
+            data-src='design-agilitybandits-elements-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='441'
+            loading='lazy'
+            decoding='async'
+            alt='Agility Bandits vector graphics showing speed lines and falling dog agility obstacles'
           />
-          <figcaption class="case-caption">Motion-inspired obstacle graphics
-            communicate speed and chaotic fun</figcaption>
+          <figcaption class='case-caption'>
+            Motion-inspired obstacle graphics communicate speed and chaotic fun
+          </figcaption>
         </figure>
 
-        <article class="case-study-block">
-          <h2>From mark to system</h2>
+        <article class='case-study-block'>
+          <h2>From logo to visual system</h2>
           <p>
-            Speed lines and tipping obstacles extend the brand's personality
-            beyond the logo. Repeating the same angles, stroke weight, and green
-            accents creates a graphic language that can frame content without
-            competing with it.
+            The identity needed more than a logo to support a complete website. I created speed
+            lines and tipping agility obstacles that could add energy to a layout without repeating
+            the main character everywhere. Using the same angles, line weight, and green accents
+            keeps the different elements connected.
           </p>
           <ul>
-            <li>Used directional lines to suggest acceleration</li>
-            <li>Turned agility equipment into recognisable decorative assets</li>
-            <li>Applied the elements across header, footer, and page layouts</li>
+            <li>Used directional lines to suggest speed and acceleration</li>
+            <li>
+              Turned familiar agility equipment into playful decorative graphics
+            </li>
+            <li>
+              Applied the elements across the header, footer, and page layouts
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item">
+        <figure class='case-study-item'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/graphics-agilitybandits-elements-600.webp"
-            data-src="graphics-agilitybandits-elements-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="453"
-            loading="lazy"
-            decoding="async"
-            alt="Agility Bandits logo and obstacle graphics applied to the website header and footer"
+            class='thumb'
+            src='/portfolio/assets/images/graphics-agilitybandits-elements-600.webp'
+            data-src='graphics-agilitybandits-elements-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='453'
+            loading='lazy'
+            decoding='async'
+            alt='Agility Bandits logo and obstacle graphics applied to the website header and footer'
           />
-          <figcaption class="case-caption">Logo and supporting graphics applied
-            across the website</figcaption>
+          <figcaption class='case-caption'>
+            Logo and supporting graphics applied across the website
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The finished system gives Agility Bandits a distinct voice that works
-        from a compact social icon to a full editorial layout. The portrait
-        makes the brand personal, while the motion-inspired elements create
-        enough variety to support the website without relying on the logo
-        everywhere. This project strengthened how I build a visual identity from
-        one central character and extend it into a flexible set of supporting
-        assets.
+        The finished system gives Agility Bandits a recognisable personality that works from a small
+        social icon to a complete website layout. Roi makes the brand personal, while the supporting
+        graphics provide enough variation to use the identity without placing the full logo
+        everywhere. This project helped me understand how one central character can become the
+        starting point for a wider and more flexible visual system.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section>
       <section
-  id="case-semester-project-1-logotype"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Gemenskapet Science Museum — Logo Design | Katja Turnsek"
-  data-description="Graphic design case study for a curiosity-led museum identity balancing playful science symbols with clear, scalable typography."
-  data-case="semester-project-1"
-  aria-labelledby="case-semester-project-1-logotype-title"
+  id='case-semester-project-1-logotype'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Gemenskapet Science Museum — Logo Design | Katja Turnsek'
+  data-description='Graphic design case study for a playful science museum identity created for older children, young teenagers, families, and schools.'
+  data-case='semester-project-1'
+  aria-labelledby='case-semester-project-1-logotype-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Graphic Design</p>
-        <h1 id="case-semester-project-1-logotype-title">Gemenskapet Science
-          Museum</h1>
-        <p class="case-subtitle">A curiosity-led museum identity balancing
-          playful science references with clarity and credibility.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Graphic Design</p>
+        <h1 id='case-semester-project-1-logotype-title'>
+          Gemenskapet Science Museum
+        </h1>
+        <p class='case-subtitle'>
+          A curiosity-led museum identity that makes science feel approachable while maintaining the
+          credibility of an educational organisation.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>Brand identity and logo design</dd>
@@ -3779,7 +3895,7 @@
           </div>
           <div>
             <dt>Audience</dt>
-            <dd>Older children and young teens</dd>
+            <dd>Older children and young teenagers</dd>
           </div>
           <div>
             <dt>Tools</dt>
@@ -3791,143 +3907,150 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="semester-project-1-logotype"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='semester-project-1-logotype'></div>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Gemenskapet Science Museum needed an identity that encouraged young
-        visitors to explore while still feeling credible to families and
-        schools. The mark had to communicate science and discovery quickly,
-        remain legible across web and print, and adapt from a full bilingual
-        lockup to a compact standalone icon.
+        Gemenskapet Science Museum needed an identity that encouraged young visitors to explore
+        while still feeling trustworthy to families and schools. The logo had to communicate science
+        and discovery quickly, remain legible across web and print, and adapt from a complete
+        bilingual lockup to a small standalone icon.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            The identity needed to combine several fields of science without
-            becoming visually crowded. It also had to balance a friendly,
-            youthful tone with the trust expected from an educational museum.
+            The museum covered several areas of science, so using only one subject as the central
+            symbol would have felt too narrow. Combining too many references, however, could easily
+            make the logo crowded and difficult to recognise. The main challenge was creating
+            something playful enough for a younger audience without losing the clarity expected from
+            an educational institution.
           </p>
           <ul>
-            <li>Represent discovery without relying on a single science subject</li>
-            <li>Keep multiple symbols clear when the mark is reduced</li>
-            <li>Balance a playful icon and tagline with a grounded wordmark</li>
+            <li>
+              Represent curiosity and discovery rather than one scientific field
+            </li>
+            <li>
+              Keep several small symbols understandable when the logo is reduced
+            </li>
+            <li>
+              Balance a colourful, youthful icon with a clear and credible wordmark
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/logosuite-gemenskapet-science-museum-900.webp"
-            data-src="logosuite-gemenskapet-science-museum-900.webp"
-            data-path="assets/images"
-            width="900"
-            height="638"
-            loading="lazy"
-            decoding="async"
-            alt="Gemenskapet Science Museum logo suite showing primary, secondary, icon, vertical, monochrome, and reversed versions"
+            class='thumb'
+            src='/portfolio/assets/images/logosuite-gemenskapet-science-museum-900.webp'
+            data-src='logosuite-gemenskapet-science-museum-900.webp'
+            data-path='assets/images'
+            width='900'
+            height='638'
+            loading='lazy'
+            decoding='async'
+            alt='Gemenskapet Science Museum logo suite showing primary, secondary, icon, vertical, monochrome, and reversed versions'
           />
-          <figcaption class="case-caption">Flexible logo suite for wide,
-            compact, monochrome, and reversed applications</figcaption>
+          <figcaption class='case-caption'>
+            Logo variations created for wide, compact, monochrome, and reversed applications
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Used a magnifying glass as the central metaphor for investigation,
-              curiosity, and learning
+              I used a magnifying glass as the main symbol because it connects observation,
+              investigation, and the curiosity behind scientific learning.
             </li>
             <li>
-              Divided the lens into coloured fields with molecule, atom, and
-              network symbols to represent different scientific disciplines
+              I divided the lens into coloured sections containing molecule, atom, and network
+              symbols to suggest several areas of science without choosing only one.
             </li>
             <li>
-              Paired rounded icon geometry with a clear sans-serif wordmark to
-              keep the identity approachable but credible
+              The rounded icon and bright colours make the identity approachable, while the clean
+              sans-serif wordmark gives it a more stable and credible foundation.
             </li>
             <li>
-              Added the handwritten Swedish tagline “utforska tillsammans :)” as
-              a warmer layer that can be removed in smaller applications
+              I added the handwritten Swedish tagline “utforska tillsammans :)” as a warmer, more
+              informal layer that can be removed when space is limited.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/icon-gemenskapet-science-museum-600.webp"
-            data-src="icon-gemenskapet-science-museum-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="435"
-            loading="lazy"
-            decoding="async"
-            alt="Standalone Gemenskapet Science Museum magnifying-glass icon with science symbols and Swedish tagline"
+            class='thumb'
+            src='/portfolio/assets/images/icon-gemenskapet-science-museum-600.webp'
+            data-src='icon-gemenskapet-science-museum-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='435'
+            loading='lazy'
+            decoding='async'
+            alt='Standalone Gemenskapet Science Museum magnifying-glass icon with science symbols and Swedish tagline'
           />
-          <figcaption class="case-caption">Standalone icon for compact and
-            recognisable applications</figcaption>
+          <figcaption class='case-caption'>
+            Standalone magnifying-glass icon for smaller and more compact placements
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The final system feels youthful without losing educational credibility.
-        Its full lockups provide context for first-time visitors, while the
-        standalone magnifying-glass symbol remains recognisable in compact
-        placements. Creating one-colour and reversed variations alongside the
-        primary version made scalability part of the design process rather than
-        a later adjustment.
+        The completed identity feels youthful and inviting without losing its educational character.
+        The full logo introduces the museum clearly, while the magnifying-glass symbol can represent
+        it in smaller spaces. Creating horizontal, vertical, monochrome, and reversed versions from
+        the beginning also made the identity practical for both digital and printed applications.
+        This project helped me understand how several visual ideas can be combined into one flexible
+        symbol without making it unnecessarily complicated.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section> <section
-  id="case-studiobid-logotype"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: StudioBid — Brand &amp; Logotype | Katja Turnsek"
-  data-description="Graphic design case study for a clear, product-ready auction identity with flexible logo variations and UI applications."
-  data-case="studiobid"
-  aria-labelledby="case-studiobid-logotype-title"
+  id='case-studiobid-logotype'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: StudioBid — Brand &amp; Logotype | Katja Turnsek'
+  data-description='Graphic design case study for StudioBid, focused on a recognisable auction identity and flexible logo system designed for digital product use.'
+  data-case='studiobid'
+  aria-labelledby='case-studiobid-logotype-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Graphic Design</p>
-        <h1 id="case-studiobid-logotype-title">StudioBid</h1>
-        <p class="case-subtitle">A direct, UI-ready auction identity designed
-          for clarity, recognition, and flexible product use.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Graphic Design</p>
+        <h1 id='case-studiobid-logotype-title'>StudioBid</h1>
+        <p class='case-subtitle'>
+          A direct auction identity designed to remain clear and recognisable throughout the digital
+          product.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>Brand identity and logo design</dd>
@@ -3950,150 +4073,153 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="studiobid-logotype"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='studiobid-logotype'></div>
         </div>
 
         <nav
-          class="project-switcher"
-          aria-label="StudioBid sections"
-          data-auto="switcher"
-          data-case="studiobid"
+          class='project-switcher'
+          aria-label='StudioBid sections'
+          data-auto='switcher'
+          data-case='studiobid'
         ></nav>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        StudioBid needed a modern identity that communicated “auction” quickly
-        and felt trustworthy inside a digital product. The logo had to work in a
-        narrow navigation area, scale down to an icon, and stay strong enough
-        for presentations and promotional layouts without becoming visually
-        heavy.
+        StudioBid needed an identity that communicated its purpose as an online auction platform
+        without requiring an explanation. The logo had to fit naturally into the interface, remain
+        recognisable as a small icon, and work across both light and dark backgrounds. It also
+        needed enough personality to distinguish the platform from more traditional auction brands.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            A gavel is immediately understood, but it is also a familiar auction
-            symbol. The challenge was to keep that useful recognition while
-            giving StudioBid its own visual rhythm and ensuring the mark
-            remained legible at product-interface sizes.
+            A gavel is an obvious symbol for an auction, which makes it useful but also very
+            familiar. The main challenge was giving this symbol enough character to feel connected
+            to StudioBid while keeping it simple enough for navigation, favicons, and other small
+            interface placements.
           </p>
           <ul>
-            <li>Communicate the platform purpose without explanation</li>
-            <li>Differentiate a familiar symbol through proportion and colour</li>
-            <li>Create variations for small, wide, light, and dark placements</li>
+            <li>Make the platform's purpose immediately recognisable</li>
+            <li>
+              Give a familiar auction symbol its own colour and visual character
+            </li>
+            <li>
+              Create variations for narrow, small, light, and dark placements
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-studiobid-logosuite-600.webp"
-            data-src="design-studiobid-logosuite-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="391"
-            loading="lazy"
-            decoding="async"
-            alt="StudioBid logo suite showing primary and secondary wordmarks, gavel icons, monochrome versions, and reversed applications"
+            class='thumb'
+            src='/portfolio/assets/images/design-studiobid-logosuite-600.webp'
+            data-src='design-studiobid-logosuite-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='391'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid logo suite showing primary and secondary wordmarks, gavel icons, monochrome versions, and reversed applications'
           />
-          <figcaption class="case-caption">Logo suite built for navigation,
-            icons, and contrasting backgrounds</figcaption>
+          <figcaption class='case-caption'>
+            Logo variations created for navigation, icons, and contrasting backgrounds
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Reduced the gavel to a bold silhouette so it remains recognisable
-              when used alone at icon and favicon sizes
+              I reduced the gavel to a bold silhouette so it remains easy to recognise when used
+              alone at icon and favicon sizes.
             </li>
             <li>
-              Highlighted “Bid” in vivid pink to emphasise the platform's core
-              action and give the wordmark a memorable endpoint
+              I highlighted “Bid” in vivid pink to draw attention to the platform's main action and
+              give the wordmark a memorable point of contrast.
             </li>
             <li>
-              Used a heavy, geometric wordmark to balance the symbol and create
-              a confident product identity
+              The heavy geometric lettering balances the symbol and gives the identity a confident,
+              contemporary character.
             </li>
             <li>
-              Prepared primary, secondary, icon, monochrome, and reversed
-              versions before testing the mark within the actual interface
+              I prepared primary, secondary, icon-only, monochrome, and reversed versions, then
+              tested them inside the actual interface rather than only presenting them as separate
+              graphics.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/design-studiobid-600.webp"
-            data-src="design-studiobid-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="434"
-            loading="lazy"
-            decoding="async"
-            alt="StudioBid gavel icon and wordmark displayed at large size on a white background"
+            class='thumb'
+            src='/portfolio/assets/images/design-studiobid-600.webp'
+            data-src='design-studiobid-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='434'
+            loading='lazy'
+            decoding='async'
+            alt='StudioBid gavel icon and wordmark displayed at large size on a white background'
           />
-          <figcaption class="case-caption">Primary mark combining the gavel
-            silhouette with the action-led wordmark</figcaption>
+          <figcaption class='case-caption'>
+            Primary mark combining the simplified gavel with the action-led wordmark
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The resulting identity is deliberately direct: users can recognise the
-        auction context quickly, while the pink accent and compact lockups give
-        StudioBid a consistent product presence. Designing the logo alongside
-        the interface helped me evaluate it as a working UI component rather
-        than only as a presentation graphic.
+        The finished identity is intentionally direct. The gavel communicates the auction concept
+        quickly, while the pink accent and compact logo variations give StudioBid a consistent
+        presence across the product. Designing the identity alongside the interface helped me treat
+        the logo as a working part of the user experience rather than only as a graphic for
+        presentation.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
 </section> <section
-  id="case-heartasylum-logotype"
-  class="fullscreen-section case-study-section"
-  data-title="Case Study: Heart Asylum — Logo Suite &amp; Cover Art | Katja Turnsek"
-  data-description="Graphic design case study for Heart Asylum, combining a dark-first logo system with atmospheric single-cover artwork for music and social platforms."
-  data-case="heartasylum"
-  aria-labelledby="case-heartasylum-logotype-title"
+  id='case-heartasylum-logotype'
+  class='fullscreen-section case-study-section'
+  data-title='Case Study: Heart Asylum — Logo Suite &amp; Cover Art | Katja Turnsek'
+  data-description='Graphic design case study for Heart Asylum, focused on a flexible logo system and atmospheric cover artwork for music and social platforms.'
+  data-case='heartasylum'
+  aria-labelledby='case-heartasylum-logotype-title'
 >
-  <div class="rows">
-    <div class="row">
-      <div class="case-study-header">
-        <p class="case-eyebrow">Graphic Design</p>
-        <h1 id="case-heartasylum-logotype-title">Heart Asylum</h1>
-        <p class="case-subtitle">A dark, flexible logo suite and atmospheric
-          release artwork for an alternative rock duo.</p>
+  <div class='rows'>
+    <div class='row'>
+      <div class='case-study-header'>
+        <p class='case-eyebrow'>Graphic Design</p>
+        <h1 id='case-heartasylum-logotype-title'>Heart Asylum</h1>
+        <p class='case-subtitle'>
+          A dark logo suite and atmospheric release artwork created for an alternative rock duo.
+        </p>
 
-        <dl class="case-summary" aria-label="Project summary">
+        <dl class='case-summary' aria-label='Project summary'>
           <div>
             <dt>Role</dt>
             <dd>Logo design and cover artwork</dd>
@@ -4116,124 +4242,126 @@
           </div>
         </dl>
 
-        <div class="tech-demo-wrapper case-demo-wrapper">
-          <div
-            class="demo-links"
-            data-auto="demo"
-            data-case="heartasylum-logotype"
-          ></div>
+        <div class='tech-demo-wrapper case-demo-wrapper'>
+          <div class='demo-links' data-auto='demo' data-case='heartasylum-logotype'></div>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <h2 class="case-section-heading">The brief</h2>
+    <div class='row'>
+      <h2 class='case-section-heading'>The brief</h2>
       <p>
-        Heart Asylum needed a recognisable identity that matched the duo's dark,
-        alternative sound and could move easily between avatars, streaming
-        platforms, social graphics, posters, and release artwork. The single
-        cover needed to extend the same atmosphere without making the logo or
-        typography compete with the central image.
+        Heart Asylum needed a recognisable identity that matched the dark, alternative character of
+        the duo's music. It had to work across several formats, including streaming platforms,
+        social graphics, posters, and release artwork. The single cover also needed to feel
+        connected to the identity while having its own composition and atmosphere.
       </p>
     </div>
 
-    <div class="row">
-      <div class="case-study-grid">
-        <article class="case-study-block case-study-block--challenge">
+    <div class='row'>
+      <div class='case-study-grid'>
+        <article class='case-study-block case-study-block--challenge'>
           <h2>Challenge</h2>
           <p>
-            Music branding has to create mood immediately, but it also has to
-            remain identifiable at the small sizes used by streaming and social
-            platforms. The system therefore needed both expressive detail and a
-            strong, simple silhouette.
+            Music branding needs to communicate a mood quickly, but many people first see it as a
+            small image on a streaming or social platform. The main challenge was creating something
+            expressive and detailed that would still have a clear silhouette and remain recognisable
+            when reduced in size.
           </p>
           <ul>
-            <li>Balance a dramatic visual tone with clarity at avatar size</li>
-            <li>Support icon, wordmark, and full-lockup applications</li>
-            <li>Connect the identity and cover artwork without repeating the
-              same composition</li>
+            <li>
+              Balance a dramatic visual style with clarity at smaller sizes
+            </li>
+            <li>
+              Create a system that could work as an icon, wordmark, or complete logo
+            </li>
+            <li>
+              Connect the logo and cover artwork without using the same composition twice
+            </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--explore">
+        <figure class='case-study-item case-study-media--explore'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/logo-heartasylum-logosuite-600.webp"
-            data-src="logo-heartasylum-logosuite-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="389"
-            loading="lazy"
-            decoding="async"
-            alt="Heart Asylum logo suite showing the primary lockup, heart icon, wordmark, secondary lockup, and reversed version"
+            class='thumb'
+            src='/portfolio/assets/images/logo-heartasylum-logosuite-600.webp'
+            data-src='logo-heartasylum-logosuite-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='389'
+            loading='lazy'
+            decoding='async'
+            alt='Heart Asylum logo suite showing the primary lockup, heart icon, wordmark, secondary lockup, and reversed version'
           />
-          <figcaption class="case-caption">Primary, secondary, icon, wordmark,
-            and reversed logo variations</figcaption>
+          <figcaption class='case-caption'>
+            Primary, secondary, icon, wordmark, and reversed logo variations
+          </figcaption>
         </figure>
 
-        <article class="case-study-block case-study-block--decisions">
+        <article class='case-study-block case-study-block--decisions'>
           <h2>Key decisions</h2>
           <ul>
             <li>
-              Built the emblem around a heart with sharp, architectural linework
-              to combine emotional meaning with a harder musical edge
+              I built the emblem around a heart with sharp, architectural linework. This connects
+              the emotional meaning of the name with the harder edge of the music.
             </li>
             <li>
-              Created icon, wordmark, primary, secondary, and reversed versions
-              so the identity can adapt without being redrawn for each format
+              I created primary, secondary, icon, wordmark, and reversed versions so the identity
+              could adapt to different backgrounds and formats.
             </li>
             <li>
-              Used high-contrast wing linework as the cover's visual hook, with
-              restrained typography and portrait detail supporting the mood
+              For the cover, I used high-contrast wing linework as the main visual element, with
+              restrained typography and portrait detail supporting the atmosphere.
             </li>
             <li>
-              Checked the square composition at reduced size so the wings,
-              title, and band mark retain a clear hierarchy on streaming grids
+              I checked the square artwork at a smaller size to make sure the wings, title, and band
+              mark kept a clear visual hierarchy.
             </li>
           </ul>
         </article>
 
-        <figure class="case-study-item case-study-media--booking">
+        <figure class='case-study-item case-study-media--booking'>
           <img
-            class="thumb"
-            src="/portfolio/assets/images/cover-heartasylum-used-to-believe-600.webp"
-            data-src="cover-heartasylum-used-to-believe-600.webp"
-            data-path="assets/images"
-            width="600"
-            height="600"
-            loading="lazy"
-            decoding="async"
-            alt="Heart Asylum single cover for Used to Believe in Angels, with white wing linework over a dark portrait"
+            class='thumb'
+            src='/portfolio/assets/images/cover-heartasylum-used-to-believe-600.webp'
+            data-src='cover-heartasylum-used-to-believe-600.webp'
+            data-path='assets/images'
+            width='600'
+            height='600'
+            loading='lazy'
+            decoding='async'
+            alt='Heart Asylum single cover for Used to Believe in Angels, with white wing linework over a dark portrait'
           />
-          <figcaption class="case-caption">Used to Believe in Angels — square
-            cover artwork designed for digital release</figcaption>
+          <figcaption class='case-caption'>
+            Used to Believe in Angels — square cover artwork designed for digital release
+          </figcaption>
         </figure>
       </div>
     </div>
 
-    <div class="row case-outcome">
-      <h2 class="case-section-heading">Outcome and reflection</h2>
+    <div class='row case-outcome'>
+      <h2 class='case-section-heading'>Outcome and reflection</h2>
       <p>
-        The result is a cohesive release package rather than a standalone logo:
-        a flexible identity for small digital placements and larger artwork,
-        paired with a cover that carries the same dark tone in a more cinematic
-        way. The project strengthened how I translate a musical atmosphere into
-        practical assets that remain recognisable across formats.
+        The result is a connected set of assets rather than only one logo. The different logo
+        versions provide practical options for small digital placements and larger graphics, while
+        the cover carries the same dark character in a more atmospheric way. This project helped me
+        develop a visual system that communicates the feeling of the music while still working
+        across very different sizes and formats.
       </p>
     </div>
 
-    <div class="back-to-work-container">
+    <div class='back-to-work-container'>
       <a
-        href="/portfolio/#work"
-        class="label-link back-to-work-label"
+        href='/portfolio/#work'
+        class='label-link back-to-work-label'
         data-back
-        data-back-fallback="/portfolio/#work"
-        aria-label="Back to Work"
+        data-back-fallback='/portfolio/#work'
+        aria-label='Back to Work'
       >
-        <svg class="icon icon-18 arrow-icon" aria-hidden="true"><use
-            href="#i-arrow-left"
-          /></svg>
-        <span class="label-text">Back to Work</span>
+        <svg class='icon icon-18 arrow-icon' aria-hidden='true'>
+          <use href='#i-arrow-left' />
+        </svg>
+        <span class='label-text'>Back to Work</span>
       </a>
     </div>
   </div>
