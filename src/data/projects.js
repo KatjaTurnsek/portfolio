@@ -426,7 +426,49 @@ export const projects = [
     order: 110,
   },
 
-  // LOGOTYPES
+  // LOGOTYPES / GRAPHIC DESIGN
+  {
+    group: 'heartasylum',
+    caseId: 'heartasylum-logotype',
+    title: 'Heart Asylum - Logo Suite & Cover Art',
+    stack: 'Adobe Illustrator | Photoshop',
+    desc: 'Logo suite and single cover art.',
+    imgSrc: img('card-heartasylum-logotype-600.webp'),
+    imgAlt: 'Heart Asylum logo suite and cover art thumbnail',
+    category: 'logotype',
+    routeUrl: 'work/heartasylum/logotype',
+    caseUrl: '#case-heartasylum-logotype',
+    demoLinks: [
+      {
+        href: pdf('heart-asylum-logosuite.pdf'),
+        label: 'Get Design Files (PDF)',
+        icon: ICONS.external,
+      },
+    ],
+    order: 210,
+  },
+
+  {
+    group: 'merlins-big-surprise',
+    caseId: 'merlins-big-surprise',
+    title: 'Merlin’s Big Surprise',
+    stack: 'Illustration | Adobe Photoshop',
+    desc: 'A published children’s book developed from pencil sketches to finished digital artwork.',
+    imgSrc: img('book-merlins-cover-hero-600.webp'),
+    imgAlt: 'Published copy of Merlin’s Big Surprise, illustrated by Katja Turnsek',
+    category: 'logotype',
+    routeUrl: 'work/merlins-big-surprise',
+    caseUrl: '#case-merlins-big-surprise',
+    demoLinks: [
+      {
+        href: 'https://www.amazon.com/Merlins-Big-Surprise-English-Kiss/dp/9639183644',
+        label: 'View Book on Amazon',
+        icon: ICONS.external,
+      },
+    ],
+    order: 215,
+  },
+
   {
     group: 'petart',
     caseId: 'petart-logotype',
@@ -446,27 +488,6 @@ export const projects = [
       },
     ],
     order: 220,
-  },
-
-  {
-    group: 'portfolio',
-    caseId: 'portfolio-logotype',
-    title: 'KT Portfolio - Logotype',
-    stack: 'Sketch | Illustrator',
-    desc: 'Fluid initials mark for web and print.',
-    imgSrc: img('card-portfolio-logotype-600.webp'),
-    imgAlt: 'Katja Dev logotype thumbnail',
-    category: 'logotype',
-    routeUrl: 'work/portfolio/logotype',
-    caseUrl: '#case-portfolio-logotype',
-    demoLinks: [
-      {
-        href: pdf('portfolio-logosuite.pdf'),
-        label: 'Get Design Files (PDF)',
-        icon: ICONS.external,
-      },
-    ],
-    order: 250,
   },
 
   {
@@ -491,27 +512,6 @@ export const projects = [
   },
 
   {
-    group: 'semester',
-    caseId: 'semester-project-1-logotype',
-    title: 'Gemenskapet Science Museum - Logotype',
-    stack: 'Adobe Illustrator',
-    desc: 'Magnifying-glass logo for a museum.',
-    imgSrc: img('card-sciencemuseum-logotype-600.webp'),
-    imgAlt: 'Gemenskapet Science Museum Logotype thumbnail',
-    category: 'logotype',
-    routeUrl: 'work/semester-project-1/logotype',
-    caseUrl: '#case-semester-project-1-logotype',
-    demoLinks: [
-      {
-        href: pdf('sciencemuseum-logosuite.pdf'),
-        label: 'Get Design Files (PDF)',
-        icon: ICONS.external,
-      },
-    ],
-    order: 260,
-  },
-
-  {
     group: 'studiobid',
     caseId: 'studiobid-logotype',
     title: 'StudioBid - Brand & Logotype',
@@ -533,24 +533,45 @@ export const projects = [
   },
 
   {
-    group: 'heartasylum',
-    caseId: 'heartasylum-logotype',
-    title: 'Heart Asylum - Logo Suite & Cover Art',
-    stack: 'Adobe Illustrator | Photoshop',
-    desc: 'Logo suite and single cover art.',
-    imgSrc: img('card-heartasylum-logotype-600.webp'),
-    imgAlt: 'Heart Asylum logo suite and cover art thumbnail',
+    group: 'portfolio',
+    caseId: 'portfolio-logotype',
+    title: 'KT Portfolio - Logotype',
+    stack: 'Sketch | Illustrator',
+    desc: 'Fluid initials mark for web and print.',
+    imgSrc: img('card-portfolio-logotype-600.webp'),
+    imgAlt: 'Katja Dev logotype thumbnail',
     category: 'logotype',
-    routeUrl: 'work/heartasylum/logotype',
-    caseUrl: '#case-heartasylum-logotype',
+    routeUrl: 'work/portfolio/logotype',
+    caseUrl: '#case-portfolio-logotype',
     demoLinks: [
       {
-        href: pdf('heart-asylum-logosuite.pdf'),
+        href: pdf('portfolio-logosuite.pdf'),
         label: 'Get Design Files (PDF)',
         icon: ICONS.external,
       },
     ],
-    order: 210,
+    order: 250,
+  },
+
+  {
+    group: 'semester',
+    caseId: 'semester-project-1-logotype',
+    title: 'Gemenskapet Science Museum - Logotype',
+    stack: 'Adobe Illustrator',
+    desc: 'Magnifying-glass logo for a museum.',
+    imgSrc: img('card-sciencemuseum-logotype-600.webp'),
+    imgAlt: 'Gemenskapet Science Museum Logotype thumbnail',
+    category: 'archive',
+    routeUrl: 'work/semester-project-1/logotype',
+    caseUrl: '#case-semester-project-1-logotype',
+    demoLinks: [
+      {
+        href: pdf('sciencemuseum-logosuite.pdf'),
+        label: 'Get Design Files (PDF)',
+        icon: ICONS.external,
+      },
+    ],
+    order: 260,
   },
 ];
 
