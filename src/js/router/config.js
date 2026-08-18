@@ -20,6 +20,7 @@ export const FILE_EXT_RE = /\.[a-z0-9]{2,8}(\?|#|$)/i;
 export const routes = {
   '/': 'home',
   '/work': 'work',
+  '/services': 'services',
   '/about': 'about',
   '/contact': 'contact',
 };

@@ -152,7 +152,9 @@ export function animateWaveLine() {
  */
 export function insertWaveLines() {
   document
-    .querySelectorAll('#about h2, #work h2, #contact h2, .fullscreen-section[id^="case-"] h1')
+    .querySelectorAll(
+      '#about h2, #work h2, #services h2, #contact h2, .fullscreen-section[id^="case-"] h1'
+    )
     .forEach((heading) => {
       const next = heading.nextElementSibling;
 

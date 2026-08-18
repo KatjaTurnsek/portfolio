@@ -1,0 +1,201 @@
+/* ==========================================================================
+   services.css — Services, starter offers, process and calls to action
+   ========================================================================== */
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 36px);
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(22px, 3vw, 34px);
+  background: var(--work-card-bg);
+  border: 1px solid var(--work-card-border);
+}
+
+.service-card .service-number,
+.eyebrow {
+  margin: 0 0 1rem;
+  color: var(--work-card-accent);
+  font-family: var(--body-font);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.service-card h3,
+.starter-services h3,
+.process-section h3 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.2;
+  text-transform: none;
+}
+
+.service-card p {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.service-card ul {
+  padding-left: 1.1rem;
+  margin: auto 0 0;
+  color: var(--text-color);
+  font-family: var(--body-font);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.service-card li + li {
+  margin-top: 0.55rem;
+}
+
+.starter-services,
+.process-section,
+.services-trust {
+  padding-top: clamp(30px, 5vw, 70px);
+}
+
+.starter-services {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.7fr);
+  gap: clamp(30px, 6vw, 80px);
+  align-items: start;
+}
+
+.service-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.service-pills li {
+  padding: 0.7rem 1rem;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  border-radius: 999px;
+  color: var(--text-color);
+  font-family: var(--body-font);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.process-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 0;
+  margin: 2rem 0 0;
+  list-style: none;
+  counter-reset: service-process;
+}
+
+.process-list li {
+  position: relative;
+  min-width: 0;
+  padding: 3rem 1rem 0 0;
+  border-top: 2px solid var(--work-card-accent);
+  counter-increment: service-process;
+}
+
+.process-list li::before {
+  content: counter(service-process, decimal-leading-zero);
+  position: absolute;
+  top: 0.75rem;
+  left: 0;
+  color: var(--work-card-accent);
+  font-family: var(--body-font);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.process-list span,
+.process-list small {
+  display: block;
+  padding-right: 1rem;
+  color: var(--text-color);
+  font-family: var(--body-font);
+}
+
+.process-list span {
+  margin-bottom: 0.45rem;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.process-list small {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.78;
+}
+
+.services-trust {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
+  gap: clamp(30px, 6vw, 80px);
+  align-items: end;
+}
+
+.services-trust > p {
+  margin: 0;
+}
+
+.page-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+@media (max-width: 980px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-list {
+    grid-template-columns: 1fr;
+  }
+
+  .process-list li {
+    padding: 1rem 0 1rem 3.2rem;
+    border-top-width: 1px;
+  }
+
+  .process-list li::before {
+    top: 1.1rem;
+  }
+}
+
+@media (max-width: 850px) {
+  .starter-services,
+  .services-trust {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .service-card h3,
+  .starter-services h3,
+  .process-section h3 {
+    text-align: left;
+  }
+
+  .eyebrow {
+    text-align: center;
+  }
+
+  .service-pills {
+    justify-content: center;
+  }
+
+  .page-actions {
+    align-items: center;
+  }
+}

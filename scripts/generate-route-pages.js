@@ -5,7 +5,7 @@ import { projects } from '../src/data/projects.js';
 const distDir = path.resolve('dist');
 const entryFile = path.join(distDir, 'index.html');
 
-const baseRoutes = ['about', 'work', 'contact', 'thank-you'];
+const baseRoutes = ['about', 'work', 'services', 'contact', 'thank-you'];
 
 const projectRoutes = projects
   .map(({ routeUrl }) => routeUrl?.replace(/^\/+|\/+$/g, ''))
