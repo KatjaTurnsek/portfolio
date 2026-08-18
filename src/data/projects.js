@@ -11,7 +11,7 @@ import { img, pdf, ICONS, DEMO_LINKS } from '../js/paths.js';
 /**
  * @typedef {Object} Project
  * @property {string} group       - Logical group key (e.g., "petart").
- * @property {string} caseId      - Unique id per project/case (e.g., "agilitybandits").
+ * @property {string} caseId      - Unique id per project/case.
  * @property {string} title
  * @property {string} stack
  * @property {string} desc
@@ -256,7 +256,7 @@ export const projects = [
     order: 90,
   },
 
-  // DESIGN
+  // WEB & INTERACTION DESIGN
   {
     group: 'lumastays',
     caseId: 'lumastays-design',
@@ -280,6 +280,30 @@ export const projects = [
       },
     ],
     order: 105,
+  },
+
+  {
+    group: 'studiobid',
+    caseId: 'studiobid-design',
+    title: 'StudioBid - UI/UX Design',
+    stack: 'Figma',
+    desc: 'UI kit and core user flows.',
+    imgSrc: img('card-studiobid-design-600.webp'),
+    imgAlt: 'StudioBid design thumbnail showing key screens and responsive layout',
+    category: 'design',
+    routeUrl: 'work/studiobid/design',
+    caseUrl: '#case-studiobid-design',
+    demoLinks: [
+      {
+        href: 'https://bit.ly/4sRhxfv',
+        label: 'Open In Figma (Desktop)',
+      },
+      {
+        href: 'https://bit.ly/4bKGKlA',
+        label: 'Open In Figma (Mobile)',
+      },
+    ],
+    order: 110,
   },
 
   {
@@ -402,30 +426,6 @@ export const projects = [
     order: 150,
   },
 
-  {
-    group: 'studiobid',
-    caseId: 'studiobid-design',
-    title: 'StudioBid - UI/UX Design',
-    stack: 'Figma',
-    desc: 'UI kit and core user flows.',
-    imgSrc: img('card-studiobid-design-600.webp'),
-    imgAlt: 'StudioBid design thumbnail showing key screens and responsive layout',
-    category: 'design',
-    routeUrl: 'work/studiobid/design',
-    caseUrl: '#case-studiobid-design',
-    demoLinks: [
-      {
-        href: 'https://bit.ly/4sRhxfv',
-        label: 'Open In Figma (Desktop)',
-      },
-      {
-        href: 'https://bit.ly/4bKGKlA',
-        label: 'Open In Figma (Mobile)',
-      },
-    ],
-    order: 110,
-  },
-
   // LOGOTYPES / GRAPHIC DESIGN
   {
     group: 'heartasylum',
@@ -491,23 +491,18 @@ export const projects = [
   },
 
   {
-    group: 'agilitybandits',
-    caseId: 'agilitybandits-logotype',
-    title: 'Agility Bandits - Logotype',
-    stack: 'Adobe Illustrator',
-    desc: 'Dog-led logo system and graphics.',
-    imgSrc: img('card-agilitybandits-logotype-600.webp'),
-    imgAlt: 'Agility Bandits graphics thumbnail',
+    group: 'logina',
+    caseId: 'logina',
+    title: 'Logina - Multidisciplinary Design',
+    stack: 'Touchscreen UI | Product Communication | Illustration',
+    desc: 'Touchscreen applications, technical product communication, and character storytelling.',
+    imgSrc: img('design-logina-cover-600.webp'),
+    imgAlt:
+      'EKV product packaging created as part of selected multidisciplinary design work for Logina',
     category: 'logotype',
-    routeUrl: 'work/agilitybandits/logotype',
-    caseUrl: '#case-agilitybandits-logotype',
-    demoLinks: [
-      {
-        href: pdf('agilitybandits-logosuite.pdf'),
-        label: 'Get Design Files (PDF)',
-        icon: ICONS.external,
-      },
-    ],
+    routeUrl: 'work/logina',
+    caseUrl: '#case-logina',
+    demoLinks: [],
     order: 230,
   },
 
@@ -573,6 +568,27 @@ export const projects = [
     ],
     order: 260,
   },
+
+  {
+    group: 'agilitybandits',
+    caseId: 'agilitybandits-logotype',
+    title: 'Agility Bandits - Logotype',
+    stack: 'Adobe Illustrator',
+    desc: 'Dog-led logo system and graphics.',
+    imgSrc: img('card-agilitybandits-logotype-600.webp'),
+    imgAlt: 'Agility Bandits graphics thumbnail',
+    category: 'archive',
+    routeUrl: 'work/agilitybandits/logotype',
+    caseUrl: '#case-agilitybandits-logotype',
+    demoLinks: [
+      {
+        href: pdf('agilitybandits-logosuite.pdf'),
+        label: 'Get Design Files (PDF)',
+        icon: ICONS.external,
+      },
+    ],
+    order: 270,
+  },
 ];
 
 /**
@@ -590,7 +606,7 @@ export const featuredProjects = projects
 export const allProjectsSorted = [...projects].sort((a, b) => a.order - b.order);
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Register demo links for the reusable component                             */
+/* Register demo links for the reusable component                            */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 for (const p of projects) {
