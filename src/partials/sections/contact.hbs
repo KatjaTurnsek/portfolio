@@ -2,27 +2,38 @@
   class='fullscreen-section'
   id='contact'
   data-title='Contact — Katja Turnsek | UX/UI Designer & Front-End Developer'
-  data-description='Get in touch with Katja Turnsek about UX/UI design, front-end development, freelance projects, or opportunities to join your team.'
+  data-description='Contact Katja Turnsek about UX/UI design, front-end development, freelance projects, agency collaborations, or suitable roles.'
 >
   <div class='rows'>
     <div class='row'>
       <h1>Contact</h1>
-      <h2>Let’s turn a good idea into something real.</h2>
+      <h2>Have a project or opportunity in mind?</h2>
 
       <p class='align-right-60'>
-        Whether you’re looking for a
-        <strong>UX/UI designer and front-end developer</strong>
-        to join your team, or need freelance support taking a project from concept to a polished
-        interface, I’d love to hear from you.
+        If you need help with a website, digital product, or visual identity or you’re looking for
+        someone who can work across both
+        <strong>design and front-end development</strong>, tell me a little about what you have in
+        mind.
       </p>
     </div>
 
     <div class='row'>
+      <h3>Ways We Can Work Together</h3>
+      <p>
+        I’m available for
+        <strong>selected freelance projects</strong>,
+        <strong>agency collaborations</strong>, and suitable
+        <strong>design or front-end roles</strong>. I’m based in Slovenia and can work with clients
+        and teams in Slovenia, Sweden, and remotely across Europe.
+      </p>
+
       <p class='info-text'>
         Email me at
-        <a id='contact-email' href='mailto:katja@pet-art.net' rel='nofollow noopener'>
-          katja@pet-art.net
-        </a>
+        <a
+          id='contact-email'
+          href='mailto:katja@pet-art.net'
+          rel='nofollow noopener'
+        >katja@pet-art.net</a>
         or send a message using the form.
       </p>
 
@@ -79,7 +90,17 @@
           </div>
 
           <div class='form-group full-width'>
-            <label for='message'>Your message *</label>
+            <label for='company-project'>Company or project (optional)</label>
+            <input
+              id='company-project'
+              name='company_or_project'
+              type='text'
+              autocomplete='organization'
+            />
+          </div>
+
+          <div class='form-group full-width'>
+            <label for='message'>Tell me a little about your project or opportunity *</label>
             <textarea id='message' name='message' rows='4' required></textarea>
           </div>
 
@@ -91,6 +112,7 @@
               </svg>
             </button>
           </div>
+
           <p
             id='contact-form-status'
             class='form-status'
